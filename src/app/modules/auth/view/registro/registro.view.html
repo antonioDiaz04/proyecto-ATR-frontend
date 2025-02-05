@@ -123,10 +123,9 @@
 <!-- !********************************************************** -->
 <div class="container">
   <div class="card">
-    
     <div class="form-container">
       <form
-        *ngIf="currentStep === 1"
+        *ngIf="currentStep === 1  "
         [formGroup]="personalDataForm"
         (ngSubmit)="goToNextStep()"
       >
@@ -145,7 +144,7 @@
             minlength="8"
             (input)="updateRemainingChars()"
           />
-          <small *ngIf="remainingChars > 0">
+          <small *ngIf="remainingChars > 0" class="error-text">
             Quedan {{ remainingChars }} caracteres.
           </small>
           <small
@@ -176,21 +175,18 @@
             formControlName="email"
             class="input-email"
           />
-          <div
-            *ngIf="personalDataForm.get('email')?.invalid && personalDataForm.get('email')?.touched"
-            class="errorMenssage"
+          <small
+            *ngIf="personalDataForm.get('email')?.hasError('required') && personalDataForm.get('email')?.touched"
+            class="error-text"
           >
-            <small
-              *ngIf="personalDataForm.get('email')?.hasError('required')"
-              class="error"
-              >El correo es obligatorio.</small
-            >
-            <small
-              *ngIf="personalDataForm.get('email')?.hasError('invalidEmail')"
-              class="error"
-              >Formato de correo inválido.</small
-            >
-          </div>
+            El correo es obligatorio.
+          </small>
+          <small
+            *ngIf="!personalDataForm.get('email')?.hasError('required') && personalDataForm.get('email')?.hasError('invalidEmail') && personalDataForm.get('email')?.touched"
+            class="error-text"
+          >
+            Formato de correo inválido.
+          </small>
         </div>
 
         <!-- Campo de Teléfono -->
@@ -201,7 +197,6 @@
             id="telefono"
             formControlName="telefono"
             placeholder="Introduce tu número telefónico"
-            
             class="form-control"
           />
           <div
@@ -210,20 +205,18 @@
           >
             <small
               *ngIf="personalDataForm.get('telefono')?.hasError('required')"
-              class="error"
+              class="error-text"
             >
               El teléfono es requerido.
             </small>
             <small
               *ngIf="personalDataForm.get('telefono')?.hasError('pattern')"
-              class="error"
+              class="error-text"
             >
               El teléfono es inválido. Debe seguir el formato: +52 999 999 9999
             </small>
           </div>
         </div>
-        
-
         <button
           class="ui basic button"
           [ngClass]="{'loading': isLoading}"
@@ -235,7 +228,7 @@
 
       <!-- Segundo formulario -->
       <form
-        *ngIf="currentStep === 2"
+        *ngIf="currentStep ===2"
         [formGroup]="credentialsForm"
         (ngSubmit)="registroCliente()"
       >
@@ -266,7 +259,8 @@
               >
             </div>
           </span>
-
+        </div>
+        <div class="form-group">
           <label for="confirmPassword">Confirma tu contraseña</label>
           <p-password
             formControlName="confirmPassword"
@@ -282,27 +276,19 @@
             Las contraseñas no coinciden.
           </span>
         </div>
-        <p-button
-          *ngIf="!isLoading"
-          [disabled]="this.faltantes.length != 0 || !credentialsForm.valid || !coincidenPasswords || isPasswordCompromised"
-          iconPos="right"
-          label="Validar y crear cuenta"
-          type="submit"
-        >
-        </p-button>
-        <!-- [disabled]="this.faltantes.length != 0 || !credentialsForm.valid || !coincidenPasswords || isPasswordCompromised" -->
-        <!-- *ngIf="!isLoading" -->
-        <p-button
-          (click)="goToPreviousStep()"
-          label="Volver"
-          type="button"
-        >
-        </p-button>
-        <!-- class="btn register" -->
-        <!-- iconPos="right" -->
-        <!-- <button class="btn signin" type="button" (click)="goToPreviousStep()">
-          Volver
-        </button> -->
+        <div class="form-group">
+          <p-button
+            *ngIf="!isLoading"
+            [disabled]="this.faltantes.length != 0 || !credentialsForm.valid || !coincidenPasswords || isPasswordCompromised"
+            iconPos="right"
+            label="Validar y crear cuenta"
+            type="submit"
+          >
+          </p-button>
+
+          <p-button (click)="goToPreviousStep()" label="Volver" type="button">
+          </p-button>
+        </div>
       </form>
     </div>
   </div>

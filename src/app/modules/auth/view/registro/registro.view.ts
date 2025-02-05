@@ -120,9 +120,17 @@ export class RegistroView {
 
   telefonoValidator(control: AbstractControl) {
     const phoneNumber = control.value;
-    const parsedNumber = parsePhoneNumberFromString(phoneNumber);
 
-    if (parsedNumber && isValidPhoneNumber(phoneNumber)) {
+    const parsedNumber = parsePhoneNumberFromString(phoneNumber, {
+      defaultCountry: 'MX',
+    });
+
+    console.log(parsedNumber);
+
+    if (
+      parsedNumber &&
+      isValidPhoneNumber(phoneNumber, { defaultCountry: 'MX' })
+    ) {
       const country = parsedNumber.country; // El país del número
       console.log('El país es:', country);
 
@@ -191,8 +199,10 @@ export class RegistroView {
         errorMessages +=
           '• El número telefónico debe contener exactamente 10 dígitos.<br>';
       }
+      if (this.personalDataForm.get('telefono')?.hasError('invalidPhone')) {
+        errorMessages += '• El número telefónico no es válido.<br>';
+      }
 
-      // Muestra el alert con los errores
       Swal.fire({
         icon: 'error',
         title: 'Errores en el formulario',
@@ -201,8 +211,11 @@ export class RegistroView {
       });
       this.personalDataForm.markAllAsTouched(); // Marca todos los campos como tocados
 
+      // Muestra el alert con los errores
+
       // Desactiva el estado de carga
       this.isLoadingBasic = false;
+      return;
     } else {
       this.showSpinner();
       // isLoadingBasic
@@ -236,7 +249,6 @@ export class RegistroView {
           this.displayModal = false;
 
           Swal.fire({
-
             icon: 'error',
             title: 'Error',
             text: 'El telefono ya está registrado', // Mensaje simple de error
@@ -293,6 +305,8 @@ export class RegistroView {
         ...this.personalDataForm.value,
         ...this.credentialsForm.value,
       });
+    } else {
+      console.log('Formulario invalido:');
     }
   }
 
@@ -358,7 +372,6 @@ export class RegistroView {
       // Obtener el token almacenado previamente
       const tokenRespuesta = this.tokenRespuesta; // Este token debería haberse obtenido al enviar el código
 
-      console.log('tokenRespuesta:', tokenRespuesta);
       if (tokenRespuesta) {
         // Decodificar y validar el token
         const decodedData = this.sessionService_.getUserTokenDecode(
@@ -575,7 +588,7 @@ export class RegistroView {
       // Llama al servicio de registro, asumiendo que tienes un servicio de usuario
       this.uservice.register(USUARIO).subscribe(
         (response) => {
-         console.log('Response:', response);
+          console.log('Response:', response);
           // Swal.fire('Exitoso', 'El registro fue exitoso', 'success');
           // this.personalDataForm.reset(); // Resetea el formulario de datos básicos
           // this.datosConfidencialesForm.reset(); // Resetea el formulario de datos confidenciales
@@ -587,7 +600,8 @@ export class RegistroView {
             'info'
           ).then(() => {
             // Redirigir al login después de cerrar el modal de SweetAlert
-            this.router.navigate(['/auth/Sign-in']);
+            // this.router.navigate(['/auth/Sign-in']);
+            this.router.navigate(['public/inicio']);
           });
         },
         (error) => {
@@ -638,8 +652,6 @@ export class RegistroView {
     this.mensageservice_.enviarTokenCorreo(email).subscribe({
       next: (response) => {
         this.tokenRespuesta = response.token;
-        console.log('Token recibido:', this.tokenRespuesta);
-
         this.hideSpinner();
 
         this.displayGmailModal = true; // Muestra el modal de WhatsApp

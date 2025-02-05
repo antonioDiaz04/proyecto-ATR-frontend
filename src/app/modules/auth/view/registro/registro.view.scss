@@ -1,14 +1,15 @@
 .container {
   // width: 300px;
   // max-width: 900px;
+  margin: 0 auto;
   background-color: var(--style-navbar-second);
   border: 2px solid var(--bg-color-card);
   border-radius: 10px;
   display: flex;
-  margin:0;
-  
-  border: solid 1px #6a6f73;
+  justify-content: center;
+  align-items: center;
 
+  border: solid 1px #6a6f73;
   padding: 20px;
 }
 
@@ -76,6 +77,7 @@ label::after {
   margin-top: 20px;
 }
 
+
 h1 {
   font-size: 22px;
   margin-bottom: 10px;
@@ -89,7 +91,6 @@ h2 {
 }
 
 form {
-
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -114,7 +115,6 @@ input[type="password"] {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
 
 .register {
   background-color: #6f4dfd;
@@ -166,6 +166,7 @@ input[type="password"] {
 }
 
 .error-text {
+  font-size: 13px;
   color: red;
 }
 
