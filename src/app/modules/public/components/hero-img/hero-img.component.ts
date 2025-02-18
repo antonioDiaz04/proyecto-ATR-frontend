@@ -66,19 +66,13 @@ import { Component } from "@angular/core";
     filter: opacity(8);
     color:rgb(255, 0, 179);
     position: relative;
-  z-index: 1;
-  /* margin: auto; */
-  padding: 7rem;
-  /* Agregar un fondo semi-transparente para mejorar la legibilidad */
-    // background-color: #000000;
-  // color: #fff;
-  text-align: center;
+    z-index: 1;
+    padding: 7rem;
+    text-align: center;
     animation: fadeIn 1.5s ease-out;
   }
   .subtitle {
     font-size: 1.2rem;
-    // color:#f3f3f3;
-    // color:#000000;
     margin-bottom: 1rem;
   }
   .title {
@@ -94,7 +88,6 @@ import { Component } from "@angular/core";
     line-height: 1.5;
     margin-bottom: 2rem;
     color:#363636;
-    // color:#f5f5f5;
   }
   .cta {
     display: inline-block;
