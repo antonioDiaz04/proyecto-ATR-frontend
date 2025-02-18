@@ -17,8 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "allowedCommonJsDependencies": ["aos","crypto-js",
-      "bcryptjs"],
+            "allowedCommonJsDependencies": ["aos", "crypto-js", "bcryptjs"],
             "outputPath": "dist/my-pwa",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -48,13 +47,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "8mb",
-                  "maximumError": "9mb"
+                  "maximumWarning": "5mb",
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2mb",
-                  "maximumError": "4mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 }
               ],
               "outputHashing": "all",

@@ -102,7 +102,40 @@
             >
           </div>
         </li>
-        
+        <li class="IsMobile" *ngIf="!isMobile">
+          <ng-container *ngIf="!isLoggedIn; else userMenu">
+            <!-- <a tabindex="0" (click)="openModal()"> -->
+            <i class="pi pi-user" (click)="openModal()"></i>
+            <!-- </a> -->
+          </ng-container>
+  
+          <ng-template #userMenu>
+            <div class="ui pointing dropdown">
+              <div class="ui grid">
+                <div class="row">
+                  <div class="column">
+                    <i class="pi pi-user"></i>
+                  </div>
+                     Mi cuenta
+                  <div class="column">
+                    <i class="dropdown icon"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="menu">
+                <div class="item" (click)="redirectTo('Mi-perfil')">
+                  <i class="pi pi-user"></i> Mi perfil
+                </div>
+                <div class="item" (click)="redirectTo('Compras')">
+                  <i class="pi pi-cog"></i> Compras
+                </div>
+                <div class="item" (click)="logout()">
+                  <i class="pi pi-sign-out"></i> Cerrar sesión
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
   
         <li *ngIf="isMobile">
           <i (click)="showDialog()" class="fa-solid fa-bars-staggered"></i>
