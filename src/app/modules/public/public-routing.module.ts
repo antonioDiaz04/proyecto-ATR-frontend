@@ -15,6 +15,8 @@ import { NotFoundComponent } from "./views/not-found/not-found.component";
 import { Error500Component } from "./views/error500/error500.component";
 import { TagComponent } from "./components/tag/tag.component";
 import { ProcessRentaComponent } from "./views/process-renta/process-renta.component";
+import { ComprasComponent } from "./views/compras/compras.component";
+import { ProcessCompraComponent } from "./views/process-compra/process-compra.component";
 
 const routes: Routes = [
   {
@@ -49,6 +51,10 @@ const routes: Routes = [
           title: "terminos",
           breadcrumb: "terminos",
         },
+      },
+      {
+        path: "Compras",
+        component: ComprasComponent,
       },
       {
         path: "politicas",
@@ -99,6 +105,14 @@ const routes: Routes = [
       {
         path: "continuarRenta/:id",
         component: ProcessRentaComponent,
+        // data: {
+        //   title: "Renata de producto",
+        //   breadcrumb: "Renta del Producto",
+        // },
+      },
+      {
+        path: "continuarCompra/:id",
+        component: ProcessCompraComponent,
         // data: {
         //   title: "Renata de producto",
         //   breadcrumb: "Renta del Producto",

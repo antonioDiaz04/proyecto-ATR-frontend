@@ -1,0 +1,26 @@
+<div class="container" *ngIf="Detalles">
+  <main class="checkout">
+    <section class="order-summary">
+      <h2>Order</h2>
+      <div class="product">
+        <img [src]="Detalles.imagenPrincipal" [alt]="Detalles.nombre" />
+        <div class="details">
+          <h3>{{ Detalles.nombre }}</h3>
+          <p>Color: {{ Detalles.color }}</p>
+          <p>Size: {{ Detalles.tallaDisponible }}</p>
+          <p class="price">
+            ${{ Detalles.precio }}
+          </p>
+        </div>
+        <p>Cantidad: {{ Detalles.length }}</p>
+      </div>
+    </section>
+    <section class="payment-summary">
+      <h2>Payment Summary</h2>
+      <div class="summary-box">
+        <p>Order Summary: <span>${{ Detalles.precio }}</span></p>
+        <button (click)="aplicarCupon()">Apply Coupon</button>
+      </div>
+    </section>
+  </main>
+</div>

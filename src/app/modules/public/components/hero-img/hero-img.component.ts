@@ -173,7 +173,7 @@ import { Component } from "@angular/core";
 z-index:1;
 border: none;
 // background-color:none;
-background-color: rgba(0, 0, 0, 0.5);
+background-color: transparent;
       color: white;
       padding: 10px;
       cursor: pointer;
@@ -187,7 +187,7 @@ background-color: rgba(0, 0, 0, 0.5);
       right: 10px;
     }
     .carousel-btn:hover {
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color:transparent;
     }
     .carousel-btn i {
       font-size: 2rem;

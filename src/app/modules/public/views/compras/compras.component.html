@@ -1,0 +1,40 @@
+<div class="contenedor-compras">
+    
+    <!-- Bolsa de Compras -->
+    <div class="bolsa-de-compras">
+        <h2>Bolsa de Compras</h2>
+        <!-- Buscador -->
+        <div class="ui center aligned container">
+            <div class="ui action input">
+                <input type="text" placeholder="Buscar producto..." [(ngModel)]="searchTerm" />
+                <button class="ui button">Buscar</button>
+            </div>
+        </div>
+        <div class="producto" *ngFor="let producto of filteredProducts">
+            <img [src]="producto.imagen" [alt]="producto.nombre" />
+            <div class="detalles">
+                <div class="ui grid">
+                    <div class="four wide column">
+                        <p>Fecha de Compra: {{ producto.fechaCompra | date:'shortDate' }}</p>
+                    </div>
+                    <div class="four wide column">
+                        <p>Fecha de Recogida: {{ producto.fechaRecogida | date:'shortDate' }}</p>
+                    </div>
+                </div>
+                <h3>{{ producto.nombre }}</h3>
+                <p>Precio: ${{ producto.precio }}</p>
+                <p>Cantidad: {{ producto.cantidad }}</p>
+                <p>Total: ${{ producto.total }}</p>
+            </div>
+            <div class="estado-recogida">
+                <p class="estado {{ producto.estado }}">{{ producto.estado }}</p>
+                <ng-container *ngIf="producto.isRecogido; else elseTemplate">
+                    <p class="recogida">Recogido en tienda</p>
+                </ng-container>
+                <ng-template #elseTemplate>
+                    <p class="recogida pendiente">Pendiente en recoger</p>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

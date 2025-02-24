@@ -69,7 +69,7 @@ nav {
 
 .marquee-container {
   width: 100%;
-  display: flex;
+  display: none;
   height: 20px;
   background: linear-gradient(
     90deg,
@@ -201,7 +201,7 @@ span {
   justify-content: left;
   border-bottom: 1px solid #faf7f7f0;
   // background-color: white;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  // transition: transform 0.3s ease, background-color 0.3s ease;
   height: 50px;
   position: sticky;
   top: 0;

@@ -4,80 +4,140 @@
   align-items: center;
   gap: 20px;
   padding: 40px;
+  
 }
+
 .contenido {
+  background: white;
+  border-radius: 5px;
   display: flex;
-  width: 100%;
+  width: 84%;
+}
+.producto-detalles{
+  width: 63%;
+  padding: 40px;
+  border: solid 1px #ddd;
+}
+.detalles-producto {
+  display: flex;
+  width: 50%;
   max-width: 1200px;
 }
+
 .card {
-  background: rgba(255, 255, 255, 0.15);
+  // background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 4px 6px rgba(119, 116, 116, 0.1);
   flex: 1;
+  text-align: start;
+  width: 70%;
+}
+
+.producto-imagen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.producto-imagen img {
+  width: 120px;
+  height: 120px;
 }
 .formulario-renta {
+  width: 130%;
+  max-width: 1200px;
   padding: 20px;
   margin-right: 20px;
   flex: 1;
-
 }
+
 .form-row {
   display: flex;
-  gap: 15px;
+  gap: 30px; /* Aumenta el espacio entre las columnas */
+  flex-wrap: wrap; /* Asegura que los inputs no se desborden en pantallas pequeñas */
+  margin-bottom: 20px; /* Asegura un pequeño margen entre los inputs */
 }
+
 .form-group {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
+
 label {
   font-size: 14px;
-  // font-weight: 600;
   color: #868282;
   margin-bottom: 5px;
 }
 
-input {
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  border-color: 1px solid #ffffff4d;
-
-  background: rgba(255, 255, 255, 0.5);
-  // box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 14px;
-}
-// 
-
-input:focus {
+input:focus,
+p-calendar:focus {
   border-color: #007bff;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
+
 .btn-generar-contrato {
+  width: 50%;
+
   padding: 12px 16px;
   border: none;
-  border-radius: 8px;
-  background-color: #6c63ff;
-
+  border-radius: 20px;
+  background-color: #1e1e1e;
   color: white;
   font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
 }
+
 .btn-generar-contrato:hover {
-  background-color: #6c63ff;
-  color: #fff;
+  background-color: #393939;
 }
-.producto-imagen img {
-  width: 80px;
-  height: 80px;
-  // border-radius: 10px;
-}
+
 .info {
   margin-bottom: 10px;
   font-size: 16px;
-  color: #555;
+  color: #63676f;
 }
+.btns{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  flex-direction: column;
+  gap: 10px;
+  .btn-generar-contrato{
+    width: 100%;
+  }
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0;
+  border-bottom: solid 1px #ddd;
+
+}
+.info-row.precio {
+  color: #454648;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+  // color: #D3D3D3;
+}
+
+.nombre {
+  font-size: 24px;
+  // font-weight: bold;
+}
+
+// Fondo: Blanco (#FFFFFF) con un ligero degradado suave en tonos pastel.
+// Texto principal: Negro (#000000) y Gris Oscuro (#555555).
+// Botón "Checkout": Azul brillante (#007BFF) con texto blanco.
+// Resaltado (Descuento/Precio anterior): Rojo (#FF3B30).
+// Iconos y detalles sutiles: Gris claro (#D3D3D3).
+// Sombreado y efecto de profundidad: Se usan fondos translúcidos con backdrop-filter: blur(10px) para un efecto de neomorfismo.

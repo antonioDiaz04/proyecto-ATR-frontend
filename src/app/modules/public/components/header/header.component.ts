@@ -35,9 +35,7 @@ export interface DressItem {
 @Component({
   selector: "app-header",
   templateUrl: "./header.component.html",
-  styleUrls: [
-    "./header.component.scss"
-  ],
+  styleUrls: ["./header.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
@@ -65,6 +63,33 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     "https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png";
   isDarkThemeOn = signal(false);
 
+  content: any[] = [
+    { title: "Andorra" },
+    { title: "United Arab Emirates" },
+    { title: "Afghanistan" },
+    { title: "Antigua" },
+    { title: "Anguilla" },
+    { title: "Albania" },
+    { title: "Armenia" },
+    { title: "Netherlands Antilles" },
+    { title: "Angola" },
+    { title: "Argentina" },
+    { title: "American Samoa" },
+    { title: "Austria" },
+    { title: "Australia" },
+    { title: "Aruba" },
+    { title: "Aland Islands" },
+    { title: "Azerbaijan" },
+    { title: "Bosnia" },
+    { title: "Barbados" },
+    { title: "Bangladesh" },
+    { title: "Belgium" },
+    { title: "Burkina Faso" },
+    { title: "Bulgaria" },
+    { title: "Bahrain" },
+    { title: "Burundi" },
+  ];
+
   darkMode = false;
   constructor(
     private indexedDbService: IndexedDbService,
@@ -76,9 +101,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
 
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-  }
-
+  ) {}
 
   isModalVisible: boolean = false;
 
@@ -91,10 +114,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["mostrarFormulario"]) {
-      const newVluesmostrarFormulario = changes["mostrarFormulario"].currentValue;
-  this.isModalVisible = newVluesmostrarFormulario; // Actualizamos el valor para cerrar el modal
+      const newVluesmostrarFormulario =
+        changes["mostrarFormulario"].currentValue;
+      this.isModalVisible = newVluesmostrarFormulario; // Actualizamos el valor para cerrar el modal
 
-      console.log("mostrarFormulario  en listado producto cambió a:", newVluesmostrarFormulario);
+      console.log(
+        "mostrarFormulario  en listado producto cambió a:",
+        newVluesmostrarFormulario
+      );
     }
     if (changes["isMobile"]) {
       this.onMobileChange(changes["isMobile"].currentValue);
@@ -105,8 +132,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     // Aquí puedes agregar lógica adicional si es necesario
   }
 
-
-
   async ngOnInit() {
     try {
       this.checkInternetConnection();
@@ -116,15 +141,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     } catch (error) {
       console.error("Error al obtener productos apartados");
     }
-
   }
 
-
-  @HostListener('window:online')
-  @HostListener('window:offline')
+  @HostListener("window:online")
+  @HostListener("window:offline")
   checkInternetConnection() {
-    const connectionStatus = document.getElementById('connection-status');
-    const connectioneExit = document.getElementById('connection-exit');
+    const connectionStatus = document.getElementById("connection-status");
+    const connectioneExit = document.getElementById("connection-exit");
     // if (navigator.onLine) {
     //   connectionStatus!.style.display = 'none'; // Ocultar si hay conexión
     //   connectioneExit!.style.display = 'block'; // Mostrar si no hay conexión
@@ -154,22 +177,30 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
   //   );
   // }
 
-
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       const nativeElement = this.elementRef.nativeElement;
 
       // Inicializar Semantic UI Dropdown
-      $(nativeElement).find('.ui.dropdown').dropdown();
+      $(nativeElement).find(".ui.dropdown").dropdown();
 
+      // Inicializar búsqueda con contenido
       $(nativeElement)
         .find(".ui.search")
         .search({
           type: "category",
-
+          source: this.content,
           onSelect: (result: any) => {
-            // Manejar la selección del resultado aquí, si es necesario
+            console.log("Seleccionado:", result.title);
           },
+        });
+
+      // Mostrar resultados al hacer focus en el input
+      $(nativeElement)
+        .find("input")
+        .on("focus", (event: FocusEvent) => {
+          const target = event.target as HTMLInputElement;
+          $(target).parent().find(".ui.search").search("showResults");
         });
     }
   }
@@ -188,7 +219,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     // Reemplaza con la llamada real a la API de búsqueda
     setTimeout(() => {
       this.isLoading = false;
-      this.router.navigate(['/public/search', this.searchQuery])
+      this.router.navigate(["/public/search", this.searchQuery]);
 
       // Implementa tu lógica de búsqueda aquí
       console.log("Buscando:", this.searchQuery);
@@ -228,7 +259,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
           {
             label: "Compras",
             icon: "pi pi-cog",
-            command: (event: MenuItemCommandEvent) => this.redirectTo("compras"),
+            command: (event: MenuItemCommandEvent) =>
+              this.redirectTo("Compras"),
           },
           {
             label: "Cerrar sesión",
@@ -269,7 +301,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     // const userData = this.sessionService.();
     const userData = this.sessionService.getUserData();
     if (userData) {
-      alert(userData._id)
+      alert(userData._id);
       this.userROL = userData.rol;
       return this.userROL === ERol.CLIENTE;
     }

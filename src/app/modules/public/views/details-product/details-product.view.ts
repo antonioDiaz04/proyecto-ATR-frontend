@@ -27,7 +27,7 @@ interface Producto {
 })
 export class DetailsProductView implements OnInit ,AfterViewInit{
   isLoading: boolean = true;
-  isLoadingRenta: boolean = false;
+  isLoadingBtn: boolean = false;
   images: any[] = []; // Change to any[] to hold the required data
   productName: string = '';
   productPrice: string = '';
@@ -37,6 +37,8 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
   selectedColor: string = '';
   selectedSize: string = '';
   // sizes: any[] = [];
+  isViewImagen: boolean = false;
+
   productId!: any;
   Detalles: any = null; // Inicializado en null
   responsiveOptions: any[] = [
@@ -65,9 +67,17 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
     this.renderer.listen(this.mainImage.nativeElement, 'mouseleave', () => {
       this.resetZoomEffect();
     });
+    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mousemove', (event: MouseEvent) => {
+      this.applyZoomEffectPreviewmainImage(event);
+    });
+
+    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mouseleave', () => {
+      this.resetZoomEffectPreviewmainImage();
+    });
   }
 
   @ViewChild('mainImage', { static: false }) mainImage!: ElementRef;
+  @ViewChild('PreviewmainImage', { static: false }) PreviewmainImage!: ElementRef;
   constructor(
     private indexedDbService: IndexedDbService,
     private productoS_: ProductoService,
@@ -93,7 +103,9 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
   scrollToTop() {
     window.scrollTo(0, 0); // Esto lleva la página a la parte superior
   }
-
+  volver() {
+    window.history.back();
+  }
   // getProductDetails() {
   //   this.isLoading = true;
   // }
@@ -111,6 +123,20 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
 
   resetZoomEffect(): void {
     const image = this.mainImage.nativeElement;
+    this.renderer.setStyle(image, 'transform', 'scale(1)');
+  }
+  applyZoomEffectPreviewmainImage(event: MouseEvent): void {
+    const image = this.PreviewmainImage.nativeElement;
+    const rect = image.getBoundingClientRect(); // Obtiene la posición de la imagen en la pantalla
+    const x = (event.clientX - rect.left) / rect.width * 100;
+    const y = (event.clientY - rect.top) / rect.height * 100;
+
+    this.renderer.setStyle(image, 'transform-origin', `${x}% ${y}%`);
+    this.renderer.setStyle(image, 'transform', 'scale(1.5)');
+  }
+
+  resetZoomEffectPreviewmainImage(): void {
+    const image = this.PreviewmainImage.nativeElement;
     this.renderer.setStyle(image, 'transform', 'scale(1)');
   }
 
@@ -138,12 +164,17 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
   }
  
   redirigirContinuarRenta(id: any) {
-    
-    
-    this.isLoadingRenta = true;
+    this.isLoadingBtn = true;
     setTimeout(() => {
-      this.isLoadingRenta = false;
+      this.isLoadingBtn = false;
     this.router.navigate([`/public/continuarRenta/${id}`]);
+    }, 2000); // 2 segundos
+  }
+  redirigirContinuarCompra(id: any) {
+    this.isLoadingBtn = true;
+    setTimeout(() => {
+      this.isLoadingBtn = false;
+    this.router.navigate([`/public/continuarCompra/${id}`]);
     }, 2000); // 2 segundos
   }
 
@@ -216,4 +247,14 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
       imagen: 'https://m.media-amazon.com/images/I/61kC5lqiJOL._AC_SX569_.jpg',
     },
   ];
+  openModal() {
+    this.isViewImagen = true;
+  }
+  
+  closeModal(event: MouseEvent) {
+    // Verifica si el clic fue en el fondo y no en la imagen
+    if ((event.target as HTMLElement).classList.contains('image-modal')) {
+      this.isViewImagen = false;
+    }
+  }
 }

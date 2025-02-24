@@ -8,6 +8,23 @@ div.contiendescripcion {
   padding: 20px;
   max-width: 1200px;
   box-shadow: 0 4px 6px rgba(136, 136, 136, 0.1); /* Para un pequeño efecto de sombra */
+  .volver {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    // border-bottom: solid 1px gainsboro;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      color: #0056b3;
+    }
+  }
   .description-container {
     margin-top: 20px;
     .description-title {
@@ -236,3 +253,25 @@ div.contiendescripcion {
     }
   }
 }
+
+// Modal de la imagen ampliada
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .modal-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    cursor: pointer;
+  }
+}
+

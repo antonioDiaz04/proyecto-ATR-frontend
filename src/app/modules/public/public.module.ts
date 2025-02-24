@@ -61,21 +61,30 @@ import { LoginModalComponent } from './views/login-modal/login-modal.component';
 import { VideosComponent } from './components/videos/videos.component';
 import { ProductosComponent } from './views/productos/productos.component';
 const MATERIALS =[PasswordModule,
-  InputMaskModule,
+  InputMaskModule,ImageModule,
   InputTextModule,FormsModule,InputGroupModule,AvatarModule,AvatarGroupModule,PaginatorModule,OverlayPanelModule,TieredMenuModule,SkeletonModule,CardModule,TabMenuModule,ButtonModule,DialogModule,SidebarModule,CheckboxModule,MenuModule]
 const COMPONENTS =[FooterComponent,HeaderComponent]
 const VIEWS=[HomeView,PublicComponent,PerfilView, AcercaDeView,DetailsProductView,LoginModalComponent,DataCompraComponent]
 
+import { ImageModule } from 'primeng/image';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ProcessRentaComponent } from './views/process-renta/process-renta.component';
 import { DataCompraComponent } from './views/data-compra/data-compra.component';
 import { InformacionUserComponent } from './views/informacion-user/informacion-user.component';
 import { TableModule } from 'primeng/table';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { ComprasComponent } from './views/compras/compras.component';
+import { ProcessCompraComponent } from './views/process-compra/process-compra.component';
+
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent],
+  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ComprasComponent, ProcessCompraComponent],
   exports:[COMPONENTS],
-  imports: [TableModule,NgxImageZoomModule,GalleriaModule,CarouselModule,
-    CommonModule,ReactiveFormsModule,FormsModule,
+  imports: [InputTextModule,FloatLabelModule,
+    InputNumberModule,
+    CalendarModule,TableModule,NgxImageZoomModule,GalleriaModule,CarouselModule,
+    CommonModule,ReactiveFormsModule,
     PublicRoutingModule,HttpClientModule, ...MATERIALS,
   ], schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [Toast,MessageService,provideClientHydration(), [provideHttpClient(withFetch())],

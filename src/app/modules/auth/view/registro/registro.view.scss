@@ -1,15 +1,11 @@
 .container {
-  // width: 300px;
-  // max-width: 900px;
-  background-color: var(--style-navbar-second);
-  border: 2px solid var(--bg-color-card);
+  // border: 2px solid var(--bg-color-card);
   border-radius: 10px;
   display: flex;
-  margin:0;
-  
-  border: solid 1px #6a6f73;
+  margin: 40px;
 
   padding: 20px;
+  justify-content: center;
 }
 
 .strong {
@@ -30,8 +26,8 @@
 .card {
   display: flex;
   flex-direction: row;
-  width: 100%;
-  gap: 20px;
+  width: 35%;
+  // gap: 20px;
 }
 
 label::after {
@@ -45,27 +41,28 @@ label::after {
   color: red;
 }
 
-.illustration {
-  flex: 1;
-  background: var(--blur-bg);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-}
+// .illustration {
+//   flex: 1;
+//   background: var(--blur-bg);
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   border-radius: 10px;
+// }
 
-.illustration img {
-  width: 500px;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-}
+// .illustration img {
+//   width: 500px;
+//   height: 100%;
+//   object-fit: cover;
+//   border-radius: 10px;
+// }
 
 .form-container {
   flex: 1;
-  width: 500px;
-
-  padding: 20px;
+  width: 700%;
+  max-width: 900px;
+  background-color: white;
+  padding: 50px;
   display: flex;
   flex-direction: column;
 }
@@ -73,13 +70,14 @@ label::after {
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  // margin-top: 20px;
 }
 
 h1 {
   font-size: 22px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   color: #333;
+  text-align: center;
 }
 
 h2 {
@@ -89,10 +87,9 @@ h2 {
 }
 
 form {
-
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 .input-email,
 input[type="text"],
@@ -100,29 +97,18 @@ input[type="email"],
 input[type="number"],
 input[type="password"] {
   width: 100%;
-  padding: 12px;
+  padding: 8px; // Reducido de 12px a 8px para menor altura
   border: 1px solid #dadfe3;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
+  border-radius: 6px; // Bordes más sutiles
+  margin-bottom: 10px; // Menos separación
+  font-size: 14px; // Ajuste del tamaño de texto
+  transition: border-color 0.3s, box-shadow 0.3s;
 
-.btn {
-  padding: 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-
-.register {
-  background-color: #6f4dfd;
-  color: var(--color-text);
-}
-
-.register:hover {
-  background-color: #5b3ed1;
+  &:focus {
+    border-color: #8a2be2; // Morado suave
+    box-shadow: 0 0 3px rgba(138, 43, 226, 0.2); // Menos resaltado
+    outline: none;
+  }
 }
 
 .signin {
@@ -134,35 +120,6 @@ input[type="password"] {
 .signin:hover {
   background-color: #6f4dfd;
   color: var(--color-text);
-}
-
-.terms {
-  font-size: 12px;
-  color: #6a6f73;
-}
-
-.terms a {
-  color: #6f4dfd;
-  text-decoration: none;
-}
-
-.terms a:hover {
-  text-decoration: underline;
-}
-
-.social-links {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.social-links a {
-  color: #6f4dfd;
-  text-decoration: none;
-}
-
-.social-links a:hover {
-  text-decoration: underline;
 }
 
 .error-text {
@@ -274,4 +231,70 @@ h3 {
 
 .resend-link:hover {
   text-decoration: underline;
+}
+
+//
+.register {
+  background-color: #6f4dfd;
+  color: #ffffff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #5a3dcb;
+  }
+
+  &:disabled {
+    background-color: #b5a8ff;
+    cursor: not-allowed;
+  }
+}
+
+.social-login {
+  text-align: center;
+  margin-top: 20px;
+
+  .social-btn {
+    width: 100%;
+    padding: 8px; // Reducido de 12px a 8px para menor altura
+    margin: 8px 0;
+    border: 1px solid #dadfe3;
+    border-radius: 6px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background-color: #f1f1f1;
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+  }
+}
+
+.account-recovery {
+  text-align: center;
+  margin-top: 15px;
+
+  a {
+    color: #6f4dfd;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

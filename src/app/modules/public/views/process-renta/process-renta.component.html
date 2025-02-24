@@ -6,38 +6,92 @@
       <form #rentaForm="ngForm" (ngSubmit)="onSubmit()" class="renta-form">
         <div class="form-row">
           <div class="form-group">
-            <label for="arrendador">Arrendador</label>
-            <input type="text" id="arrendador" name="arrendador" [(ngModel)]="arrendador" required />
+            <p-floatLabel>
+              <input
+                type="text"
+                id="arrendador"
+                pInputText
+                [(ngModel)]="arrendador"
+                name="arrendador"
+                required
+              />
+              <label for="arrendador">Arrendador</label>
+            </p-floatLabel>
           </div>
           <div class="form-group">
-            <label for="arrendatario">Arrendatario</label>
-            <input type="text" id="arrendatario" name="arrendatario" [(ngModel)]="arrendatario" required />
+            <p-floatLabel>
+              <input
+                type="text"
+                id="arrendatario"
+                pInputText
+                [(ngModel)]="arrendatario"
+                name="arrendatario"
+                required
+              />
+              <label for="arrendatario">Arrendatario</label>
+            </p-floatLabel>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="fechaInicio">Fecha de Inicio</label>
-            <input type="date" id="fechaInicio" name="fechaInicio" [(ngModel)]="fechaInicio" required />
+            <p-floatLabel>
+              <p-calendar
+                id="fechaInicio"
+                [(ngModel)]="fechaInicio"
+                name="fechaInicio"
+                required
+              ></p-calendar>
+              <label for="fechaInicio">Fecha de Inicio</label>
+            </p-floatLabel>
           </div>
           <div class="form-group">
-            <label for="fechaFin">Fecha de Fin</label>
-            <input type="date" id="fechaFin" name="fechaFin" [(ngModel)]="fechaFin" required />
+            <p-floatLabel>
+              <p-calendar
+                id="fechaFin"
+                [(ngModel)]="fechaFin"
+                name="fechaFin"
+                required
+              ></p-calendar>
+              <label for="fechaFin">Fecha de Fin</label>
+            </p-floatLabel>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="direccionInmueble">Dirección del Inmueble</label>
-            <input type="text" id="direccionInmueble" name="direccionInmueble" [(ngModel)]="direccionInmueble" required />
+            <p-floatLabel>
+              <input
+                type="text"
+                id="direccionInmueble"
+                pInputText
+                [(ngModel)]="direccionInmueble"
+                name="direccionInmueble"
+                required
+              />
+              <label for="direccionInmueble">Dirección del Inmueble</label>
+            </p-floatLabel>
           </div>
           <div class="form-group">
-            <label for="montoRenta">Monto de la Renta</label>
-            <input type="number" id="montoRenta" name="montoRenta" [(ngModel)]="montoRenta" required />
+            <p-floatLabel>
+              <input
+                type="number"
+                id="montoRenta"
+                pInputText
+                [(ngModel)]="montoRenta"
+                name="montoRenta"
+                required
+              />
+              <label for="montoRenta">Monto de la Renta</label>
+            </p-floatLabel>
           </div>
         </div>
 
-        <button type="submit" [disabled]="!rentaForm.valid" class="btn-generar-contrato">
+        <button
+          type="submit"
+          [disabled]="!rentaForm.valid"
+          class="btn-generar-contrato"
+        >
           Generar Contrato
         </button>
       </form>
@@ -45,15 +99,42 @@
 
     <!-- Detalles a la derecha -->
     <div class="detalles-producto card">
-      <h2>Producto seleccionado</h2>
       <div *ngIf="!isLoading && Detalles" class="producto-detalles">
+        <h2>Producto seleccionado</h2>
         <div class="producto-imagen">
           <img [src]="Detalles.imagenPrincipal" alt="{{ Detalles.nombre }}" />
         </div>
+        <!-- Detalles a la derecha -->
         <div class="info">
-          <p><strong>ID:</strong> {{ Detalles.id }}</p>
-          <p><strong>Nombre:</strong> {{ Detalles.nombre }}</p>
-          <p><strong>Precio	:</strong> {{ Detalles.precio }}</p>
+          <p class="nombre">{{ Detalles.nombre }}</p>
+          <div class="info-row">
+            <p class="precio-label">Precio:</p>
+            <p class="precio">$ {{ Detalles.precio }}</p>
+          </div>
+          <div class="info-row precio">
+            <p class="total-label">Total:</p>
+            <p class="total">$ {{ Detalles.precio }}</p>
+          </div>
+        </div>
+        <div class="btns">
+          <button
+            type="submit"
+            [disabled]="!rentaForm.valid"
+            class="btn-generar-contrato"
+          >
+            Continuar el pago
+          </button>
+
+          <button
+            type="submit"
+            [disabled]="!rentaForm.valid"
+            class="btn-generar-contrato"
+          >
+            Pagar despues
+          </button>
+          <div>
+            <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1740090533/images-removebg-preview_iw6u1w.png" alt="">
+          </div>
         </div>
       </div>
     </div>
