@@ -386,6 +386,8 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
       .subscribe(
         (response) => {
           if (response) {
+
+            
             this.storageService.setToken(response.token);
             const userData = this.sessionService.getUserData();
             // window.location.reload();
@@ -416,7 +418,6 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
         (err) => {
           console.error("Error en el inicio de sesión:", err);
           this.isLoading = false;
-
           if (err) {
             if (err.error.message === "Captcha inválido") {
               Swal.fire({

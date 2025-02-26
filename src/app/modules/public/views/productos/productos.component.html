@@ -1,15 +1,17 @@
 <div *ngIf="!isLoading">
-    <p-carousel
-      [circular]="true"
-      [value]="productos"
-      [numVisible]="numVisibleProducts"
-      [numScroll]="1"
-      [responsiveOptions]="responsiveOptions"
-      [autoplayInterval]="2000"
-      [showIndicators]="false" 
-      [showNavigators]="true" 
-      styleClass="custom-carousel"
-    >
+  <p-carousel
+  [circular]="true"
+  [value]="productos"
+  [numVisible]="numVisibleProducts"
+  [numScroll]="1"
+  [responsiveOptions]="responsiveOptions"
+  [autoplayInterval]="autoplay"
+  [showIndicators]="false"
+  [showNavigators]="true"
+  styleClass="custom-carousel"
+  (mouseenter)="pauseCarousel()"
+  (mouseleave)="resumeCarousel()"
+>
       <ng-template pTemplate="item" let-producto>
         <div class="producto-card">
           <div *ngIf="producto.isNuevo" class="ribbon">Nuevo</div>

@@ -1,4 +1,4 @@
-<p-dialog
+<!-- <p-dialog
   [style]="{ width: '80vw' }"
   [modal]="true"
   [draggable]="false"
@@ -8,7 +8,7 @@
 >
   <ng-template pTemplate="header">
     <h2>Agregar Vestido</h2>
-  </ng-template>
+  </ng-template> -->
 
   <form
     class="form-container"
@@ -85,67 +85,98 @@
     <div class="form-grid">
       <div class="group-input">
         <label>Nombre del vestido</label>
-        <p-inputText formControlName="nombre" placeholder="Nombre del vestido"></p-inputText>
+        <input
+          type="text"
+          formControlName="nombre"
+          placeholder="Nombre del vestido"
+        />
       </div>
-    
+
       <div class="group-input">
         <label>Talla</label>
-        <p-dropdown formControlName="talla" [options]="tallas" placeholder="Selecciona una talla"></p-dropdown>
+        <select formControlName="talla">
+          <option *ngFor="let talla of tallas" [value]="talla">
+            {{ talla }}
+          </option>
+        </select>
       </div>
-    
+
       <div class="group-input">
         <label>Altura (cm)</label>
-        <p-inputNumber formControlName="altura" placeholder="Altura (cm)"></p-inputNumber>
+        <input
+          type="number"
+          formControlName="altura"
+          placeholder="Altura (cm)"
+        />
       </div>
-    
+
       <div class="group-input">
         <label>Cintura (cm)</label>
-        <p-inputNumber formControlName="cintura" placeholder="Cintura (cm)"></p-inputNumber>
+        <input
+          type="number"
+          formControlName="cintura"
+          placeholder="Cintura (cm)"
+        />
       </div>
-    
+
       <div class="group-input">
         <label>Color</label>
-        <p-dropdown formControlName="color" [options]="colores" placeholder="Selecciona un color"></p-dropdown>
+        <select formControlName="color">
+          <option *ngFor="let color of colores" [value]="color">
+            {{ color }}
+          </option>
+        </select>
       </div>
-    
-      <!-- <div class="group-input">
-        <label>Categoría</label>
-        <p-dropdown formControlName="categoria" [options]="categorias" placeholder="Selecciona una categoría"></p-dropdown>
-      </div>
-     -->
+
       <div class="group-input">
         <label>Textura (opcional)</label>
-        <p-inputText formControlName="textura" placeholder="Textura (opcional)"></p-inputText>
+        <input
+          type="text"
+          formControlName="textura"
+          placeholder="Textura (opcional)"
+        />
       </div>
-    
+
       <div class="group-input">
         <label>Ingrese el precio</label>
-        <p-inputNumber formControlName="precio" placeholder="Ingrese el precio"></p-inputNumber>
+        <input
+          type="number"
+          formControlName="precio"
+          placeholder="Ingrese el precio"
+        />
       </div>
-    
+
       <div class="group-input">
         <label>Tipo de Venta</label>
-        <p-dropdown formControlName="tipoVenta" [options]="tiposVenta" placeholder="Selecciona Tipo de Venta"></p-dropdown>
+        <select formControlName="tipoVenta">
+          <option *ngFor="let tipo of tiposVenta" [value]="tipo">
+            {{ tipo }}
+          </option>
+        </select>
       </div>
-    
+
       <div class="group-input">
         <label>Estado del producto</label>
-        <p-dropdown formControlName="nuevo" [options]="estadoProducto" placeholder="Es nuevo?"></p-dropdown>
+        <select formControlName="nuevo">
+          <option *ngFor="let estado of estadoProducto" [value]="estado">
+            {{ estado }}
+          </option>
+        </select>
       </div>
     </div>
-    
+
     <div>
       <label>Descripción</label>
-      <p-inputTextarea
-        placeholder="Agrega la descripción"
+      <textarea
         formControlName="descripcion"
+        placeholder="Agrega la descripción"
         rows="5"
         cols="30"
-      ></p-inputTextarea>
+      ></textarea>
     </div>
 
     <button class="submit-btn" (click)="onAgregarProducto()">
       Agregar Producto
     </button>
   </form>
-</p-dialog>
+<!-- </p-dialog> -->

@@ -77,6 +77,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ComprasComponent } from './views/compras/compras.component';
 import { ProcessCompraComponent } from './views/process-compra/process-compra.component';
+import { VentayrentaService } from '../../shared/services/ventayrenta.service';
 
 @NgModule({
   declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ComprasComponent, ProcessCompraComponent],
@@ -87,7 +88,7 @@ import { ProcessCompraComponent } from './views/process-compra/process-compra.co
     CommonModule,ReactiveFormsModule,
     PublicRoutingModule,HttpClientModule, ...MATERIALS,
   ], schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [Toast,MessageService,provideClientHydration(), [provideHttpClient(withFetch())],
+  providers: [VentayrentaService,Toast,MessageService,provideClientHydration(), [provideHttpClient(withFetch())],
   SessionService,
   mensageservice,
   UsuarioService,

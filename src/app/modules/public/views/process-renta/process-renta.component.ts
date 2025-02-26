@@ -17,7 +17,7 @@ export class ProcessRentaComponent implements OnInit {
   Detalles: any;
 
   // Variables del formulario de renta
-  arrendador: string = "";
+  usuarioId: string = "";
   arrendatario: string = "";
   fechaInicio: string = "";
   fechaFin: string = "";
@@ -74,7 +74,7 @@ export class ProcessRentaComponent implements OnInit {
           const token = JSON.stringify(sub);
           console.log("enviar=>", token);
           const data = {
-            arrendador: this.arrendador,
+            usuarioId: this.usuarioId,
             arrendatario: this.arrendatario,
             fechaInicio: this.fechaInicio,
             fechaFin: this.fechaFin,

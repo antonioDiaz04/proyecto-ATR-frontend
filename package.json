@@ -27,6 +27,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@capacitor/cli": "^6.2.0",
     "@capacitor/core": "^6.2.0",
+    "@mercadopago/sdk-js": "^0.0.3",
     "@primeng/themes": "^19.0.2",
     "@types/bcrypt": "^5.0.2",
     "angular-toastr": "^2.1.1",

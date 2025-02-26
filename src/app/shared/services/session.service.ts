@@ -24,6 +24,8 @@ export class SessionService {
     }
     return undefined;
   }
+
+  
   getUserTokenDecode(token: string, providedCode: string): boolean {
     try {
       const decodedData: any = this.helper.decodeToken(token);

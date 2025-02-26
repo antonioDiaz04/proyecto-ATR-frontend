@@ -137,3 +137,37 @@ div.otrasImagenes {
     gap: 10px;
   }
 }
+input,select,textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  transition: border-color 0.3s ease-in-out;
+}
+
+input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
+textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
+select:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
+
+select {
+  appearance: none;
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+}

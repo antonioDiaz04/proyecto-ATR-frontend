@@ -175,7 +175,7 @@ nav {
 }
 
 header.app-header {
-  background-color: white;
+  background-color: transparent;
   box-shadow: 0 4px 8px #e7e7e79a;
   width: 100%;
 }
@@ -251,9 +251,10 @@ p-sidebar {
   width: 100%;
   position: fixed !important;
   background-color: white !important;
+  // background-color: white !important;
   backdrop-filter: blur(3px);
   border: solid 1px #faf7f7;
-  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+  // transition: background-color 0.5s ease, box-shadow 0.5s ease;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); // Sombra sutil al hacer scroll
 
   // transform: translateY(60px); /* Aparece suavemente */
@@ -305,7 +306,7 @@ p-sidebar {
     font-size: 14px;
     padding: 10px 20px;
     border-radius: 50px;
-    transition: background-color 0.3s ease;
+    // transition: background-color 0.3s ease;
     color: #9f9a9a;
     cursor: pointer;
     // font-weight: 900;

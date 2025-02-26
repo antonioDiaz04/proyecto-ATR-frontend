@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  api: 'https://proyecto-atr-backend.onrender.com/api/v1', //!alojado
-  // api: 'http://localhost:4000/api/v1', //!Local
+  // api: 'https://proyecto-atr-backend.onrender.com/api/v1', //!alojado
+  api: 'http://localhost:4000/api/v1', //!Local
   serviceWorker: false,
 
   publicKey:"BLYrs4NfSkkjBeVIMgH2ANO4Hcd3FrGKYXabe5L6jpURiePXV9cbl4IewwLjzdszahWAb8SaiPNmyMz6mywr6KY",

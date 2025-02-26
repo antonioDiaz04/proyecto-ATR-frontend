@@ -197,10 +197,10 @@ background-color: transparent;
 export class HeroImgComponent {
   images: string[] = [
     "https://res.cloudinary.com/dvvhnrvav/image/upload/v1736990456/images-AR/gh5ryrsad5fnaxgjgall.jpg",
-    "https://scontent.fpaz3-1.fna.fbcdn.net/v/t39.30808-6/461324196_122179092788124868_97257439273535514_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=wftOA82u4tgQ7kNvgHJE6RH&_nc_oc=AdjLXatA8FNBccknPB4pgDyH43CJWGVAYJNl5lraAEeFFZ5Kzd92595gBfV5q7rZx4M&_nc_zt=23&_nc_ht=scontent.fpaz3-1.fna&_nc_gid=AVOy8kuUE2L4_Bm1nM420HA&oh=00_AYBJO2QLvEsmDlzE__6M7FjSiafrsYAM9nb2OaywOEc8-A&oe=67B5433A",
-    "https://scontent.fpaz3-1.fna.fbcdn.net/v/t39.30808-6/461136486_122178603002124868_6501731612350359085_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=t6Epz0rGLW4Q7kNvgGwAoTf&_nc_oc=Adio204Gz9TAx21HY8L7tWB3pj_gjygdn53WDz5ec76A1DzIST_PlJYiSdM8NBYZNwc&_nc_zt=23&_nc_ht=scontent.fpaz3-1.fna&_nc_gid=ANIMCAa59DLfS92LbMa79_A&oh=00_AYA72HwXQlVYg4HpiUjJvcUTfbXe6EJC0igKeDsUlvJTLA&oe=67B55547",
-    // "https://scontent.fntr6-1.fna.fbcdn.net/v/t51.75761-15/474322255_17904945975094225_9108677490445345985_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=bEdE0F93RE8Q7kNvgGiglG3&_nc_oc=Adhx_gaWeXY447Rlkvb0ARBfb2DuCWItDZG_9CBp_YWWC0P92-0fHv8iHvgyF6ZUYJ0&_nc_zt=23&_nc_ht=scontent.fntr6-1.fna&_nc_gid=A-8Z7miyyXFeAG4unoL8OjH&oh=00_AYC4MJwGoEULBwVQv2JQ2U1mkcjjhoBW2PVrnI20lEPx3w&oe=67B547A2",
-    // "https://scontent.fpaz}3-1.fna.fbcdn.net/v/t39.30808-6/451776584_122166183206124868_2486089495469501853_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=7i4mVIigkc4Q7kNvgFHb22y&_nc_oc=Adg-pyOY8793cI2hgC1Bxf2nyerBaDGGTwmFyKpSZWHEu8nCosEQOyc8vz01l8hwO_E&_nc_zt=23&_nc_ht=scontent.fpaz3-1.fna&_nc_gid=AzlcihI8ZWAlUYVWsNIW47B&oh=00_AYDrmC_i_9vt2w88lI7k7tHYsGkQSNPpJ-rbW3Z8iightg&oe=67B553DF",
+  "https://res.cloudinary.com/dvvhnrvav/image/upload/v1740548991/images-AR/eo8xyojnqxjhyjz9vfec.jpg",
+  "https://res.cloudinary.com/dvvhnrvav/image/upload/v1740548954/images-AR/olxd7enpsw0xm7h2wz5i.jpg",
+  "https://res.cloudinary.com/dvvhnrvav/image/upload/v1740548954/images-AR/br5qoj8efwj5fzm5a8ls.jpg",
+  "https://res.cloudinary.com/dvvhnrvav/image/upload/v1740548924/images-AR/y9i9sl47oklfv6sjijyl.jpg"
   ];
 
   selectedIndex: number = 0;

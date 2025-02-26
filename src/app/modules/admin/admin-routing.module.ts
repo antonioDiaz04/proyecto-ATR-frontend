@@ -94,6 +94,10 @@ const routes: Routes = [
             component:RegistoProductoComponent,
           },
           {
+            path: 'edit-producto/:id',
+            component:RegistoProductoComponent,
+          },
+          {
             path: '',
             redirectTo: 'registro-producto',
             pathMatch: 'full',

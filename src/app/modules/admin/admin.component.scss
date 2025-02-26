@@ -63,10 +63,13 @@
 
 
 main{
-
-  margin-left: 20%; /* Cambia el valor según lo que necesites */
-  margin-top:6%; /* Cambia el valor según lo que necesites */
-  // border:dashed;
+  margin-left: 20%;
+  margin-top: 6%;
+  border: 1px solid #e0ebebf7; /* Cambiado a un gris más claro */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 10px 16px 15px #e0ebebf7; /* Sombra más suave */
+  background: white;
 }
 /* Estilos del menú de navegación */
 .nav-menu {

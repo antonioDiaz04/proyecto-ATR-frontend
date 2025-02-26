@@ -62,25 +62,13 @@ import { RegistroPoliComponent } from './components/registro-poli/registro-poli.
 import { AddAccesorioComponent } from './components/add-accesorio/add-accesorio.component';
 import { ListadoAccesorioComponent } from './components/listado-accesorio/listado-accesorio.component';
 import { ControlAccesorioView } from './views/control-accesorio/control-accesorio.view';
-  // import { } from '../../shared/services/collapsed-state.service';
-// import {  SmartChartModule } from 'smart-webcomponents-angular/chart';
-// import { SmartChartModule
-// import { ChartModule } from 'smart-webcomponents-angular/chart'
-
-// import { PickListModule } from 'primeng/picklist';
-// import { PickListModule } from 'primeng/picklist';
-// import { DragDropModule } from 'primeng/dragdrop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AsignarAccesoriosVestidoComponent } from './components/asignar-accesorios-vestido/asignar-accesorios-vestido.component';
-
-// import { DropdownModule } from 'primeng/dropdown';
-// import { AvatarModule } from 'primeng/avatar';
-// import { AvatarGroupModule } from 'primeng/avatargroup';
-
 import { PickListModule } from 'primeng/picklist';
 import { ConstrolAccesoriosVestidoView } from './views/constrol-accesorios-vestido/constrol-accesorios-vestido.view';
 import { AsignarAcsVestidoRentaComponent } from './components/asignar-acs-vestido-renta/asignar-acs-vestido-renta.component';
 import { ListadoAcsVestidoRentaComponent } from './components/listado-acs-vestido-renta/listado-acs-vestido-renta.component';
+import { VentayrentaService } from '../../shared/services/ventayrenta.service';
 const VIEWS = [HomeView, FooterComponent];
 
 const MATERIALS = [ DragDropModule,ButtonModule, DropdownModule, InputTextModule, CardModule,CalendarModule, InputNumberModule, ToastrModule,TabViewModule,
@@ -130,7 +118,7 @@ const MATERIALS = [ DragDropModule,ButtonModule, DropdownModule, InputTextModule
 
   ],
   imports: [ MATERIALS,ReactiveFormsModule,ToastModule ,CommonModule, AdminRoutingModule, FormsModule,HttpClientModule,],
-  providers: [
+  providers: [VentayrentaService,
     UsuarioService,
     ControlAdministrativaService,
     ClientesService,

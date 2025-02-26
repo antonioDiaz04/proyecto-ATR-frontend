@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import {
   Component,
   EventEmitter,
@@ -15,10 +16,10 @@ import { ProductoService } from "../../../../shared/services/producto.service";
   templateUrl: "./registo-producto.component.html",
   styleUrls: ["./registo-producto.component.scss"],
 })
-export class RegistoProductoComponent implements OnInit, OnChanges {
+export class RegistoProductoComponent implements OnInit {
   @Input() mostrarModalAddVestido!: boolean;
   @Output() mostrarFormulario = new EventEmitter<boolean>(); // Evento para cerrar el modal
-  @Input() productoEditar: any | null = null; // Recibe el producto a editar
+  productoId: any | null = null; // Recibe el producto a editar
 
   productoForm: FormGroup;
 
@@ -26,8 +27,9 @@ export class RegistoProductoComponent implements OnInit, OnChanges {
   imagenesAdicionales: File[] = []; // Inicializa como un array vacío
 
   constructor(
+    private route:ActivatedRoute, 
     private fb: FormBuilder,
-    private productoService: ProductoService
+    private productoService: ProductoService,
   ) {
     this.productoForm = this.fb.group({
       nombre: ["", [Validators.required]],
@@ -47,18 +49,35 @@ export class RegistoProductoComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["mostrarModalAddVestido"]) {
-      const newValues = changes["mostrarModalAddVestido"].currentValue;
-      this.mostrarModalAddVestido = newValues;
-    }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes["mostrarModalAddVestido"]) {
+  //     const newValues = changes["mostrarModalAddVestido"].currentValue;
+  //     this.mostrarModalAddVestido = newValues;
+  //   }
 
-    if (changes["productoEditar"] && this.productoEditar) {
-      this.productoService.obtenerDetalleProductoById(this.productoEditar).subscribe(
+  //   if (changes["productoId"] && this.productoId) {
+  //     this.productoService.obtenerDetalleProductoById(this.productoId).subscribe(
+  //       (producto) => {
+  //         alert("llego id")
+  //         this.cargarProductoEnFormulario(producto);
+  //         // this.cargarProductoEnFormulario(this.productoId);
+  //       },
+  //       (error) => {
+  //         console.error('Error al cargar el producto:', error);
+  //       }
+  //     );
+  //   }
+  // }
+
+  ngOnInit(): void {
+    this.productoId = this.route.snapshot.paramMap.get('id');
+    console.log('ID del producto:', this.productoId);
+    if (this.productoId) {
+      this.productoService.obtenerDetalleProductoById(this.productoId).subscribe(
         (producto) => {
           alert("llego id")
           this.cargarProductoEnFormulario(producto);
-          // this.cargarProductoEnFormulario(this.productoEditar);
+          // this.cargarProductoEnFormulario(this.productoId);
         },
         (error) => {
           console.error('Error al cargar el producto:', error);
@@ -67,8 +86,6 @@ export class RegistoProductoComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit(): void {}
-
   cargarProductoEnFormulario(producto: any) {
     this.productoForm.patchValue({
       nombre: producto.nombre,
@@ -76,7 +93,7 @@ export class RegistoProductoComponent implements OnInit, OnChanges {
       categoria: producto.categoria,
       color: producto.color,
       textura: producto.textura,
-      talla: producto.talla,
+      talla: producto.tallaDisponible ,
       altura: producto.altura,
       cintura: producto.cintura,
       precio: producto.precio,
@@ -178,10 +195,10 @@ export class RegistoProductoComponent implements OnInit, OnChanges {
     }
 
     // Dependiendo de si estamos editando o agregando, enviamos la solicitud
-    if (this.productoEditar) {
+    if (this.productoId) {
       // Lógica de edición
       this.productoService
-        .editarProducto(this.productoEditar, formData)
+        .editarProducto(this.productoId, formData)
         .subscribe(
           (response) => {
             console.log("Producto editado exitosamente:", response);

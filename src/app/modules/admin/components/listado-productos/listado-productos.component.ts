@@ -3,6 +3,7 @@ import { ProductoService } from '../../../../shared/services/producto.service';
 import { Producto } from '../../../../shared/models/Producto.model';
 import { FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 declare const $: any;
 
 @Component({
@@ -28,7 +29,7 @@ export class ListadoProductosComponent implements OnInit,OnChanges {
   
 
 
-  constructor(private productoS: ProductoService) {}
+  constructor(private productoS: ProductoService,private router:Router ) {}
   abrirModal(){
     console.log("abierto")
     this.mostrarModalAddVestido=true;
@@ -135,22 +136,7 @@ export class ListadoProductosComponent implements OnInit,OnChanges {
   editProduct(id: any) {
     this.productoEditar= id; // Guardamos el producto que se va a editar
     this.mostrarModalAddVestido = true; // Mostrar el modal
-    // this.idCliente = this.router.snapshot.params["id"];
-    // if (id !== null) {
-    //   console.log("actualizar....");
-    //   this.UserS.detalleClienteById(id).subscribe((data) => {
-    //     this.listUsuario = data;
-    //     this.clienteForm.setValue({
-    //       nombre: data.nombre,
-    //       email: data.email,
-    //       estatus: data.estatus,
-    //       numCasa: data.numCasa,
-    //       telefono: data.telefono,
-    //       latitud: data.latitud,
-    //       longitud: data.longitud,
-    //     });
-    //   });
-    // }
+    this.router.navigate([`admin/control-productos/edit-producto/${id}`]); 
   }
   onPageChange(event: any) {
     this.first = event.first;
