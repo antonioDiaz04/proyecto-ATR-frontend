@@ -17,11 +17,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "allowedCommonJsDependencies": ["aos", "crypto-js", "bcryptjs"],
+            "allowedCommonJsDependencies": [
+              "aos",
+              "crypto-js",
+              "bcryptjs"
+            ],
             "outputPath": "dist/my-pwa",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -85,7 +91,10 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -103,11 +112,23 @@
               "node_modules/semantic-ui-css/semantic.min.js"
             ]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": "b4090fe7-a4fe-4e17-a474-a877816f131a"
+    "analytics": "b4090fe7-a4fe-4e17-a474-a877816f131a",
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }
