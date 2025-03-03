@@ -148,13 +148,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
   checkInternetConnection() {
     const connectionStatus = document.getElementById("connection-status");
     const connectioneExit = document.getElementById("connection-exit");
-    // if (navigator.onLine) {
-    //   connectionStatus!.style.display = 'none'; // Ocultar si hay conexión
-    //   connectioneExit!.style.display = 'block'; // Mostrar si no hay conexión
-    // } else {
-    //   connectionStatus!.style.display = 'block'; // Mostrar si no hay conexión
-    //   connectioneExit!.style.display = 'none'; // Ocultar si hay conexión
-    // }
+    if (navigator.onLine) {
+      connectionStatus!.style.display = 'none'; // Ocultar si hay conexión
+      connectioneExit!.style.display = 'block'; // Mostrar si no hay conexión
+    } else {
+      connectionStatus!.style.display = 'block'; // Mostrar si no hay conexión
+      connectioneExit!.style.display = 'none'; // Ocultar si hay conexión
+    }
   }
   onMobileChange(isMobile: boolean) {
     // Aquí puedes poner la lógica que quieres ejecutar cuando cambia isMobile
@@ -301,7 +301,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     // const userData = this.sessionService.();
     const userData = this.sessionService.getUserData();
     if (userData) {
-      alert(userData._id);
+      // alert(userData._id);
       this.userROL = userData.rol;
       return this.userROL === ERol.CLIENTE;
     }

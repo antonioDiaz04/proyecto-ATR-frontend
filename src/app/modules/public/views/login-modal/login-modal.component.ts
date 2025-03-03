@@ -117,6 +117,7 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
   timerSubscription!: Subscription;
 
   loginForm: FormGroup;
+  
   errorMessage: string = "";
   // userROL!: string;
   loading: boolean = false;

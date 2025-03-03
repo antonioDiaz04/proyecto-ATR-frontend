@@ -55,7 +55,7 @@
   .carousel {
     display: flex;
     overflow-x: auto;
-    justify-content: center;
+    // justify-content: center;
     align-items: center;
 
     scroll-snap-type: x mandatory;
@@ -94,35 +94,70 @@
   }
 
   .related-products {
-    // display: grid;
-    // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 30px;
     display: flex;
-
-    margin-top: 40px;
-    justify-content: center;
-    align-items: center;
-    .related-product {
+    overflow-x: auto; // Permite el scroll horizontal
+    scroll-behavior: smooth; // Hace que el desplazamiento sea suave
+    gap: 30px;
+    white-space: nowrap; // Evita que los elementos se vayan a la siguiente línea
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+    position: relative;
+    
+    // Ocultar barra de scroll en navegadores modernos
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // Internet Explorer
+  
+    &::-webkit-scrollbar {
+      display: none; // Chrome, Safari
+    }
+  
+    &:hover .carousel-track {
+      animation-play-state: paused; // Pausa la animación al hacer hover
+    }
+  
+    .carousel-track {
       display: flex;
-      flex-direction: column; // Asegura que el texto esté encima de la imagen
-      align-items: center;    // Centra la imagen horizontalmente
+      gap: 30px;
+      animation: scroll-carousel 20s linear infinite;
+    }
+  
+    .related-product {
+      flex: 0 0 auto;
+      width: 200px;
       background: #fff;
       border-radius: 2px;
       padding: 20px;
-
-      h3, p {
-        text-align: start; // Alinea el texto a la izquierda
-        margin: 0;        // Elimina márgenes para mejor alineación
-        padding-bottom: 10px; // Espacio entre el texto y la imagen
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+  
+      &:hover {
+        transform: scale(1.05);
       }
-
+  
       img {
-        max-width: 100%;   // Asegúrate de que la imagen no exceda el contenedor
-        height: auto;      // Mantiene la proporción de la imagen
-        margin-top: auto;   // Empuja la imagen hacia abajo si hay espacio
-        display: block;     // Asegura que no haya espacio adicional debajo de la imagen
+        max-width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 5px;
+      }
+  
+      h3,
+      p {
+        margin: 10px 0;
       }
     }
+  }
+  
+  
+}
 
+// Animación de desplazamiento automático
+@keyframes scroll-carousel {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }

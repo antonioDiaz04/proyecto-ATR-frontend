@@ -85,3 +85,25 @@
 }
  */
 
+
+ .productos {
+  display: flex;
+  flex-direction: column;
+  /* padding: 60px 80px; */
+  /* flex-grow: 1; */
+  flex-grow: 1;
+  padding: 10px;
+  width: 100%;
+
+z-index:1;
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+    }
+  }
+}

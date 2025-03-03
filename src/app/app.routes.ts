@@ -1,9 +1,5 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './shared/guards/auth.guard';
-import { NotFoundComponent } from './modules/public/views/not-found/not-found.component';
-import { PublicComponent } from './modules/public/public.component';
-import { HomeView } from './modules/public/views/home/home.view';
-import { Error500Component } from './modules/public/views/error500/error500.component';
 
 export const routes: Routes = [
     {

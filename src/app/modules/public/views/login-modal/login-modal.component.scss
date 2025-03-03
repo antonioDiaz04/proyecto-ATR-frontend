@@ -1,9 +1,9 @@
-.blur-background {
-  ::ng-deep .p-dialog-mask {
-    backdrop-filter: blur(2px);
-    background: rgb(255, 214, 78); // Oscurecimiento opcional
-  }
-}
+// .blur-background {
+//   ::ng-deep {
+//     backdrop-filter: blur(2px);
+//     background: rgb(255, 214, 78); // Oscurecimiento opcional
+//   }
+// }
 
 .logo-atelier {
   display: block;

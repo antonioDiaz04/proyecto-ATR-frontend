@@ -1,0 +1,63 @@
+<!-- <main class="content-all">
+  <router-outlet></router-outlet>
+</main> -->
+
+<main>
+  <div class="sidenav">
+    <ul class="">
+      <li>Hola mundo</li>
+      <li>Hola mundo</li>
+      <li>Hola mundo</li>
+      <li>Hola mundo</li>
+      <li>Hola mundo</li>
+      <li>Hola mundo</li>
+      <li>Hola mundo</li>
+      <li>Hola mundo</li>
+    </ul>
+  </div>
+  <div class="box">
+    <div class="option"></div>
+  </div>
+</main>
+
+<style>
+  main {
+    display: flex;
+    flex-direction: row;
+    /* border: dashed 1px; */
+  }
+  .sidenav {
+    background-color: rgb(237, 237, 237);
+    padding: 20px;
+    border: 1px gainsboro solid;
+    width: 20%;
+    border-radius: 10px;
+
+    justify-content: center;
+    /* border: dashed 1px red; */
+    align-items: center;
+    ul {
+        margin: 0;
+        /* position: absolute; */
+      display: grid;
+        gap: 20px;
+      /* flex-direction: column; */
+      color: black !important;
+      li {
+        list-style: none !important;
+        cursor: pointer !important;
+        &:hover {
+          color: blue;
+        }
+      }
+    }
+  }
+  .box {
+    border-radius: 10px;
+
+    width: 100%;
+    margin: 0px 50px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 1px 10px 10px 10px #dbdbdb;
+  }
+</style>

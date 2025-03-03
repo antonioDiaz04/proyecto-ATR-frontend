@@ -1,9 +1,9 @@
 div.secciones {
   padding-left: 100px;
   padding-right: 100px;
-  width: 155%;
+  width: 100%;
 
-  color:var(--bg-color-card);
+  color: var(--bg-color-card);
   /* background: linear-gradient(180deg, #ebe3db 10%, #ffffff 20%);  */
   background-color: var(--back-secction);
   backdrop-filter: blur(8px); // Desenfoque del fondo
@@ -11,7 +11,7 @@ div.secciones {
   //   box-shadow: 0px 0px 20px 14px rgba(255, 251, 246, 0.4);
   //   box-shadow: 0px 0px 20px 14px rgba(235, 227, 219, 1);}
   box-shadow: rgba(150, 158, 166, 0.2) 0px 8px 24px;
-  margin: 20px;
+  // margin: 20px;
   padding: 40px;
   background: white;
 }
@@ -58,7 +58,7 @@ section.resenas {
 
   .resena {
     width: 30%;
-    color:var(--bg-color-card);
+    color: var(--bg-color-card);
     /* background: linear-gradient(180deg, #ebe3db 10%, #ffffff 20%);  */
     background-color: var(--back-secction);
     padding: 10px;
@@ -176,7 +176,7 @@ main {
 
 .step .icon {
   font-size: 2.5rem;
-  color: #6c63ff; /* Color personalizado */
+  color: #ff7f00; /* Color personalizado */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,7 +187,7 @@ main {
 }
 
 button {
-  background-color: #6c63ff;
+  background-color: #ff7f00;
   color: #fff;
   border: none;
   padding: 0.5rem 1rem;
@@ -197,7 +197,7 @@ button {
 }
 
 button:hover {
-  background-color: #574bff;
+  background-color: #ff7f00;
 }
 
 delivery-option h2 {
@@ -233,14 +233,14 @@ footer button {
   h2 {
     font-size: 1.8rem;
     text-align: center;
-    // color: #6c63ff;
+    // color: #ff7f00;
     margin-bottom: 1rem;
   }
 
   ul {
     list-style: none;
     padding-left: 0;
-text-align: start;
+    text-align: start;
     li {
       font-size: 1rem;
       margin-bottom: 0.8rem;
@@ -251,4 +251,65 @@ text-align: start;
       }
     }
   }
+}
+
+.container-card {
+  // max-width: 1100px;
+  margin: auto;
+  margin-top: 15px;
+  width: 100%;
+  .accessory-message {
+    font-size: 2rem; /* Tamaño de fuente */
+    color: rgb(255, 0, 179); /* Color del texto */
+    margin: 1rem 0; /* Espaciado superior e inferior */
+    text-align: center; /* Centrar el texto */
+  }
+  
+}
+
+.card-hero {
+  display: flex;
+  align-items: center;
+  background: white;
+  /* background: linear-gradient(135deg, #ccd5ff, #ffffff); Fondo degradado */
+  // border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 50px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  height: 50%;
+  min-height: 300px; /* Aumenta la altura */
+}
+
+.card-hero:hover {
+  transform: scale(1.03);
+}
+
+.card-img {
+  width: 50%;
+  height: 80%;
+  object-fit: cover;
+}
+
+.card-text {
+  width: 50%;
+  padding: 40px;
+  text-align: justify;
+}
+
+.card-hero h2 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 28px;
+}
+
+.card-hero p {
+  color: #555;
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+/* Tarjeta invertida */
+.card-hero.reverse {
+  flex-direction: row-reverse;
 }

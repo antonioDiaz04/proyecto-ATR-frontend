@@ -78,9 +78,11 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { ComprasComponent } from './views/compras/compras.component';
 import { ProcessCompraComponent } from './views/process-compra/process-compra.component';
 import { VentayrentaService } from '../../shared/services/ventayrenta.service';
+import { RentasComponent } from './views/rentas/rentas.component';
+import { AccesoriosComponent } from './components/accesorios/accesorios.component';
 
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ComprasComponent, ProcessCompraComponent],
+  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ComprasComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent],
   exports:[COMPONENTS],
   imports: [InputTextModule,FloatLabelModule,
     InputNumberModule,

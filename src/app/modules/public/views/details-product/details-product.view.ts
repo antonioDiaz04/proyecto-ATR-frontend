@@ -38,7 +38,10 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
   selectedSize: string = '';
   // sizes: any[] = [];
   isViewImagen: boolean = false;
+  productosRelacionados:any;
 
+
+  accesorios:any;
   productId!: any;
   Detalles: any = null; // Inicializado en null
   responsiveOptions: any[] = [
@@ -99,6 +102,23 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
         this.Detalles = response;
         this.cdRef.detectChanges(); // Forzar la actualización del DOM
       });
+      this.productoS_
+      .obtenerAccesorios()
+      .subscribe((accesorios) => {
+        this.accesorios = accesorios.map(item => ({
+          nombre: item.nombre,
+          imagen: item.imagenPrincipal, // Ajuste del nombre de la propiedad
+        }));
+      });
+      this.productoS_
+      .obtenerProductos()
+      .subscribe((accesorios) => {
+        this.productosRelacionados = accesorios.map(item => ({
+          nombre: item.nombre,
+          imagen: item.imagenPrincipal, // Ajuste del nombre de la propiedad
+        }));
+      });
+    
   }
   scrollToTop() {
     window.scrollTo(0, 0); // Esto lleva la página a la parte superior
@@ -198,55 +218,9 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
     // Agregar producto a la lista de "Apartados" o "Rentados"
   }
 
-  productos = [
-    {
-      nombre: 'Diadema Elegante',
-      precio: 15,
-      imagen:
-        'https://img.ltwebstatic.com/images3_spmp/2024/09/05/c4/17254703255ca6e5d5659688c66976ff7fcca3f6ca_thumbnail_720x.jpg',
-    },
-    {
-      nombre: 'Collar de Perlas',
-      precio: 25,
-      imagen:
-        'https://img.ltwebstatic.com/images3_spmp/2024/09/05/c4/17254703255ca6e5d5659688c66976ff7fcca3f6ca_thumbnail_720x.jpg',
-    },
-    {
-      nombre: 'Pulsera Brillante',
-      precio: 10,
-      imagen:
-        'https://img.ltwebstatic.com/images3_spmp/2024/09/05/c4/17254703255ca6e5d5659688c66976ff7fcca3f6ca_thumbnail_720x.jpg',
-    },
-    {
-      nombre: 'Renta de Vestido',
-      precio: 50,
-      imagen:
-        'https://img.ltwebstatic.com/images3_spmp/2024/09/05/c4/17254703255ca6e5d5659688c66976ff7fcca3f6ca_thumbnail_720x.jpg',
-    },
-  ];
 
-  productosRelacionados = [
-    {
-      nombre: 'vestido pulpa',
-      precio: 30,
-      imagen: 'https://m.media-amazon.com/images/I/61kC5lqiJOL._AC_SX569_.jpg',
-    },
-    {
-      nombre: 'vestido 2',
-      precio: 40,
-      imagen: 'https://m.media-amazon.com/images/I/61kC5lqiJOL._AC_SX569_.jpg',
-    },
-    {
-      nombre: 'vestido 3',
-      precio: 20,
-      imagen: 'https://m.media-amazon.com/images/I/61kC5lqiJOL._AC_SX569_.jpg',
-    },
-    {
-      nombre: 'vestido 3',
-      precio: 20,
-      imagen: 'https://m.media-amazon.com/images/I/61kC5lqiJOL._AC_SX569_.jpg',
-    },
-  ];
+
+
   openModal() {
     this.isViewImagen = true;
   }
@@ -257,4 +231,8 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
       this.isViewImagen = false;
     }
   }
+  verDetalles(id: number) {
+    this.router.navigate(["/public/Detail/" + id]);
+  }
+
 }

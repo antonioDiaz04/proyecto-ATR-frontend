@@ -207,24 +207,23 @@
 
     <h2 class="carousel-title">Accesorios incluidos en el look</h2>
     <div class="carousel">
-      <div class="carousel-item" *ngFor="let Detalles of productos">
-        <img [src]="Detalles.imagen" alt="{{ Detalles.nombre }}" />
-        <h3>{{ Detalles.nombre }}</h3>
+      <div class="carousel-item" *ngFor="let detalle of accesorios">
+        <img [src]="detalle.imagen" alt="{{ detalle.nombre }}" />
+        <h3>{{ detalle.nombre }}</h3>
       </div>
     </div>
 
     <h2 class="related-title">Productos Relacionados</h2>
     <div class="related-products">
-      <div
-        class="related-product"
-        *ngFor="let related of productosRelacionados"
-      >
-        <img [src]="related.imagen" alt="{{ related.nombre }}" />
-        <h3>{{ related.nombre }}</h3>
-        <p class="price">${{ related.precio }}</p>
-        <!-- <button class="btn-view">Ver Detalles</button> -->
+      <div class="carousel-track">
+        <div  class="related-product" *ngFor="let related of productosRelacionados">
+          <img [src]="related.imagen" alt="{{ related.nombre }}" />
+          <h3>{{ related.nombre }}</h3>
+          <p class="price">${{ related.precio }}</p>
+        </div>
       </div>
     </div>
+    
   </div>
   <!-- </div> -->
 </div>

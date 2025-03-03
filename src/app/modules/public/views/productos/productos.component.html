@@ -1,35 +1,32 @@
-<div *ngIf="!isLoading">
-  <p-carousel
-  [circular]="true"
-  [value]="productos"
-  [numVisible]="numVisibleProducts"
-  [numScroll]="1"
-  [responsiveOptions]="responsiveOptions"
-  [autoplayInterval]="autoplay"
-  [showIndicators]="false"
-  [showNavigators]="true"
-  styleClass="custom-carousel"
-  (mouseenter)="pauseCarousel()"
-  (mouseleave)="resumeCarousel()"
->
-      <ng-template pTemplate="item" let-producto>
-        <div class="producto-card">
-          <div *ngIf="producto.isNuevo" class="ribbon">Nuevo</div>
-          <div class="product-image">
-            <img
-              (click)="verDetalles(producto._id)"
-              [src]="producto.imagenPrincipal"
-              alt="{{ producto.nombre }}"
-            />
-          </div>
-          <div class="product-content">
-            <p>{{ producto.nombre }}</p>
-            <p>MX$:<strong>{{ producto.precio | currency }}</strong></p>
-          </div>
+<h2 class="accessory-message"> Nuestros productos</h2>
+
+<div class="custom-carousel" *ngIf="!isLoading">
+  <button class="carousel-btn prev" (click)="scrollLeft()">&#10094;</button>
+
+  <div class="carousel-container" #carousel>
+    <div class="carousel-track">
+      <div class="producto-card" *ngFor="let producto of productos">
+        <div *ngIf="producto.isNuevo" class="ribbon">Nuevo</div>
+        <div class="product-image"  (click)="verDetalles(producto._id)">
+          <img
+            [src]="producto.imagenPrincipal"
+            alt="{{ producto.nombre }}"
+          />
+          <!-- 🔹 Nueva capa para efecto hover -->
+          <div class="hover-overlay">Ver más detalles</div>
         </div>
-      </ng-template>
-    </p-carousel>
+        <div class="product-content">
+          <p>{{ producto.nombre }}</p>
+          <p>MX$:<strong>{{ producto.precio | currency }}</strong></p>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <button class="carousel-btn next" (click)="scrollRight()">&#10095;</button>
+</div>
+
+  
   
   <!-- Si se está cargando, muestra las cards de skeleton -->
   <div *ngIf="isLoading" class="skeleton-container">

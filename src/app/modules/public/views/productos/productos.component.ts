@@ -2,8 +2,8 @@ import {
   Component,
   HostListener,
   Inject,
-  OnInit,
-  PLATFORM_ID,
+  OnInit,ViewChild,
+  PLATFORM_ID,ElementRef
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { Router } from "@angular/router";
@@ -134,6 +134,7 @@ export class ProductosComponent implements OnInit {
   }
 
   isPageReloading(): boolean {
+    
     return performance.navigation.type === performance.navigation.TYPE_RELOAD;
   }
 
@@ -192,5 +193,15 @@ export class ProductosComponent implements OnInit {
     } catch (error) {
       console.error("Error al guardar el producto:", error);
     }
+  }
+
+    @ViewChild('carousel', { static: false }) carousel!: ElementRef;
+
+  scrollLeft() {
+    this.carousel.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
+  }
+
+  scrollRight() {
+    this.carousel.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
   }
 }
