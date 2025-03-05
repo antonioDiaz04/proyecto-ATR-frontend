@@ -9,6 +9,9 @@ import { RentasComponent } from './views/historial/rentas/rentas.component';
 import { InicioView } from './views/inicio/inicio.view';
 import { DashboardView } from './views/dashboard/dashboard.view';
 
+import { ChartModule } from 'primeng/chart';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -19,8 +22,8 @@ import { DashboardView } from './views/dashboard/dashboard.view';
     InicioView,
     DashboardView
   ],
-  imports: [
-    CommonModule,
+  imports: [TableModule,ButtonModule ,
+    CommonModule,ChartModule,
     TitularRoutingModule
   ]
 })

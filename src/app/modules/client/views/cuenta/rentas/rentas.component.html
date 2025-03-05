@@ -1,1 +1,67 @@
-<p>rentas works!</p>
+<div class="contenedor-compras">
+  <!-- Bolsa de Compras -->
+  <div class="bolsa-de-compras">
+    <h2>Bolsa de Rentas</h2>
+    <!-- Buscador -->
+    <div class="ui center aligned container">
+      <div class="ui action input">
+        <input
+          type="text"
+          placeholder="Buscar producto..."
+          [(ngModel)]="searchTerm"
+        />
+        <button class="ui button">Buscar</button>
+      </div>
+    </div>
+
+    <!-- Iterar sobre las rentas -->
+    <div class="producto" *ngFor="let renta of bolsaDeRentas">
+      <div class="detalles">
+        <div class="ui grid">
+          <div class="four wide column">
+            <p>
+              Fecha de Renta:
+              {{ renta.detallesRenta.fechaInicio | date: "shortDate" }}
+            </p>
+          </div>
+          <div class="four wide column">
+            <p>Estado: {{ renta.estado }}</p>
+          </div>
+        </div>
+        <div>
+          <h3>{{ renta.producto.nombre }}</h3>
+          <p>Precio: ${{ renta.producto.precio }}</p>
+          <p>Duración: {{ renta.detallesRenta.duracionDias }} días</p>
+          <p>
+            Total: ${{
+              renta.producto.precio * renta.detallesRenta.duracionDias
+            }}
+          </p>
+          <img
+            *ngIf="renta.producto.imagenPrincipal"
+            [src]="renta.producto.imagenPrincipal"
+            [alt]="renta.producto.nombre"
+          />
+          <!-- Botón para mostrar/ocultar detalles -->
+          <!-- Botón PrimeNG para ver detalles -->
+          <p-button
+            label="Ver Detalles del producto"
+            (click)="verDetalles(renta.producto._id)"
+          ></p-button>
+          <p-button label="Ver Detalles de la compra" variant="text"  [ngStyle]="{'color': 'blue'}"></p-button>
+
+
+        </div>
+      </div>
+      <div class="estado-recogida">
+        <p class="estado {{ renta.estado }}">{{ renta.estado }}</p>
+        <ng-container *ngIf="renta.isRecogido; else elseTemplate">
+          <p class="recogida">Recogido en tienda</p>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <p class="recogida pendiente">Pendiente en recoger</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
-import { UsuarioService } from '../../../../../shared/services/usuario.service';
-import { StorageService } from '../../../../../shared/services/storage.service';
-import { SessionService } from '../../../../../shared/services/session.service';
+import { StorageService } from './../../../../../shared/services/storage.service';
+import { Component, OnInit } from '@angular/core';
+// import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { SignInService } from '../../../../auth/commons/services/sign-in.service';
 import { Router } from '@angular/router';
+import { UsuarioService } from '../../../../../shared/services/usuario.service';
+import { SessionService } from '../../../../../shared/services/session.service';
 
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.scss'
+  styleUrl: './perfil.component.scss',
 })
-export class PerfilComponent {
-data: any = {};
+export class PerfilComponent implements OnInit {
+  data: any = {};
 
   id!: string;
   editMode: boolean = false;
@@ -79,5 +81,4 @@ data: any = {};
       reader.readAsDataURL(input.files[0]);
     }
   }
-
 }

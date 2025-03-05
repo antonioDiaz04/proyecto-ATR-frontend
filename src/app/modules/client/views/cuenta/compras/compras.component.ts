@@ -1,43 +1,41 @@
-import { Component } from '@angular/core';
-import { SessionService } from '../../../../../shared/services/session.service';
-import { VentayrentaService } from '../../../../../shared/services/ventayrenta.service';
-import { ERol } from '../../../../../shared/constants/rol.enum';
+import { Component, OnInit } from "@angular/core";
+import { SessionService } from "../../../../../shared/services/session.service";
+import { VentayrentaService } from "../../../../../shared/services/ventayrenta.service";
+import { ERol } from "../../../../../shared/constants/rol.enum";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-compras',
-  // standalone: ,
-  // imports: [],
-  templateUrl: './compras.component.html',
-  styleUrls: ['../../../style.scss']
+  selector: "app-compras",
+  templateUrl: "./compras.component.html",
+  styleUrls: ["../../../style.scss"],
 })
-export class ComprasComponent {
+export class ComprasComponent implements OnInit {
+  userROL: string | null = null;
+  userData: string | null = null;
+  searchTerm: string = "";
 
-userROL!: string;
-  userData!: string;
-  searchTerm: string = ""; // Término de búsqueda
+  bolsaDeCompras: any[] = [];
 
-  bolsaDeCompras!: any[]
   totalCompras = {
-    subtotal: 850,
-    impuestos: 136,
-    envio: 50,
-    totalPagar: 1036,
+    subtotal: 0,
+    impuestos: 0,
+    descuentos: 0,
+    totalPagar: 0,
   };
 
   constructor(
+private router:Router,
     private sessionService: SessionService,
     private comprayrentaS_: VentayrentaService
   ) {}
 
   ngOnInit(): void {
-    // this.isUserLoggedIn();
     if (this.isUserLoggedIn()) {
-      this.obtenerComprasById(this.userData);
-    } else {
+      this.obtenerComprasById(this.userData!);
     }
   }
 
-  isUserLoggedIn(): boolean {
+  private isUserLoggedIn(): boolean {
     const userData = this.sessionService.getUserData();
     if (userData) {
       this.userData = userData._id;
@@ -47,35 +45,36 @@ userROL!: string;
     return false;
   }
 
-  // Método para filtrar productos
   get filteredProducts() {
-    return this.bolsaDeCompras.filter((producto) =>
-      producto.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    return this.bolsaDeCompras?.filter((producto) =>
+      producto?.nombre?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    ) || [];
   }
 
-  obtenerComprasById(usuarioId: string) {
+  private obtenerComprasById(usuarioId: string) {
     this.comprayrentaS_
       .obtenerProductosCompradoByIdUser(usuarioId)
-      .subscribe((response) => {
-        this.bolsaDeCompras = response.map(item=>({
-          
-            id: item._id,
-            isRecogido: item.isRecogido,
-            estado: item.isRecogido,
-            nombre: item.nombre,
-            imagen:item.imagen,
-            precio: item.precio,
-            cantidad: item.cantidad,
-            total: item.total,
-            fechaCompra: item.fechaCompra,
-            fechaRecogida: item.fechaRecogida,
+      .subscribe((response: any[]) => {
+        this.bolsaDeCompras = response.map((venta) => ({
+          id: venta._id,
+          fechaCompra: venta.fechaVenta,
+          estado: venta.estado,
+          productos: venta.productos.map((producto: any) => ({
+            nombre: producto.producto.nombre,  // Acceder correctamente al nombre del producto
+            precio: producto.precioUnitario,  // Precio unitario correcto
+            cantidad: producto.cantidad,
+            total: producto.cantidad * producto.precioUnitario,  // Calcular total correctamente
+            imagen: producto.producto.imagenPrincipal,  // Acceder correctamente a la imagen
+          }))
         }));
       });
   }
+  
+
   volver() {
     window.history.back();
   }
-
-
+  verDetalles(id: number) {
+    this.router.navigate(["/public/Detail/" + id]);
+  }
 }

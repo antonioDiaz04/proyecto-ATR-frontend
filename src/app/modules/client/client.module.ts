@@ -7,6 +7,14 @@ import { ClientComponent } from './client.component';
 import { SessionService } from '../../shared/services/session.service';
 import { VentayrentaService } from '../../shared/services/ventayrenta.service';
 import { ComprasComponent } from './views/cuenta/compras/compras.component';
+import { FormsModule } from '@angular/forms';
+import { StorageService } from '../../shared/services/storage.service';
+import { UsuarioService } from '../../shared/services/usuario.service';
+import { provideClientHydration } from '@angular/platform-browser';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { ButtonModule } from 'primeng/button';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { AvatarModule } from 'primeng/avatar';
 
 
 @NgModule({
@@ -17,12 +25,13 @@ import { ComprasComponent } from './views/cuenta/compras/compras.component';
     ClientComponent
   ],
   imports: [
-    CommonModule,
-    ClientRoutingModule
+    CommonModule,  ButtonModule,AvatarModule,AvatarGroupModule,
+    ClientRoutingModule,FormsModule
   ]
   ,providers: [
-    SessionService,
-    VentayrentaService
+    SessionService,UsuarioService,StorageService,
+    VentayrentaService,provideClientHydration(), [provideHttpClient(withFetch())]
+    
   ],
 })
 export class ClientModule { }

@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  padding: 20px;
+}
+
+p-table {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+::ng-deep .p-datatable-thead > tr > th {
+  color: #343a40; /* Fondo oscuro para encabezado */
+  background-color: #ffffff; /* Texto blanco */
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+::ng-deep .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #f8f9fa; /* Color alterno para filas pares */
+}
+
+::ng-deep .p-datatable-tbody > tr:hover {
+  background-color: #e9ecef; /* Resaltado al pasar el mouse */
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+  color: #333; /* Texto oscuro */
+}
+
+button {
+  margin-bottom: 15px;
+  background-color: white; /* Fondo blanco */
+  color: #007bff; /* Color del texto */
+  border: 2px solid #007bff; /* Borde azul */
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: #007bff; /* Fondo azul al pasar el mouse */
+    color: white; /* Texto blanco al pasar el mouse */
+  }
+}

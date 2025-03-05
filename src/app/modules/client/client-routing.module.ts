@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientComponent } from './client.component';
 import { PerfilComponent } from './views/cuenta/perfil/perfil.component';
-import { RentasComponent } from '../public/views/rentas/rentas.component';
-import { ComprasComponent } from '../public/views/compras/compras.component';
+import { RentasComponent } from './views/cuenta/rentas/rentas.component';
+import { ComprasComponent } from './views/cuenta/compras/compras.component';
 
 const routes: Routes = [
     {

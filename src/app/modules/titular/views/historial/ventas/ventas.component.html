@@ -1,1 +1,25 @@
-<p>ventas works!</p>
+<div class="ventas-container">
+  <h2>Historial de Ventas</h2>
+  <button pButton label="Generar Reporte" icon="pi pi-file" (click)="generarReporte()"></button>
+
+  <p-table [value]="ventas" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Fecha</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Total ($)</th>
+        <th>Método de Pago</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-venta>
+      <tr>
+        <td>{{ venta.fecha }}</td>
+        <td>{{ venta.producto }}</td>
+        <td>{{ venta.cantidad }}</td>
+        <td>{{ venta.total | currency }}</td>
+        <td>{{ venta.metodoPago }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

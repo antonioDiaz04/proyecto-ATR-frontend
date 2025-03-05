@@ -5,7 +5,8 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
-import { Component } from "@angular/core";
+import { Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from "@angular/core";
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: "app-hero-img",
@@ -186,6 +187,60 @@ import { Component } from "@angular/core";
     padding: 0rem;
     width: 70%;
 }
+.hero-content {
+  transition: transform 0.3s ease, font-size 0.3s ease;
+
+  h1 {
+    font-size: 3rem;
+    transition: font-size 0.3s ease;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    transition: font-size 0.3s ease;
+  }
+
+  .description {
+    font-size: 1rem;
+    transition: font-size 0.3s ease;
+  }
+
+  // When the "scrolled" class is added, chan.ge the style.
+  &.scrolled {
+    transform: translateY(-10px);  // You can add the effect you want, e.g., moving the hero content up.
+    h1 {
+      font-size: 2.5rem; // Example: Reduce font-size on scroll
+    }
+
+    .subtitle {
+      font-size: 1.25rem; // Example: Change subtitle font-size on scroll
+    }
+
+    .description {
+      font-size: 0.9rem; // Example: Change description font-size on scroll
+    }
+  }
+}
+
+
+// Aplicar el efecto cuando se hace scroll
+@media (min-width: 768px) {
+  .scrolled .hero-content {
+    transform: scale(0.9);
+  
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+    }
+
+    .description {
+      font-size: 0.9rem;
+    }
+  }
+}
 
 .subtitle {
     width: 100%;
@@ -259,7 +314,7 @@ background-color: transparent;
     }
 `,
 })
-export class HeroImgComponent {
+export class HeroImgComponent implements OnInit, OnDestroy {
   images: string[] = [
     "https://res.cloudinary.com/dvvhnrvav/image/upload/v1736990456/images-AR/gh5ryrsad5fnaxgjgall.jpg",
     "https://res.cloudinary.com/dvvhnrvav/image/upload/v1740548991/images-AR/eo8xyojnqxjhyjz9vfec.jpg",
@@ -271,6 +326,8 @@ export class HeroImgComponent {
   selectedIndex: number = 0;
   selectedImage: string = this.images[this.selectedIndex];
 
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {}
+
   prevImage() {
     this.selectedIndex =
       (this.selectedIndex - 1 + this.images.length) % this.images.length;
@@ -281,4 +338,34 @@ export class HeroImgComponent {
     this.selectedIndex = (this.selectedIndex + 1) % this.images.length;
     this.selectedImage = this.images[this.selectedIndex];
   }
+
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      window.addEventListener("scroll", this.onScroll);
+    }
+  }
+
+  ngOnDestroy() {
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener("scroll", this.onScroll);
+    }
+  }
+
+  private onScroll = () => {
+    if (window.scrollY > 50) {
+      document.body.classList.add("scrolled");
+    } else {
+      document.body.classList.remove("scrolled");
+    }
+  };
+  @HostListener("window:scroll", [])
+onWindowScroll() {
+  const hero = document.querySelector(".hero-content");
+  if (window.scrollY > 50) {
+    hero?.classList.add("scrolled");
+  } else {
+    hero?.classList.remove("scrolled");
+  }
+}
+
 }

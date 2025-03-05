@@ -1,0 +1,90 @@
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+.sidenav {
+  background-color: rgb(237, 237, 237);
+  padding: 20px;
+  border: 1px solid gainsboro;
+  width: 20%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* Fijar el sidenav en la pantalla */
+  position: fixed;
+  height: 100vh; /* Altura fija */
+  top: 0; /* Asegurarse de que esté en la parte superior */
+  left: 0; /* Asegurarse de que esté a la izquierda */
+  z-index: 1000; /* Asegurarse de que el sidenav esté encima del contenido */
+}
+
+.sidenav ul {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+  color: black;
+}
+
+.sidenav li {
+  list-style: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.sidenav li:hover {
+  color: blue;
+}
+
+.group-label-container {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.group-label {
+  font-weight: bold;
+  margin-bottom: 5px; /* Espaciado entre el grupo y la lista */
+}
+
+.submenu {
+  list-style: none;
+  padding-left: 20px;
+}
+
+.submenu li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.submenu li i {
+  font-size: 1.2em;
+}
+
+.box {
+  border-radius: 10px;
+  width: 80%; /* Ajustar el contenido principal */
+  margin-left: 20%; /* Dejar espacio para el sidenav */
+  padding: 20px; /* Añadir un poco de espacio interno */
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+  color: #007bff;
+  text-decoration: none;
+  padding: 10px;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #0056b3;
+  }
+
+  .pi {
+    margin-right: 8px; /* Espacio entre el icono y el texto */
+  }
+}

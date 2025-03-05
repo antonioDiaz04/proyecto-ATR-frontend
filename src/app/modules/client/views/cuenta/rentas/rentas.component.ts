@@ -1,21 +1,20 @@
-import { Component } from '@angular/core';
-import { SessionService } from '../../../../../shared/services/session.service';
-import { VentayrentaService } from '../../../../../shared/services/ventayrenta.service';
-import { ERol } from '../../../../../shared/constants/rol.enum';
+import { Component } from "@angular/core";
+import { SessionService } from "../../../../../shared/services/session.service";
+import { VentayrentaService } from "../../../../../shared/services/ventayrenta.service";
+import { ERol } from "../../../../../shared/constants/rol.enum";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-rentas',
-  templateUrl: './rentas.component.html',
-  styleUrls: ['../../../style.scss']
-
+  selector: "app-rentas",
+  templateUrl: "./rentas.component.html",
+  styleUrls: ["../../../style.scss"],
 })
 export class RentasComponent {
-
-userROL!: string;
+  userROL!: string;
   userData!: string;
   searchTerm: string = ""; // Término de búsqueda
 
-  bolsaDeRentas!: any[]
+  bolsaDeRentas: any[]=[];
   totalCompras = {
     subtotal: 850,
     impuestos: 136,
@@ -24,6 +23,7 @@ userROL!: string;
   };
 
   constructor(
+    private router:Router,
     private sessionService: SessionService,
     private comprayrentaS_: VentayrentaService
   ) {}
@@ -57,24 +57,14 @@ userROL!: string;
     this.comprayrentaS_
       .obtenerProductosRentadosByIdUser(usuarioId)
       .subscribe((response) => {
-        this.bolsaDeRentas = response.map(item=>({
-          
-            id: item._id,
-            isRecogido: item.isRecogido,
-            estado: item.isRecogido,
-            nombre: item.nombre,
-            imagen:item.imagen,
-            precio: item.precio,
-            cantidad: item.cantidad,
-            total: item.total,
-            fechaCompra: item.fechaCompra,
-            fechaRecogida: item.fechaRecogida,
-        }));
+        this.bolsaDeRentas = response;
       });
   }
+
   volver() {
     window.history.back();
   }
-
+  verDetalles(id: number) {
+    this.router.navigate(["/public/Detail/" + id]);
+  }
 }
-

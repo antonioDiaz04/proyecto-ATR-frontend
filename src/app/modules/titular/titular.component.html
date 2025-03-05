@@ -1,1 +1,33 @@
-<p>titular works!</p>
+<div class="container">
+  <header>
+    <h2>Panel de Control</h2>
+  </header>
+
+  <div class="sidenav">
+    <ul>
+      <li (click)="redirectTo('home')">
+        <i class="pi pi-home"></i> Home
+      </li>
+      <li (click)="redirectTo('historial-ventas')">
+        <i class="pi pi-shopping-cart"></i> Ventas
+      </li>
+      <li (click)="redirectTo('historial-rentas')">
+        <i class="pi pi-chart-line"></i> Rentas
+      </li>
+      <li (click)="redirectTo('perdidas')">
+        <i class="pi pi-times-circle"></i> Pérdidas
+      </li>
+      <li (click)="logout()">
+        <i class="pi pi-sign-out"></i> Cerrar Sesión
+      </li>
+    </ul>
+  </div>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer>
+    <p>© 2024 - Gestión Empresarial</p>
+  </footer>
+</div>

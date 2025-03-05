@@ -320,4 +320,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
         : ["/public", route]
     );
   }
+  redirectToCliente(route: string): void {
+    this.sidebarVisible = false;
+    this.isModalVisible = false;
+    this.router.navigate(["/cuenta/", route]
+    );
+  }
 }
