@@ -142,9 +142,9 @@
             (input)="updateRemainingChars()"
             placeholder="ejemplo123"
           />
-          <!-- <small *ngIf="remainingChars > 0">Quedan {{ remainingChars }} caracteres.</small> -->
-          <!-- <small *ngIf="personalDataForm.get('username')?.hasError('required') && personalDataForm.get('username')?.touched" class="error-text">El nombre es obligatorio.</small> -->
-          <!-- <small *ngIf="personalDataForm.get('username')?.hasError('pattern') && personalDataForm.get('username')?.touched" class="error-text">Solo letras, números y guiones.</small> -->
+          <small *ngIf="remainingChars > 0">Quedan {{ remainingChars }} caracteres.</small>
+          <small *ngIf="personalDataForm.get('username')?.hasError('required') && personalDataForm.get('username')?.touched" class="error-text">El nombre es obligatorio.</small>
+          <small *ngIf="personalDataForm.get('username')?.hasError('pattern') && personalDataForm.get('username')?.touched" class="error-text">Solo letras, números y guiones.</small>
         </div>
 
         <!-- Campo de Correo Electrónico -->
@@ -156,10 +156,10 @@
             formControlName="email"
             placeholder="correo@ejemplo.com"
           />
-          <!-- <div *ngIf="personalDataForm.get('email')?.invalid && personalDataForm.get('email')?.touched" class="error-message">
+          <div *ngIf="personalDataForm.get('email')?.invalid && personalDataForm.get('email')?.touched" class="error-message">
             <small *ngIf="personalDataForm.get('email')?.hasError('required')" class="error">El correo es obligatorio.</small>
             <small *ngIf="personalDataForm.get('email')?.hasError('email')" class="error">Formato de correo inválido.</small>
-          </div> -->
+          </div>
         </div>
 
         <!-- Campo de Teléfono -->
@@ -171,16 +171,17 @@
             formControlName="telefono"
             placeholder="555-123-4567"
           />
-          <!-- <div *ngIf="personalDataForm.get('telefono')?.touched || personalDataForm.get('telefono')?.dirty" class="error-message">
+          <div *ngIf="personalDataForm.get('telefono')?.touched || personalDataForm.get('telefono')?.dirty" class="error-message">
             <small *ngIf="personalDataForm.get('telefono')?.hasError('required')" class="error">El teléfono es requerido.</small>
             <small *ngIf="personalDataForm.get('telefono')?.hasError('pattern')" class="error">El teléfono es inválido.</small>
-          </div> -->
+          </div>
         </div>
 
         <button
           class="register"
           [ngClass]="{'loading': isLoading}"
           type="submit"
+          [disabled]="!isFormValid || isLoading"
         >
           {{ isLoading ? 'Cargando...' : 'Siguiente' }}
         </button>

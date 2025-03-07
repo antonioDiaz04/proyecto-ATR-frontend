@@ -4,6 +4,7 @@ import { ClientComponent } from './client.component';
 import { PerfilComponent } from './views/cuenta/perfil/perfil.component';
 import { RentasComponent } from './views/cuenta/rentas/rentas.component';
 import { ComprasComponent } from './views/cuenta/compras/compras.component';
+import { NotificacionesComponent } from './views/cuenta/notificaciones/notificaciones.component';
 
 const routes: Routes = [
     {
@@ -26,6 +27,14 @@ const routes: Routes = [
         {
           path: "compras",
           component: ComprasComponent
+          // data: {
+          //   title: "inicio",
+          //   breadcrumb: "inicio",
+          // },
+        },
+        {
+          path: "notificaciones",
+          component: NotificacionesComponent
           // data: {
           //   title: "inicio",
           //   breadcrumb: "inicio",

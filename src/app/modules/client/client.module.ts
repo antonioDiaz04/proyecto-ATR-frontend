@@ -15,6 +15,8 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AvatarModule } from 'primeng/avatar';
+import { HeaderComponent } from '../../shared/components/header/header.component';
+import { NotificacionesComponent } from './views/cuenta/notificaciones/notificaciones.component';
 
 
 @NgModule({
@@ -22,9 +24,10 @@ import { AvatarModule } from 'primeng/avatar';
     PerfilComponent,
     RentasComponent,
     ComprasComponent,
-    ClientComponent
+    ClientComponent,
+    NotificacionesComponent,
   ],
-  imports: [
+  imports: [HeaderComponent,
     CommonModule,  ButtonModule,AvatarModule,AvatarGroupModule,
     ClientRoutingModule,FormsModule
   ]

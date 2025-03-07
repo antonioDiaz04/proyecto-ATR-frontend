@@ -1,45 +1,44 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   ValidationErrors,
   Validators,
-} from '@angular/forms';
-import { mensageservice } from '../../../../shared/services/mensage.service';
-import Swal from 'sweetalert2';
-import { SessionService } from '../../../../shared/services/session.service';
-import { UsuarioService } from '../../../../shared/services/usuario.service';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { NgxUiLoaderService } from 'ngx-ui-loader'; // Import NgxUiLoaderService
+} from "@angular/forms";
+import { mensageservice } from "../../../../shared/services/mensage.service";
+import Swal from "sweetalert2";
+import { SessionService } from "../../../../shared/services/session.service";
+import { UsuarioService } from "../../../../shared/services/usuario.service";
+import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
+import { NgxUiLoaderService } from "ngx-ui-loader"; // Import NgxUiLoaderService
 import {
   parsePhoneNumberFromString,
   isValidPhoneNumber,
-} from 'libphonenumber-js';
-import axios from 'axios';
+} from "libphonenumber-js";
+import axios from "axios";
 
 declare const $: any;
 
 @Component({
-  selector: 'app-registro',
-  templateUrl: './registro.view.html',
+  selector: "app-registro",
+  templateUrl: "./registro.view.html",
   styleUrls: [
-    './registro.view.scss',
-    '../../../../shared/styles/notificaciones.scss',
+    "./registro.view.scss",
+    "../../../../shared/styles/notificaciones.scss",
   ],
- 
 })
 export class RegistroView {
   currentStep = 1;
-  passwordStrengthClass: string = ''; // Clase CSS que se aplica dinámicamente
-  passwordStrengthMessage: string = ''; // Mensaje dinámico que se muestra debajo del campo
+  passwordStrengthClass: string = ""; // Clase CSS que se aplica dinámicamente
+  passwordStrengthMessage: string = ""; // Mensaje dinámico que se muestra debajo del campo
   faltantes: string[] = []; // Lista de requisitos faltantes
 
-  verificationCode: string = '';
+  verificationCode: string = "";
   remainingChars: number = 15;
   emailError: string | null = null;
-  passwordStrength: string = ''; // variable para almacenar la fuerza de la contraseña
+  passwordStrength: string = ""; // variable para almacenar la fuerza de la contraseña
   personalDataForm: FormGroup;
   credentialsForm: FormGroup;
   otpForm: FormGroup; // Para Gmail
@@ -59,7 +58,7 @@ export class RegistroView {
 
   showSpinner() {
     this.isLoading = true;
-    $('.ui.segment').modal('show'); // Muestra el modal con jQuery o Semantic UI
+    $(".ui.segment").modal("show"); // Muestra el modal con jQuery o Semantic UI
 
     // Simula una carga y oculta el spinner después de 3 segundos
     setTimeout(() => {
@@ -67,11 +66,11 @@ export class RegistroView {
     }, 3000);
   }
   get email() {
-    return this.personalDataForm.get('email');
+    return this.personalDataForm.get("email");
   }
   hideSpinner() {
     this.isLoading = false;
-    $('.ui.segment').modal('hide'); // Oculta el modal
+    $(".ui.segment").modal("hide"); // Oculta el modal
   }
   constructor(
     private router: Router,
@@ -84,9 +83,9 @@ export class RegistroView {
     private ngxService: NgxUiLoaderService
   ) {
     this.personalDataForm = this.fb.group({
-      username: ['', [Validators.required]],
+      username: ["", [Validators.required]],
       email: [
-        '',
+        "",
         [
           Validators.required,
           this.emailValidator(),
@@ -95,37 +94,41 @@ export class RegistroView {
           ),
         ],
       ],
-      telefono: ['', [Validators.required, this.telefonoValidator]],
+      telefono: ["", [Validators.required, this.telefonoValidator]],
     });
 
     this.credentialsForm = this.fb.group({
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
+      password: ["", Validators.required],
+      confirmPassword: ["", Validators.required],
     });
 
     // Inicialización de otpForm (Gmail) y otpWhatsappForm (WhatsApp)
     this.otpForm = this.fb.group({
       otpCode: [
-        '',
+        "",
         [Validators.required, Validators.minLength(4), Validators.maxLength(4)],
       ],
     });
 
     this.otpWhatsappForm = this.fb.group({
       otpCode: [
-        '',
+        "",
         [Validators.required, Validators.minLength(4), Validators.maxLength(4)],
       ],
     });
   }
 
+
+  get isFormValid(): boolean {
+    return this.personalDataForm.valid;
+  }
   telefonoValidator(control: AbstractControl) {
     const phoneNumber = control.value;
     const parsedNumber = parsePhoneNumberFromString(phoneNumber);
 
     if (parsedNumber && isValidPhoneNumber(phoneNumber)) {
       const country = parsedNumber.country; // El país del número
-      console.log('El país es:', country);
+      console.log("El país es:", country);
 
       return null; // Número válido
     }
@@ -142,7 +145,7 @@ export class RegistroView {
     };
   }
   updateRemainingChars() {
-    const usernameValue = this.personalDataForm.get('username')?.value || '';
+    const usernameValue = this.personalDataForm.get("username")?.value || "";
     this.remainingChars = 8 - usernameValue.length;
   }
 
@@ -150,16 +153,16 @@ export class RegistroView {
   generateCode(option: string) {
     this.displayModal = false; // Cierra el modal principal
     // this.showSpinner();
-    if (option === 'gmail') {
+    if (option === "gmail") {
       this.resendCodeGmail();
-    } else if (option === 'whatsapp') {
+    } else if (option === "whatsapp") {
       this.resendCodeWhatsapp();
     }
   }
 
   // Avanzar al siguiente paso del formulario
   goToNextStep() {
-    this.personalDataForm.get('otpCode')?.reset();
+    this.personalDataForm.get("otpCode")?.reset();
     // this.ngxService.start(); // start foreground spinner of the master loader with 'default' taskId
     // Stop the foreground loading after 5s
     // this.isLoadingBasic = !this.isLoadingBasic;
@@ -205,47 +208,75 @@ export class RegistroView {
     //   // Desactiva el estado de carga
     //   this.isLoadingBasic = false;
     // } else {
-      this.showSpinner();
-      // isLoadingBasic
-      const email = this.personalDataForm.get('email')?.value;
-      const telefono = this.personalDataForm.get('telefono')?.value;
-      this.uservice.checkEmailExists(email).subscribe({
-        next: () => {
-          this.isLoadingBasic = false;
-          // Si no hay errores, mostrar el modal
-          this.displayModal = true;
-        },
-        error: () => {
-          this.displayModal = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'El email ya está registrado', // Mensaje simple de error
-            confirmButtonText: 'Ok',
-          });
-          this.hideSpinner();
-        },
+    this.showSpinner();
+    // isLoadingBasic
+    const username = this.personalDataForm.get("username")?.value;
+    const email = this.personalDataForm.get("email")?.value;
+    const telefono = this.personalDataForm.get("telefono")?.value;
+    if (!username) {
+      // Muestra el alert con los errores
+      Swal.fire({
+        icon: "error",
+        title: "Errores en el formulario",
+        html: "El username es obligatorio",
+        confirmButtonText: "Ok",
       });
-      this.uservice.checkTelefonoExists(telefono).subscribe({
-        next: () => {
-          this.isLoadingBasic = false;
-          // Si no hay errores, mostrar el modal
-          this.displayModal = true;
-        },
-        error: () => {
-          this.isLoadingBasic = false;
-          this.displayModal = false;
-
-          Swal.fire({
-
-            icon: 'error',
-            title: 'Error',
-            text: 'El telefono ya está registrado', // Mensaje simple de error
-            confirmButtonText: 'Ok',
-          });
-          this.hideSpinner();
-        },
+    }
+    if (!email) {
+      // Muestra el alert con los errores
+      Swal.fire({
+        icon: "error",
+        title: "Errores en el formulario",
+        html: "El correo es obligatorio",
+        confirmButtonText: "Ok",
       });
+    }
+    if (!telefono) {
+      // Muestra el alert con los errores
+      Swal.fire({
+        icon: "error",
+        title: "Errores en el formulario",
+        html: "El telefono es obligatorio",
+        confirmButtonText: "Ok",
+      });
+    }
+
+    this.uservice.checkEmailExists(email).subscribe({
+      next: () => {
+        this.isLoadingBasic = false;
+        // Si no hay errores, mostrar el modal
+        this.displayModal = true;
+      },
+      error: () => {
+        this.displayModal = false;
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "El email ya está registrado", // Mensaje simple de error
+          confirmButtonText: "Ok",
+        });
+        this.hideSpinner();
+      },
+    });
+    this.uservice.checkTelefonoExists(telefono).subscribe({
+      next: () => {
+        this.isLoadingBasic = false;
+        // Si no hay errores, mostrar el modal
+        this.displayModal = true;
+      },
+      error: () => {
+        this.isLoadingBasic = false;
+        this.displayModal = false;
+
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "El telefono ya está registrado", // Mensaje simple de error
+          confirmButtonText: "Ok",
+        });
+        this.hideSpinner();
+      },
+    });
     // }
   }
 
@@ -270,17 +301,17 @@ export class RegistroView {
   getErrorMessages(errors: ValidationErrors | null): string {
     const messages: string[] = [];
 
-    if (errors?.['required']) {
-      messages.push('El campo es obligatorio.');
+    if (errors?.["required"]) {
+      messages.push("El campo es obligatorio.");
     }
-    if (errors?.['maxlength']) {
+    if (errors?.["maxlength"]) {
       messages.push(`El campo excede la longitud máxima permitida.`);
     }
-    if (errors?.['pattern']) {
+    if (errors?.["pattern"]) {
       messages.push(`El formato ingresado no es válido.`);
     }
 
-    return messages.join(' ');
+    return messages.join(" ");
   }
   // Retroceder al paso anterior
   goToPreviousStep() {
@@ -290,7 +321,7 @@ export class RegistroView {
   // Enviar formulario final
   onSubmit() {
     if (this.credentialsForm.valid) {
-      console.log('Formulario enviado:', {
+      console.log("Formulario enviado:", {
         ...this.personalDataForm.value,
         ...this.credentialsForm.value,
       });
@@ -305,7 +336,7 @@ export class RegistroView {
       // Obtener el token almacenado previamente
       const tokenRespuesta = this.tokenRespuesta; // Este token debería haberse obtenido al enviar el código
 
-      console.log('tokenRespuesta:', tokenRespuesta);
+      console.log("tokenRespuesta:", tokenRespuesta);
       if (tokenRespuesta) {
         // Decodificar y validar el token
         const decodedData = this.sessionService_.getUserTokenDecode(
@@ -315,11 +346,11 @@ export class RegistroView {
 
         if (decodedData) {
           this.hideSpinner();
-          console.log('Código OTP verificado correctamente.');
+          console.log("Código OTP verificado correctamente.");
           Swal.fire(
-            'Éxito',
-            'El código de verificación es correcto.',
-            'success'
+            "Éxito",
+            "El código de verificación es correcto.",
+            "success"
           );
           this.currentStep = 2;
           this.displayGmailModal = false;
@@ -328,9 +359,9 @@ export class RegistroView {
 
           // console.warn('El código OTP proporcionado no es correcto.');
           Swal.fire(
-            'Error',
-            'El código de verificación es incorrecto.',
-            'error'
+            "Error",
+            "El código de verificación es incorrecto.",
+            "error"
           );
         }
       } else {
@@ -338,16 +369,16 @@ export class RegistroView {
 
         // console.error('No se encontró un token para validar.');
         Swal.fire(
-          'Error',
-          'No se pudo validar el código de verificación.',
-          'error'
+          "Error",
+          "No se pudo validar el código de verificación.",
+          "error"
         );
       }
     } else {
       this.hideSpinner();
 
-      console.log('Código OTP (Gmail) inválido.');
-      Swal.fire('Error', 'Por favor ingrese un código válido.', 'error');
+      console.log("Código OTP (Gmail) inválido.");
+      Swal.fire("Error", "Por favor ingrese un código válido.", "error");
     }
   }
 
@@ -359,7 +390,7 @@ export class RegistroView {
       // Obtener el token almacenado previamente
       const tokenRespuesta = this.tokenRespuesta; // Este token debería haberse obtenido al enviar el código
 
-      console.log('tokenRespuesta:', tokenRespuesta);
+      console.log("tokenRespuesta:", tokenRespuesta);
       if (tokenRespuesta) {
         // Decodificar y validar el token
         const decodedData = this.sessionService_.getUserTokenDecode(
@@ -369,11 +400,11 @@ export class RegistroView {
 
         if (decodedData) {
           this.hideSpinner();
-          console.log('Código OTP verificado correctamente.');
+          console.log("Código OTP verificado correctamente.");
           Swal.fire(
-            'Éxito',
-            'El código de verificación es correcto.',
-            'success'
+            "Éxito",
+            "El código de verificación es correcto.",
+            "success"
           );
           this.currentStep = 2;
           this.displayGmailModal = false;
@@ -382,9 +413,9 @@ export class RegistroView {
 
           // console.warn('El código OTP proporcionado no es correcto.');
           Swal.fire(
-            'Error',
-            'El código de verificación es incorrecto.',
-            'error'
+            "Error",
+            "El código de verificación es incorrecto.",
+            "error"
           );
         }
       } else {
@@ -392,16 +423,16 @@ export class RegistroView {
 
         // console.error('No se encontró un token para validar.');
         Swal.fire(
-          'Error',
-          'No se pudo validar el código de verificación.',
-          'error'
+          "Error",
+          "No se pudo validar el código de verificación.",
+          "error"
         );
       }
     } else {
       this.hideSpinner();
 
-      console.log('Código OTP (Gmail) inválido.');
-      Swal.fire('Error', 'Por favor ingrese un código válido.', 'error');
+      console.log("Código OTP (Gmail) inválido.");
+      Swal.fire("Error", "Por favor ingrese un código válido.", "error");
     }
   }
 
@@ -427,7 +458,7 @@ export class RegistroView {
   };
 
   verificarPassword() {
-    const password = this.credentialsForm.get('password')?.value || '';
+    const password = this.credentialsForm.get("password")?.value || "";
     // Contadores de los caracteres presentes
     const mayusculas = (password.match(/[A-Z]/g) || []).length;
     const minusculas = (password.match(/[a-z]/g) || []).length;
@@ -458,10 +489,10 @@ export class RegistroView {
     // Si no faltan requisitos, la contraseña es válida
     if (this.faltantes.length === 0) {
       this.passwordStrengthMessage =
-        'Contraseña válida con el formato adecuado';
+        "Contraseña válida con el formato adecuado";
     } else {
       this.passwordStrengthMessage = `Formato incompleto. Faltan: ${this.faltantes.join(
-        ', '
+        ", "
       )}`;
     }
   }
@@ -470,19 +501,19 @@ export class RegistroView {
   checkPasswordStrength(password: string) {
     if (password.length < 8) {
       this.passwordStrengthMessage =
-        'La contraseña debe tener al menos 8 caracteres.';
-      this.passwordStrengthClass = 'text-danger';
+        "La contraseña debe tener al menos 8 caracteres.";
+      this.passwordStrengthClass = "text-danger";
     } else if (
       !/[a-z]/.test(password) ||
       !/[A-Z]/.test(password) ||
       !/\d/.test(password)
     ) {
       this.passwordStrengthMessage =
-        'La contraseña debe contener letras y números.';
-      this.passwordStrengthClass = 'text-warning';
+        "La contraseña debe contener letras y números.";
+      this.passwordStrengthClass = "text-warning";
     } else {
-      this.passwordStrengthMessage = 'Contraseña fuerte';
-      this.passwordStrengthClass = 'text-success';
+      this.passwordStrengthMessage = "Contraseña fuerte";
+      this.passwordStrengthClass = "text-success";
     }
   }
 
@@ -496,19 +527,19 @@ export class RegistroView {
       const response = await axios.get(
         `https://api.pwnedpasswords.com/range/${prefix}`
       );
-      const matches = response.data.split('\n');
+      const matches = response.data.split("\n");
 
       this.isPasswordCompromised = false; // Resetear estado
 
       for (let match of matches) {
-        const [matchHash, count] = match.split(':');
+        const [matchHash, count] = match.split(":");
         if (matchHash === suffix) {
           this.isPasswordCompromised = true; // Contraseña comprometida
           this.toastr.error(
             `¡Esta contraseña ha sido comprometida! Se ha encontrado ${count} veces.`,
-            'Advertencia',
+            "Advertencia",
             {
-              toastClass: 'toast error', // Aplica tus estilos personalizados
+              toastClass: "toast error", // Aplica tus estilos personalizados
             }
           );
           break;
@@ -516,10 +547,10 @@ export class RegistroView {
       }
 
       if (!this.isPasswordCompromised) {
-        this.passwordStrengthClass = 'text-success'; // Si no está comprometida, mantener mensaje positivo
+        this.passwordStrengthClass = "text-success"; // Si no está comprometida, mantener mensaje positivo
       }
     } catch (error) {
-      console.error('Error al verificar la contraseña', error);
+      console.error("Error al verificar la contraseña", error);
     }
   }
 
@@ -527,18 +558,18 @@ export class RegistroView {
   async getPasswordHash(password: string): Promise<string> {
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    const hashBuffer = await crypto.subtle.digest("SHA-1", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray
-      .map((byte) => byte.toString(16).padStart(2, '0'))
-      .join('');
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
     return hashHex.toUpperCase();
   }
 
   // Validador de fuerza de la contraseña
   passwordStrengthValidator() {
     return () => {
-      const password = this.credentialsForm.get('password')?.value || '';
+      const password = this.credentialsForm.get("password")?.value || "";
       const isValid =
         /[a-z]/.test(password) &&
         /[A-Z]/.test(password) &&
@@ -551,17 +582,17 @@ export class RegistroView {
 
   // Verificar si las contraseñas coinciden
   verificarCoincidencia() {
-    const password = this.credentialsForm.get('password')?.value;
-    const confirmPassword = this.credentialsForm.get('confirmPassword')?.value;
+    const password = this.credentialsForm.get("password")?.value;
+    const confirmPassword = this.credentialsForm.get("confirmPassword")?.value;
     this.coincidenPasswords = password === confirmPassword;
   }
 
   registroCliente(): void {
     if (this.personalDataForm.valid && this.credentialsForm.valid) {
-      const username = this.personalDataForm.get('username')?.value;
-      const email = this.personalDataForm.get('email')?.value;
-      const telefono = this.personalDataForm.get('telefono')?.value;
-      const password = this.credentialsForm.get('password')?.value;
+      const username = this.personalDataForm.get("username")?.value;
+      const email = this.personalDataForm.get("email")?.value;
+      const telefono = this.personalDataForm.get("telefono")?.value;
+      const password = this.credentialsForm.get("password")?.value;
 
       // Crear el objeto USUARIO accediendo campo por campo
       const USUARIO = {
@@ -576,19 +607,19 @@ export class RegistroView {
       // Llama al servicio de registro, asumiendo que tienes un servicio de usuario
       this.uservice.register(USUARIO).subscribe(
         (response) => {
-         console.log('Response:', response);
+          console.log("Response:", response);
           // Swal.fire('Exitoso', 'El registro fue exitoso', 'success');
           // this.personalDataForm.reset(); // Resetea el formulario de datos básicos
           // this.datosConfidencialesForm.reset(); // Resetea el formulario de datos confidenciales
           // this.politicasForm.reset(); // Resetea el formulario de políticas
           this.hideSpinner();
           Swal.fire(
-            'Bienvenido a la tienda en linea de ATELIER',
-            'Se ha activado tu cuenta, ya puedes continuar.',
-            'info'
+            "Bienvenido a la tienda en linea de ATELIER",
+            "Se ha activado tu cuenta, ya puedes continuar.",
+            "info"
           ).then(() => {
             // Redirigir al login después de cerrar el modal de SweetAlert
-            this.router.navigate(['/auth/Sign-in']);
+            this.router.navigate(["/auth/Sign-in"]);
           });
         },
         (error) => {
@@ -597,10 +628,10 @@ export class RegistroView {
 
           // Extract the error message from the response (adjust as per your backend structure)
           const errorMessage =
-            error.error?.message || 'An unknown error occurred';
+            error.error?.message || "An unknown error occurred";
 
           // Display the backend error message using Toastr
-          this.toastr.error(errorMessage, 'Error');
+          this.toastr.error(errorMessage, "Error");
         }
       );
     }
@@ -610,23 +641,23 @@ export class RegistroView {
 
   resendCodeWhatsapp() {
     this.showSpinner();
-    const number_to_send = this.personalDataForm.get('telefono')?.value;
+    const number_to_send = this.personalDataForm.get("telefono")?.value;
     this.mensageservice_.enviarTokenWasthapp(number_to_send).subscribe({
       next: (response) => {
         this.tokenRespuesta = response.token;
         this.hideSpinner();
-        console.log('Token recibido:', this.tokenRespuesta);
+        console.log("Token recibido:", this.tokenRespuesta);
 
-        this.personalDataForm.get('otpCode')?.reset();
+        this.personalDataForm.get("otpCode")?.reset();
 
         this.displayWhatsappModal = true; // Muestra el modal de WhatsApp
       },
       error: () => {
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudo enviar el código. Por favor, intente nuevamente.',
-          icon: 'error',
-          confirmButtonText: 'Ok',
+          title: "Error",
+          text: "No se pudo enviar el código. Por favor, intente nuevamente.",
+          icon: "error",
+          confirmButtonText: "Ok",
         });
       },
     });
@@ -634,12 +665,12 @@ export class RegistroView {
   resendCodeGmail() {
     this.showSpinner();
 
-    const email = this.personalDataForm.get('email')?.value;
+    const email = this.personalDataForm.get("email")?.value;
 
     this.mensageservice_.enviarTokenCorreo(email).subscribe({
       next: (response) => {
         this.tokenRespuesta = response.token;
-        console.log('Token recibido:', this.tokenRespuesta);
+        console.log("Token recibido:", this.tokenRespuesta);
 
         this.hideSpinner();
 
@@ -647,10 +678,10 @@ export class RegistroView {
       },
       error: () => {
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudo enviar el código. Por favor, intente nuevamente.',
-          icon: 'error',
-          confirmButtonText: 'Ok',
+          title: "Error",
+          text: "No se pudo enviar el código. Por favor, intente nuevamente.",
+          icon: "error",
+          confirmButtonText: "Ok",
         });
       },
     });
@@ -660,11 +691,11 @@ export class RegistroView {
     if (this.displayGmailModal) {
       this.displayGmailModal = false;
       Swal.fire({
-        title: 'Seleccione un método',
-        text: '¿Cómo desea recibir el código de verificación?',
-        icon: 'question',
+        title: "Seleccione un método",
+        text: "¿Cómo desea recibir el código de verificación?",
+        icon: "question",
         showCancelButton: true,
-        confirmButtonText: 'WhatsApp',
+        confirmButtonText: "WhatsApp",
         // cancelButtonText: 'SMS',
       }).then((result) => {
         if (result.isConfirmed) {
@@ -677,11 +708,11 @@ export class RegistroView {
     } else if (this.displayWhatsappModal) {
       this.displayWhatsappModal = false;
       Swal.fire({
-        title: 'Seleccione un método',
-        text: '¿Cómo desea recibir el código de verificación?',
-        icon: 'question',
+        title: "Seleccione un método",
+        text: "¿Cómo desea recibir el código de verificación?",
+        icon: "question",
         showCancelButton: true,
-        confirmButtonText: 'Gmail',
+        confirmButtonText: "Gmail",
         // cancelButtonText: 'SMS',
       }).then((result) => {
         if (result.isConfirmed) {

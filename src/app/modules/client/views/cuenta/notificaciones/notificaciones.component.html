@@ -1,0 +1,28 @@
+<div class="notifications-container">
+    <h2>Notificaciones</h2>
+    <ul>
+      <li *ngFor="let notification of notifications" [ngClass]="{
+        'high-priority': notification.priority === 'high',
+        'medium-priority': notification.priority === 'medium',
+        'low-priority': notification.priority === 'low'
+      }">
+        <div class="notification-header">
+          <span class="notification-type">{{ notification.type === 'comment' ? 'Comentario' : 'Producto' }}</span>
+          <span class="notification-date">{{ notification.date | date: 'medium' }}</span>
+          <button class="delete-button" (click)="deleteNotification(notification.id)">Eliminar</button>
+        </div>
+        <div class="notification-body">
+          <p>{{ notification.message }}</p>
+          <span *ngIf="notification.status" class="notification-status" [ngClass]="{
+            'pending': notification.status === 'pending',
+            'approved': notification.status === 'approved',
+            'rejected': notification.status === 'rejected',
+            'purchased': notification.status === 'purchased',
+            'returned': notification.status === 'returned'
+          }">
+            Estado: {{ notification.status }}
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>

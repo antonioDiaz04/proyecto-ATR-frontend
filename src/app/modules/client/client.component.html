@@ -1,3 +1,4 @@
+<app-header></app-header>
 <main>
   <div class="sidenav">
     <ul>
@@ -24,6 +25,26 @@
           </li>
           <li (click)="redirectToCliente('rentas')">
             <i class="pi pi-box"></i> Rentas
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div class="group-label-container">
+          <span class="group-label">Notificaciones</span>
+        </div>
+        <ul class="submenu">
+          <li (click)="redirectToCliente('notificaciones')">
+            <i class="pi pi-bell"></i> Notificaciones
+          </li>
+        </ul>
+      </li>
+      <li>
+        <div class="group-label-container">
+          <span class="group-label">Configuración</span>
+        </div>
+        <ul class="submenu">
+          <li (click)="redirectToCliente('configuracion')">
+            <i class="pi pi-cog"></i> Configuración
           </li>
         </ul>
       </li>

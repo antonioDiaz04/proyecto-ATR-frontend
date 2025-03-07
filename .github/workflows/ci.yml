@@ -1,0 +1,52 @@
+name: Angular CI with Email Notification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check for modified file
+        id: check-file
+        run: |
+          git diff --name-only HEAD^ HEAD > modified_files.txt
+          if grep -q "src/app/my-file.ts" modified_files.txt; then
+            echo "::set-output name=file_modified::true"
+          else
+            echo "::set-output name=file_modified::false"
+          fi
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - run: npm install
+      - run: npm run build -- --prod
+      - run: npm test
+      - run: npm run e2e
+
+      - name: Send email notification
+        if: steps.check-file.outputs.file_modified == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "File Modified in Angular Project"
+          body: |
+            The file `src/app/my-file.ts` was modified in the latest commit.
+            Commit Message: ${{ github.event.head_commit.message }}
+            Commit SHA: ${{ github.sha }}
+            Workflow Status: ${{ job.status }}
+          to: ${{ secrets.EMAIL_RECIPIENT }}
+          from: ${{ secrets.EMAIL_USERNAME }}
+          content_type: text/plain
