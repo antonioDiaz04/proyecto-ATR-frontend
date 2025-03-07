@@ -21,29 +21,29 @@ jobs:
           # Verificar si es el primer commit
           if [ $(git rev-list --count HEAD) -eq 1 ]; then
             echo "Primer commit. Todos los archivos son nuevos."
-            echo "::set-output name=file_modified::true"
+            echo "file_modified=true" >> $GITHUB_ENV
           else
             # Comparar con el commit anterior
             git diff --name-only HEAD^ HEAD > modified_files.txt
             if grep -q "src/app/my-file.ts" modified_files.txt; then
-              echo "::set-output name=file_modified::true"
+              echo "file_modified=true" >> $GITHUB_ENV
             else
-              echo "::set-output name=file_modified::false"
+              echo "file_modified=false" >> $GITHUB_ENV
             fi
           fi
 
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3  # 🔥 Usa setup-node v3
         with:
-          node-version: 18.19.0
+          node-version: 18.19.0  # ✅ Corrige la versión de Node.js
 
       - run: npm install
-      - run: npm run build -- --prod
+      - run: npm run build --configuration=production  # ✅ Corrige el comando build
       - run: npm test
       - run: npm run e2e
 
       - name: Send email notification
-        if: steps.check-file.outputs.file_modified == 'true'
+        if: env.file_modified == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
