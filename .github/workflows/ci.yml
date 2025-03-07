@@ -12,15 +12,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2  # Clona los últimos 2 commits
 
       - name: Check for modified file
         id: check-file
         run: |
-          git diff --name-only HEAD^ HEAD > modified_files.txt
-          if grep -q "src/app/my-file.ts" modified_files.txt; then
+          # Verificar si es el primer commit
+          if [ $(git rev-list --count HEAD) -eq 1 ]; then
+            echo "Primer commit. Todos los archivos son nuevos."
             echo "::set-output name=file_modified::true"
           else
-            echo "::set-output name=file_modified::false"
+            # Comparar con el commit anterior
+            git diff --name-only HEAD^ HEAD > modified_files.txt
+            if grep -q "src/app/my-file.ts" modified_files.txt; then
+              echo "::set-output name=file_modified::true"
+            else
+              echo "::set-output name=file_modified::false"
+            fi
           fi
 
       - name: Use Node.js
@@ -41,12 +50,20 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "File Modified in Angular Project"
+          subject: "¡Alerta! Cambios en el archivo importante"
           body: |
-            The file `src/app/my-file.ts` was modified in the latest commit.
-            Commit Message: ${{ github.event.head_commit.message }}
-            Commit SHA: ${{ github.sha }}
-            Workflow Status: ${{ job.status }}
+            ¡Hola equipo!
+
+            El archivo `src/app/my-file.ts` ha sido modificado en el último commit.
+            Detalles del cambio:
+            - **Mensaje del commit:** ${{ github.event.head_commit.message }}
+            - **Hash del commit:** ${{ github.sha }}
+            - **Estado del workflow:** ${{ job.status }}
+
+            Revisa los cambios aquí: https://github.com/antonioDiaz04/proyecto-ATR-frontend/commit/${{ github.sha }}
+
+            ¡Saludos!
+            El equipo de DevOps
           to: ${{ secrets.EMAIL_RECIPIENT }}
           from: ${{ secrets.EMAIL_USERNAME }}
           content_type: text/plain
