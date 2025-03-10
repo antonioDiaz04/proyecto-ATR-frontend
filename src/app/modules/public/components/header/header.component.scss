@@ -229,8 +229,9 @@ p-sidebar {
 
         a {
           text-decoration: none;
-          font-size: 14px;
-          color: #838282;
+          // font-size: 14px;
+          font-size: .875rem;
+          // color: #838282;
           display: flex;
           align-items: center;
 
@@ -300,14 +301,15 @@ p-sidebar {
 }
 .nav-menu li {
   a {
-    font-family: Montserrat, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     // font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     text-decoration: none;
     font-size: 14px;
+    // font-size: .875rem;
     padding: 10px 20px;
     border-radius: 50px;
     // transition: background-color 0.3s ease;
-    color: #9f9a9a;
+    color: rgba(31, 31, 31, 0.964);
     cursor: pointer;
     // font-weight: 900;
     &:hover {
@@ -317,6 +319,7 @@ p-sidebar {
       backdrop-filter: blur(10px);
     }
   }
+  border:0 solid #e5e7eb;
 }
 
 .nav-accion {

@@ -85,7 +85,7 @@ import { isPlatformBrowser } from '@angular/common';
   background-position: center;
   background-color:rgb(252, 230, 230);
   background-attachment: fixed;
-  mask-image: linear-gradient(black 76%, transparent);
+  mask-image: linear-gradient(black 90%, transparent);
   padding: 0 2rem;
   opacity: 1; /* Asegúrate de que la opacidad inicial sea 1 */
   transition: opacity 0.5s ease-in-out;

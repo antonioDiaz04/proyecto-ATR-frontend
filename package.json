@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:my-pwa": "node dist/my-pwa/server/server.mjs",
+    "e2e": "ng e2e",
     "lint": "ng lint"
   },
   "private": true,
