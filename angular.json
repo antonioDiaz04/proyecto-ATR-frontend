@@ -20,7 +20,10 @@
             "allowedCommonJsDependencies": [
               "aos",
               "crypto-js",
-              "bcryptjs"
+              "bcryptjs",
+              "form-data",
+              "proxy-from-env",
+              "follow-redirects"
             ],
             "outputPath": "dist/my-pwa",
             "index": "src/index.html",
@@ -43,7 +46,16 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "prerender": {
+              "options": {
+                "prerenderTimeout": 60000, 
+                "routes": [
+                  "!/public/AcercaDe", 
+                  "!/public/Mi-perfil",
+                  "!/public/CitasProbador"
+                ]
+              }
+            },
             "ssr": {
               "entry": "server.ts"
             }
