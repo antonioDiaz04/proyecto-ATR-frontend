@@ -4,11 +4,13 @@ main {
 }
 
 .sidenav {
-  background-color: rgb(237, 237, 237);
+  // background-color: rgb(237, 237, 237);
   padding: 20px;
-  border: 1px solid gainsboro;
+  background: #fffcf9;
+
+  border-right: 1px solid gainsboro;
   width: 20%;
-  border-radius: 10px;
+  // border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,7 +18,7 @@ main {
   /* Fijar el sidenav en la pantalla */
   position: fixed;
   height: 100vh; /* Altura fija */
-  top: 0; /* Asegurarse de que esté en la parte superior */
+  // top: 0; /* Asegurarse de que esté en la parte superior */
   left: 0; /* Asegurarse de que esté a la izquierda */
   z-index: 1000; /* Asegurarse de que el sidenav esté encima del contenido */
 }
@@ -26,7 +28,7 @@ main {
   padding: 0;
   display: grid;
   gap: 20px;
-  color: black;
+  color: #555;
 }
 
 .sidenav li {
@@ -36,7 +38,7 @@ main {
 }
 
 .sidenav li:hover {
-  color: blue;
+  color:black;
 }
 
 .group-label-container {

@@ -3,6 +3,7 @@ import { IndexedDbService } from "../../commons/services/indexed-db.service";
 import { Router } from "@angular/router";
 import { SessionService } from "../../../../shared/services/session.service";
 import { ERol } from "../../../../shared/constants/rol.enum";
+import { CartService } from "../../../../shared/services/cart.service";
 declare const $: any;
 
 export interface DressItem {
@@ -35,7 +36,8 @@ export class CitasProbadorView implements OnInit {
   constructor(
     private sessionService: SessionService,
     private indexedDbService: IndexedDbService,
-    private router: Router
+    private router: Router,
+    private  cartService:CartService
   ) {}
 
   async ngOnInit() {
@@ -55,7 +57,9 @@ export class CitasProbadorView implements OnInit {
       console.error("Error al obtener productos apartados:", error);
     }
   }
-
+  volver() {
+    window.history.back();
+  }
   private initializeTabs() {
     if (typeof $ !== "undefined") {
       $(".menu .item").tab();
@@ -73,7 +77,9 @@ export class CitasProbadorView implements OnInit {
       this.productosVenta = this.productosVenta.filter(
         (item) => item.id !== id
       );
-      this.calcularTotal();
+        // Eliminar el producto del carrito
+        this.cartService.removeFromCart(id);
+        this.calcularTotal();
     } catch (error) {
       console.error("Error al eliminar el producto:", error);
     }

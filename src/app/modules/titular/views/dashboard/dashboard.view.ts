@@ -47,5 +47,5 @@ export class DashboardView {
       ]
     };
   }
-  
+  descargarReporte(){}
 }

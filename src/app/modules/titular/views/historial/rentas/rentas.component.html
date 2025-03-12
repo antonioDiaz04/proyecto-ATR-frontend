@@ -1,6 +1,6 @@
 <div class="ventas-container">
   <h2>Historial de Rentas</h2>
-  <button pButton label="Generar Reporte" icon="pi pi-file" (click)="generarReporte()"></button>
+  <button pButton label="Generar Reporte" icon="pi pi-file-pdf"  (click)="generarReporte()"></button>
 
   <p-table [value]="ventas" [paginator]="true" [rows]="5" responsiveLayout="scroll">
     <ng-template pTemplate="header">

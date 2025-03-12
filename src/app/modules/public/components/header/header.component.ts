@@ -14,6 +14,8 @@ import {
   SimpleChanges,
   OnChanges,
   computed,
+  effect,
+  OnDestroy,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { MenuItem, MenuItemCommandEvent, MessageService } from "primeng/api";
@@ -22,7 +24,9 @@ import { SessionService } from "../../../../shared/services/session.service";
 import { ERol } from "../../../../shared/constants/rol.enum";
 import { DatosEmpresaService } from "../../../../shared/services/datos-empresa.service";
 import { ThemeServiceService } from "../../../../shared/services/theme-service.service";
+import { CartService } from "../../../../shared/services/cart.service";
 import { IndexedDbService } from "../../commons/services/indexed-db.service";
+import { Subscription } from 'rxjs';
 declare const $: any;
 
 export interface DressItem {
@@ -38,14 +42,14 @@ export interface DressItem {
   styleUrls: ["./header.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
+export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   isScrolled = false;
   sidebarVisible = false;
   @Input() isMobile = false;
   items: MenuItem[] = [];
   isLoggedIn = false;
   // Señal para manejar el contador
-  // dressItemCount = signal(0);
+  dressItemCount!:any;
   userROL!: string;
   isSticky = false;
   searchQuery = ""; // Bind search input
@@ -54,10 +58,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
   dressItems: any[] = [];
   // Señal para manejar reactividad
   private dressItemsSignal = signal<any[]>([]);
-  // Señal computada para el contador
-  dressItemCount = computed(() => this.dressItemsSignal().length);
   empresaData: any;
-
+  private cartSubscription!: Subscription;
   imageUrl!: string;
   defaultImageUrl: string =
     "https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png";
@@ -98,11 +100,29 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     private datosEmpresaService: DatosEmpresaService,
     private elementRef: ElementRef,
     public themeService: ThemeServiceService,
-
+    private cartService: CartService,
     private router: Router,
+    private messageService: MessageService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
-
+  ) {
+    
+ // Usar la señal computada del servicio para el contador
+    this.dressItemCount = this.cartService.dressItemCount;
+    effect(() => {
+      const items = this.cartService.getCartItems();
+      if (items.length > 0) {
+        this.showAlert('Se agregó un producto al carrito');
+      }
+    });
+  }
+  
+  showAlert(message: string) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Notificación',
+      detail: message,
+    });
+  }
   isModalVisible: boolean = false;
 
   openModal() {
@@ -126,10 +146,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     if (changes["isMobile"]) {
       this.onMobileChange(changes["isMobile"].currentValue);
     }
-
     this.dressItemsSignal.set(this.dressItems); // Actualiza la señal correctamente
-
     // Aquí puedes agregar lógica adicional si es necesario
+  }
+  ngOnDestroy() {
+    // Desuscribirse para evitar fugas de memoria
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
   }
 
   async ngOnInit() {
@@ -137,11 +161,22 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
       this.checkInternetConnection();
       const productos = await this.indexedDbService.obtenerProductosApartados();
       this.dressItems = Array.isArray(productos) ? productos : [productos];
+      const items = Array.isArray(productos) ? productos : [productos];
+
+      // Inicializar el carrito con los productos obtenidos
+      this.cartService.initializeCart(items);
+      // Suscribirse a cambios en el carrito
+      this.cartSubscription = this.cartService.cartUpdated$.subscribe((message:any) => {
+        if (message) {
+          this.showAlert(message);
+        }
+      });
       // console.log(this.dressItems);
     } catch (error) {
       console.error("Error al obtener productos apartados");
     }
   }
+
 
   @HostListener("window:online")
   @HostListener("window:offline")

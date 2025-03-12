@@ -52,7 +52,6 @@
     "pouchdb-browser": "^9.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.15",
-    "rxjs": "~7.8.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.14.3",
     "swiper": "^11.2.2",

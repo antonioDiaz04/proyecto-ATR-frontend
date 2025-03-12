@@ -159,3 +159,39 @@ p{
     }
   }
 }
+
+/* styles.css o el archivo de estilos del componente */
+.product-notification {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.product-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.product-details h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.product-details p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.product-actions button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

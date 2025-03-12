@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
@@ -80,21 +80,30 @@ import { ProcessCompraComponent } from './views/process-compra/process-compra.co
 import { VentayrentaService } from '../../shared/services/ventayrenta.service';
 import { RentasComponent } from './views/rentas/rentas.component';
 import { AccesoriosComponent } from './components/accesorios/accesorios.component';
+import { CartService } from '../../shared/services/cart.service';
 
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageModule } from 'primeng/message';
+import { ComentariosComponent } from './components/comentarios/comentarios.component';
+import { CsrfInterceptor } from '../../shared/services/csrf.interceptor';
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ComprasComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent],
+  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ComprasComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent],
   exports:[COMPONENTS],
   imports: [InputTextModule,FloatLabelModule,
-    InputNumberModule,
+    InputNumberModule,ConfirmDialogModule,MessageModule,
     CalendarModule,TableModule,NgxImageZoomModule,GalleriaModule,CarouselModule,
     CommonModule,ReactiveFormsModule,
     PublicRoutingModule,HttpClientModule, ...MATERIALS,
   ], schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [VentayrentaService,Toast,MessageService,provideClientHydration(), [provideHttpClient(withFetch())],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: CsrfInterceptor,
+    multi: true, // Permite múltiples interceptores
+  },VentayrentaService,Toast,MessageService,provideClientHydration(), [provideHttpClient(withFetch())],
   SessionService,
   mensageservice,
   UsuarioService,
-  ToastrService,
+  ToastrService,CartService,
   MessageService,IndexedDbService,
   ConfirmationService,SignInService,
   SignUpService,ProductoService,UsuarioService,DatosEmpresaService,ControlAdministrativaService,ThemeServiceService],

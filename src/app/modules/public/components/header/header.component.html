@@ -1,3 +1,6 @@
+<p-toast></p-toast>
+<p-confirmdialog></p-confirmdialog>
+
 <!-- <body> -->
   <header class="app-header" [ngClass]="{ scrolled: isScrolled }">
     <!-- <nav> -->
@@ -96,9 +99,9 @@
         </li>
         <li>
           <div class="counter-container" (click)="redirectTo('CitasProbador')">
-            <i class="pi pi-calendar"></i>
+            <i class="pi pi-cart-arrow-down"></i>
             <span class="counter-badge"
-              ><strong>{{ dressItems.length }}</strong></span
+              ><strong>{{ dressItemCount() }}</strong></span
             >
           </div>
         </li>

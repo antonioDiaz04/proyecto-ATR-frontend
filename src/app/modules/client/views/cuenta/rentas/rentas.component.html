@@ -21,7 +21,19 @@
           <div class="four wide column">
             <p>
               Fecha de Renta:
-              {{ renta.detallesRenta.fechaInicio | date: "shortDate" }}
+              {{ renta.detallesRenta.fechaInicio | date: "shortDate" }} a
+              {{ renta.detallesRenta.fechaFin | date: "shortDate" }}
+            </p>
+            
+            </div>
+          <div class="four wide column">
+            <p>
+              Fecha Entregada: 15/10/2023 <!-- Fecha estática -->
+          </p>
+          </div>
+          <div class="four wide column">
+            <p class="multa">
+              Multa:+$10 <!-- Mostrar multa si hay retraso -->
             </p>
           </div>
           <div class="four wide column">

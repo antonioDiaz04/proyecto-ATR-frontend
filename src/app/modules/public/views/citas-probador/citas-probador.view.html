@@ -2,6 +2,9 @@
   <div class="content">
     <!-- Left Column: Dress Summary -->
     <div class="summary">
+      <div class="volver" >
+        <i class="pi pi-arrow-left"(click)="volver()">Atrás</i> 
+      </div>
       <div class="ui top attached tabular menu">
         <a class="item active" data-tab="renta" (click)="setTipoCompra('renta')"
           >Renta</a
@@ -12,6 +15,27 @@
       </div>
 
       <div class="ui bottom attached tab segment active" data-tab="renta">
+        <div *ngIf="productosRenta.length == 0" class="empty-cart">
+          <svg
+            width="100"
+            height="100"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-shopping-cart"
+          >
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2 8h13l2-6H6"></path>
+            <path d="M9 21H20"></path>
+          </svg>
+          <p>Agrega productos al carrito </p>
+
+          <a routerLink="/productos" class="btn-agregar">Ir a productos</a>
+        </div>
         <div class="dress-item" *ngFor="let item of productosRenta">
           <img [src]="item.imagenPrincipal" [alt]="item.nombre" />
           <div class="details">
@@ -21,16 +45,33 @@
           <button class="delete-btn" (click)="deleteDressItem(item.id)">
             Eliminar
           </button>
-          <button
-            class="continue-btn"
-            (click)="continuarCompra(item, 'renta')"
-          >
+          <button class="continue-btn" (click)="continuarCompra(item, 'renta')">
             Continuar
           </button>
         </div>
       </div>
 
       <div class="ui bottom attached tab segment" data-tab="venta">
+        <div *ngIf="productosVenta.length == 0" class="empty-cart">
+          <svg
+            width="100"
+            height="100"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-shopping-cart"
+          >
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2 8h13l2-6H6"></path>
+            <path d="M9 21H20"></path>
+          </svg>
+          <p>Agrega productos al carrito </p>
+          <a routerLink="/productos" class="btn-agregar">Ir a productos</a>
+        </div>
         <div class="dress-item" *ngFor="let item of productosVenta">
           <img [src]="item.imagenPrincipal" [alt]="item.nombre" />
           <div class="details">
@@ -43,7 +84,6 @@
           <button class="continue-btn" (click)="mostrarResumen(item)">
             Continuar
           </button>
-          
         </div>
       </div>
     </div>
@@ -52,8 +92,7 @@
     <p *ngIf="tipoCompra === 'venta'">Total Venta: ${{ totalCompra }}</p>
 
     <app-data-compra></app-data-compra>
-    
-    
+
     <p-dialog
       header="Resumen de compra"
       [(visible)]="mostrarModal"
@@ -63,7 +102,9 @@
       <div class="resumen-compra">
         <p>Producto: {{ productoSeleccionado?.nombre }}</p>
         <p>Precio: ${{ productoSeleccionado?.precio }}</p>
-        <p *ngIf="tipoCompra === 'renta'">Total Renta: ${{ productoSeleccionado?.precio }}</p>
+        <p *ngIf="tipoCompra === 'renta'">
+          Total Renta: ${{ productoSeleccionado?.precio }}
+        </p>
         <p *ngIf="tipoCompra === 'venta'">Total Venta: ${{ totalCompra }}</p>
         <button
           pButton

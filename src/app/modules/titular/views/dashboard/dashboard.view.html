@@ -1,43 +1,40 @@
 <div class="dashboard-container">
- 
-  
-    <div class="dashboard-content">
-      <!-- Tarjetas de métricas -->
-      <div class="cards">
-        <div class="card">
-          <h3>Total Ventas</h3>
-          <p>$120,000</p>
-        </div>
-        <div class="card">
-          <h3>Ingresos</h3>
-          <p>$80,000</p>
-        </div>
-        <div class="card">
-          <h3>Clientes</h3>
-          <p>340</p>
-        </div>
-        <div class="card">
-          <h3>Pérdidas</h3>
-          <p>$5,000</p>
-        </div>
+  <div class="dashboard-header">
+    <h2>Dashboard </h2>
+    <p-button label="Descargar Reporte (PDF)" icon="pi pi-file-pdf" (click)="descargarReporte()"></p-button>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Tarjetas de métricas -->
+    <div class="cards">
+      <div class="card">
+        <h3>Total Ventas</h3>
+        <p>$120,000</p>
       </div>
-  
-      <!-- Gráficas -->
-      <div class="charts">
-        <div class="chart">
-          <h3>Ventas Mensuales</h3>
-          <p-chart type="bar" [data]="barChartData"></p-chart>
-        </div>
-       
-       
-       
-        <div class="chart">
-          <h3>Clientes Frecuentes</h3>
-          <p-chart type="radar" [data]="radarChartData"></p-chart>
-        </div>
+      <div class="card">
+        <h3>Ingresos</h3>
+        <p>$80,000</p>
+      </div>
+      <div class="card">
+        <h3>Clientes</h3>
+        <p>340</p>
+      </div>
+      <div class="card">
+        <h3>Pérdidas</h3>
+        <p>$5,000</p>
       </div>
     </div>
-  
-  
+
+    <!-- Gráficas -->
+    <div class="charts">
+      <div class="chart">
+        <h3>Ventas Mensuales</h3>
+        <p-chart type="bar" [data]="barChartData"></p-chart>
+      </div>
+      <div class="chart">
+        <h3>Clientes Frecuentes</h3>
+        <p-chart type="radar" [data]="radarChartData"></p-chart>
+      </div>
+    </div>
   </div>
-  
+</div>

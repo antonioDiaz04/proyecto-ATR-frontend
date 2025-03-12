@@ -2,6 +2,8 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Render
 import { ProductoService } from '../../../../shared/services/producto.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IndexedDbService } from '../../commons/services/indexed-db.service';
+import { CartService } from '../../../../shared/services/cart.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
 declare const $: any;
 
 interface Producto {
@@ -87,7 +89,10 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
     private activatedRoute: ActivatedRoute,
     private renderer: Renderer2,
     private cdRef: ChangeDetectorRef,
-    private router:Router
+    private router:Router,
+    private cartService: CartService,
+    private confirmationService: ConfirmationService, // Inyectar ConfirmationService
+    private messageService: MessageService // Inyectar MessageService (opcional para notificacio
   ) {
     // this.id=require.para
   }
@@ -95,25 +100,23 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
     this.isLoading = true;
     this.scrollToTop();
     this.productId = this.activatedRoute.snapshot.params['id'];
-    this.productoS_
-      .obtenerDetalleProductoById(this.productId)
-      .subscribe((response) => {
+    this.productoS_.obtenerDetalleProductoById(this.productId)
+      .subscribe((response:any) => {
         this.isLoading = false;
         this.Detalles = response;
         this.cdRef.detectChanges(); // Forzar la actualización del DOM
       });
-      this.productoS_
-      .obtenerAccesorios()
-      .subscribe((accesorios) => {
-        this.accesorios = accesorios.map(item => ({
+      this.productoS_.obtenerAccesorios()
+      .subscribe((accesorios:any) => {
+        this.accesorios = accesorios.map((item:any) => ({
           nombre: item.nombre,
           imagen: item.imagenPrincipal, // Ajuste del nombre de la propiedad
         }));
       });
       this.productoS_
       .obtenerProductos()
-      .subscribe((accesorios) => {
-        this.productosRelacionados = accesorios.map(item => ({
+      .subscribe((accesorios:any) => {
+        this.productosRelacionados = accesorios.map((item:any) => ({
           nombre: item.nombre,
           imagen: item.imagenPrincipal, // Ajuste del nombre de la propiedad
         }));
@@ -199,8 +202,6 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
   }
 
   apartarRentar(producto: any) {
-    console.log('primero=>', producto); // Log the data being saved
-    // guardarProducto(productData);
     const body2 = {
       id: producto._id,
       nombre: producto.nombre,
@@ -208,17 +209,53 @@ export class DetailsProductView implements OnInit ,AfterViewInit{
       imagenPrincipal: producto.imagenPrincipal,
       categoria: producto.categoria,
     };
-    console.log('ssegundo=>', body2); // Log the data being saved
+
     try {
+      // Guardar el producto en IndexedDB
       this.indexedDbService.guardarProducto(body2);
-      // this.dbService.guardarProducto(productData);
+
+      // Agregar el producto al carrito usando el servicio
+      this.cartService.addToCart(body2);
+
+      // Mostrar diálogo de confirmación
+      this.confirmationService.confirm({
+        message: `
+          <div class="product-notification">
+            <img src="${producto.imagenPrincipal}" alt="${producto.nombre}" class="product-image" />
+            <div class="product-details">
+              <h4>${producto.nombre}</h4> 
+              <p>${producto.precio}</p>
+            </div>
+            <p>¿Deseas ir al carrito o iniciar sesión?</p>
+          </div>
+        `,
+        header: 'Producto agregado',
+        acceptLabel: 'Ir al carrito',
+        rejectLabel: 'Iniciar sesión',
+        accept: () => {
+          // Lógica para ir al carrito
+          this.goToCart();
+        },
+        reject: () => {
+          // Lógica para iniciar sesión
+          this.login();
+        },
+      });
     } catch (error) {
-      console.error('Error saving product:', error);
+      console.error('Error al guardar el producto:', error);
     }
-    // Agregar producto a la lista de "Apartados" o "Rentados"
   }
 
 
+  goToCart() {
+    // Lógica para ir al carrito
+    console.log('Ir al carrito');
+  }
+
+  login() {
+    // Lógica para iniciar sesión
+    console.log('Iniciar sesión');
+  }
 
 
   openModal() {

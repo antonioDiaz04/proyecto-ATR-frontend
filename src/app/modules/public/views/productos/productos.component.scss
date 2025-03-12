@@ -10,8 +10,6 @@ p {
   text-align: center; /* Centrar el texto */
 }
 
-
-
 /* !hacer responsive */
 .text {
   margin-left: 50px;
@@ -231,9 +229,8 @@ p {
     /* background-color: var(--color-bg); */
     box-shadow: 0 2px 8px rgba(91, 107, 112, 0.1);
   }
-  .product-content{
-  padding: 10px;
-
+  .product-content {
+    padding: 10px;
   }
 }
 .skeleton-container {
@@ -271,13 +268,42 @@ p {
     -ms-overflow-style: none;
     scrollbar-width: none;
     padding: 10px;
+    -webkit-mask: linear-gradient(
+        to right,
+        transparent 0%,
+        white 50px,
+        white calc(100% - 50px),
+        transparent 100%
+      );
+      mask: linear-gradient(
+        to right,
+        transparent 0%,
+        white 50px,
+        white calc(100% - 50px),
+        transparent 100%
+      );
     .carousel-track {
       display: flex;
       gap: 20px;
-      width: 100%;
+      // width: 100%;
+      width: max-content; /* Asegura que el ancho del track sea suficiente para todos los elementos */
       animation: scroll-carousel 20s linear infinite;
       // (...) Animación para desplazamiento automático
-
+      -webkit-mask: linear-gradient(
+        to right,
+        transparent 0%,
+        white 50px,
+        white calc(100% - 50px),
+        transparent 100%
+      );
+      mask: linear-gradient(
+        to right,
+        transparent 0%,
+        white 50px,
+        white calc(100% - 50px),
+        transparent 100%
+      );
+     
       .producto-card {
         flex: 0 0 auto;
         width: 200px;
@@ -363,13 +389,12 @@ p {
   }
 }
 
-
-// Animación de desplazamiento automático
+/* Animación de desplazamiento automático */
 @keyframes scroll-carousel {
-  from {
+  0% {
     transform: translateX(0);
   }
-  to {
-    transform: translateX(-50%);
+  100% {
+    transform: translateX(calc(-100% + 100vw)); /* Desplaza el track hacia la izquierda */
   }
 }
