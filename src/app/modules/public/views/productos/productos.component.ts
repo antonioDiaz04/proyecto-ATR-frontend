@@ -2,27 +2,29 @@ import {
   Component,
   HostListener,
   Inject,
-  OnInit,ViewChild,
-  PLATFORM_ID,ElementRef
-} from "@angular/core";
-import { isPlatformBrowser } from "@angular/common";
-import { Router } from "@angular/router";
-import { SessionService } from "../../../../shared/services/session.service";
-import { ERol } from "../../../../shared/constants/rol.enum";
-import { DatosEmpresaService } from "../../../../shared/services/datos-empresa.service";
-import { ProductoService } from "../../../../shared/services/producto.service";
-import { IndexedDbService } from "../../commons/services/indexed-db.service";
+  OnInit,
+  ViewChild,
+  PLATFORM_ID,
+  ElementRef,
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
+import { SessionService } from '../../../../shared/services/session.service';
+import { ERol } from '../../../../shared/constants/rol.enum';
+import { DatosEmpresaService } from '../../../../shared/services/datos-empresa.service';
+import { ProductoService } from '../../../../shared/services/producto.service';
+import { IndexedDbService } from '../../commons/services/indexed-db.service';
 
 @Component({
-  selector: "app-productos",
-  templateUrl: "./productos.component.html",
-  styleUrl: "./productos.component.scss",
+  selector: 'app-productos',
+  templateUrl: './productos.component.html',
+  styleUrl: './productos.component.scss',
 })
 export class ProductosComponent implements OnInit {
   isMobile: boolean = false;
   visible: boolean = false;
   userROL!: string;
-  position: any = "bottom-left";
+  position: any = 'bottom-left';
   productosPaginados: any = [];
   numVisibleProducts: number = 5; // Valor por defecto
   rows = 7; // Número de elementos por página
@@ -30,17 +32,17 @@ export class ProductosComponent implements OnInit {
   productos: any = []; // Inicializamos como array vacío
   responsiveOptions = [
     {
-      breakpoint: "1024px",
+      breakpoint: '1024px',
       numVisible: 3.5, // Producto central completo y los laterales a la mitad
       numScroll: 1,
     },
     {
-      breakpoint: "768px",
+      breakpoint: '768px',
       numVisible: 2.5, // Dos productos completos y uno a la mitad
       numScroll: 1,
     },
     {
-      breakpoint: "500px",
+      breakpoint: '500px',
       numVisible: 1.5, // Uno completo y el siguiente a la mitad
       numScroll: 1,
     },
@@ -70,30 +72,30 @@ export class ProductosComponent implements OnInit {
   ) {}
 
   private detectDevice() {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const ua = navigator.userAgent;
       console.log(ua);
       this.isMobile = window.innerWidth <= 600;
     }
   }
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   onResize() {
     this.detectDevice();
   }
 
   // Antes de recargar o cerrar la página, vaciamos productos y mostramos el skeleton
-  @HostListener("window:beforeunload", ["$event"])
+  @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(event: Event) {
-    console.log("⏳ La página se está recargando...");
+    console.log('⏳ La página se está recargando...');
     this.isLoading = true;
     this.productos = []; // Vaciar los productos en la carga
   }
 
   // HostListener para window:load (se dispara al cargar la página)
-  @HostListener("window:load", ["$event"])
+  @HostListener('window:load', ['$event'])
   onWindowLoad(event: Event) {
-    console.log("✅ La página se ha cargado completamente.");
+    console.log('✅ La página se ha cargado completamente.');
     // Cargar los productos después de que la página se haya cargado
     this.cargarProductos();
   }
@@ -127,49 +129,46 @@ export class ProductosComponent implements OnInit {
         this.isLoading = false; // Ocultar el skeleton
       },
       (error) => {
-        console.error("❌ Error al cargar los productos:");
+        console.error('❌ Error al cargar los productos:');
         this.isLoading = false; // Ocultar el skeleton en caso de error
       }
     );
   }
 
+  // isPageReloading(): boolean {
+
+  //   return performance.navigation.type === performance.navigation.TYPE_RELOAD;
+  // }
+
   isPageReloading(): boolean {
-    
-    return performance.navigation.type === performance.navigation.TYPE_RELOAD;
+    if (typeof window === 'undefined' || typeof performance === 'undefined') {
+      console.warn('No se está ejecutando en un navegador');
+      return false;
+    }
+
+    if (typeof performance.getEntriesByType === 'function') {
+      const navigationEntries = performance.getEntriesByType(
+        'navigation'
+      ) as PerformanceNavigationTiming[];
+      if (navigationEntries.length > 0 && 'type' in navigationEntries[0]) {
+        return navigationEntries[0].type === 'reload';
+      }
+    }
+
+    return (window.performance as any)?.navigation?.type === 1;
   }
 
-  // isPageReloading(): boolean {
-  //   if (typeof window === "undefined" || typeof performance === "undefined") {
-  //     console.warn("No se está ejecutando en un navegador");
-  //     return false;
-  //   }
-
-  //   if (typeof performance.getEntriesByType === "function") {
-  //     const navigationEntries = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-  //     if (navigationEntries.length > 0 && "type" in navigationEntries[0]) {
-  //       return navigationEntries[0].type === "reload";
-  //     }
-  //   }
-
-  //   return (window.performance as any)?.navigation?.type === 1;
-  // }
-
-  // isPageReloading(): boolean {
-  //   const navEntries = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-  //   return navEntries.length > 0 && navEntries[0].type === "reload";
-  // }
-
   verDetalles(id: number) {
-    this.router.navigate(["/public/Detail/" + id]);
+    this.router.navigate(['/public/Detail/' + id]);
   }
 
   redirectTo(route: string): void {
     console.log(route);
-    if (route === "Sign-in") {
-      this.router.navigate(["/auth/Sign-in"]);
+    if (route === 'Sign-in') {
+      this.router.navigate(['/auth/Sign-in']);
     } else {
-      console.log("click", route);
-      this.router.navigate(["/public", route]);
+      console.log('click', route);
+      this.router.navigate(['/public', route]);
     }
   }
 
@@ -180,7 +179,7 @@ export class ProductosComponent implements OnInit {
   }
 
   apartarRentar(producto: any) {
-    console.log("Producto seleccionado:", producto);
+    console.log('Producto seleccionado:', producto);
     const body2 = {
       id: producto._id,
       nombre: producto.nombre,
@@ -191,11 +190,11 @@ export class ProductosComponent implements OnInit {
     try {
       this.indexedDbService.guardarProducto(body2);
     } catch (error) {
-      console.error("Error al guardar el producto:", error);
+      console.error('Error al guardar el producto:', error);
     }
   }
 
-    @ViewChild('carousel', { static: false }) carousel!: ElementRef;
+  @ViewChild('carousel', { static: false }) carousel!: ElementRef;
 
   scrollLeft() {
     this.carousel.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });

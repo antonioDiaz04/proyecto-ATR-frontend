@@ -1,10 +1,21 @@
-import { Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable()
 export class CsrfInterceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     const csrfToken = this.getCsrfToken(); // Recupera el token CSRF desde las cookies
 
     if (csrfToken) {
@@ -21,7 +32,12 @@ export class CsrfInterceptor implements HttpInterceptor {
 
   // Método para obtener el token CSRF desde las cookies
   private getCsrfToken(): string | null {
-    const csrfToken = document.cookie.split(';').find(cookie => cookie.trim().startsWith('XSRF-TOKEN='));
-    return csrfToken ? csrfToken.split('=')[1] : null;
+    if (isPlatformBrowser(this.platformId)) {
+      const csrfToken = document.cookie
+        .split(';')
+        .find((cookie) => cookie.trim().startsWith('XSRF-TOKEN='));
+      return csrfToken ? csrfToken.split('=')[1] : null;
+    }
+    return null;
   }
 }

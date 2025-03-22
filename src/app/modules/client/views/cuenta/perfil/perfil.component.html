@@ -1,6 +1,6 @@
-<div class="profile-edit-container">
-  <h1>Editar perfil</h1>
-  <p class="subtitle">
+<div class="perfil-edit-container">
+  <h1>Editar Perfil</h1>
+  <p class="subtitulo">
     Mantén privados tus datos personales. Cualquier persona que pueda ver tu
     perfil podrá ver la información que agregues aquí.
   </p>
@@ -27,28 +27,23 @@
     <input type="file" (change)="onFileChange($event)" />
   </div>
 
-  <form class="profile-form">
+  <form class="perfil-form">
     <div class="form-group-container">
       <div class="form-group">
-        <label for="first-name">Nombre(s)</label>
-        <input type="text" id="first-name" value="{{ data.nombre }}" />
+        <label for="primer-nombre">Nombre(s)</label>
+        <input type="text" id="primer-nombre" [value]="data.nombre" />
       </div>
-
       <div class="form-group">
-        <label for="last-name">Correo</label>
-        <input type="text" id="last-name" value="{{ data.email }}" />
+        <label for="email">Correo</label>
+        <input type="email" id="email" [value]="data.email" />
       </div>
-
       <div class="form-group">
-        <label for="phone-number">Número telefónico</label>
-        <input type="text" id="phone-number" value="{{ data.telefono }}" />
+        <label for="telefono">Número Telefónico</label>
+        <input type="text" id="telefono" [value]="data.telefono" />
       </div>
     </div>
-
     <div class="button-group">
-      <button type="button" (click)="logout()" class="reset-btn">
-        Cerrar sesión
-      </button>
+      <button type="button" (click)="logout()" class="reset-btn">Cerrar Sesión</button>
       <button type="button" class="reset-btn">Restablecer</button>
       <button type="submit" class="save-btn">Guardar</button>
     </div>

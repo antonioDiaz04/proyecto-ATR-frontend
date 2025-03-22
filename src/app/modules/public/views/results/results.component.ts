@@ -1,16 +1,14 @@
-import { HttpClient } from "@angular/common/http";
-import {
-  Component,
-  OnInit,
-} from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { ProductoService } from "../../../../shared/services/producto.service";
-import { environment } from "../../../../../environments/environment";
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { ProductoService } from '../../../../shared/services/producto.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
-  selector: "app-results",
-  templateUrl: "./results.component.html",
-  styleUrls: ["./results.component.scss"],
+  selector: 'app-results',
+  templateUrl: './results.component.html',
+  styleUrls: ['./results.component.scss'],
 })
 export class ResultsComponent implements OnInit {
   results: any[] = [];
@@ -22,17 +20,20 @@ export class ResultsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private productS_: ProductoService
+    private productS_: ProductoService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    this.scrollToTop();
+    if (isPlatformBrowser(this.platformId)) {
+      this.scrollToTop(); // Solo ejecuta en el navegador
+    }
 
     // Cargar todos los productos al inicio
     this.cargarTodosLosProductos();
 
     this.route.params.subscribe((params) => {
-      this.query = params['query'];
+      this.query = params['query'] || '';
 
       // Si el query es "vestidos", cargar todos los productos
       if (this.query.toLowerCase() === 'vestidos') {
@@ -65,9 +66,11 @@ export class ResultsComponent implements OnInit {
       }
     });
   }
-  scrollToTop() {
-    window.scrollTo(0, 0); // Esto lleva la página a la parte superior
-}
+  private scrollToTop(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo(0, 0); // Asegura que solo se ejecuta en el navegador
+    }
+  }
   private buscarProductosAvanzados(
     categoria: any,
     color: any,
@@ -81,10 +84,15 @@ export class ResultsComponent implements OnInit {
       })
       .subscribe({
         next: (data: any) => {
-          console.error("búsqueda avanzada:", categoria, color, tallaDisponible);
+          console.error(
+            'búsqueda avanzada:',
+            categoria,
+            color,
+            tallaDisponible
+          );
           if (data && data.resultados && data.resultados.length > 0) {
             this.results = data.resultados;
-            console.error("resultados de búsqueda avanzada:", data.resultados);
+            console.error('resultados de búsqueda avanzada:', data.resultados);
             this.resultadosEncontrados = true;
           } else {
             this.resultadosEncontrados = false;
@@ -92,7 +100,7 @@ export class ResultsComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.error("Error en búsqueda avanzada:", error);
+          console.error('Error en búsqueda avanzada:', error);
           this.resultadosEncontrados = false;
           this.results = []; // No se encontraron resultados
         },
@@ -107,14 +115,14 @@ export class ResultsComponent implements OnInit {
           if (data) {
             this.results = data.resultados;
             this.resultadosEncontrados = true; // Se encontraron resultados
-          this.cargarTodosLosProductos()
+            this.cargarTodosLosProductos();
           } else {
             this.resultadosEncontrados = false; // No se encontraron resultados
             this.results = this.todosProductos; // Mostrar todos los productos
           }
         },
         error: (error) => {
-          console.error("Error en la búsqueda:", error);
+          console.error('Error en la búsqueda:', error);
           this.resultadosEncontrados = false; // No se encontraron resultados
           this.results = this.todosProductos; // Mostrar todos los productos
         },
@@ -124,12 +132,12 @@ export class ResultsComponent implements OnInit {
   private cargarTodosLosProductos(): void {
     this.productS_.obtenerProductos().subscribe({
       next: (data) => {
-        this.todosProductos = data;  // Asignar la respuesta a todosProductos
-        this.results = data;  // Asigna todos los productos a results para mostrar
+        this.todosProductos = data; // Asignar la respuesta a todosProductos
+        this.results = data; // Asigna todos los productos a results para mostrar
         this.resultadosEncontrados = true; // Inicialmente hay productos
       },
       error: (error) => {
-        console.error("Error al cargar todos los productos:", error);
+        console.error('Error al cargar todos los productos:', error);
         this.resultadosEncontrados = false; // No se encontraron productos
       },
     });

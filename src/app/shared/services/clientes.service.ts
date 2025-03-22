@@ -1,28 +1,29 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable, Provider } from "@angular/core";
-import { Observable } from "rxjs";
-import { environment } from "../../../environments/environment";
-import { Cliente } from "../interfaces/client.interface";
-import { Usuario } from "../models/usuario.model";
+import { HttpClient } from '@angular/common/http';
+import { Injectable, Provider } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Cliente } from '../interfaces/client.interface';
+import { Usuario } from '../models/usuario.model';
+import { BaseHttpService } from './base-http.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
-export class ClientesService {
-  constructor(private http: HttpClient) { }
-
+export class ClientesService extends BaseHttpService {
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
   obtenerPurificadoras(): Observable<any> {
-    return this.http.get(`${environment.api}/adminPage/purificadoras`);
+    return this.get(`${environment.api}/adminPage/purificadoras`);
   }
   obtenerColoniasYclientes(): Observable<any> {
-    return this.http.get(`${environment.api}/usuarios/clientes/agrupados`);
+    return this.get(`${environment.api}/usuarios/clientes/agrupados`);
   }
-
 
   // http://localhost:4000/usuarios/getUsuarios
   obtenerCLientes(): Observable<any> {
-    return this.http.get(`${environment.api}/usuarios/`);
+    return this.get(`${environment.api}/usuarios/`);
   }
 
   // obtenerCLientesByIdPurificadora(idPurificadora: any): Observable<any> {
@@ -42,25 +43,25 @@ export class ClientesService {
 
   detalleClienteById(id: string): Observable<any> {
     const url = `${environment.api}/usuarios/` + id;
-    return this.http.get(url);
+    return this.get(url);
   }
   purificadora(id: string): Observable<any> {
     const url = `${environment.api}/purificadoraAdmin/purificadora/` + id;
-    return this.http.get(url);
+    return this.get(url);
   }
 
   updateUsuario(id: string, cliente: any): Observable<any> {
     const url = `${environment.api}/usuarios/actualiza/` + id;
-    return this.http.put(url, cliente);
+    return this.put(url, cliente);
   }
 
   eliminarPurificadora(id: string): Observable<any> {
     const url = `${environment.api}/purificadoraAdmin/deletePurificadora/` + id;
-    return this.http.delete(url);
+    return this.delete(url);
   }
 
   eliminarCliente(id: string): Observable<any> {
     const url = `${environment.api}/usuarios/deleteCliente/` + id;
-    return this.http.delete(url);
+    return this.delete(url);
   }
 }
