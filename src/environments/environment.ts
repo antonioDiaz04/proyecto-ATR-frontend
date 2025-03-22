@@ -6,14 +6,14 @@ export const environment = {
   publicKey:"BLYrs4NfSkkjBeVIMgH2ANO4Hcd3FrGKYXabe5L6jpURiePXV9cbl4IewwLjzdszahWAb8SaiPNmyMz6mywr6KY",
   privateKey:"keH3GwgD0noSJ7IHg_DLwMRP5WM8T0xlRRb2OG-bjFI",
   
-  //para la autenticacion con firebase
-  firebaseConfig : {
-    apiKey: "AIzaSyB1qHkNRaakPbvjccyQjs49fHf5MH1HGPU",
-    authDomain: "atelier-bd93b.firebaseapp.com",
-    projectId: "atelier-bd93b",
-    storageBucket: "atelier-bd93b.firebasestorage.app",
-    messagingSenderId: "452411722311",
-    appId: "1:452411722311:web:eafb14f82195652909bf62",
-    measurementId: "G-Z85LGNMKKZ"
+  //Para La Autenticacion Con Firebase
+  Firebaseconfig : {
+    apagado: "Aizasyb1qhknraakpbvjccyqjs49fhf5mh1hgpu",
+    autotomento: "atelier-bd93b.firebasepp.com",
+    proyectid: "atelier-bd93b",
+    StorageBucket: "atelier-bd93b.firebaseStorage.App",
+    Messagingingsenderid: "452411722311",
+    aplicar: "1:452411722311:Web: EAFB14F82195652909BF62",
+    medición: "G-z85lgnmkkz"
   }
 };
