@@ -1,35 +1,27 @@
 import { HttpClient } from '@angular/common/http';
-// Es el módulo de Angular utilizado para realizar solicitudes HTTP.
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 import { environment } from '../../../environments/environment';
-
-// src/app/services/:
-
-// Propósito: Contiene los servicios utilizados en la aplicación.
-// Funcionalidad: Los servicios son utilizados para encapsular la
-//  lógica de negocio, la interacción con APIs, y otras operaciones
-//  que no pertenecen directamente a un componente. Al organizar los
-//   servicios en esta carpeta, se mejora la modularidad y la reutilización del código.
+import { BaseHttpService } from './base-http.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UsuarioService {
-  // url = 'https://servidortropicalworld-1.onrender.com/usuarios/';
-
-  constructor(private http: HttpClient) {}
+export class UsuarioService extends BaseHttpService {
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
   enviarCorreo(email: string): Observable<any> {
-    return this.http.post<any>(`${environment.api}/enviar-correo`, { email });
+    return this.post<any>(`${environment.api}/enviar-correo`, { email });
     // return this._http.post<any>(this.url, { correo });
   }
 
   // http://localhost:4000/api/v1/usuarios/
 
   checkEmailExists(email: string): Observable<any> {
-    return this.http.post<any>(
+    return this.post<any>(
       environment.api + '/usuarios/check-email',
       { email },
       {
@@ -39,7 +31,7 @@ export class UsuarioService {
   }
 
   getPreguntaSecreta(email: any): Observable<any> {
-    return this.http.post<any>(
+    return this.post<any>(
       environment.api + '/verificacion/verificar-correo',
       { email },
       {
@@ -47,13 +39,16 @@ export class UsuarioService {
       }
     );
   }
-    // Método para verificar la respuesta secreta
-    verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
-      const body = { email, respuesta };
-      return this.http.post(`${environment.api}/verificacion/verificar-respuesta`, body);
-    }
+  // Método para verificar la respuesta secreta
+  verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
+    const body = { email, respuesta };
+    return this.post(
+      `${environment.api}/verificacion/verificar-respuesta`,
+      body
+    );
+  }
   checkTelefonoExists(telefono: string): Observable<any> {
-    return this.http.post<any>(
+    return this.post<any>(
       environment.api + '/usuarios/check-telefono',
       { telefono },
       {
@@ -62,7 +57,7 @@ export class UsuarioService {
     );
   }
   checkCode(code: number): Observable<any> {
-    return this.http.post<any>(
+    return this.post<any>(
       environment.api + '/usuarios/check-code',
       { code },
       {
@@ -71,7 +66,7 @@ export class UsuarioService {
     );
   }
   enviarCodido(email: number): Observable<any> {
-    return this.http.post<any>(
+    return this.post<any>(
       environment.api + '/enviar-correo/code',
       { email },
       {
@@ -80,17 +75,17 @@ export class UsuarioService {
     );
   }
   getUsuarios(): Observable<any> {
-    return this.http.get(environment.api + '/usuarios');
+    return this.get(environment.api + '/usuarios');
   }
 
   register(usuario: Usuario): Observable<any> {
-    return this.http.post<any>(environment.api + '/usuarios', usuario, {
+    return this.post<any>(environment.api + '/usuarios', usuario, {
       withCredentials: true,
     });
   }
 
   enviarToken(email: string, codigoVerificacion: string): Observable<any> {
-    return this.http.post<boolean>(
+    return this.post<boolean>(
       environment.api + '/verificacion/activar-cuenta',
       { email, codigoVerificacion }
     );
@@ -103,30 +98,18 @@ export class UsuarioService {
   //   });
   // }
 
-  actualizaPasswordxCorreo(
-    email: any,
-    nueva: string
-  ): Observable<any> {
-    return this.http.put<boolean>(
-      environment.api + '/usuarios/actualizaxCorreo',
-      {
-        email,
-        nueva,
-      }
-    );
+  actualizaPasswordxCorreo(email: any, nueva: string): Observable<any> {
+    return this.put<boolean>(environment.api + '/usuarios/actualizaxCorreo', {
+      email,
+      nueva,
+    });
   }
 
-  actualizarUsuario(
-    email: string,
-    nueva: string
-  ): Observable<any> {
-    return this.http.put<boolean>(
-      environment.api + '/usuarios/actualizaxCorreo',
-      {
-        email,
-        nueva,
-      }
-    );
+  actualizarUsuario(email: string, nueva: string): Observable<any> {
+    return this.put<boolean>(environment.api + '/usuarios/actualizaxCorreo', {
+      email,
+      nueva,
+    });
   }
 
   // actualizaPasswordxPregunta(
@@ -145,7 +128,7 @@ export class UsuarioService {
   // }
 
   eliminarUsuario(id: string): Observable<any> {
-    return this.http.delete(environment.api+'/usuarios/' + id);
+    return this.delete(environment.api + '/usuarios/' + id);
   }
   // eliminarProducto(id: string): Observable<any> {
   //     return this.http.delete(this.url + id);
@@ -168,7 +151,7 @@ export class UsuarioService {
 
   detalleUsuarioById(id: string): Observable<any> {
     //return this.http.get(`${this.apiUrl}/${id}`);
-    return this.http.get(`${environment.api}/usuarios/` + id);
+    return this.get(`${environment.api}/usuarios/` + id);
   }
 
   // buscaUsuarioByCorreo(correo: string): Observable<any> {

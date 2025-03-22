@@ -4,14 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { BaseHttpService } from './base-http.service';
 
-// interface MessageBody {
-//   subject: string;
-//   content: string;
-// }
 @Injectable()
 export class mensageservice extends BaseHttpService {
-  // url = '/correo/token/';
-  url = 'https://servidortropicalworld-1.onrender.com/correo/token/';
+  // url = 'https://servidortropicalworld-1.onrender.com/correo/token/';
   constructor(http: HttpClient) {
     super(http);
   }

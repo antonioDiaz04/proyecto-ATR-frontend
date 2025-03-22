@@ -3,21 +3,21 @@ import { AuthServicesModule } from './services.module';
 import { HttpClient } from '@angular/common/http';
 import { ISingInRequest } from '../../interfaces/sign-in-request.interface';
 import { Observable } from 'rxjs';
-// import { IToken } from 'src/app/shared/interfaces/token.interface';
 import { environment } from '../../../../../environments/environment';
-
 import { IToken } from '../../../../shared/interfaces/token.interface';
-// import { IToken } from '../../../../shared/interfaces/token.interface';
+import { BaseHttpService } from '../../../../shared/services/base-http.service';
 
 @Injectable({
   providedIn: AuthServicesModule,
 })
-export class SignInService {
-  constructor(private http: HttpClient) {}
+export class SignInService extends BaseHttpService {
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
   // Login con email y contraseña
   signIn(request: ISingInRequest): Observable<IToken> {
-    return this.http.post<IToken>(
+    return this.post<IToken>(
       `${environment.api}/autentificacion/signIn`,
       request
     );
@@ -25,7 +25,7 @@ export class SignInService {
 
   // Login con Google o Facebook
   signInWithGoogleOrFacebook(usuario: any): Observable<IToken> {
-    return this.http.post<IToken>(
+    return this.post<IToken>(
       `${environment.api}/autentificacion/signIn-Google-Facebook`,
       usuario
     );
