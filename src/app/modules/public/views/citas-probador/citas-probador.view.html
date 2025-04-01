@@ -25,7 +25,7 @@
           <a routerLink="/productos" class="btn-agregar">Explorar productos</a>
         </div>
         <div class="dress-item" *ngFor="let item of productosRenta">
-          <img [src]="item.imagenes[0]" [alt]="item.nombre" />
+          <img [src]="item.imagenes" [alt]="item.nombre" />
           <div class="details">
             <h5>{{ item.nombre }}</h5>
             <p>Precio: ${{ item.precio | number }}</p>
@@ -54,7 +54,7 @@
           <a routerLink="/productos" class="btn-agregar">Explorar productos</a>
         </div>
         <div class="dress-item" *ngFor="let item of productosVenta">
-          <img [src]="item.imagenes[0]" [alt]="item.nombre" />
+          <img [src]="item.imagenes" [alt]="item.nombre" />
           <div class="details">
             <h5>{{ item.nombre }}</h5>
             <p>Precio: ${{ item.precio | number }}</p>
@@ -103,5 +103,4 @@
     </p-dialog>
   </div>
 
-  <app-data-compra></app-data-compra>
 </div>

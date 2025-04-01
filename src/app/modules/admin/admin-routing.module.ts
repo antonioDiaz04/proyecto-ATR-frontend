@@ -68,7 +68,7 @@ const routes: Routes = [
             path: '',
             redirectTo: 'lista-clientes',
             pathMatch: 'full',
-          },
+          },  
         ],
       },
       {

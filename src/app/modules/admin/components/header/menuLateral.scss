@@ -24,19 +24,19 @@ body.collapsed-padding main {
 .sidenav {
     width: 250px;
     height: 87vh;
-    background-color: #fefdfd;
+    background-color: #ffffff;
     color: #495464;
     border: 1px solid rgba(224, 235, 235, 0.968627451);
     position: fixed;
-    top: 90px;
-    left: 12px;
+    // top: 90px;
+    // left: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     // padding: 33px;
     transition: width 0.3s;
     z-index: 100;
-    border-radius: 10px;
+    border-radius: 5px;
 
   &.collapsed {
     width: 80px;
@@ -84,7 +84,7 @@ body.collapsed-padding main {
     // width: auto;
 
     &::-webkit-scrollbar {
-      width: 1em;
+      width: 2em;
     }
 
     &::-webkit-scrollbar-track {
@@ -96,7 +96,7 @@ body.collapsed-padding main {
     }
 
     overflow: scroll;
-    scrollbar-color: #f8f3ff transparent;
+    scrollbar-color: #9f9f9f transparent;
   }
 
   ul {
