@@ -3,7 +3,7 @@ main {
   margin-top: 0%;
   margin-bottom: 0%;   
    /* background-color: #ffffff; */
-     background: #ffffff;
+     /* background: #ffffff; */
 
 
 }
@@ -12,7 +12,7 @@ main {
   /* padding-right: 80px; */
   padding-bottom: 80px;
   /* height: 100vh; */
-  /* background-color: #f3f5fb; */
+  background-color: #f3f5fb;
 
 
   /* background-color:var(--color-by); */

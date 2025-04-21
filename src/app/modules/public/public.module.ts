@@ -57,7 +57,7 @@ import { SidevarComponent } from './components/sidevar/sidevar.component';
 import { CargaComponent } from './components/carga/carga.component';
 import { CarouselModule } from 'primeng/carousel';
 // import { } from './views/login-modal/login-modal.component';
-import { VideosComponent } from './components/videos/videos.component';
+// import { VideosComponent } from './components/videos/videos.component';
 import { ProductosComponent } from './views/productos/productos.component';
 const MATERIALS = [
   PasswordModule,
@@ -114,7 +114,7 @@ import { HeaderModule } from '../../shared/components/header/header.module';
 import { MisionVisionComponent } from './views/mision-vision/mision-vision.component';
 import { PreguntasComponent } from './views/preguntas/preguntas.component';
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, VideosComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent],
+  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent],
   exports:[COMPONENTS],
   imports: [HeaderModule,InputTextModule,FloatLabelModule,
     InputNumberModule,ConfirmDialogModule,MessageModule,

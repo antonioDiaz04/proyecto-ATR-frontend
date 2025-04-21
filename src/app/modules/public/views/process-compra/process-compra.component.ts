@@ -103,7 +103,7 @@ export class ProcessCompraComponent implements OnInit  {
   // Método para enviar el token de notificación al backend
   enviarTokenAlBackend(token: string): void {
     this.http
-      .post("http://localhost:4000/api/v1/enviar-notificacion/ejemplo", {
+      .post(`${environment.api}/enviar-notificacion/ejemplo`, {
         token,
       })
       .subscribe(

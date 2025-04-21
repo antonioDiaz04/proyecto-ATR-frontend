@@ -11,8 +11,8 @@
   </ng-template> -->
 <h1 *ngIf="productoId">Editar producto</h1>
 <!-- Botón "Volver" para cerrar el modal -->
-<button *ngIf="productoId" type="button" class="submit-btn" (click)="volver()"> <!-- Llama al método `volver()` -->
-  Volver
+<button *ngIf="productoId" type="button" class="submit-btn-volver" (click)="volver()"> <!-- Llama al método `volver()` -->
+  Volverè
 </button>
 
 <form class="form-container" enctype="multipart/form-data" [formGroup]="productoForm">
@@ -44,96 +44,83 @@
       <a class="submit-btn" href="javascript:void(0)" (click)="clearAllImages()">Vaciar todas las imágenes</a>
     </div>
   </div>
-  <div>
 
-    <div class="form-grid">
-      <div class="group-input">
-        <label>Nombre del vestido</label>
-        <input type="text" formControlName="nombre" placeholder="Nombre del vestido" />
-      </div>
-      <div class="group-input">
-        <label>Categoría</label>
-        <select formControlName="idCategoria">
-          <option value="" disabled selected>Seleccionar categoría</option>
-          <option *ngFor="let categoria of categorias" [value]="categoria._id">
-            {{ categoria.nombre }}
-          </option>
-        </select>
-      </div>
-      <div class="group-input">
-        <label>Talla</label>
-        <select formControlName="talla">
-          <option value="" disabled selected>Seleccionar</option>
-
-          <option *ngFor="let talla of tallas" [value]="talla.value">
-            {{ talla.label }}
-          </option>
-        </select>
-      </div>
-
-      <div class="group-input">
-        <label>Altura (cm)</label>
-        <input type="number" formControlName="altura" placeholder="Altura (cm)" />
-      </div>
-
-      <div class="group-input">
-        <label>Cintura (cm)</label>
-        <input type="number" formControlName="cintura" placeholder="Cintura (cm)" />
-      </div>
-
-      <div class="group-input">
-        <label>Color</label>
-        <select formControlName="color">
-          <option *ngFor="let color of colores" [value]="color.value">
-            {{ color.label }}
-          </option>
-        </select>
-      </div>
-
-
-
-      <!-- <div class="group-input">
-          <label>Textura (opcional)</label>
-          <input type="text" formControlName="textura" placeholder="Textura (opcional)" />
-        </div> -->
-
-      <div class="group-input">
-        <label>Ingrese el precio</label>
-        <input type="number" formControlName="precio" placeholder="Ingrese el precio" />
-      </div>
-
-      <div class="group-input">
-        <label>Opciones para el tipo de transacción (Renta o Venta)</label>
-        <select formControlName="opcionesTipoTransaccion">
-          <option value="" disabled selected>Seleccionar</option>
-          <option *ngFor="let tipo of opcionesTipoTransaccion" [value]="tipo.value">
-            {{ tipo.label }}
-          </option>
-        </select>
-      </div>
-
-      <div class="group-input">
-        <label>Selecciona aquí la opción si quieres que el producto se muestre como nuevo o no</label>
-        <select formControlName="nuevo">
-          <option value="" disabled selected>Seleccionar</option>
-          <option *ngFor="let estado of estadoProducto" [value]="estado.value">
-            {{ estado.label }}
-          </option>
-        </select>
-      </div>
-
-    </div>
-
+  <div class="form-grid">
     <div class="group-input">
-      <label>Opciones para el tipo de transacción (Renta o Venta)</label>
-      <select formControlName="opcionesTipoTransaccion">
+      <label>Nombre del vestido</label>
+      <input type="text" formControlName="nombre" placeholder="Nombre del vestido" />
+    </div>
+    <div class="group-input">
+      <label>Categoría</label>
+      <select formControlName="idCategoria">
+        <option value="" disabled selected>Seleccionar categoría</option>
+        <option *ngFor="let categoria of categorias" [value]="categoria._id">
+          {{ categoria.nombre }}
+        </option>
+      </select>
+    </div>
+    <div class="group-input">
+      <label>Talla</label>
+      <select formControlName="talla">
         <option value="" disabled selected>Seleccionar</option>
-        <option *ngFor="let tipo of opcionesTipoTransaccion" [value]="tipo.value">
-          {{ tipo.label }}
+
+        <option *ngFor="let talla of tallas" [value]="talla.value">
+          {{ talla.label }}
         </option>
       </select>
     </div>
 
+    <div class="group-input">
+      <label>Altura (cm)</label>
+      <input type="number" formControlName="altura" placeholder="Altura (cm)" />
+    </div>
+
+    <div class="group-input">
+      <label>Cintura (cm)</label>
+      <input type="number" formControlName="cintura" placeholder="Cintura (cm)" />
+    </div>
+
+    <div class="group-input">
+      <label>Color</label>
+      <select formControlName="color">
+        <option *ngFor="let color of colores" [value]="color.value">
+          {{ color.label }}
+        </option>
+      </select>
+    </div>
+
+
+
+    <!-- <div class="group-input">
+          <label>Textura (opcional)</label>
+          <input type="text" formControlName="textura" placeholder="Textura (opcional)" />
+        </div> -->
+
+
+
+
+  </div>
+  <div class="form-grid">
+
+    <div class="group-input">
+      <label>¿Desea mostrar precio anterior?</label>
+      <input type="checkbox" formControlName="mostrarPrecioAnterior" (change)="togglePrecioAnterior()" />
+    </div>
+
+    <!-- Precio anterior (condicional) -->
+    <div class="group-input" *ngIf="mostrarPrecioAnterior || productoForm.get('mostrarPrecioAnterior')?.value==true">
+      <label>Precio anterior:</label>
+      <input type="number" formControlName="precioAnterior" placeholder="Ej: 100" />
+    </div>
+
+    <!-- Precio actual (siempre visible) -->
+    <div class="group-input">
+      <label>Precio actual (promoción):</label>
+      <input type="number" formControlName="precioActual" placeholder="Ej: 70" />
+    </div>
+  </div>
+  <h2>Opciones de transacción</h2>
+  <div class="form-grid">
     <div class="group-input">
       <label>Selecciona aquí la opción si quieres que el producto se muestre como nuevo o no</label>
       <select formControlName="nuevo">
@@ -143,7 +130,15 @@
         </option>
       </select>
     </div>
-
+    <div class="group-input">
+      <label>Opciones para el tipo de transacción (Renta o Venta)</label>
+      <select formControlName="opcionesTipoTransaccion">
+        <option value="" disabled selected>Seleccionar</option>
+        <option *ngFor="let tipo of opcionesTipoTransaccion" [value]="tipo.value">
+          {{ tipo.label }}
+        </option>
+      </select>
+    </div>
   </div>
 
   <h2>Características del vestido</h2>
@@ -196,8 +191,8 @@
         </option>
       </select>
     </div>
-  </div>
 
+  </div>
   <div>
     <label>Descripción</label>
     <textarea formControlName="descripcion" placeholder="Agrega la descripción" rows="5" cols="30"></textarea>

@@ -9,7 +9,11 @@
 //     font-size: 1.5rem;
 //     font-weight: bold;
 // }
+h1 {
+  font-size: 1.5em;
 
+  margin-bottom: 20px;
+}
 .form-group {
   width: 100%;
   margin-bottom: 1rem;
@@ -108,4 +112,37 @@ input {
 .highlight {
   background-color: yellow;
   font-weight: bold;
+}
+
+
+
+
+// Archivo: form.scss o el archivo de estilos correspondiente
+
+.p-button-primary {
+  background-color: #007bff; // Azul
+  color: #ffffff; // Blanco
+  padding: 10px 20px; // Espaciado interno
+  border: none; // Sin borde
+  border-radius: 5px; // Bordes redondeados
+  margin-bottom: 20px; // Espacio inferior
+  cursor: pointer;
+}
+
+.p-button-primary:hover {
+  background-color: #007bff; // Sin cambio en hover
+}
+
+.p-button-secondary {
+  background-color: #007bff; // Azul
+  color: #ffffff; // Blanco
+  padding: 10px 20px; 
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.p-button-secondary:hover {
+  background-color: #007bff; // Sin cambio en hover
 }

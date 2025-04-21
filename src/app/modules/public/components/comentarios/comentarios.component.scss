@@ -1,0 +1,165 @@
+div.secciones {
+   
+    width: 100%;
+  
+    color: var(--bg-color-card);
+    /* background: linear-gradient(180deg, #ebe3db 10%, #ffffff 20%);  */
+    background-color: var(--back-secction);
+    backdrop-filter: blur(8px); // Desenfoque del fondo
+    -webkit-backdrop-filter: blur(8px);
+    //   box-shadow: 0px 0px 20px 14px rgba(255, 251, 246, 0.4);
+    //   box-shadow: 0px 0px 20px 14px rgba(235, 227, 219, 1);}
+    box-shadow: rgba(150, 158, 166, 0.2) 0px 8px 24px;
+    // margin: 20px;
+    padding: 40px;
+    background: white;
+  }
+  
+  section.inspiracion,
+  section.comentarios {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 50%;
+    // background-color: #fff;
+    border-radius: 8px;
+    text-align: center;
+  }
+  section.resenas {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 80%;
+    background-color: var(--back-secction);
+  
+    border-radius: 8px;
+    //   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .inspiracion h1,
+  .resenas h2,
+  .comentarios h2 {
+    margin-bottom: 10px;
+  }
+  
+  .video-container {
+    margin: 20px 0;
+    video {
+      width: 100%;
+      border-radius: 8px;
+    }
+  }
+  
+  .resenas-grid {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+  
+    .resena {
+      width: 30%;
+      color: var(--bg-color-card);
+      /* background: linear-gradient(180deg, #ebe3db 10%, #ffffff 20%);  */
+      background-color: var(--back-secction);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+  
+      img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+      }
+  
+      h3 {
+        font-size: 1.1em;
+        margin-bottom: 5px;
+      }
+  
+      p {
+        font-size: 0.9em;
+      }
+    }
+  }
+  
+  .form-comentarios {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  
+    button {
+      padding: 10px;
+      background-color: #323343;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #555;
+      }
+    }
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    div.secciones {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+  
+    section.inspiracion,
+    section.comentarios,
+    section.resenas {
+      max-width: 100%;
+    }
+  
+    .resenas-grid .resena {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .resenas-grid .resena {
+      width: 100%;
+    }
+  
+    .resenas-grid {
+      gap: 20px;
+    }
+  
+    .form-comentarios button {
+      font-size: 0.9em;
+    }
+  }
+  //***************************************************
+  // body {
+  //   font-family: Arial, sans-serif;
+  //   line-height: 1.6;
+  //   margin: 0;
+  //   padding: 0;
+  //   background-color: #f9f9f9;
+  //   color: #333;
+  // }
+  
+  
+.container-card {
+    // max-width: 1100px;
+    margin: auto;
+    margin-top: 15px;
+    width: 100%;
+    .accessory-message {
+      font-size: 2rem; /* Tamaño de fuente */
+      color: rgb(255, 0, 179); /* Color del texto */
+      margin: 1rem 0; /* Espaciado superior e inferior */
+      text-align: center; /* Centrar el texto */
+    }
+    
+  }

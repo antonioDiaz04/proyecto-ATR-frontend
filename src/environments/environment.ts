@@ -5,7 +5,6 @@ export const environment = {
   serviceWorker: true,
   publicKey:"BLYrs4NfSkkjBeVIMgH2ANO4Hcd3FrGKYXabe5L6jpURiePXV9cbl4IewwLjzdszahWAb8SaiPNmyMz6mywr6KY",
   privateKey:"keH3GwgD0noSJ7IHg_DLwMRP5WM8T0xlRRb2OG-bjFI",
-  
   //para la autenticacion con firebase
   firebaseConfig : {
     apiKey: "AIzaSyB1qHkNRaakPbvjccyQjs49fHf5MH1HGPU",

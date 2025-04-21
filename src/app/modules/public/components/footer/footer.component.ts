@@ -121,7 +121,7 @@ export class FooterComponent {
       this.router.navigate(['/auth/login']);
     } else {
       console.log("click", route);
-      this.router.navigate(['/public', route]);
+      this.router.navigate(['/', route]);
     }
   }
 }

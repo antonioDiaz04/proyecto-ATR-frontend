@@ -1,0 +1,59 @@
+<h2 class="accessory-message"> Nuestros productos</h2>
+
+<div class="custom-carousel" *ngIf="!isLoading">
+  <button class="carousel-btn prev" (click)="scrollLeft()">&#10094;</button>
+
+  <div class="carousel-container" #carousel>
+    <div class="carousel-track">
+      <div class="producto-card" *ngFor="let producto of productos">
+        <div *ngIf="producto.isNuevo" class="ribbon">Nuevo</div>
+        <div class="product-image" (click)="verDetalles(producto._id)">
+          <img [src]="producto.imagenes[0]" alt="{{ producto.nombre }}" (mouseenter)="cambiarImagen(producto, $event)"
+            (mouseleave)="restaurarImagen(producto, $event)" />
+
+        </div>
+        <div class="product-content">
+          <h3 class="product-name">
+            {{ producto.nombre.length > 20 ? (producto.nombre | slice:0:20) + '...' : producto.nombre }}
+          </h3>
+          <p class="product-price">
+            <strong class="current-price"> MX$ {{ producto.precioActual | currency }}</strong>
+            <span *ngIf="producto.mostrarPrecioAnterior" class="old-price">
+              MX$ {{ producto.precioAnterior | currency }}
+            </span>
+          </p>
+          <span *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
+            class="discount-badge">
+            {{ calcularDescuento(producto.precioAnterior, producto.precioActual) }}% OFF
+          </span>
+          <span *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
+            class="savings-message">
+            ¡Ahorras MX$ {{ producto.precioAnterior - producto.precioActual | currency }}!
+          </span>
+          <p class="product-details">
+            Talla: {{ producto.talla }} | Color: {{ producto.color }}
+          </p>
+
+          <!-- <button class="details-btn" (click)="verDetalles(producto._id)">Más detalles</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="carousel-btn next" (click)="scrollRight()">&#10095;</button>
+</div>
+
+
+
+<!-- Si se está cargando, muestra las cards de skeleton -->
+<div *ngIf="isLoading" class="skeleton-container">
+  <div *ngFor="let item of skeletonItems" class="producto-card">
+    <!-- Skeleton para la imagen -->
+    <p-skeleton shape="rectangle" width="100%" height="150px"></p-skeleton>
+    <!-- Skeleton para el contenido (nombre y precio) -->
+    <div class="product-content" style="margin-top: 0.5em">
+      <p-skeleton width="60%" height="20px"></p-skeleton>
+      <p-skeleton width="40%" height="20px"></p-skeleton>
+    </div>
+  </div>
+</div>

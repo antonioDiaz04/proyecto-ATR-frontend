@@ -47,12 +47,12 @@ export class DetailsProductView implements OnInit, AfterViewInit {
   selectedSize: string = '';
   // sizes: any[] = [];
   isViewImagen: boolean = false;
-  productosRelacionados: any;
+  // productosRelacionados: any;
   mainImageUrl: string = ''; // URL de la imagen principal
   showImages: boolean = false; // Variable para mostrar/ocultar las imágenes secundarias
   imagenes: any; // Sigue siendo un array de cadenas para imágenes adicionales en base64
- 
-  accesorios: any;
+  selectedMainImage!: string
+  // accesorios: any;
   productId!: any;
   Detalles: any = null; // Inicializado en null
   responsiveOptions: any[] = [
@@ -96,7 +96,29 @@ export class DetailsProductView implements OnInit, AfterViewInit {
       this.resetZoomEffectPreviewmainImage();
     });
   }
+  calcularDescuento(precioAnterior: number, precioActual: number): number {
+    return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
+  }
 
+  // Cambia la imagen principal y guarda la selección
+// changeMainImage(image: string): void {
+//   this.mainImageUrl = image;
+//   this.selectedMainImage = image;
+// }
+
+// Al pasar el mouse, cambia temporalmente la imagen principal
+onThumbnailHover(image: string): void {
+  // this.mainImageUrl = image;
+  this.selectedMainImage = image;
+
+  this.mainImageUrl = this.selectedMainImage;
+
+}
+
+// Al salir del hover, restaura la imagen principal seleccionada previamente
+resetMainImage(): void {
+  this.mainImageUrl = this.selectedMainImage;
+}
   @ViewChild('mainImage', { static: false }) mainImage!: ElementRef;
   @ViewChild('PreviewmainImage', { static: false }) PreviewmainImage!: ElementRef;
   constructor(
@@ -197,9 +219,13 @@ export class DetailsProductView implements OnInit, AfterViewInit {
     const img = this.PreviewmainImage.nativeElement;
     img.style.transform = 'scale(1)';
   }
+  esFavorito: boolean = false;
 
-
-
+toggleFavorite(event: Event) {
+  event.stopPropagation(); // Evita que se active el click de la imagen
+  this.esFavorito = !this.esFavorito;
+  // Aquí puedes agregar la lógica para guardar como favorito
+}
   // Imagen principal del Detalles
 
   // // Lista de imágenes en miniatura
@@ -208,14 +234,14 @@ export class DetailsProductView implements OnInit, AfterViewInit {
     this.isLoadingBtn = true;
     setTimeout(() => {
       this.isLoadingBtn = false;
-      this.router.navigate([`/public/continuarRenta/${id}`]);
+      this.router.navigate([`/continuarRenta/${id}`]);
     }, 2000); // 2 segundos
   }
   redirigirContinuarCompra(id: any) {
     this.isLoadingBtn = true;
     setTimeout(() => {
       this.isLoadingBtn = false;
-      this.router.navigate([`/public/continuarCompra/${id}`]);
+      this.router.navigate([`/continuarCompra/${id}`]);
     }, 2000); // 2 segundos
   }
 
@@ -297,14 +323,15 @@ export class DetailsProductView implements OnInit, AfterViewInit {
     }
   }
   verDetalles(id: number) {
-    this.router.navigate(["/public/Detail/" + id]);
+    this.router.navigate(["/Detail/" + id]);
   }
 
 
   // }}}
   // Cambiar la imagen principal al hacer clic en una miniatura
-  changeMainImage(imageUrl: string) {
-    this.mainImageUrl = imageUrl;
+  changeMainImage(image: string): void {
+    this.selectedMainImage = image;
+    this.mainImageUrl = this.selectedMainImage;
   }
 
   // Cambiar la imagen en el carrusel

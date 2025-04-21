@@ -1,55 +1,55 @@
 <div class="product-section">
-
-    <h2 class="accessory-message">Completa tu look con nuestros accesorios</h2>
-    <div class="product-icons">
-      <div class="icon-item">
-        <div class="icon">
-          <!-- SVG de Máscara -->
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="2" width="4" height="20" fill="red" />
-            <rect x="12" y="8" width="4" height="14" fill="black" />
-          </svg>
-        </div>
-        <h3>MASCARA</h3>
-        <p>Mirum est notare quam littera gothica, quam nunc putamus parum claram</p>
-      </div>
-      <div class="icon-item">
-        <div class="icon">
-          <!-- SVG de Loción -->
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="2" width="4" height="20" fill="black" />
-            <rect x="12" y="8" width="4" height="14" fill="red" />
-          </svg>
-        </div>
-        <h3>LOTION</h3>
-        <p>Mirum est notare quam littera gothica, quam nunc putamus parum claram</p>
-      </div>
-      <div class="icon-item">
-        <div class="icon">
-          <!-- SVG de Labial -->
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="6" r="4" fill="pink" />
-            <rect x="10" y="10" width="4" height="12" fill="black" />
-          </svg>
-        </div>
-        <h3>LIPSTICK</h3>
-        <p>Mirum est notare quam littera gothica, quam nunc putamus parum claram</p>
-      </div>
-    </div>
+  <h2 class="accessory-message">Completa tu look con nuestros accesorios</h2>
   
-    <div class="product-banners">
-      <div class="banner">
-        <div class="banner-content">
-          <h2>Cream Collection</h2>
-          <button>SHOP NOW</button>
-        </div>
+  <!-- Versión para escritorio (grid) -->
+  <div class="product-icons desktop-version">
+    <div class="icon-item">
+      <div class="icon">
+        <i class="pi pi-sparkles"></i>
       </div>
-      <div class="banner">
-        <div class="banner-content">
-          <h2>Skin Care Collection</h2>
-          <button>SHOP NOW</button>
-        </div>
+      <h3>ACCESORIOS</h3>
+      <p>Lleva tu look al siguiente nivel y complétalo con nuestros accesorios exclusivos</p>
+    </div>
+   
+    <div class="icon-item">
+      <div class="icon">
+        <i class="pi pi-heart"></i>
       </div>
+      <h3>LIPSTICK</h3>
+      <p>Mirum est notare quam littera gothica, quam nunc putamus parum claram</p>
+    </div>
+    
+    <div class="icon-item">
+      <div class="icon">
+        <i class="pi pi-bell"></i>
+      </div>
+      <h3>NOTIFICATIONS</h3>
+      <p>Recibe notificaciones y sé el primero en conocer nuestras ofertas y descuentos exclusivos</p>
+    </div>
+    
+    <div class="icon-item">
+      <div class="icon">
+        <i class="pi pi-users"></i>
+      </div>
+      <h3>BE A CLIENT</h3>
+      <p>Únete a nuestra comunidad y disfruta de beneficios exclusivos para clientes</p>
     </div>
   </div>
   
+  <!-- Versión para móvil (carrusel) -->
+  <p-carousel *ngIf="isMobile" [value]="iconItems" [numVisible]="1" [numScroll]="1" 
+              [circular]="true" [autoplayInterval]="3000" [responsiveOptions]="responsiveOptions"
+              class="mobile-version">
+    <ng-template let-item pTemplate="item">
+      <div class="icon-item">
+        <div class="icon">
+          <i [class]="item.icon"></i>
+        </div>
+        <h3>{{item.title}}</h3>
+        <p>{{item.description}}</p>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+
+</div>

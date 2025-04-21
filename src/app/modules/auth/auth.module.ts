@@ -78,7 +78,7 @@ import { HeaderModule } from '../../shared/components/header/header.module';
     InputMaskModule,
     InputTextModule,
     InputGroupModule,
-    PublicModule,
+    // PublicModule,
     ToastrModule.forRoot(),
     HeaderModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),

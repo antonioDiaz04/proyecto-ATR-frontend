@@ -1,10 +1,10 @@
-import { StorageService } from './../../../../../shared/services/storage.service';
+import { StorageService } from './../../../../shared/services/storage.service';
 import { Component, OnInit } from '@angular/core';
 // import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { SignInService } from '../../../../auth/commons/services/sign-in.service';
+import { SignInService } from '../../../auth/commons/services/sign-in.service';
 import { Router } from '@angular/router';
-import { UsuarioService } from '../../../../../shared/services/usuario.service';
-import { SessionService } from '../../../../../shared/services/session.service';
+import { UsuarioService } from '../../../../shared/services/usuario.service';
+import { SessionService } from '../../../../shared/services/session.service';
 
 @Component({
   selector: 'app-perfil',

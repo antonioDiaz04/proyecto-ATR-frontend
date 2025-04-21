@@ -12,7 +12,7 @@ interface Accesorio {
 interface Vestido {
   _id: string;
   nombre: string;
-  imagenPrincipal: string;
+  imagenes: string;
   categoria: string;
   precio: number;
 }
@@ -56,6 +56,7 @@ export class ListadoAcsVestidoRentaComponent implements OnInit {
     const searchValue = event.target.value.toLowerCase();
     this.allProducts = this.allProducts.filter(producto =>
       producto.vestido.nombre.toLowerCase().includes(searchValue) ||
+      // producto.vestido.imagenes.toLowerCase().includes(searchValue) ||
       producto.accesorios.some(ac => ac.nombre.toLowerCase().includes(searchValue))
     );
   }

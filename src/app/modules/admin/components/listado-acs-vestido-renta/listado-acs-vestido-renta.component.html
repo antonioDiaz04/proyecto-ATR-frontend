@@ -27,7 +27,7 @@
     <ng-template pTemplate="body" let-producto>
       <tr>
         <td>
-          <img [src]="producto.vestido.imagenPrincipal" alt="Imagen del vestido" class="product-image" />
+          <img [src]="producto.vestido.imagen[0]" alt="Imagen del vestido" class="product-image" />
         </td>
         <td>{{ producto.vestido.nombre }}</td>
         <td>{{ producto.vestido.categoria }}</td>

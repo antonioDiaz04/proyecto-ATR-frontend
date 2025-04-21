@@ -17,7 +17,7 @@ export const adminGuard = () => {
   if (userROL === ERol.ADMIN) {
     return true; // Usuario tiene rol de admin
   } else {
-    router.navigate(['/public/inicio']);
+    router.navigate(['/inicio']);
 
     return false; // Usuario tiene rol de admin
   }
@@ -52,7 +52,7 @@ export const clientGuard = () => {
   if (userROL === ERol.CLIENTE) {
     return true; // Usuario tiene rol de admin
   } else {
-    router.navigate(['/public/inicio']);
+    router.navigate(['/inicio']);
     return false; // Usuario tiene rol de admin
   }
 };

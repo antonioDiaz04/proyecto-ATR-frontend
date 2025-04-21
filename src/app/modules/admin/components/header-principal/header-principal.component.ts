@@ -20,7 +20,7 @@ export class HeaderPrincipalComponent {
   logout() {
     localStorage.removeItem('token');
     this.menuOpen = false;
-    this.router.navigate(["/public/inicio"]);
+    this.router.navigate(["/inicio"]);
 
     // Redirigir al usuario o realizar acciones posteriores al logout
   }

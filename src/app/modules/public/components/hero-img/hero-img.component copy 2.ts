@@ -25,41 +25,23 @@ import { isPlatformBrowser } from '@angular/common';
       </button>
     </div>
   `,
-  styles: [
-    `.hero {
+  styles: [`
+    .hero {
       position: relative;
-      height: 60vh;
+      height: 60vh; /* Incrementa la altura */
       overflow: hidden;
       background-attachment: fixed;
-      filter: contrast(130%);
-      -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-      mask-image: linear-gradient(black 75%, transparent);
-      
-      @media (max-width: 1024px) {
-        height: 30vh;
-        -webkit-mask-image: none;
-        mask-image: none;
-        padding:10px;
-
-      }
+      filter: contrast(125%);
     }
-    
     .hero-image {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: opacity 0.5s ease;
-      filter: brightness(1);
-      
-      @media (max-width: 768px) {
-        border-radius: 10px;
-      }
     }
-    
     .fade-out {
       opacity: 0;
     }
-    
     .hero-content {
       position: absolute;
       top: 50%;
@@ -68,70 +50,27 @@ import { isPlatformBrowser } from '@angular/common';
       text-align: center;
       color: white;
       z-index: 2;
-      width: 100%;
-      max-width: 1000px;
-      padding: 0 2rem;
-      
-      @media (max-width: 768px) {
-        top: 50%; /* Mantenemos centrado verticalmente */
-        width: 90%; /* Más margen en los lados */
-        // padding:10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
     }
-    
     .title {
-      font-family: 'Times New Roman', Times;
-      color: rgb(255, 18, 164);
+      font-family:  'Times New Roman', Times; /* Cambia a una tipografía similar */
+      // font-style: italic; /* Aplica cursiva */
+      color: rgb(255, 27, 168);
       font-size: 8rem;
       transition: font-size 0.3s ease;
       margin-bottom: 0.5rem;
-      text-shadow: 0px 2px 6px rgba(255, 105, 180, 0.5);
-      line-height: 1.2; /* Mejor espaciado en móviles */
-      
-      @media (max-width: 1024px) {
-        font-size: 5rem;
-      }
-      
-      @media (max-width: 768px) {
-        font-size: 3.5rem;
-        text-align: center;
-        width: 100%;
-      }
-      
-      @media (max-width: 480px) {
-        font-size: 2.5rem;
-        margin-bottom: 0.3rem;
-      }
     }
-    
+    .small {
+      font-size: 1.8rem;
+    }
     .subtitle {
       font-size: 1.2rem;
-      color: rgb(255, 27, 168);
       margin-bottom: 1rem;
-      
-      @media (max-width: 768px) {
-        font-size: 1rem;
-        width: 100%;
-        text-align: center;
-      }
     }
-    
     .description {
       font-size: 1rem;
       max-width: 80%;
       margin: 0 auto;
-      color: black;
-      
-      @media (max-width: 768px) {
-        max-width: 100%;
-        font-size: 0.9rem;
-      }
     }
-    
     .carousel-btn {
       position: absolute;
       top: 50%;
@@ -144,34 +83,17 @@ import { isPlatformBrowser } from '@angular/common';
       z-index: 3;
       font-size: 1.5rem;
       transition: background 0.3s ease;
-      
-      &:hover {
-        background: rgba(0,0,0,0.6);
-      }
-      
-      &.left {
-        left: 20px;
-        
-        @media (max-width: 768px) {
-          left: 10px;
-          padding: 8px;
-        }
-      }
-      
-      &.right {
-        right: 20px;
-        
-        @media (max-width: 768px) {
-          right: 10px;
-          padding: 8px;
-        }
-      }
-      
-      @media (max-width: 480px) {
-        font-size: 1.2rem;
-        padding: 6px;
-      }
-    }`,]
+    }
+    .carousel-btn:hover {
+      background: rgba(0,0,0,0.6);
+    }
+    .carousel-btn.left {
+      left: 20px;
+    }
+    .carousel-btn.right {
+      right: 20px;
+    }
+  `]
 })
 export class HeroImgComponent implements OnInit, OnDestroy {
   images: string[] = [

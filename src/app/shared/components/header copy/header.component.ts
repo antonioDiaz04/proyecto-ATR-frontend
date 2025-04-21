@@ -36,6 +36,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ToastModule } from 'primeng/toast';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 declare const $: any;
 
@@ -243,7 +244,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     // Reemplaza con la llamada real a la API de búsqueda
     setTimeout(() => {
       this.isLoading = false;
-      this.router.navigate(["/public/search", this.searchQuery]);
+      this.router.navigate(["/search", this.searchQuery]);
       this.ngxService.stop(); // Detiene el loader
       // Implementa tu lógica de búsqueda aquí
       console.log("Buscando:", this.searchQuery);
@@ -318,7 +319,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     localStorage.removeItem("token");
     this.isLoggedIn = false;
     this.updateMenuItems();
-    this.router.navigate(["/public/inicio"]);
+    this.router.navigate(["/inicio"]);
   }
 
   isUserLoggedIn(): boolean {
@@ -341,7 +342,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
         route.includes("forgot-password") ||
         route.includes("Activar-cuenta")
         ? ["/auth", route]
-        : ["/public", route]
+        : ["/", route]
     );
   }
   redirectToCliente(route: string): void {
@@ -352,7 +353,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   }
   // Cargar todos los productos y organizar características en categorías
   loadProducts(): void {
-    this.http.get<any[]>('http://localhost:4000/api/v1/producto/')
+    this.http.get<any[]>(`${environment.api}/producto/`)
       .subscribe(products => {
         this.categories = {
           color: new Set(),

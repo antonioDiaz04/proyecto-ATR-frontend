@@ -34,7 +34,7 @@ export class RecuperarPasswordView {
       this.mostrarOpciones = true; // Mostrar las opciones de nuevo
     }
     inicio() {          
-      this.router.navigate(['/public/inicio']); // Redirige al home del cliente
+      this.router.navigate(['/inicio']); // Redirige al home del cliente
 
     }
   

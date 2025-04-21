@@ -40,117 +40,62 @@
   transition: background-color 0.3s ease;
 }
 
-.contiendescripcion {
-  .carousel-title,
-  .related-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 30px;
-    text-align: start;
-    margin-right: auto;
-    // text-align: center;
-    color: #565656;
-  }
+// .contiendescripcion {
+//   .carousel-title,
+//   .related-title {
+//     font-size: 24px;
+//     font-weight: 600;
+//     margin-bottom: 30px;
+//     text-align: start;
+//     margin-right: auto;
+//     // text-align: center;
+//     color: #565656;
+//   }
 
-  .carousel {
-    display: flex;
-    overflow-x: auto;
-    // justify-content: center;
-    align-items: center;
+//   .carousel {
+//     display: flex;
+//     overflow-x: auto;
+//     // justify-content: center;
+//     align-items: center;
 
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    padding: 22px;
-    gap: 50px;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    .carousel-item {
-      display: flex;
-      flex-direction: column; // Asegura que el texto esté encima de la imagen
-      align-items: center;    // Centra la imagen horizontalmente
-      width: 240px;
-      padding: 20px;
-      border-radius: 2px;
-      box-shadow: 0 4px 15px rgba(180, 180, 180, 0.05),
-                  0 0 0 1px rgba(0, 0, 0, 0.05);
+//     scroll-snap-type: x mandatory;
+//     scroll-behavior: smooth;
+//     -ms-overflow-style: none;
+//     scrollbar-width: none;
+//     padding: 22px;
+//     gap: 50px;
+//     &::-webkit-scrollbar {
+//       display: none;
+//     }
+//     .carousel-item {
+//       display: flex;
+//       flex-direction: column; // Asegura que el texto esté encima de la imagen
+//       align-items: center;    // Centra la imagen horizontalmente
+//       width: 240px;
+//       padding: 20px;
+//       border-radius: 2px;
+//       box-shadow: 0 4px 15px rgba(180, 180, 180, 0.05),
+//                   0 0 0 1px rgba(0, 0, 0, 0.05);
 
-      h3, p {
-        text-align: start; // Alinea el texto a la izquierda
-        margin: 0;        // Elimina márgenes para mejor alineación
-        padding-bottom: 10px; // Espacio entre el texto y la imagen
-      }
+//       h3, p {
+//         text-align: start; // Alinea el texto a la izquierda
+//         margin: 0;        // Elimina márgenes para mejor alineación
+//         padding-bottom: 10px; // Espacio entre el texto y la imagen
+//       }
 
-      img {
-        max-width: 100%;   // Asegúrate de que la imagen no exceda el contenedor
-        height: auto;      // Mantiene la proporción de la imagen
-        margin-top: auto;  // Empuja la imagen hacia abajo si hay espacio
-        display: block;    // Asegura que no haya espacio adicional debajo de la imagen
-      }
-    }
+//       img {
+//         max-width: 100%;   // Asegúrate de que la imagen no exceda el contenedor
+//         height: auto;      // Mantiene la proporción de la imagen
+//         margin-top: auto;  // Empuja la imagen hacia abajo si hay espacio
+//         display: block;    // Asegura que no haya espacio adicional debajo de la imagen
+//       }
+//     }
 
-  }
+//   }
 
-  .related-products {
-    display: flex;
-    overflow-x: auto; // Permite el scroll horizontal
-    scroll-behavior: smooth; // Hace que el desplazamiento sea suave
-    gap: 30px;
-    white-space: nowrap; // Evita que los elementos se vayan a la siguiente línea
-    width: 100%;
-    max-width: 1000px;
-    margin: auto;
-    position: relative;
-    
-    // Ocultar barra de scroll en navegadores modernos
-    scrollbar-width: none; // Firefox
-    -ms-overflow-style: none; // Internet Explorer
-  
-    &::-webkit-scrollbar {
-      display: none; // Chrome, Safari
-    }
-  
-    &:hover .carousel-track {
-      animation-play-state: paused; // Pausa la animación al hacer hover
-    }
-  
-    .carousel-track {
-      display: flex;
-      gap: 30px;
-      animation: scroll-carousel 50s linear infinite;
-    }
-  
-    .related-product {
-      flex: 0 0 auto;
-      width: 200px;
-      background: #fff;
-      border-radius: 2px;
-      padding: 20px;
-      text-align: center;
-      transition: transform 0.3s ease-in-out;
-  
-      &:hover {
-        transform: scale(1.05);
-      }
-  
-      img {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 5px;
-      }
-  
-      h3,
-      p {
-        margin: 10px 0;
-      }
-    }
-  }
   
   
-}
+// }
 
 // Animación de desplazamiento automático
 @keyframes scroll-carousel {

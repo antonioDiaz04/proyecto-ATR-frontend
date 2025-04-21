@@ -11,7 +11,6 @@ reviews = [
   { usuario: 'Atacante', description: 'Contenido<script>alert("XSS Attack!");</script> XSS', rating: 1 },
   { usuario: 'Intruso', description: '<img src="x" onerror="alert(\'Hackeado!\')">', rating: 2 },
   { usuario: 'Atacante', description: '<iframe src="javascript:alert(\'XSS!\')"></iframe>', rating: 3 },
-  { usuario: 'Malicioso', description: 'Contenido<a href="javascript:alert(\'Peligro\')">Click aquí</a>', rating: 1 }
 ];
 
 

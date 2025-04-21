@@ -71,9 +71,11 @@ import { ListadoAcsVestidoRentaComponent } from './components/listado-acs-vestid
 import { VentayrentaService } from '../../shared/services/ventayrenta.service';
 import { CategoriaComponent } from './components/categoria/categoria.component';
 import { CategoriaService } from '../../shared/services/categoria.service';
+import { ChartModule } from 'primeng/chart';
+
 const VIEWS = [HomeView, FooterComponent];
 
-const MATERIALS = [ DragDropModule,ButtonModule, DropdownModule, InputTextModule, CardModule,CalendarModule, InputNumberModule, ToastrModule,TabViewModule,
+const MATERIALS = [ChartModule, DragDropModule,ButtonModule, DropdownModule, InputTextModule, CardModule,CalendarModule, InputNumberModule, ToastrModule,TabViewModule,
   AvatarModule, PaginatorModule,AvatarGroupModule, DialogModule,TableModule,IconFieldModule,InputIconModule
 ]
 @NgModule({

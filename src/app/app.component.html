@@ -42,16 +42,18 @@
 
 
 <router-outlet/>
-
-<p-dialog *ngIf="showWelcomeMessage" modal [closable]="false" header="Bienvenido">
-  <p>¡Bienvenido! Parece que es tu primera vez aquí.</p>
-  <p>¿Quieres sincronizar una cuenta para recuperar tu información?</p>
-
-  <div class="dialog-buttons">
-    <button pButton label="Sí, sincronizar" (click)="sincronizarCuenta()" class="p-button-primary"></button>
-    <button pButton label="No, gracias" (click)="cerrarMensaje()" class="p-button-secondary"></button>
+<!-- Modal de bienvenida -->
+<div class="modal-overlay" *ngIf="showWelcomeMessage">
+  <div class="modal">
+    <h2>Bienvenido</h2>
+    <p>¡Bienvenido! Parece que es tu primera vez aquí.</p>
+    <p>¿Quieres sincronizar una cuenta para recuperar tu información?</p>
+    <div class="dialog-buttons">
+      <button (click)="sincronizarCuenta()" class="btn btn-primary">Sí, sincronizar</button>
+      <button (click)="cerrarMensaje()" class="btn btn-secondary">No, gracias</button>
+    </div>
   </div>
-</p-dialog>
+</div>
 
 <!-- <ng-chatbot-angular
   [chatConfig]="config"

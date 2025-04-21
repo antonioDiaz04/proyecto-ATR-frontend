@@ -58,6 +58,6 @@ editarRenta(rentaId: string, rentaData: any): Observable<any> {
 
   // Obtener productos rentados por un usuario
   obtenerProductosRentadosByIdUser(usuarioId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/obtenerProductosRentadosByIdUser/${usuarioId}`);
+    return this.http.get(`${this.apiUrl}/rentasByidUser/${usuarioId}`);
   }
 }

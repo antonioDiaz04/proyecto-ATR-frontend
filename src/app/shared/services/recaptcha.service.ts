@@ -7,6 +7,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,7 @@ export class RecaptchaService {
 
     return this.http
       .post<any>(
-        'http://localhost:4000/api/v1/verificar/' + token + '/',
+        `${environment.api}/verificar/' + token + '/`,
         httpOptions
       )
 

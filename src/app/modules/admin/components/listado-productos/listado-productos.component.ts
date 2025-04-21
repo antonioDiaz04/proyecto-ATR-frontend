@@ -13,6 +13,7 @@ declare const $: any;
     '../../../../shared/styles/tablePrime.scss',
     '../../../../shared/styles/form.scss',
   ],
+
 })
 export class ListadoProductosComponent implements OnInit, OnChanges {
   allProducts: Producto[] = [];

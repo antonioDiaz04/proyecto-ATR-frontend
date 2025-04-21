@@ -6,7 +6,7 @@
     Confirmar Eliminación
   </div>
   <div class="content">
-    <p>¿Estás seguro de que deseas eliminar este producto?</p>
+    <p>¿Estás seguro de que deseas eliminar este vestido?</p>
   </div>
   <div class="actions">
     <div class="ui red cancel inverted button">
@@ -21,12 +21,12 @@
 </div>
 
 <section>
-  <h1>{{ mostrarModalAddVestido ? 'Agregar Producto' : 'Lista de Productos' }}</h1>
+  <h1>{{ mostrarModalAddVestido ? 'Agregar vestido' : 'Lista de vestidos' }}</h1>
 
-  <button class="submit-btn" type="button" (click)="mostrarModalAddVestido ? cerrarModalHandler(false) : abrirModal()"
-    [ngClass]="mostrarModalAddVestido ? 'p-button-secondary' : 'p-button-primary'">
-    {{ mostrarModalAddVestido ? 'Cancelar' : 'Agregar Producto' }}
-  </button>
+  <!-- [ngClass]="mostrarModalAddVestido ? 'p-button-secondary' : 'p-button-primary'"> -->
+  <button class="submit-btn-volver" type="button" (click)="mostrarModalAddVestido ? cerrarModalHandler(false) : abrirModal()"
+ > {{ mostrarModalAddVestido ? 'Cancelar' : 'Agregar vestido' }}
+</button>
 
   <app-registo-producto [productoEditar]="productoEditar" [mostrarModalAddVestido]="mostrarModalAddVestido"
     *ngIf="mostrarModalAddVestido" (mostrarFormulario)="cerrarModalHandler($event)"

@@ -21,7 +21,7 @@ export class PublicComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // Verifica si la ruta actual es 'home'
-        this.isHomePage = event.url === '/public/inicio';
+        this.isHomePage = event.url === '/inicio';
       }
     });
   }
@@ -76,7 +76,7 @@ export class PublicComponent implements OnInit {
       this.router.navigate(['/auth/login']); // Navegación hacia la página de inicio de sesión
     } else {
       console.log('click', route);
-      this.router.navigate(['/public', route]); // Navegación hacia otras páginas públicas
+      this.router.navigate(['/', route]); // Navegación hacia otras páginas públicas
     }
   }
 

@@ -1,21 +1,36 @@
 <p-confirmDialog></p-confirmDialog>
 
-<div class="contiendescripcion"> <div class="volver" >
-  <i class="pi pi-arrow-left"(click)="volver()">Atrás</i> 
-</div>
+<div class="contiendescripcion">
+  <div class="volver">
+    <i class="pi pi-arrow-left" (click)="volver()">Atrás</i>
+  </div>
   <div class="product-detail-container" *ngIf="Detalles && !isLoading">
     <div class="product-img">
+      <!-- Contador de imágenes (añadido) -->
+      <div class="image-counter">
+        {{ (Detalles.imagenes?.indexOf(mainImageUrl) || 0) + 1 }} / {{ Detalles.imagenes?.length || 0 }}
+      </div>
+
+      <!-- Thumbnail images (original) -->
       <div class="thumbnail-images">
         <ng-container *ngIf="Detalles.imagenes">
           <img *ngFor="let image of Detalles.imagenes; let i = index" [src]="image" alt="Thumbnail"
-            (click)="changeMainImage(image)" [class.selected]="image === mainImageUrl" class="thumbnail" />
+            (mouseenter)="onThumbnailHover(image)" (mouseleave)="resetMainImage()" (click)="changeMainImage(image)"
+            [class.selected]="image === mainImageUrl" class="thumbnail" />
         </ng-container>
       </div>
-
-      <!-- Imagen principal -->
-      <div class="product-images">
+      <!-- Product images (original con botón añadido) -->
+      <div class="product-images" style="position: relative;">
         <img #mainImage *ngIf="mainImageUrl" [src]="mainImageUrl" alt="Product Main Image" class="main-image"
           (click)="openModal()" (mousemove)="applyZoomEffect($event)" (mouseleave)="resetZoomEffect()" />
+
+        <!-- Botón de favoritos (añadido) -->
+        <button class="favorite-button" (click)="toggleFavorite($event)">
+          <svg [class.favorite-active]="esFavorito" viewBox="0 0 24 24">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </button>
       </div>
     </div>
 
@@ -42,10 +57,16 @@
     <div class="product-info" data-aos="zoom-in-down">
       <h1 class="product-name">{{ Detalles.nombre }}</h1>
 
-      <div *ngIf="Detalles.disponible" class="availability">
+      <div *ngIf="Detalles.disponible" class="availability disponible">
         <i class="fas fa-store"></i>
-        <span>Disponible en tienda</span>
+        <span>Disponible para
+          {{ Detalles.opcionesTipoTransaccion}}
+        </span>
       </div>
+
+
+
+
       <!-- 🚨 Mostrar mensaje si el producto no está disponible -->
       <div class="availability" *ngIf="!Detalles.disponible">
         <i class="pi pi-exclamation-triangle"></i>
@@ -54,13 +75,27 @@
       <div class="contenidoTExt">
         <div class="price-content">
 
-          <p class="price">$MX{{ Detalles.precio }}</p>
-
+          <p class="price">$MX{{ Detalles.precioActual }}</p>
+          <p *ngIf="Detalles.mostrarPrecioAnterior" class="old-price">$MX{{ Detalles.precioAnterior }}</p>
         </div>
+
         <div *ngIf="Detalles.nuevo" class="new-label">
           <i class="fas fa-tag"></i>
           <span>¡Nuevo!</span>
         </div>
+      </div>
+      <div class="contenidoTExt">
+        <div class="price-content">
+          <span *ngIf="Detalles.mostrarPrecioAnterior && Detalles.precioAnterior > Detalles.precioActual"
+            class="discount-badge">
+            {{ calcularDescuento(Detalles.precioAnterior, Detalles.precioActual) }}% OFF
+          </span>
+          <span *ngIf="Detalles.mostrarPrecioAnterior && Detalles.precioAnterior > Detalles.precioActual"
+            class="savings-message">
+            ¡Ahorras MX$ {{ Detalles.precioAnterior - Detalles.precioActual | currency }}!
+          </span>
+        </div>
+
       </div>
       <!-- Opciones del producto -->
       <div class="product-options">
@@ -161,37 +196,12 @@
   <div *ngIf="Detalles && !isLoading">
     <h2 class="description-title">Descripción</h2>
     <p class="description-summary">{{ Detalles.descripcion }}</p>
-
-    <h2 class="carousel-title">Accesorios incluidos en el look</h2>
-    <!-- <div class="carousel">
-      <div class="carousel-item" *ngFor="let detalle of accesorios">
-        <img [src]="detalle.imagen" alt="{{ detalle.nombre }}" />
-        <h3>{{ detalle.nombre }}</h3>
-      </div>
-    </div> -->
-
-    <h2 class="related-title">Productos Relacionados</h2>
-    <div class="related-products">
-      <div class="carousel-track">
-        <div class="related-product" *ngFor="let related of productosRelacionados">
-          <img [src]="related.imagen" alt="{{ related.nombre }}" />
-          <h3>{{ related.nombre }}</h3>
-          <p class="price">${{ related.precio }}</p>
-        </div>
-      </div>
-    </div>
-
   </div>
   <!-- </div> -->
 </div>
 <!-- Modal de la imagen en pantalla completa -->
 <div class="image-modal" *ngIf="isViewImagen" (click)="closeModal($event)">
-  <img
-    #PreviewmainImage
-    (mousemove)="applyZoomEffectPreviewmainImage($event)"
-    (mouseleave)="resetZoomEffectPreviewmainImage()"
-    [src]="Detalles.imagenPrincipal"
-    alt="Imagen Ampliada"
-    class="modal-image"
-  />
+  <img #PreviewmainImage (mousemove)="applyZoomEffectPreviewmainImage($event)"
+    (mouseleave)="resetZoomEffectPreviewmainImage()" [src]="Detalles.imagenPrincipal" alt="Imagen Ampliada"
+    class="modal-image" />
 </div>

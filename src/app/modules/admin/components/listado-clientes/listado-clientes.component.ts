@@ -173,13 +173,14 @@ export class ListadoClientesComponent implements OnInit {
     if (route === 'login') {
       this.rou.navigate(['/auth/login']); // Navegación hacia la página de inicio de sesión
     } else {
-      this.rou.navigate(['/purificadoraAdm', route]); // Navegación hacia otras páginas públicas
+      this.rou.navigate(['/admin', route]); // Navegación hacia otras páginas públicas
     }
   }
 
-  redirecTo(route: string): void {
-    this.rou.navigate(['/purificadoraAdm/cliente/', route]);
-  }
+  
+add(){
+    this.visible = true;
+}
 
   editar(id: any) {
     this.visible = true;
@@ -188,20 +189,20 @@ export class ListadoClientesComponent implements OnInit {
       // Decodifica la contraseña
 
       console.log('actualizar....');
-      // this.UserS.detalleClienteById(id).subscribe((data) => {
-      //   this.listUsuario = data;
-      //   const decodedPassword = this.sessionService.descifrarTexto(
-      //     data.password
-      //   );
-      //   console.log(decodedPassword);
-      //   this.clienteForm.setValue({
-      //     nombre: data.nombre,
-      //     email: data.email,
-      //     // // estatus: data.estatus,
-      //     telefono: data.telefono,
-      //     password: decodedPassword,
-      //   });
-      // });
+      this.UserS.detalleClienteById(id).subscribe((data) => {
+        this.listUsuario = data;
+        // const decodedPassword = this.sessionService.descifrarTexto(
+        //   data.password
+        // );
+        // console.log(decodedPassword);
+        this.clienteForm.setValue({
+          nombre: data.nombre,
+          email: data.email,
+          // // estatus: data.estatus,
+          telefono: data.telefono,
+          password: '',
+        });
+      });
     }
   }
   // resaltado de texto letra o palabra entonctrada

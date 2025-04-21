@@ -88,6 +88,7 @@ div.contiendescripcion {
 }
 
 .product-img {
+  position: relative;
   flex: 2;
   display: flex;
   align-items: center;
@@ -177,6 +178,62 @@ div.contiendescripcion {
   }
 }
 
+
+
+
+
+// 
+/* Contador de imágenes */
+.image-counter {
+  position: absolute;
+  top: 25px;
+  right: 15px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+/* Botón de favoritos */
+.favorite-button {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.favorite-button svg {
+  width: 20px;
+  height: 20px;
+  fill: #ccc;
+  stroke: #999;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+.favorite-button .favorite-active {
+  fill: #ff4757;
+  stroke: #ff4757;
+}
+
+.favorite-button:hover svg {
+  transform: scale(1.1);
+}
+
+// 
 /* Para pantallas grandes */
 @media (min-width: 768px) {
   .ui.slide.masked.reveal.image .visible.content {

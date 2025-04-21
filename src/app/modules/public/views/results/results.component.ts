@@ -149,7 +149,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
 
   viewProductDetails(productId: string): void {
     this.ngxService.start();
-    this.router.navigateByUrl(`public/Detail/${productId}`);
+    this.router.navigateByUrl(`/Detail/${productId}`);
   }
 
 

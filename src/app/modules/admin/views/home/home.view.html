@@ -1,6 +1,118 @@
+<div class="home-dashboard">
+    <!-- <h1>Bienvenido </h1> -->
+    <div class="admin-header">
+        <div class="admin-title">
+            <h1>Hola Admin</h1>
+            <p>Bienvenido al panel de administración</p>
+        </div>
+    </div>
+
+    <section class="card-container">
+        <div class="card">
+            <div class="card-background"
+                style="background-image: url('https://i.pinimg.com/474x/34/85/14/348514ab4c60b100efa35680b02f7d75.jpg');">
+            </div>
+            <div class="card-footer">
+                <h2>Usuarios</h2>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-background"
+                style="background-image: url('https://i.pinimg.com/474x/ba/4a/6f/ba4a6fdd8fb86ea36cfa834b17405bd4.jpg');">
+            </div>
+            <div class="card-footer">
+                <h2>Productos</h2>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-background"
+                style="background-image: url('https://i.pinimg.com/474x/62/34/f2/6234f2a95a986a0c670c2554e2ca7add.jpg');">
+            </div>
+            <div class="card-footer">
+                <h2>Rentas y ventas</h2>
+            </div>
+        </div>
+    </section>
 
 
-<!-- <smart-chart #chart id="chart" [caption]="caption" [borderLineWidth]="borderLineWidth" [showBorderLine]="showBorderLine"
-    [description]="description" [showLegend]="showLegend" [padding]="padding" [titlePadding]="titlePadding"
-    [dataSource]="dataSource" [xAxis]="xAxis" [seriesGroups]="seriesGroups"></smart-chart>
- -->
+    <section class="rentas-dashboard">
+        <h3>Dashboard de Rentas</h3>
+        <div class="dashboard-container">
+            <div class="dashboard-card">
+                <h4>Prenda más rentada</h4>
+                <p>
+                    {{ stats.productoMasRentado?.productoNombre || 'No disponible' }}
+                    <span *ngIf="stats.productoMasRentado">({{ stats.productoMasRentado.count }} alquileres)</span>
+                </p>
+            </div>
+            <div class="dashboard-card">
+                <h4>Usuario con más rentas</h4>
+                <p>
+                    {{ stats.usuarioMasActivo?.usuarioNombre || 'No disponible' }}
+                    <span *ngIf="stats.usuarioMasActivo">({{ stats.usuarioMasActivo.count }} rentas)</span>
+                </p>
+            </div>
+            <div class="dashboard-card">
+                <h4>Fecha con más rentas</h4>
+                <p>{{ stats.fechaMayorRenta || 'No disponible' }}</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="chart-container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Estadísticas por Fecha de Rentas</h3>
+            </div>
+            <div class="card-body">
+                <p-chart type="bar" [data]="chartDataFecha"></p-chart>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Estadísticas de Rentas</h3>
+            </div>
+            <div class="card-body">
+                <p-chart type="pie" [data]="chartData"></p-chart>
+            </div>
+        </div>
+    </section>
+    <section class="chart-container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Estadísticas de Rentas y Ventas por Año</h3>
+            </div>
+            <div class="card-body">
+                <p-chart type="line" [data]="chartDataAnual"></p-chart>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Estadísticas de Rentas y Ventas por Mes</h3>
+            </div>
+            <div class="card-body">
+                <p-chart type="line" [data]="chartDataMensual"></p-chart>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Tarjeta de notificaciones de comentarios pendientes -->
+    <!-- <section class="notifications-container">
+        <div class="notification-card">
+            <div class="notification-icon">
+                <i class="fa fa-commenting-o" aria-hidden="true"></i>
+            </div>
+            <div class="notification-content">
+                <h4>Comentarios Pendientes</h4>
+                <p>{{ commentCount || 0 }} nuevos</p>
+                <span class="date">{{ fechaTexto }}</span>
+                <button class="btn-notification" type="button" (click)="goToComments()">Ver Comentarios</button>
+            </div>
+        </div>
+    </section> -->
+</div>

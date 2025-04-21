@@ -1,46 +1,30 @@
 <div class="container-card">
   <h2 class="accessory-message">Elegancia y estilo</h2>
-  <!-- Tarjeta 1 -->
-  <div class="card-hero">
-    <img
-      src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1740548954/images-AR/kbvvxf2v2wx7g2ac3qgg.jpg"
-      alt="Vestido Elegante"
-      class="card-img"
-    />
+  <!-- Desktop view (tarjetas normales) -->
+<div *ngIf="!isMobile">
+  <div class="card-hero" *ngFor="let card of cards; let i = index" [class.reverse]="i % 2 !== 0">
+    <img [src]="card.image" alt="Imagen" class="card-img" />
     <div class="card-text">
-      <h2>
-        Descubre la esencia de la elegancia con nuestro exclusivo vestido.
-      </h2>
-
-      <p>
-        Cada pliegue y cada detalle han sido diseñados para resaltar tu belleza
-        única. Imagina deslizarte en un evento, sintiendo cómo todas las miradas
-        se posan en ti, admirando no solo el vestido, sino la confianza que
-        emana de ti. Este no es solo un atuendo; es una declaración de estilo
-        que transforma cada ocasión en un momento inolvidable. Atrévete a
-        brillar.
-      </p>
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.text }}</p>
     </div>
   </div>
+</div>
 
-  <!-- Tarjeta 2 -->
-  <div class="card-hero reverse">
-    <img
-      src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1740548944/images-AR/ybxbjn512j1u1tba1sob.jpg"
-      alt="Vestido Casual"
-      class="card-img"
-    />
-    <div class="card-text">
-      <h2>Redefine tu estilo con nuestro cautivador vestido.</h2>
-      <p>
-        Cada detalle ha sido meticulosamente diseñado para realzar tu silueta y
-        resaltar tu personalidad. Imagina la sensación de ser el centro de
-        atención en cada evento, mientras la sofisticación y el glamour te
-        envuelven. Este vestido no es solo una prenda; es una experiencia que te
-        invita a expresar tu verdadera esencia. Haz que cada momento cuente.
-      </p>
+<!-- Mobile view (carrusel con texto encima de la imagen) -->
+<p-carousel *ngIf="isMobile" [value]="cards" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="6000">
+  <ng-template pTemplate="item" let-card>
+    <div class="card-hero-mobile">
+      <img [src]="card.image" alt="Imagen" />
+      <div class="overlay">
+        <div class="card-text">
+          <h2>{{ card.title }}</h2>
+          <p>{{ card.text }}</p>
+        </div>
+      </div>
     </div>
-  </div>
+  </ng-template>
+</p-carousel>
 
   <div class="secciones">
     <!-- <section class="inspiracion">
@@ -101,49 +85,26 @@
       </header>
 
       <main>
-        <section class="steps">
-          <div class="step">
+        <section class="steps" *ngIf="!isMobile">
+          <div class="step" *ngFor="let item of steps">
             <span class="icon">
-              <i class="pi pi-whatsapp"></i>
-              <!-- Icono de WhatsApp -->
+              <i [class]="item.icon"></i>
             </span>
-            <p>
-              <strong>Visítanos en el local:</strong> Llámanos por WhatsApp o
-              por nuestras Redes Sociales...
-            </p>
-            <!-- <button>Haz tu cita aquí</button> -->
-          </div>
-
-          <div class="step">
-            <span class="icon">
-              <i class="pi pi-home"></i>
-              <!-- Icono de Selección -->
-            </span>
-            <p>
-              <strong>¡Visítanos y Selecciona!</strong> Prueba los vestidos que
-              más te gusten...
-            </p>
-          </div>
-
-          <div class="step">
-            <span class="icon">
-              <i class="pi pi-check-circle"></i>
-              <!-- Icono de Renta -->
-            </span>
-            <p><strong>¡Renta!</strong> Recoge y lleva el vestido...</p>
-          </div>
-
-          <div class="step">
-            <span class="icon">
-              <i class="pi pi-undo"></i>
-              <!-- Icono de Devolución -->
-            </span>
-            <p>
-              <strong>Devolución Fácil:</strong> Los vestidos se regresan...
-            </p>
+            <p [innerHTML]="item.text"></p>
           </div>
         </section>
-
+        
+        <p-carousel *ngIf="isMobile" [value]="steps" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000">
+          <ng-template pTemplate="item" let-step>
+            <div class="step p-4">
+              <span class="icon">
+                <i [class]="step.icon"></i>
+              </span>
+              <p [innerHTML]="step.text"></p>
+            </div>
+          </ng-template>
+        </p-carousel>
+        
         <section class="delivery-option">
           <h2>¿No Tengo Tiempo De Recoger O Devolver El Vestido?</h2>
           <p>Por comodidad ofrecemos la opción de...</p>
@@ -155,17 +116,6 @@
       </main>
     </section>
 
-    <section class="comentarios">
-      <h2>Coméntanos</h2>
-      <p>
-        ¿Quieres compartir tu opinión o experiencia? ¡Envíanos tu comentario
-        para ayudarnos a mejorar!👇
-      </p>
-      <form class="form-comentarios">
-        <input type="text" placeholder="Ingresa tu nombre" required />
-        <textarea placeholder="Comentario" rows="4" required></textarea>
-        <button type="submit">Enviar</button>
-      </form>
-    </section>
+
   </div>
 </div>

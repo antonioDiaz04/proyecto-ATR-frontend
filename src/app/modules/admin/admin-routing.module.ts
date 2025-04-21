@@ -57,21 +57,6 @@ const routes: Routes = [
         component: CategoriaComponent,
       },
       {
-        path: 'cliente',
-        component: ControlClientesView,
-        children: [
-          {
-            path: 'lista-clientes',
-            component: ListadoClientesComponent,
-          },
-          {
-            path: '',
-            redirectTo: 'lista-clientes',
-            pathMatch: 'full',
-          },  
-        ],
-      },
-      {
         path: 'control-clientes',
         component: ControlClientesView,
         children: [

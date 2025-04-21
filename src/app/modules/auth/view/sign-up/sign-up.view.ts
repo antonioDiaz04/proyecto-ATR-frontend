@@ -344,7 +344,7 @@ export class SignUpView implements OnInit, AfterViewInit {
             'info'
           ).then(() => {
             // Redirigir al login después de cerrar el modal de SweetAlert
-            this.router.navigate(['/public/inicio']);
+            this.router.navigate(['/inicio']);
           });
         },
         (error) => {

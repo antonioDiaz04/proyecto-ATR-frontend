@@ -8,6 +8,23 @@
   // border:solid 1.5px #f5f5f5;
 }
 
+
+
+
+.availability.disponible span {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+
+.availability.disponible span {
+  background-color: #dcfce7;
+  /* green-100 */
+  color: #166534;
+  /* green-800 */
+}
+
 .availability {
   display: flex;
   align-items: center; // Alinea verticalmente el ícono y el texto
@@ -34,14 +51,51 @@ h1 {
   font-weight: 999;
 }
 
-.price {
-  color: #ff7f00;
-  // font-size: 1.5em;
-  font-size: 20px;
-  font-weight: 900;
+
+.price-content {
+  display: flex;
+  flex-direction: row;
+
+  gap: 2px; /* Espacio reducido entre precios */
+  // text-align: justify;
+  .price {
+    color: #ff7f00;
+    // font-size: 1.5em;
+    font-size: 2.5em;
+    // font-weight: 900;
 
 
+  }
+
+  .old-price {
+    color: #999;
+    /* color gris */
+    text-decoration: line-through;
+    /* tachado */
+    font-size: 2.5em;
+    margin-left: 8px;
+
+    /* espacio entre precios */
+  }
+
+
+  
+  .discount-badge {
+    background: #ff0000;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 5px;
+  }
+  
+  .savings-message {
+    color: #00aa00;
+    font-size: 14px;
+    margin-left: 5px;
+  }
 }
+
 
 // p{
 //   font-size: x-small;
@@ -227,6 +281,7 @@ h1 {
 
 .product-name {
   font-size: 30px;
+  margin-bottom: 2em;
 
 }
 
@@ -250,10 +305,9 @@ h1 {
   gap: 10px;
   display: flex;
   flex-direction: row;
-  // padding: inherit;
-  // justify-content: space-between;
+  // margin-top: 10px;
+  align-items: flex-start; /* Evita que los hijos se estiren verticalmente */
 }
-
 // .availability {
 //   background-color: #e8f5e9; /* Fondo verde claro */
 //   color: #2e7d32; /* Texto verde oscuro */

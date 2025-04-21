@@ -440,13 +440,13 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
               if (this.userROL === ERol.ADMIN) {
                 navigateTo = '/admin/home';
               } else if (this.userROL === ERol.CLIENTE) {
-                navigateTo = '/public/inicio';
+                navigateTo = '/inicio';
               } else if (this.userROL === ERol.TITULAR) {
                 navigateTo = '/titular/home';
               }
 
               this.router.navigate([navigateTo]).then(() => {
-                if (navigateTo === '/public/inicio') {
+                if (navigateTo === '/inicio') {
                   window.location.reload();
                 }
                 this.inicia();
@@ -559,14 +559,14 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
           if (this.userROL === ERol.ADMIN) {
             navigateTo = '/admin/home';
           } else if (this.userROL === ERol.CLIENTE) {
-            navigateTo = '/public/inicio';
+            navigateTo = '/inicio';
           } else if (this.userROL === ERol.TITULAR) {
             navigateTo = '/titular/home';
           }
           console.log(navigateTo);
 
           this.router.navigate([navigateTo]).then(() => {
-            if (navigateTo === '/public/inicio') {
+            if (navigateTo === '/inicio') {
               window.location.reload();
             }
             this.inicia();

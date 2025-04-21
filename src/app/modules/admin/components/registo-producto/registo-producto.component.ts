@@ -44,28 +44,45 @@ export class RegistoProductoComponent implements OnInit {
       altura: ["", [Validators.required, Validators.min(30)]],
       cintura: ["", [Validators.required, Validators.min(20)]],
       color: ["", [Validators.required]],
-      precio: [0, [Validators.required, Validators.min(0)]],
+      precioAnterior: [0, [Validators.required, Validators.min(0)]],
+      precioActual: [0, [Validators.required, Validators.min(0)]],
+      mostrarPrecioAnterior: [false], // Checkbox desactivado por defecto
       opcionesTipoTransaccion: ["Venta", [Validators.required]],
       nuevo: [true],
+
       tipoCuello: ["", [Validators.required]],
       tipoCola: ["", [Validators.required]],
       tipoCapas: ["", [Validators.required]],
       tipoHombro: ["", [Validators.required]],
       descripcion: [""],
       idCategoria: ['', Validators.required], // Agregar este control
- 
+
     });
   }
 
 
+  mostrarPrecioAnterior: boolean = false
+  togglePrecioAnterior() {
+    const mostrar = this.productoForm.get('mostrarPrecioAnterior')?.value;
+    const precioAnteriorCtrl = this.productoForm.get('precioAnterior');
+
+    if (mostrar) {
+      this.mostrarPrecioAnterior = mostrar
+      precioAnteriorCtrl?.setValidators([Validators.required]); // Hacerlo obligatorio si se activa
+    } else {
+      this.mostrarPrecioAnterior = false
+      precioAnteriorCtrl?.clearValidators();
+    }
+    precioAnteriorCtrl?.updateValueAndValidity();
+  }
 
   ngOnInit(): void {
     this.productoId = this.route.snapshot.paramMap.get('id');
     console.log('ID del producto:', this.productoId);
-  
+
     // Obtener categorías
     this.obtenerCategorias();
-  
+
     if (this.productoId) {
       this.productoService.obtenerDetalleProductoById(this.productoId).subscribe(
         (producto) => {
@@ -78,7 +95,7 @@ export class RegistoProductoComponent implements OnInit {
       );
     }
   }
-  
+
   obtenerCategorias(): void {
     this.categoriaService.obtenerCategorias().subscribe(
       (categorias) => {
@@ -103,6 +120,9 @@ export class RegistoProductoComponent implements OnInit {
       nuevo: producto.nuevo !== undefined ? producto.nuevo : true, // Valor por defecto si no está definido
       tipoCuello: producto.tipoCuello || "",
       tipoCola: producto.tipoCola || "",
+      precioAnterior: producto.precioAnterior|| 0,
+      precioActual: producto.precioActual|| 0,
+      mostrarPrecioAnterior: producto.mostrarPrecioAnterior, // Checkbox desactivado por defecto
       tipoCapas: producto.tipoCapas || "",
       tipoHombro: producto.tipoHombro || "",
       descripcion: producto.descripcion || "",
@@ -135,7 +155,7 @@ export class RegistoProductoComponent implements OnInit {
     { label: 'Gris', value: 'gris' },
     { label: 'Beige', value: 'beige' },
     { label: 'Cremas', value: 'crema' },
-    
+
     // Colores primarios y secundarios
     { label: 'Rojo', value: 'rojo' },
     { label: 'Azul', value: 'azul' },
@@ -144,41 +164,41 @@ export class RegistoProductoComponent implements OnInit {
     { label: 'Naranja', value: 'naranja' },
     { label: 'Morado', value: 'morado' },
     { label: 'Rosa', value: 'rosa' },
-    
+
     // Tonos pastel
     { label: 'Rosa Pastel', value: 'rosaPastel' },
     { label: 'Azul Pastel', value: 'azulPastel' },
     { label: 'Lavanda', value: 'lavanda' },
     { label: 'Menta', value: 'menta' },
     { label: 'Melocotón', value: 'melocoton' },
-    
+
     // Tonos tierra
     { label: 'Marrón', value: 'marron' },
     { label: 'Caqui', value: 'caqui' },
     { label: 'Terracota', value: 'terracota' },
     { label: 'Ocre', value: 'ocre' },
     { label: 'Caramelo', value: 'caramelo' },
-    
+
     // Colores metálicos
     { label: 'Dorado', value: 'dorado' },
     { label: 'Plateado', value: 'plateado' },
     { label: 'Bronce', value: 'bronce' },
     { label: 'Cobre', value: 'cobre' },
-    
+
     // Colores vibrantes
     { label: 'Fucsia', value: 'fucsia' },
     { label: 'Turquesa', value: 'turquesa' },
     { label: 'Esmeralda', value: 'esmeralda' },
     { label: 'Rubí', value: 'rubi' },
     { label: 'Zafiro', value: 'zafiro' },
-    
+
     // Patrones y estampados
     { label: 'Estampado Floral', value: 'estampadoFloral' },
     { label: 'Rayas', value: 'rayas' },
     { label: 'Cuadros', value: 'cuadros' },
     { label: 'Puntos', value: 'puntos' },
     { label: 'Animal Print', value: 'animalPrint' },
-    
+
     // Degradados y efectos
     { label: 'Degradé', value: 'degrade' },
     { label: 'Ombré', value: 'ombre' },

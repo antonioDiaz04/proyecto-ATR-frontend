@@ -162,7 +162,7 @@ verificarRespuesta() {
                 'Se actualizó tu contraseña',
                 'success'
               );
-              this.router.navigate(['/public/inicio']); // Redirige al home del cliente
+              this.router.navigate(['/inicio']); // Redirige al home del cliente
               this.esFrmResetPassword = false;
             } else {
               this.toastr.error('Los datos no fueron encontrados', 'Error');

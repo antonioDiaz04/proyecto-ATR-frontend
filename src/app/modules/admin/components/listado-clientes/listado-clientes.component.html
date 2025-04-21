@@ -71,7 +71,7 @@
         <input pInputText style="width: 150%; padding-left: 20%;" type="text" (input)="onGlobalFilter($event)"
           placeholder="Buscar cliente..." [(ngModel)]="filterText" />
       </span>
-      <button (click)="redirecTo('agregar-cliente')" class="custom-btn add-button">
+      <button (click)="add()" class="custom-btn add-button">
         <i class="fa-solid fa-plus"></i> Nuevo
       </button>
     </ng-template>

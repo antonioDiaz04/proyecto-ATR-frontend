@@ -88,7 +88,7 @@ export class SidevarComponent implements OnInit {
   private redirectWithFilters() {
     const { categoria, color, tallas } = this.selectedFilters;
     // Redirige a la ruta deseada con los filtros como parámetros de consulta
-    this.router.navigate(['/public/search'], {
+    this.router.navigate(['/search'], {
       queryParams: {
         categoria,
         color,

@@ -29,7 +29,7 @@ import { environment } from "../environments/environment";
     },
   ],
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  styleUrls: ["./app.component.scss",'./alert.scss'],
 })
 export class AppComponent implements OnInit {
   showWelcomeMessage = false;
@@ -39,6 +39,8 @@ export class AppComponent implements OnInit {
   isLoading: boolean = false; // Loader de carga
   firstTime: boolean = false; // Control de la primera vez
 
+ // Nueva propiedad para controlar el diálogo de sincronización
+ showSyncCartDialog: boolean = false; 
 
   constructor(
     private swPush: SwPush,
@@ -70,7 +72,7 @@ export class AppComponent implements OnInit {
     if (typeof sessionStorage !== "undefined") {
       if (!sessionStorage.getItem("firstSession") && !this.isUserLoggedIn()) {
         this.firstTime = true;
-          this.showWelcomeLoader();
+        this.showWelcomeLoader();
 
         setTimeout(() => {
           this.ngxService.stop();
@@ -80,6 +82,11 @@ export class AppComponent implements OnInit {
     } else {
       console.warn("sessionStorage no está disponible en este entorno.");
     }
+
+    // // Si el usuario no está logeado, mostrar el diálogo para sincronizar el carrito
+    // if (!this.showWelcomeMessage) {
+    //   this.showSyncCartDialog = true;
+    // }
   }
 
     // ✅ Loader de bienvenida (solo primera vez)
@@ -106,10 +113,10 @@ export class AppComponent implements OnInit {
     const userData = this.sessionService.getUserData();
     if (userData) {
       this.userROL = userData.rol;
-      // this.showWelcomeMessage = false;
+      this.showWelcomeMessage = false;
       return this.userROL === ERol.CLIENTE;
     }
-    // this.showWelcomeMessage = true;
+    this.showWelcomeMessage = true;
     return false;
   }
 

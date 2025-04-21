@@ -160,7 +160,7 @@ export class ProductosComponent implements OnInit {
   // }
 
   verDetalles(id: number) {
-    this.router.navigate(["/public/Detail/" + id]);
+    this.router.navigate(["/Detail/" + id]);
   }
 
   redirectTo(route: string): void {
@@ -169,7 +169,7 @@ export class ProductosComponent implements OnInit {
       this.router.navigate(["/auth/Sign-in"]);
     } else {
       console.log("click", route);
-      this.router.navigate(["/public", route]);
+      this.router.navigate(["/", route]);
     }
   }
 

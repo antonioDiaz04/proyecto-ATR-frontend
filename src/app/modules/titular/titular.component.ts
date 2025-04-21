@@ -18,6 +18,6 @@ export class TitularComponent {
   }
   logout() {
     localStorage.removeItem("token");
-    this.router.navigate(["/public/inicio"]);
+    this.router.navigate(["/inicio"]);
   }
 }

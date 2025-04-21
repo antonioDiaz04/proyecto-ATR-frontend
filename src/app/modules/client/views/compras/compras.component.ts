@@ -1,14 +1,14 @@
 import { Component, OnInit } from "@angular/core";
-import { SessionService } from "../../../../../shared/services/session.service";
-import { VentayrentaService } from "../../../../../shared/services/ventayrenta.service";
-import { ERol } from "../../../../../shared/constants/rol.enum";
+import { SessionService } from "../../../../shared/services/session.service";
+import { VentayrentaService } from "../../../../shared/services/ventayrenta.service";
+import { ERol } from "../../../../shared/constants/rol.enum";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 
 @Component({
   selector: "app-compras",
   templateUrl: "./compras.component.html",
-  styleUrls: ["../../../style.scss"],
+  styleUrls: ["../../style.scss"],
 })
 export class ComprasComponent implements OnInit {
   userROL: string | null = null;
@@ -77,6 +77,6 @@ private router:Router,
     this.location.back();
   }
   verDetalles(id: number) {
-    this.router.navigate(["/public/Detail/" + id]);
+    this.router.navigate(["/Detail/" + id]);
   }
 }

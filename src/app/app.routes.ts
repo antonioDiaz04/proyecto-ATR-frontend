@@ -7,11 +7,11 @@ import { clientGuard } from './shared/guards/auth.guard';
 export const routes: Routes = [
     {
       path: '',
-      redirectTo: 'public',
+      redirectTo: '',
       pathMatch: 'full',
     },
     {
-      path: 'public',
+      path: '',
       loadChildren: () => import('../app/modules/public/public.module').then(m => m.PublicModule),
       // canActivate: [SomeGuard], // Si necesitas algún guard
     },

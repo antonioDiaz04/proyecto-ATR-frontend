@@ -8,7 +8,7 @@ import { StorageService } from "../../../../shared/services/storage.service";
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss',"menuLateral.scss"],
+  styleUrls: ['./header.component.scss', "menuLateral.scss"],
 
   encapsulation: ViewEncapsulation.None,
 })
@@ -39,6 +39,7 @@ export class HeaderComponent implements OnInit {
   }
 
 
+
   isResizing: boolean = false;
 
 
@@ -58,6 +59,25 @@ export class HeaderComponent implements OnInit {
     ];
     this.home = { icon: 'pi pi-home', routerLink: '/' };
   }
+
+  // Método que se dispara al pasar el cursor sobre el menú lateral
+  onSidenavMouseEnter(): void {
+    if (this.isCollapsed) {
+      // Abre el menú y remueve la clase de padding colapsado
+      this.isCollapsed = false;
+      this.renderer.removeClass(document.body, 'collapsed-padding');
+    }
+  }
+
+  // Método que se dispara al salir el cursor del menú lateral
+  onSidenavMouseLeave(): void {
+    if (!this.isCollapsed) {
+      // Colapsa el menú y agrega la clase de padding colapsado
+      this.isCollapsed = true;
+      this.renderer.addClass(document.body, 'collapsed-padding');
+    }
+  }
+
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
     if (this.isCollapsed) {
@@ -88,21 +108,21 @@ export class HeaderComponent implements OnInit {
 
 
 
-resizeSidebar(event: MouseEvent) {
-  if (this.isResizing) {
-    const newWidth = event.clientX; // Calcula el nuevo ancho según la posición del mouse
-    const minWidth = 250; // Puedes ajustar el ancho mínimo
-    const maxWidth = 600; // Ajusta el ancho máximo
+  resizeSidebar(event: MouseEvent) {
+    if (this.isResizing) {
+      const newWidth = event.clientX; // Calcula el nuevo ancho según la posición del mouse
+      const minWidth = 250; // Puedes ajustar el ancho mínimo
+      const maxWidth = 600; // Ajusta el ancho máximo
 
-    // Limita el ancho a un rango
-    const finalWidth = Math.min(Math.max(newWidth, minWidth), maxWidth);
-    this.renderer.setStyle(
-      document.querySelector('.w-30rem'),
-      'width',
-      `${finalWidth}px`
-    );
+      // Limita el ancho a un rango
+      const finalWidth = Math.min(Math.max(newWidth, minWidth), maxWidth);
+      this.renderer.setStyle(
+        document.querySelector('.w-30rem'),
+        'width',
+        `${finalWidth}px`
+      );
+    }
   }
-}
 
 
 
@@ -212,10 +232,10 @@ resizeSidebar(event: MouseEvent) {
 
 
   isLoggedIn = !!localStorage.getItem('token'); // Verificar si el token existe
-menuOpen = false;
+  menuOpen = false;
 
-toggleMenu() {
-  this.menuOpen = !this.menuOpen;
-}
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
 }

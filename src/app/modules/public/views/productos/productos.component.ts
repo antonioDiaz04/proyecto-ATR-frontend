@@ -17,7 +17,7 @@ import { NgxUiLoaderService } from "ngx-ui-loader";
 @Component({
   selector: "app-productos",
   templateUrl: "./productos.component.html",
-  styleUrl: "./productos.component.scss",
+  styleUrls: ["./productos.component.scss"],
 })
 export class ProductosComponent implements OnInit {
   isMobile: boolean = false;
@@ -27,24 +27,46 @@ export class ProductosComponent implements OnInit {
   productosPaginados: any = [];
   numVisibleProducts: number = 5; // Valor por defecto
   rows = 7; // Número de elementos por página
-  skeletonItems: any[] = Array(6).fill({}); // Array de 6 elementos para el skeleton
+  skeletonItems: any[] = Array(5).fill({}); // Array de 6 elementos para el skeleton
   productos: any = []; // Inicializamos como array vacío
+  // responsiveOptions = [
+  //   {
+  //     breakpoint: "1024px",
+  //     numVisible: 3.5, // Producto central completo y los laterales a la mitad
+  //     numScroll: 1,
+  //   },
+  //   {
+  //     breakpoint: "768px",
+  //     numVisible: 2.5, // Dos productos completos y uno a la mitad
+  //     numScroll: 1,
+  //   },
+  //   {
+  //     breakpoint: "500px",
+  //     numVisible: 1.5, // Uno completo y el siguiente a la mitad
+  //     numScroll: 1,
+  //   },
+  // ];
   responsiveOptions = [
     {
-      breakpoint: "1024px",
-      numVisible: 3.5, // Producto central completo y los laterales a la mitad
-      numScroll: 1,
+      breakpoint: '1400px',
+      numVisible: 4,
+      numScroll: 1
     },
     {
-      breakpoint: "768px",
-      numVisible: 2.5, // Dos productos completos y uno a la mitad
-      numScroll: 1,
+      breakpoint: '1024px',
+      numVisible: 3,
+      numScroll: 1
     },
     {
-      breakpoint: "500px",
-      numVisible: 1.5, // Uno completo y el siguiente a la mitad
-      numScroll: 1,
+      breakpoint: '768px',
+      numVisible: 2,
+      numScroll: 1
     },
+    {
+      breakpoint: '560px',
+      numVisible: 1,
+      numScroll: 1
+    }
   ];
 
   autoplay = 2000; // Intervalo en milisegundos
@@ -78,6 +100,12 @@ export class ProductosComponent implements OnInit {
       this.isMobile = window.innerWidth <= 600;
     }
   }
+  calcularDescuento(precioAnterior: number, precioActual: number): number {
+    return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
+  }
+
+
+
 
   @HostListener("window:resize", ["$event"])
   onResize() {
@@ -169,7 +197,7 @@ export class ProductosComponent implements OnInit {
 
   verDetalles(id: number) {
     this.ngxService.start(); // Inicia el loader
-    this.router.navigate(["/public/Detail/" + id]);
+    this.router.navigate(["/Detail/" + id]);
   }
 
   redirectTo(route: string): void {
@@ -178,7 +206,7 @@ export class ProductosComponent implements OnInit {
       this.router.navigate(["/auth/Sign-in"]);
     } else {
       console.log("click", route);
-      this.router.navigate(["/public", route]);
+      this.router.navigate(["/", route]);
     }
   }
 

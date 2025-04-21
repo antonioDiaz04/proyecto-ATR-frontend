@@ -1,14 +1,29 @@
-<div class="ui four cards">
+<div class="secciones">
+
+  <section class="comentarios">
+    <h2>Coméntanos</h2>
+    <p>
+      ¿Quieres compartir tu opinión o experiencia? ¡Envíanos tu comentario
+      para ayudarnos a mejorar!👇
+    </p>
+    <form class="form-comentarios">
+      <input type="text" placeholder="Ingresa tu nombre" required />
+      <textarea placeholder="Comentario" rows="4" required></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+  <div class="ui four cards">
     <div *ngFor="let review of reviews" class="ui card">
       <div class="content">
         <div class="header">{{ review.usuario }}</div>
         <div class="description">
-            <p [innerHTML]="review.description"></p>
-            <!-- <p>{{ review.description }}</p> -->
+          <p [innerHTML]="review.description"></p>
+          <!-- <p>{{ review.description }}</p> -->
         </div>
-    </div>
-    <div class="extra content">
+      </div>
+      <div class="extra content">
         <div class="ui star rating" [attr.data-rating]="review.rating" data-max-rating="5"></div>
       </div>
     </div>
   </div>
+</div>

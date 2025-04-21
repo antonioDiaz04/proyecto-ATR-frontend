@@ -1,8 +1,177 @@
-
-
-/* This is the CSS used in the demo */
-smart-chart {
-	width: 100%;
-	max-width: 850px;
+.home-dashboard {
+	padding: 20px;
 }
 
+.admin-header {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	background: linear-gradient(90deg, #007bff, #6f42c1); // Gradiente de azul a morado
+	padding: 20px;
+	border-radius: 10px;
+	color: #fff;
+	margin-bottom: 20px;
+
+	.admin-image {
+		margin-right: 20px;
+
+		img {
+			width: 80px;
+			height: 80px;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+	}
+
+	.admin-title {
+		h1 {
+			margin: 0;
+			font-size: 32px;
+		}
+
+		p {
+			margin: 0;
+			font-size: 16px;
+		}
+	}
+}
+
+.card-container {
+	display: flex;
+	gap: 20px;
+	flex-wrap: wrap;
+}
+
+.card {
+	position: relative;
+	border-radius: 10px;
+	overflow: hidden;
+	width: 360px; // Puedes ajustar el ancho deseado
+	box-shadow: 0 2px 6px rgba(163, 163, 163, 0.15);
+
+	.card-background {
+		height: 200px; // Altura para la imagen de fondo
+		background-size: cover;
+		background-position: center;
+	}
+
+	.card-footer {
+		background: #ffffff; // Fondo blanco
+		padding: 10px;
+		text-align: center;
+
+		h2 {
+			margin: 0;
+			font-size: 20px;
+			color: #333;
+		}
+	}
+}
+
+
+
+
+//   dasboards styles
+.rentas-dashboard {
+	margin: 20px 0;
+
+	h3 {
+		margin-bottom: 10px;
+	}
+
+	.dashboard-container {
+		display: flex;
+		gap: 20px;
+		flex-wrap: wrap;
+	}
+
+	.dashboard-card {
+		flex: 1 1 300px;
+		border: solid 1px #d8d8d8;
+		// background: #f5f5f5;
+		padding: 15px;
+		border-radius: 10px;
+		box-shadow: 0 2px 4px rgba(213, 213, 213, 0.1);
+
+		h4 {
+			margin: 0 0 5px 0;
+			color: #007bff;
+		}
+
+		p {
+			margin: 0;
+			font-size: 16px;
+			color: #333;
+		}
+	}
+}
+
+.chart-container {
+	display: flex;
+	gap: 20px;
+	flex-direction: row;
+	flex-wrap: wrap;
+	// max-width: 600px; // Ancho máximo de la gráfica
+	margin: 20px auto;
+
+	.chart-container p-chart {
+		width: 100%; // Ocupa todo el ancho del contenedor
+		height: 400px; // Define la altura deseada en píxeles
+		display: block;
+	}
+
+	.card {
+		background: #fff;
+		border-radius: 10px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		flex: 1 1 300px;
+		padding: 20px;
+	}
+
+	.card-header h3 {
+		margin: 0 0 10px;
+		color: #007bff;
+	}
+
+	.card-body {
+		text-align: center;
+	}
+}
+
+
+
+// noticicaciones
+.notifications-container {
+	margin: 20px 0;
+	display: flex;
+	justify-content: center;
+}
+
+.notification-card {
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+	padding: 15px 20px;
+	max-width: 400px;
+	width: 100%;
+
+	.notifications-container {
+		margin: 20px 0;
+		display: flex;
+		justify-content: center;
+	}
+
+	.notification-card {
+		background: #fff;
+		border-radius: 10px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		display: flex;
+		align-items: center;
+		padding: 15px 20px;
+		max-width: 400px;
+		width: 100%;
+
+	}
+}
