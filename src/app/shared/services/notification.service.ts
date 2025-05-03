@@ -72,8 +72,8 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/agradecimiento-compra`, datos);
   }
 
-  enviarNotificacionLlevateCarrito(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/llevate-carrito`, {});
+  enviarNotificacionLlevateCarrito(token:any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/llevate-carrito`, { token });
   }
 
   // Métodos de renta

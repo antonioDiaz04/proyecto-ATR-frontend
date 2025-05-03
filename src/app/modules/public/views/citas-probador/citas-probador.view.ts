@@ -6,6 +6,8 @@ import { ERol } from "../../../../shared/constants/rol.enum";
 import { CartService } from "../../../../shared/services/cart.service";
 import { Location } from "@angular/common";
 import { NotificacionService } from "../../../../shared/services/notification.service";
+import { SwPush } from "@angular/service-worker";
+import { environment } from "../../../../../environments/environment";
 declare const $: any;
 
 export interface DressItem {
@@ -34,8 +36,11 @@ export class CitasProbadorView implements OnInit {
   selectedProductoRenta: DressItem | null = null;
   selectedProductoVenta: DressItem | null = null;
   userROL!: string;
+    publicKey: string = environment.publicKey; // Este es el valor que debes obtener en la consola de Firebase.
+  
   confirmarCompra(){}
   constructor(
+    private swPush: SwPush,
     private notificacionService_:NotificacionService,
     private location: Location,
     private sessionService: SessionService,
@@ -46,7 +51,7 @@ export class CitasProbadorView implements OnInit {
 
   async ngOnInit() {
     try {
-      this.enviarNotificacion();
+      this.generarToken();
       // Obtener productos desde IndexedDB
       const productos = await this.indexedDbService.obtenerProductosApartados();
       
@@ -67,7 +72,7 @@ export class CitasProbadorView implements OnInit {
       // const productos =this.cartService.loadCartItems();
       console.log("=>"+productos)
 
-      this.calcularTotal();
+      // this.calcularTotal();
       this.initializeTabs();
     } catch (error) {
       console.error("Error al obtener productos apartados:", error);
@@ -85,9 +90,35 @@ export class CitasProbadorView implements OnInit {
       console.error("jQuery no está disponible.");
     }
   }
+ // Método para generar el token y enviarlo al backend
+  generarToken(): void {
+    if ('serviceWorker' in navigator && this.swPush) {
+      this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+        .then((sub) => {
+          const token = JSON.stringify(sub);
+          const data = { // Datos que deseas enviar al backend
+            token: token // Token generado
+          };
+          
+          this.enviarNotificacion(token); // Enviar el token al backend
+        })
+        .catch((err) => {
+          console.error('Error al suscribirse a notificaciones:', err);
+          alert('Hubo un problema al suscribirse a las notificaciones. Por favor, asegúrese de que el navegador soporte Service Workers.');
+          // this.isLoading = false; // Desactiva el loader en caso de error
+        });
+    } else {
+      console.error('Service Workers no están habilitados en este navegador.');
+      alert('El navegador no soporta notificaciones push.');
+      // this.isLoading = false; // Desactiva el loader si no es compatible
+    }
+  }
 
-  enviarNotificacion() {
-    this.notificacionService_.enviarNotificacionLlevateCarrito().subscribe(
+  
+
+  // Método para enviar el token de notificación al backend
+  enviarNotificacion(token: string): void {
+    this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe(
       (response) => {
         console.log("Notificación enviada:", response);
         // Aquí puedes manejar la respuesta de la API si es necesario
@@ -97,7 +128,28 @@ export class CitasProbadorView implements OnInit {
         // Manejo de errores
       }
     );
+    // this.http.post('http://localhost:4000/api/v1/enviar-notificacion/ejemplo', { token })
+    //   .subscribe(
+    //     () => console.log('Token enviado al backend correctamente'),
+    //     (err) => console.error('Error al enviar el token al backend:', err)
+    //   );
   }
+
+
+
+
+  // enviarNotificacion() {
+  //   this.notificacionService_.enviarNotificacionLlevateCarrito().subscribe(
+  //     (response) => {
+  //       console.log("Notificación enviada:", response);
+  //       // Aquí puedes manejar la respuesta de la API si es necesario
+  //     },
+  //     (error) => {
+  //       console.error("Error al enviar la notificación:", error);
+  //       // Manejo de errores
+  //     }
+  //   );
+  // }
 
   
   async deleteDressItem(id: string) {
