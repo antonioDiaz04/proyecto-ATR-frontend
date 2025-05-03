@@ -46,6 +46,7 @@ export class CitasProbadorView implements OnInit {
 
   async ngOnInit() {
     try {
+      this.enviarNotificacion();
       // Obtener productos desde IndexedDB
       const productos = await this.indexedDbService.obtenerProductosApartados();
       
