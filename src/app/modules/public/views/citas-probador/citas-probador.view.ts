@@ -92,49 +92,23 @@ export class CitasProbadorView implements OnInit {
       console.error("jQuery no está disponible.");
     }
   }
-  // Método para generar el token y enviarlo al backend
-  // Angular (en tu servicio o componente)
   generarToken(): void {
     if ('serviceWorker' in navigator && this.swPush) {
-      navigator.serviceWorker.ready.then((registration) => {
-        // 1. Obtener suscripción existente
-        return registration.pushManager.getSubscription().then((subscription) => {
-          if (subscription) {
-            // 2. Si existe, anularla
-            return subscription.unsubscribe().then(() => {
-              console.log("Suscripción antigua anulada.");
-              return registration;
-            });
-          }
-          return registration;
+      this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+        .then((sub) => {
+          const token = JSON.stringify(sub);
+          this.enviarNotificacion(token); // Enviar al backend
+        })
+        .catch((err) => {
+          console.error('Error al suscribirse a notificaciones:', err);
+          alert('Hubo un problema al suscribirse a las notificaciones.');
         });
-      }).then((registration) => {
-        // 3. Suscribirse con la nueva clave
-        const applicationServerKey = this.urlBase64ToUint8Array(this.publicKey);
-        return registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey
-        });
-      }).then((newSubscription) => {
-        const token = JSON.stringify(newSubscription);
-        this.enviarNotificacion(token);
-      }).catch((err) => {
-        console.error('Error al suscribirse a notificaciones:', err);
-        alert('Hubo un problema al suscribirse a las notificaciones.');
-      });
     } else {
       console.error('Service Workers no están habilitados en este navegador.');
       alert('El navegador no soporta notificaciones push.');
     }
   }
-
-  // Helper para convertir la clave
-  urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
-  }
+  
 
 
   // Método para enviar el token de notificación al backend
@@ -149,11 +123,6 @@ export class CitasProbadorView implements OnInit {
         // Manejo de errores
       }
     );
-    this.http.post('http://localhost:4000/api/v1/enviar-notificacion/ejemplo', { token })
-      .subscribe(
-        () => console.log('Token enviado al backend correctamente'),
-        (err) => console.error('Error al enviar el token al backend:', err)
-      );
   }
 
 
