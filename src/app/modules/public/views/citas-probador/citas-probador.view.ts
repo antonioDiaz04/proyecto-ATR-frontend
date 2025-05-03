@@ -8,6 +8,7 @@ import { Location } from "@angular/common";
 import { NotificacionService } from "../../../../shared/services/notification.service";
 import { SwPush } from "@angular/service-worker";
 import { environment } from "../../../../../environments/environment";
+import { HttpClient } from "@angular/common/http";
 declare const $: any;
 
 export interface DressItem {
@@ -36,29 +37,30 @@ export class CitasProbadorView implements OnInit {
   selectedProductoRenta: DressItem | null = null;
   selectedProductoVenta: DressItem | null = null;
   userROL!: string;
-    publicKey: string = environment.publicKey; // Este es el valor que debes obtener en la consola de Firebase.
-  
-  confirmarCompra(){}
+  publicKey: string = environment.publicKey; // Este es el valor que debes obtener en la consola de Firebase.
+
+  confirmarCompra() { }
   constructor(
+    private http: HttpClient,
     private swPush: SwPush,
-    private notificacionService_:NotificacionService,
+    private notificacionService_: NotificacionService,
     private location: Location,
     private sessionService: SessionService,
     private indexedDbService: IndexedDbService,
     private router: Router,
     private cartService: CartService // Inyecta el servicio CartService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     try {
       this.generarToken();
       // Obtener productos desde IndexedDB
       const productos = await this.indexedDbService.obtenerProductosApartados();
-      
+
       // Mostrar en consola los productos obtenidos de IndexedDB
       console.log("Productos obtenidos de IndexedDB:", productos);
       console.table(productos); // Esto mostrará los datos en formato de tabla
-      
+
       // Corregir el filtrado (nota la propiedad y el valor exacto)
       this.productosRenta = productos.filter(
         (item) => item.opcionesTipoTransaccion?.toLowerCase() === "renta"
@@ -70,7 +72,7 @@ export class CitasProbadorView implements OnInit {
       // Inicializar el carrito con los productos obtenidos
       this.cartService.initializeCart(productos);
       // const productos =this.cartService.loadCartItems();
-      console.log("=>"+productos)
+      console.log("=>" + productos)
 
       // this.calcularTotal();
       this.initializeTabs();
@@ -90,7 +92,7 @@ export class CitasProbadorView implements OnInit {
       console.error("jQuery no está disponible.");
     }
   }
- // Método para generar el token y enviarlo al backend
+  // Método para generar el token y enviarlo al backend
   generarToken(): void {
     if ('serviceWorker' in navigator && this.swPush) {
       this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
@@ -99,7 +101,7 @@ export class CitasProbadorView implements OnInit {
           const data = { // Datos que deseas enviar al backend
             token: token // Token generado
           };
-          
+
           this.enviarNotificacion(token); // Enviar el token al backend
         })
         .catch((err) => {
@@ -114,7 +116,7 @@ export class CitasProbadorView implements OnInit {
     }
   }
 
-  
+
 
   // Método para enviar el token de notificación al backend
   enviarNotificacion(token: string): void {
@@ -128,11 +130,11 @@ export class CitasProbadorView implements OnInit {
         // Manejo de errores
       }
     );
-    // this.http.post('http://localhost:4000/api/v1/enviar-notificacion/ejemplo', { token })
-    //   .subscribe(
-    //     () => console.log('Token enviado al backend correctamente'),
-    //     (err) => console.error('Error al enviar el token al backend:', err)
-    //   );
+    this.http.post('http://localhost:4000/api/v1/enviar-notificacion/ejemplo', { token })
+      .subscribe(
+        () => console.log('Token enviado al backend correctamente'),
+        (err) => console.error('Error al enviar el token al backend:', err)
+      );
   }
 
 
@@ -151,10 +153,10 @@ export class CitasProbadorView implements OnInit {
   //   );
   // }
 
-  
+
   async deleteDressItem(id: string) {
     try {
-      
+
       // Eliminar el producto de las listas locales
       this.productosRenta = this.productosRenta.filter(
         (item) => item.id !== id
@@ -210,5 +212,5 @@ export class CitasProbadorView implements OnInit {
     this.mostrarModal = true;
   }
 
-  continuarCompraTotal() {}
+  continuarCompraTotal() { }
 }
