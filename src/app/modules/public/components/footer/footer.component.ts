@@ -6,7 +6,6 @@ import { MenuItem } from 'primeng/api';
   selector: 'app-footer',
   standalone: false,
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
   isScrolled = false;

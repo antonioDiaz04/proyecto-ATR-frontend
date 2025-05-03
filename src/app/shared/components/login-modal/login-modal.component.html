@@ -1,144 +1,131 @@
-<p-dialog  (onHide)="close()" [modal]="true" [(visible)]="isModalVisible" [style]="{ width: '30rem' }"
-  class="blur-background">
-  <div class="login-container"data-aos="fade-up">
-    <div class="login-card">
-      <h2>Iniciar sesión</h2>
+<p-dialog (onHide)="close()" [modal]="true" [(visible)]="isModalVisible" [style]="{ width: '40rem' }" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
+  <div class="p-6" data-aos="fade-up">
+    <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Iniciar sesión</h2>
 
-      <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
-        alt="Logo de la empresa" class="logo-atelier" />
+    <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
+      alt="Logo de la empresa" class="w-32 h-auto mx-auto mb-8" />
 
-      <form class="form-box" [formGroup]="loginForm" (ngSubmit)="login()" method="post">
+    <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="login()" method="post">
 
-        <div class="input-group">
-          <div class="login-options">
-            <label for="email">{{usePhoneLogin ?'Teléfono':'Email'}}</label>
-            <span class="switch-option" (click)="toggleLoginMethod()">
-              o inicia sesión con {{usePhoneLogin ?'Email':'teléfono'}}
-            </span>
-          </div>
-
-          <p-inputGroup *ngIf="!usePhoneLogin; else phoneLogin">
-            <input pInputText type="text" placeholder="Introduce tu correo electrónico" formControlName="email"
-              id="email" class="input-login" required [pattern]="'^[a-zA-Z0-9][\\w.-]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'"
-              [disabled]="isLocked" />
-          </p-inputGroup>
-
-          <ng-template #phoneLogin>
-            <p-inputGroup>
-              <input pInputText type="tel" placeholder="Introduce tu número de teléfono" formControlName="telefono"
-                id="phone" class="input-login" required [pattern]="'^[0-9]{9,15}$'" [disabled]="isLocked" />
-            </p-inputGroup>
-          </ng-template>
-
-          <div *ngIf="!usePhoneLogin">
-            <div *ngIf="
-              loginForm.get('email')?.hasError('required') &&
-              loginForm.get('email')?.touched &&
-              !isGoogleLogin
-            " class="error">
-              <small class="error">El correo es obligatorio.</small>
-            </div>
-
-            <div *ngIf="
-              loginForm.get('email')?.hasError('pattern') &&
-              loginForm.get('email')?.touched &&
-              !isGoogleLogin
-            " class="error">
-              <small class="error">Introduce un correo válido.</small>
-            </div>
-          </div>
-
-          <div *ngIf="usePhoneLogin">
-            <div *ngIf="
-              loginForm.get('telefono')?.hasError('required') &&
-              loginForm.get('telefono')?.touched
-            " class="error">
-              <small class="error">El teléfono es obligatorio.</small>
-            </div>
-
-            <div *ngIf="
-              loginForm.get('telefono')?.hasError('pattern') &&
-              loginForm.get('telefono')?.touched
-            " class="error">
-              <small class="error">Introduce un teléfono válido (9-15 dígitos).</small>
-            </div>
-          </div>
+      <!-- Email/Teléfono -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between text-base">
+          <label for="email" class="font-medium text-gray-900">{{ usePhoneLogin ? 'Teléfono' : 'Email' }}</label>
+          <span class="text-gray-600 underline cursor-pointer hover:text-gray-800" (click)="toggleLoginMethod()">
+            o inicia sesión con {{ usePhoneLogin ? 'Email' : 'teléfono' }}
+          </span>
         </div>
 
-        <div class="input-group">
-          <label for="password">Contraseña</label>
-          <p-inputGroup class="input-group">
-            <p-password formControlName="password" [toggleMask]="true" [feedback]="false" (input)="verificarPassword()"
-              inputStyleClass="input-login" promptLabel="Ingresa tu contraseña" [disabled]="!loginForm.get('email')">
-            </p-password>
-          </p-inputGroup>
-          <p [ngClass]="passwordStrengthClass">{{ passwordStrengthMessage }}</p>
-        </div>
-        <div *ngIf="
-            loginForm.get('password')?.hasError('required') &&
-            loginForm.get('password')?.touched
-          " class="error">
-          <small class="error">La contraseña es obligatoria.</small>
+        <div *ngIf="!usePhoneLogin; else phoneLogin">
+          <input type="text" placeholder="Introduce tu correo electrónico" formControlName="email"
+            id="email"
+            class="w-full px-5 py-3 text-lg rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
+            required [pattern]="'^[a-zA-Z0-9][\\w.-]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'" [disabled]="isLocked" />
         </div>
 
-        <!-- Mensajes de requisitos de la contraseña (solo si hay algo escrito) -->
-        <div *ngIf="faltantes.length > 0 && loginForm.get('password')?.value">
-          <p>La contraseña debe contener:</p>
-          <ul>
+        <ng-template #phoneLogin>
+          <div>
+            <input type="tel" placeholder="Introduce tu número de teléfono" formControlName="telefono"
+              id="phone"
+              class="w-full px-5 py-3 text-lg rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
+              required [pattern]="'^[0-9]{9,15}$'" [disabled]="isLocked" />
+          </div>
+        </ng-template>
+
+        <!-- Errores -->
+        <div *ngIf="!usePhoneLogin">
+          <div *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched && !isGoogleLogin"
+            class="text-gray-900 text-sm mt-1">El correo es obligatorio.</div>
+          <div
+            *ngIf="loginForm.get('email')?.hasError('pattern') && loginForm.get('email')?.touched && !isGoogleLogin"
+            class="text-gray-900 text-sm mt-1">Introduce un correo válido.</div>
+        </div>
+
+        <div *ngIf="usePhoneLogin">
+          <div *ngIf="loginForm.get('telefono')?.hasError('required') && loginForm.get('telefono')?.touched"
+            class="text-gray-900 text-sm mt-1">El teléfono es obligatorio.</div>
+          <div *ngIf="loginForm.get('telefono')?.hasError('pattern') && loginForm.get('telefono')?.touched"
+            class="text-gray-900 text-sm mt-1">Introduce un teléfono válido (9-15 dígitos).</div>
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="space-y-3">
+        <label for="password" class="font-medium text-gray-900">Contraseña</label>
+        <div class="relative">
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password" (input)="verificarPassword()"
+            id="password"
+            class="w-full px-5 py-3 text-lg rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
+            placeholder="Ingresa tu contraseña" [disabled]="!loginForm.get('email')" />
+          <button type="button" (click)="showPassword = !showPassword"
+            class="absolute right-3 top-3 text-gray-500 hover:text-gray-900">
+            <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+          </button>
+        </div>
+        
+        <p [ngClass]="passwordStrengthClass" class="text-sm mt-1">{{ passwordStrengthMessage }}</p>
+        <div *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched"
+          class="text-gray-900 text-sm">La contraseña es obligatoria.</div>
+
+        <div *ngIf="faltantes.length > 0 && loginForm.get('password')?.value" class="text-sm text-gray-600 mt-2">
+          <p class="font-medium">La contraseña debe contener:</p>
+          <ul class="list-disc list-inside pl-4">
             <li *ngFor="let falta of faltantes">{{ falta }}</li>
           </ul>
         </div>
+      </div>
 
-        <span *ngIf="errorMessage" class="error">
-          {{ errorMessage }}
-        </span>
-        <div class="captcha-wrapper">
-          <div id="captcha-container" class="g-recaptcha" data-sitekey="6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI"
-            data-theme="light"></div>
+      <!-- Captcha -->
+      <div class="mt-6" id="captcha-container" data-sitekey="6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI"
+        data-theme="light"></div>
+
+      <div *ngIf="loginError" class="text-gray-900 text-base py-2 px-3 bg-gray-100 rounded-lg border border-gray-300">{{ loginError }}</div>
+
+      <div *ngIf="loginForm.get('captcha')?.invalid && loginForm.get('captcha')?.touched" class="text-gray-900 text-sm">
+        <div *ngIf="isLocked">
+          <p>Intenta nuevamente en {{ remainingTime }} segundos.</p>
         </div>
-        <div *ngIf="loginError" class="informativo">
-          <small class="informativo">{{ loginError }}</small>
-        </div>
-        <div *ngIf="
-            loginForm.get('captcha')?.invalid &&
-            loginForm.get('captcha')?.touched
-          " class="error">
-          <div *ngIf="isLocked">
-            <p>Intenta nuevamente en {{ remainingTime }} segundos.</p>
-          </div>
-        </div>
-        <!-- <button type="submit" class="ui button login-btn" [class.loading]="isLoading"
-          [disabled]="loginForm.invalid || isLoading">
-          Iniciar sesión
-        </button> -->
-        <button type="submit" class="ui button login-btn" [class.loading]="isLoading"
-          [disabled]="isLoading">
-          Iniciar sesión
+      </div>
+
+      <!-- Botón -->
+      <button type="submit"
+        class="w-full py-3 text-lg rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-800 transition duration-300 disabled:opacity-50 flex justify-center items-center"
+        [class.loading]="isLoading" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Iniciar sesión</span>
+        <i *ngIf="isLoading" class="pi pi-spinner pi-spin ml-2"></i>
+      </button>
+
+      <!-- Botones sociales -->
+      <div class="space-y-4 pt-6">
+        <button type="button" (click)="loginWithGoogle(); $event.preventDefault()"
+          class="flex items-center justify-center w-full py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-50 transition border border-gray-300">
+          <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-6 h-6 mr-3" alt="Google" />
+          <span class="text-lg">Continuar con Google</span>
         </button>
-        <div class="social-login-container">
-          <button type="button" (click)="loginWithGoogle(); $event.preventDefault()" class="google-btn">
-            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="google-logo" />
-            Continuar con Google
-          </button>
-          <button type="button" (click)="loginWithFacebook(); $event.preventDefault()" class="facebook-btn">
-            <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" alt="Facebook" class="facebook-logo" />
-            Continuar con Facebook
-          </button>
-        </div>
+        <button type="button" (click)="loginWithFacebook(); $event.preventDefault()"
+          class="flex items-center justify-center w-full py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-50 transition border border-gray-300">
+          <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" class="w-6 h-6 mr-3" alt="Facebook" />
+          <span class="text-lg">Continuar con Facebook</span>
+        </button>
+      </div>
 
-        <p class="forgot-password">
-          <a (click)="redirectTo('forgot-password')">
+      <!-- Enlaces -->
+      <div class="text-center space-y-3 mt-6">
+        <p class="text-base">
+          <a (click)="redirectTo('forgot-password')" class="text-gray-900 underline hover:text-gray-700 cursor-pointer">
             ¿Olvidaste tu contraseña?
           </a>
         </p>
-        <p class="register-text">
-          ¿No tienes cuenta? <a (click)="redirectTo('Sign-up')">Regístrate</a>
+        <p class="text-base">
+          ¿No tienes cuenta?
+          <a (click)="redirectTo('Sign-up')" class="text-gray-900 underline hover:text-gray-700 cursor-pointer">Regístrate</a>
         </p>
-      </form>
-      <div class="footer-links">
-        <a (click)="redirectTo('terminos')">Términos y Condiciones</a> |
-        <a (click)="redirectTo('politicas')">Política de Privacidad</a> |
       </div>
+    </form>
+
+    <div class="text-center text-sm text-gray-500 mt-8 space-x-4">
+      <a (click)="redirectTo('terminos')" class="underline hover:text-gray-900 cursor-pointer">Términos</a>
+      <a (click)="redirectTo('politicas')" class="underline hover:text-gray-900 cursor-pointer">Privacidad</a>
     </div>
   </div>
 </p-dialog>

@@ -9,7 +9,7 @@ import { SessionService } from '../../../../shared/services/session.service';
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.scss',
+  // styleUrl: './perfil.component.scss',
 })
 export class PerfilComponent implements OnInit {
   data: any = {};

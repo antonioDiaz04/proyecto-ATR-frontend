@@ -4,7 +4,6 @@ import AOS from 'aos';
 @Component({
   selector: 'app-preguntas',
   templateUrl: './preguntas.component.html',
-  styleUrl: './preguntas.component.scss'
 })
 export class PreguntasComponent implements OnInit {
 // Datos de Preguntas Frecuentes

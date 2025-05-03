@@ -6,10 +6,11 @@ import AOS from 'aos';
 @Component({
   selector: 'app-politicas',
   templateUrl: './politicas.component.html',
-  styleUrl: './politicas.component.scss',
+  // styleUrl: './politicas.component.scss',
 })
 export class PoliticasComponent implements OnInit {
   data: any;
+  today: any;
   politicas: any;
   constructor(private datosEmpresaService_: DatosEmpresaService) { }
   ngOnInit(): void {

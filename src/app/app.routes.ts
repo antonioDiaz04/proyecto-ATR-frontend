@@ -36,10 +36,10 @@ export const routes: Routes = [
   },
   {
     path: '500', // Ruta para error 500
-    redirectTo: 'public/500'
+    redirectTo: '/500'
   },
   {
     path: '**', // Ruta wildcard para capturar cualquier otra ruta no definida
-    redirectTo:'public/404' // Redirige a la ruta 'public'
+    redirectTo:'/404' // Redirige a la ruta 'public'
   },
 ];

@@ -1,0 +1,135 @@
+<div class="relative w-full h-screen min-h-[700px] overflow-hidden bg-[#faf9f7]">
+    <!-- Fondo con efecto parallax -->
+    <div class=" inset-0 overflow-hidden">
+      <div class=" right-0 top-0 w-[45%] h-full z-0">
+        <div class=" inset-0 bg-gradient-to-r from-[#faf9f7] via-[#faf9f7]/70 to-transparent z-10"></div>
+        <img src="https://doce38boutique.com/wp-content/uploads/2023/02/VL038-2-Vestido-largo-circular-bordado-off-shoulder-768x1152.jpg" 
+             class="w-full h-full object-cover object-center"
+             alt="Vestido de novia de alta costura">
+      </div>
+    </div>
+  
+    <!-- Contenido principal -->
+    <div class="relative z-20 h-full flex items-center pl-8 lg:pl-24 xl:pl-32 pr-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 w-full max-w-8xl">
+        <!-- Columna de texto -->
+        <div class="pt-16">
+          <!-- Badge de colección -->
+          <div class="mb-6 flex items-center">
+            <div class="w-24 h-px bg-[#d4af37] mr-4"></div>
+            <span class="font-sans text-xs uppercase tracking-[0.5em] text-[#555]">Haute Couture</span>
+          </div>
+          
+          <!-- Título principal con tipografía de lujo -->
+          <h1 class="font-display text-7xl md:text-8xl lg:text-[7.5rem] leading-[0.88] tracking-tight mb-10 text-[#222]">
+            <span class="block font-light italic">Venta</span>
+            <span class="block font-normal">& Renta</span>
+          </h1>
+          
+          <!-- Línea decorativa -->
+          <div class="w-16 h-0.5 bg-[#d4af37] mb-8"></div>
+          
+          <!-- Descripción -->
+          <p class="font-serif text-xl max-w-md mb-12 text-[#555] leading-relaxed">
+            "Donde cada puntada cuenta una historia y cada diseño es una obra de arte para tu ocasión especial"
+          </p>
+          
+          <!-- Botones de acción -->
+          <div class="flex flex-wrap gap-5">
+            <a href="#" class="cta-button-primary">
+              <span>Explorar Colección</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+            <a href="#" class="cta-button-secondary">
+              Consulta Personalizada
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tarjetas flotantes de productos -->
+    <div class="hidden lg:block absolute right-24 bottom-24 z-10 w-72 bg-white p-8 shadow-[0_25px_50px_-15px_rgba(0,0,0,0.1)] transform transition-all duration-500 hover:translate-y-[-10px]">
+      <div class="absolute -top-4 -left-4 w-8 h-8 bg-[#d4af37] flex items-center justify-center">
+        <span class="text-white text-xs font-sans">NEW</span>
+      </div>
+      <h3 class="font-serif text-2xl mb-3 text-[#222]">"Éclat"</h3>
+      <p class="font-sans text-sm text-[#777] mb-5 uppercase tracking-widest">Vestido de Gala</p>
+      <p class="font-serif text-3xl text-[#222] mb-6">$5,200</p>
+      <a href="#" class="font-sans text-xs uppercase tracking-widest text-[#555] hover:text-[#d4af37] transition-colors flex items-center">
+        Ver detalles
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  
+    <!-- Elemento decorativo de marcas -->
+    <div class="absolute bottom-12 left-24 z-10">
+      <div class="flex space-x-10 opacity-80">
+        <span class="brand-divider">Elie Saab</span>
+        <span class="brand-divider">Zuhair Murad</span>
+        <span class="brand-divider">Oscar de la Renta</span>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:wght@300;400;500;600;700&family=Marcellus&display=swap');
+  
+  .font-sans {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .font-serif {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .font-display {
+    font-family: 'Marcellus', serif;
+  }
+  
+  /* Componentes reutilizables */
+  .cta-button-primary {
+    @apply font-sans px-8 py-4 bg-[#222] text-white text-sm uppercase tracking-widest transition-all duration-300 flex items-center;
+    letter-spacing: 0.2em;
+  }
+  
+  .cta-button-primary:hover {
+    @apply bg-[#d4af37] text-[#222];
+  }
+  
+  .cta-button-secondary {
+    @apply font-sans px-8 py-4 border border-[#222] text-[#222] text-sm uppercase tracking-widest transition-all duration-300;
+    letter-spacing: 0.2em;
+  }
+  
+  .cta-button-secondary:hover {
+    @apply bg-[#222] text-white;
+  }
+  
+  .brand-divider {
+    @apply font-serif text-xs tracking-widest text-[#555] relative;
+  }
+  
+  .brand-divider:after {
+    content: "";
+    @apply absolute bottom-[-8px] left-0 w-full h-px bg-[#d4af37];
+  }
+  
+  /* Efectos especiales */
+  .shadow-luxury {
+    box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hover-gold {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-gold:hover {
+    color: #d4af37;
+  }
+  </style>
+  

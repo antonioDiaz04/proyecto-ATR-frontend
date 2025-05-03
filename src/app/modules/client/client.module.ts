@@ -18,6 +18,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { HeaderModule } from '../../shared/components/header/header.module';
 import { NotificacionesComponent } from './views/notificaciones/notificaciones.component';
 import { DatosEmpresaService } from '../../shared/services/datos-empresa.service';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { DatosEmpresaService } from '../../shared/services/datos-empresa.service
     ComprasComponent,
     ClientComponent,
     NotificacionesComponent,
+    SidenavComponent,
   ],
   imports: [HeaderModule, 
     CommonModule,  ButtonModule,AvatarModule,AvatarGroupModule,

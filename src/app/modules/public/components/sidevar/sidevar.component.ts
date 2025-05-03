@@ -13,7 +13,7 @@ interface SelectedFilters {
 @Component({
   selector: "app-sidevar",
   templateUrl: "./sidevar.component.html",
-  styleUrls: ["../../../../shared/styles/categoriesNav.scss"],
+  // styleUrls: ["../../../../shared/styles/categoriesNav.scss"],
   styles:`.reset-button {
     background-color: #f44336; /* Color rojo */
     color: white;

@@ -6,7 +6,6 @@ import { error } from 'console';
 @Component({
   selector: 'app-acerca-de',
   templateUrl: './acerca-de.view.html',
-  styleUrl: './acerca-de.view.scss',
 })
 export class AcercaDeView implements OnInit {
   displayTermsDialog: boolean = false;

@@ -2,8 +2,15 @@
 @import "primeicons/primeicons.css";
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
+// @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+// @import "src/app/shared/styles/variables.css";
 // In app.component.css
 :host ::ng-deep .Password-Styling-Class{
 

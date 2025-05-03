@@ -1,107 +1,140 @@
-<h2 class="accessory-message"> Nuestros productos</h2>
-
-<div class="custom-carousel" *ngIf="!isLoading && !isMobile">
+<div class="pt-2 pb-2 px-6 items-center text-center justify-center " >
+  <span class="block italic font-light text-[#9c8e7a] text-xl">Haute Couture</span>
+  <div class="relative flex items-center justify-center">
+    <div class="flex-grow border-t border-[#9c8e7a]"></div>
+    <h2 class="font-serif text-4xl md:text-5xl text-center text-[#2a2723] tracking-tight leading-[1.1] mx-4 shrink-0">
+      Nuestra colección de lujo
+    </h2>
+    <div class="flex-grow border-t border-[#9c8e7a]"></div>
+  </div>
+  
+</div>
+<!-- Versión Desktop - Carrusel de Lujo -->
+<div class="w-full  mb-2" *ngIf="!isLoading && !isMobile">
   <p-carousel 
     [value]="productos" 
-    [numVisible]="5" 
+    [numVisible]="4" 
     [numScroll]="1" 
     [circular]="true"
     [responsiveOptions]="responsiveOptions"
-    styleClass="custom-carousel-prime"
+    styleClass="luxury-carousel"
   >
     <ng-template let-producto pTemplate="item">
-      <div class="producto-card">
-        <div *ngIf="producto.isNuevo" class="ribbon">Nuevo</div>
-        <div class="product-image" (click)="verDetalles(producto._id)">
+      <div class="bg-white flex flex-col h-[480px] border border-[#e8e3db] hover:shadow-lg transition-all duration-500" style="width: 350px;">    
+        <!-- Imagen con efectos de lujo -->
+        <div class="relative w-full overflow-hidden group" (click)="verDetalles(producto._id)" style="height: 350px;">
           <img 
             [src]="producto.imagenes[0]" 
-            alt="{{ producto.nombre }}" 
+            [alt]="producto.nombre" 
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             (mouseenter)="cambiarImagen(producto, $event)"
-            (mouseleave)="restaurarImagen(producto, $event)" 
+            (mouseleave)="restaurarImagen(producto, $event)"
           />
+          
+          <!-- Badge Nuevo - Estilo lujo -->
+          <div *ngIf="producto.isNuevo" class="absolute top-3 left-3 bg-[#2a2723] text-[#d4c4a8] text-xs px-3 py-1 tracking-wider">
+            NUEVO INGRESO
+          </div>
+          
+          <!-- Descuento - Estilo refinado -->
+          <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual" 
+               class="absolute top-3 right-3 bg-[#d4c4a8] text-[#2a2723] text-xs px-3 py-1 tracking-wider">
+            -{{ calcularDescuento(producto.precioAnterior, producto.precioActual) }}%
+          </div>
         </div>
-        <div class="product-content">
-          <h3 class="product-name">
-            {{ producto.nombre.length > 20 ? (producto.nombre | slice:0:20) + '...' : producto.nombre }}
-          </h3>
-          <p class="product-price">
-            <strong class="current-price">MX$ {{ producto.precioActual | currency }}</strong>
-            <span *ngIf="producto.mostrarPrecioAnterior" class="old-price">
-              MX$ {{ producto.precioAnterior | currency }}
-            </span>
-          </p>
-          <span 
-            *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
-            class="discount-badge"
-          >
-            {{ calcularDescuento(producto.precioAnterior, producto.precioActual) }}% OFF
-          </span>
-          <span 
-            *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
-            class="savings-message"
-          >
-            ¡Ahorras MX$ {{ producto.precioAnterior - producto.precioActual | currency }}!
-          </span>
-          <p class="product-details">
-            Talla: {{ producto.talla }} | Color: {{ producto.color }}
-          </p>
+
+        <!-- Contenido del producto -->
+        <div class="flex flex-col p-4 flex-1 justify-between">
+          <div>
+            <h3 class="font-serif text-lg text-[#2a2723] mb-2 tracking-tight">
+              {{ producto.nombre }}
+            </h3>
+            
+            <p class="text-xs text-[#9c8e7a] mb-3 font-light">
+              Talla: {{ producto.talla }} | Color: {{ producto.color }}
+            </p>
+          </div>
+          
+          <div>
+            <!-- Precios - Diseño elegante -->
+            <div class="flex items-baseline gap-2">
+              <span class="text-lg text-[#2a2723] font-medium">
+                MX$ {{ producto.precioActual | currency }}
+              </span>
+              <span *ngIf="producto.mostrarPrecioAnterior" class="line-through text-[#9c8e7a] text-xs">
+                MX$ {{ producto.precioAnterior | currency }}
+              </span>
+            </div>
+            
+            <!-- Ahorro - Texto discreto -->
+            <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual" 
+                 class="mt-1 text-[#6e6a63] text-xs">
+              Ahorras MX$ {{ producto.precioAnterior - producto.precioActual | currency }}
+            </div>
+          </div>
         </div>
       </div>
     </ng-template>
   </p-carousel>
 </div>
 
-<!-- 
- -->
- <div class="productos-grid" *ngIf="isMobile">
-  <div class="producto-card" *ngFor="let producto of productos">
-    <div *ngIf="producto.isNuevo" class="ribbon">Nuevo</div>
-    <div class="product-image" (click)="verDetalles(producto._id)">
+<!-- Versión Mobile - Grid Elegante -->
+<div *ngIf="!isLoading && isMobile" class="grid grid-cols-2 gap-4 px-4">
+  <div *ngFor="let producto of productos" class="bg-white border border-[#e8e3db]">
+    <div class="relative" (click)="verDetalles(producto._id)">
       <img 
         [src]="producto.imagenes[0]" 
-        alt="{{ producto.nombre }}" 
-        (mouseenter)="cambiarImagen(producto, $event)"
-        (mouseleave)="restaurarImagen(producto, $event)" 
+        [alt]="producto.nombre" 
+        class="w-full h-48 object-cover"
       />
+      
+      <div *ngIf="producto.isNuevo" class="absolute top-2 left-2 bg-[#2a2723] text-[#d4c4a8] text-xs px-2 py-1">
+        NUEVO
+      </div>
     </div>
-    <div class="product-content">
-      <h3 class="product-name">
-        {{ producto.nombre.length > 20 ? (producto.nombre | slice:0:20) + '...' : producto.nombre }}
+    
+    <div class="p-3">
+      <h3 class="font-serif text-sm text-[#2a2723] truncate">
+        {{ producto.nombre }}
       </h3>
-      <p class="product-price">
-        <strong class="current-price">MX$ {{ producto.precioActual | currency }}</strong>
-        <span *ngIf="producto.mostrarPrecioAnterior" class="old-price">
+      
+      <div class="mt-1">
+        <span class="text-sm text-[#2a2723] font-medium">
+          MX$ {{ producto.precioActual | currency }}
+        </span>
+        <span *ngIf="producto.mostrarPrecioAnterior" class="line-through text-[#9c8e7a] text-xs ml-1">
           MX$ {{ producto.precioAnterior | currency }}
         </span>
-      </p>
-      <span 
-        *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
-        class="discount-badge"
-      >
-        {{ calcularDescuento(producto.precioAnterior, producto.precioActual) }}% OFF
-      </span>
-      <span 
-        *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
-        class="savings-message"
-      >
-        ¡Ahorras MX$ {{ producto.precioAnterior - producto.precioActual | currency }}!
-      </span>
-      <p class="product-details">
-        Talla: {{ producto.talla }} | Color: {{ producto.color }}
-      </p>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Si se está cargando, muestra las cards de skeleton -->
-<div *ngIf="isLoading" class="skeleton-container">
-  <div *ngFor="let item of skeletonItems" class="producto-card">
-    <!-- Skeleton para la imagen -->
-    <p-skeleton shape="rectangle" width="100%" height="150px"></p-skeleton>
-    <!-- Skeleton para el contenido (nombre y precio) -->
-    <div class="product-content" style="margin-top: 0.5em">
-      <p-skeleton width="60%" height="20px"></p-skeleton>
+<!-- Skeleton Loading - Estilo minimalista -->
+<div *ngIf="isLoading" class="flex justify-center gap-6">
+  <div *ngFor="let item of skeletonItems" class="bg-white w-80 h-[480px] border border-[#e8e3db]">
+    <p-skeleton width="100%" height="320px" borderRadius="0"></p-skeleton>
+    <div class="p-4">
+      <p-skeleton width="80%" height="20px" class="mb-3"></p-skeleton>
+      <p-skeleton width="60%" height="16px" class="mb-4"></p-skeleton>
       <p-skeleton width="40%" height="20px"></p-skeleton>
     </div>
   </div>
 </div>
+
+<!-- Estilos personalizados para el carrusel -->
+<style>
+.luxury-carousel .p-carousel-indicators .p-carousel-indicator button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #e8e3db;
+  transition: all 0.3s;
+}
+
+.luxury-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+  background-color: #2a2723;
+  width: 20px;
+  border-radius: 4px;
+}
+</style>

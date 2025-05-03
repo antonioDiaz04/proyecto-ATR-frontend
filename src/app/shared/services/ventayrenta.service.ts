@@ -26,15 +26,15 @@ export class VentayrentaService {
     return this.http.get<any[]>(`${this.apiUrl}/proceso/comprasByidUser/${usuarioId}`);
   }
 
- 
-  
-
-  
 
 
 
-   // Obtener todas las rentas
-   obtenerRentas(): Observable<any> {
+
+
+
+
+  // Obtener todas las rentas
+  obtenerRentas(): Observable<any> {
     return this.http.get(`${this.apiUrl}/obtenerRentas`);
   }
 
@@ -43,12 +43,16 @@ export class VentayrentaService {
   crearRenta(renta: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/crearRenta`, renta);
   }
-editarRenta(rentaId: string, rentaData: any): Observable<any> {
-  return this.http.put(`${this.apiUrl}/editarRenta/${rentaId}`, rentaData);
-}
+  editarRenta(rentaId: string, rentaData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/editarRenta/${rentaId}`, rentaData);
+  }
   // Cancelar una renta
   cancelarRenta(data: { rentaId: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/cancelarRenta`, data);
+  }
+  // Eliminar una renta
+  eliminarRenta(rentaId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/eliminarRenta/${rentaId}`);
   }
 
   // Listar rentas de un usuario específico

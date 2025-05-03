@@ -5,6 +5,7 @@ import { SessionService } from "../../../../shared/services/session.service";
 import { ERol } from "../../../../shared/constants/rol.enum";
 import { CartService } from "../../../../shared/services/cart.service";
 import { Location } from "@angular/common";
+import { NotificacionService } from "../../../../shared/services/notification.service";
 declare const $: any;
 
 export interface DressItem {
@@ -18,7 +19,6 @@ export interface DressItem {
 @Component({
   selector: "app-citas-probador",
   templateUrl: "./citas-probador.view.html",
-  styleUrls: ["./citas-probador.view.scss"],
 })
 export class CitasProbadorView implements OnInit {
   productosRenta: DressItem[] = [];
@@ -34,8 +34,9 @@ export class CitasProbadorView implements OnInit {
   selectedProductoRenta: DressItem | null = null;
   selectedProductoVenta: DressItem | null = null;
   userROL!: string;
-
+  confirmarCompra(){}
   constructor(
+    private notificacionService_:NotificacionService,
     private location: Location,
     private sessionService: SessionService,
     private indexedDbService: IndexedDbService,
@@ -84,6 +85,20 @@ export class CitasProbadorView implements OnInit {
     }
   }
 
+  enviarNotificacion() {
+    this.notificacionService_.enviarNotificacionLlevateCarrito().subscribe(
+      (response) => {
+        console.log("Notificación enviada:", response);
+        // Aquí puedes manejar la respuesta de la API si es necesario
+      },
+      (error) => {
+        console.error("Error al enviar la notificación:", error);
+        // Manejo de errores
+      }
+    );
+  }
+
+  
   async deleteDressItem(id: string) {
     try {
       

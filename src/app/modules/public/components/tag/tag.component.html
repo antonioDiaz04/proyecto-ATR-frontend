@@ -1,121 +1,170 @@
-<div class="container-card">
-  <h2 class="accessory-message">Elegancia y estilo</h2>
-  <!-- Desktop view (tarjetas normales) -->
-<div *ngIf="!isMobile">
-  <div class="card-hero" *ngFor="let card of cards; let i = index" [class.reverse]="i % 2 !== 0">
-    <img [src]="card.image" alt="Imagen" class="card-img" />
-    <div class="card-text">
-      <h2>{{ card.title }}</h2>
-      <p>{{ card.text }}</p>
-    </div>
+<div class="pt-2 pb-2 px-6 items-center text-center justify-center">
+  <span class="block italic font-light text-[#9c8e7a] text-xl">Alta Costura</span>
+  <div class="relative flex items-center justify-center">
+    <div class="flex-grow border-t border-[#9c8e7a]"></div>
+    <h2 class="font-serif text-4xl md:text-5xl text-center text-[#2a2723] tracking-tight leading-[1.1] mx-4 shrink-0">
+      El Arte de la Elegancia
+    </h2>
+    <div class="flex-grow border-t border-[#9c8e7a]"></div>
   </div>
 </div>
 
-<!-- Mobile view (carrusel con texto encima de la imagen) -->
-<p-carousel *ngIf="isMobile" [value]="cards" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="6000">
+
+
+<!-- Luxury Image Collage - Desktop -->
+<div *ngIf="!isMobile" class="hidden md:block">
+  <div class="grid grid-cols-4 h-[90vh] max-h-[1200px] gap-4 p-4">
+    <!-- Main Feature Card -->
+    <div class="relative col-span-2 row-span-2 overflow-hidden group">
+      <img [src]="cards[0].image" alt="Luxury collection"
+        class="w-full h-full object-cover object-center transition-all duration-700 ease-in-out transform group-hover:scale-105" />
+      <div class="absolute inset-0 flex items-end p-12 bg-gradient-to-t from-black/50 via-black/5 to-transparent">
+        <div
+          class="text-white transition-all duration-700 ease-in-out transform group-hover:translate-y-0 translate-y-4">
+          <h3 class="font-serif text-4xl md:text-5xl mb-4 tracking-tight leading-tight">{{ cards[0].title }}</h3>
+          <p class="text-[#f0f0f0] font-light max-w-md text-lg">{{ cards[0].text }}</p>
+          <div
+            class="w-24 h-px bg-[#e8e3db] mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Cards -->
+    <div class="relative overflow-hidden group">
+      <img [src]="cards[1].image" alt="Accessories"
+        class="w-full h-full object-cover object-center transition-all duration-500 ease-in-out transform group-hover:scale-105" />
+      <div class="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/40 via-black/3 to-transparent">
+        <div
+          class="text-white transition-all duration-500 ease-in-out transform group-hover:translate-y-0 translate-y-3">
+          <h3 class="font-serif text-2xl mb-3 tracking-tight">{{ cards[1].title }}</h3>
+          <p class="text-[#f0f0f0] text-base font-light">{{ cards[1].text }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative overflow-hidden group">
+      <img [src]="cards[2].image" alt="Jewelry"
+        class="w-full h-full object-cover object-center transition-all duration-500 ease-in-out transform group-hover:scale-105" />
+      <div class="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/40 via-black/3 to-transparent">
+        <div
+          class="text-white transition-all duration-500 ease-in-out transform group-hover:translate-y-0 translate-y-3">
+          <h3 class="font-serif text-2xl mb-3 tracking-tight">{{ cards[2].title }}</h3>
+          <p class="text-[#f0f0f0] text-base font-light">{{ cards[2].text }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wide Feature Card -->
+    <div class="relative col-span-2 overflow-hidden group">
+      <img [src]="cards[3].image" alt="Bridal collection"
+        class="w-full h-full object-cover object-center transition-all duration-700 ease-in-out transform group-hover:scale-105" />
+      <div class="absolute inset-0 flex items-end p-12 bg-gradient-to-t from-black/50 via-black/5 to-transparent">
+        <div
+          class="text-white transition-all duration-700 ease-in-out transform group-hover:translate-y-0 translate-y-4">
+          <h3 class="font-serif text-3xl md:text-4xl mb-4 tracking-tight leading-tight">{{ cards[3].title }}</h3>
+          <p class="text-[#f0f0f0] font-light max-w-md text-lg">{{ cards[3].text }}</p>
+          <div
+            class="w-24 h-px bg-[#e8e3db] mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile Carousel - Simplified Luxury -->
+<p-carousel *ngIf="isMobile" [value]="cards" [numVisible]="1" [numScroll]="1" [circular]="true"
+  [autoplayInterval]="6000" class="md:hidden">
   <ng-template pTemplate="item" let-card>
-    <div class="card-hero-mobile">
-      <img [src]="card.image" alt="Imagen" />
-      <div class="overlay">
-        <div class="card-text">
-          <h2>{{ card.title }}</h2>
-          <p>{{ card.text }}</p>
+    <div class="relative h-[70vh] overflow-hidden">
+      <img [src]="card.image" alt="Mobile view" class="w-full h-full object-cover opacity-95" />
+      <div class="absolute inset-0 flex items-end p-8 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+        <div class="text-white">
+          <h3 class="font-serif text-2xl mb-3">{{ card.title }}</h3>
+          <p class="text-[#e5e5e5]">{{ card.text }}</p>
         </div>
       </div>
     </div>
   </ng-template>
 </p-carousel>
-
-  <div class="secciones">
-    <!-- <section class="inspiracion">
-    <h1>Inspiración y Novedades</h1>
- <p>
-   Mantente al día con las últimas tendencias de diseño, los mejores consejos y mucho más. Aquí encontrarás contenido relevante y útil.
- </p>
- <div class="video-container">
-   <video controls>
-     <source src="video.mp4" type="video/mp4">
-     Tu navegador no soporta la etiqueta de video.
-   </video>
- </div>
-</section> -->
-
-    <!-- <section class="resenas">
- <h2>Reseñas de clientes</h2>
- <p>
-   Según el éxito de las soluciones, las reseñas de los clientes ayudan a mejorar nuestro servicio y atender mejor a nuestras comunidades.
- </p>
- <div class="resenas-grid">
-   <div class="resena">
-     <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730673202/images-AR/iskxc74b749qjsbsl6h0.webp" alt="Cliente 1">
-     <h3>Automatic processing</h3>
-     <p>Descripción breve de la reseña del cliente.</p>
-   </div>
-   <div class="resena">
-     <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730673202/images-AR/iskxc74b749qjsbsl6h0.webp" alt="Cliente 2">
-     <h3>Automatic processing</h3>
-     <p>Descripción breve de la reseña del cliente.</p>
-   </div>
-   <div class="resena">
-     <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730673202/images-AR/iskxc74b749qjsbsl6h0.webp" alt="Cliente 3">
-     <h3>Automatic processing</h3>
-     <p>Descripción breve de la reseña del cliente.</p>
-   </div>
- </div>
-</section> -->
-
-    <!-- </div> -->
-    <section class="services">
-      <h2>Nuestros Servicios</h2>
-      <ul>
-        <li>
-          <strong>Renta y Venta de Vestidos:</strong> Exclusivamente en nuestra
-          Boutique física con cita.
-        </li>
-        <li>
-          <strong>Accesorios de Tendencia:</strong> Completa tu look con una
-          gama de accesorios: Aretes, collares, bolsos, tacones, bronceador.
-        </li>
-      </ul>
-    </section>
-
-    <section>
-      <header>
-        <h1>¿Cómo rentar mi vestido?</h1>
-      </header>
-
-      <main>
-        <section class="steps" *ngIf="!isMobile">
-          <div class="step" *ngFor="let item of steps">
-            <span class="icon">
-              <i [class]="item.icon"></i>
-            </span>
-            <p [innerHTML]="item.text"></p>
-          </div>
-        </section>
-        
-        <p-carousel *ngIf="isMobile" [value]="steps" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000">
-          <ng-template pTemplate="item" let-step>
-            <div class="step p-4">
-              <span class="icon">
-                <i [class]="step.icon"></i>
-              </span>
-              <p [innerHTML]="step.text"></p>
-            </div>
-          </ng-template>
-        </p-carousel>
-        
-        <section class="delivery-option">
-          <h2>¿No Tengo Tiempo De Recoger O Devolver El Vestido?</h2>
-          <p>Por comodidad ofrecemos la opción de...</p>
-          <ul>
-            <li>Recogida y devolución: $150</li>
-            <li>Horario de entrega: 4–5 pm.</li>
-          </ul>
-        </section>
-      </main>
-    </section>
-
-
+ <div class="pt-2 pb-2  px-6 items-center text-center justify-center">
+    <span class="block italic font-light text-[#9c8e7a] text-xl">Servicio Personalizado</span>
+    <div class="relative flex items-center justify-center">
+      <div class="flex-grow border-t border-[#9c8e7a]"></div>
+      <h2 class="font-serif text-4xl md:text-5xl text-center text-[#2a2723] tracking-tight leading-[1.1] mx-4 shrink-0">
+        Nuestras Ofertas Exclusivas
+      </h2>
+      <div class="flex-grow border-t border-[#9c8e7a]"></div>
+    </div>
   </div>
-</div>
+<!-- Luxury Services Section -->
+<section class="bg-white py-20 px-6 sm:px-12 max-w-6xl mx-auto">
+ 
+  <ul class="space-y-8 max-w-3xl mx-auto">
+    <li class="flex items-start border-b border-[#f0ece6] pb-8">
+      <div class="bg-[#2a2723] rounded-full p-2 mr-6 flex-shrink-0">
+        <svg class="h-5 w-5 text-[#d4c4a8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-serif text-xl text-[#2a2723] mb-2">Alquiler de Vestidos a Medida</h3>
+        <p class="text-[#6e6a63] font-light">Citas privadas disponibles en nuestro atelier principal con nuestros consultores de estilo.</p>
+      </div>
+    </li>
+
+    <li class="flex items-start border-b border-[#f0ece6] pb-8">
+      <div class="bg-[#2a2723] rounded-full p-2 mr-6 flex-shrink-0">
+        <svg class="h-5 w-5 text-[#d4c4a8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-serif text-xl text-[#2a2723] mb-2">Accesorios Curados</h3>
+        <p class="text-[#6e6a63] font-light">Joyas, bolsos de mano y tacones seleccionados de diseñadores emergentes para complementar tu look.</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- Luxury Process Section -->
+<section class="bg-[#f9f7f4] py-20 px-6 sm:px-12">
+  <div class="max-w-6xl mx-auto">
+    <header class="text-center mb-20">
+      <h2 class="font-serif text-3xl md:text-4xl text-[#2a2723] tracking-tight">
+        <span class="block italic font-light text-[#9c8e7a] text-xl mb-3">The Experience</span>
+        Our Selection Process
+      </h2>
+    </header>
+
+    <!-- Versión corregida del template -->
+    <!-- Desktop Steps - Animated Luxury Grid -->
+    <div *ngIf="!isMobile" [@stepAnimation] class="grid md:grid-cols-4 gap-8">
+      <div *ngFor="let item of steps; let i = index" class="text-center step-item">
+        <div class="bg-[#2a2723] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <i [class]="item.icon" class="text-2xl text-[#d4c4a8] transition-colors duration-300"></i>
+        </div>
+        <p class="text-[#6e6a63] font-light text-lg leading-relaxed">
+          <span class="font-serif text-[#2a2723] font-thin text-2xl mr-1">{{ i + 1 }}.</span>
+          <span [innerHTML]="item.text" class="align-middle"></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Mobile Carousel - Animated Version -->
+    <p-carousel *ngIf="isMobile" [value]="steps" [numVisible]="1" [numScroll]="1" [circular]="true"
+      [autoplayInterval]="3000" class="md:hidden">
+      <ng-template pTemplate="item" let-step let-i="index">
+        <div class="text-center px-8" [@stepAnimation]>
+          <div class="bg-[#2a2723] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <i [class]="step.icon" class="text-2xl text-[#d4c4a8] transition-colors duration-300"></i>
+          </div>
+          <p class="text-[#6e6a63] font-light text-lg leading-relaxed">
+            <span class="font-serif text-[#2a2723] font-thin text-2xl mr-1">{{ i + 1 }}.</span>
+            <span [innerHTML]="step.text" class="align-middle"></span>
+          </p>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+</section>

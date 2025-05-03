@@ -1,118 +1,189 @@
-<div class="home-dashboard">
-    <!-- <h1>Bienvenido </h1> -->
-    <div class="admin-header">
-        <div class="admin-title">
-            <h1>Hola Admin</h1>
-            <p>Bienvenido al panel de administración</p>
+<div class="min-h-screen bg-gray-50 p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Hola Admin</h1>
+        <p class="text-gray-500 mt-1">Bienvenido al panel de administración - {{ fechaTexto }}</p>
+      </div>
+      <div class="mt-4 md:mt-0 flex items-center space-x-4">
+        <div class="relative">
+          <button class="p-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors">
+            <i class="pi pi-bell text-gray-600"></i>
+            <span *ngIf="commentCount > 0" class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+              {{ commentCount }}
+            </span>
+          </button>
         </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+            <img src="https://dummyimage.com/40x40/ccc/aaa&text=2x2" alt="Profile" class="w-full h-full object-cover">
+          </div>
+          <span class="hidden md:block text-sm font-medium text-gray-700">Admin</span>
+        </div>
+      </div>
     </div>
-
-    <section class="card-container">
-        <div class="card">
-            <div class="card-background"
-                style="background-image: url('https://i.pinimg.com/474x/34/85/14/348514ab4c60b100efa35680b02f7d75.jpg');">
-            </div>
-            <div class="card-footer">
-                <h2>Usuarios</h2>
-            </div>
+  
+    <!-- Quick Access Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div class="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-80 group-hover:opacity-90 transition-opacity"></div>
+        <div class="absolute inset-0 bg-cover bg-center" 
+             style="background-image: url('https://i.pinimg.com/474x/34/85/14/348514ab4c60b100efa35680b02f7d75.jpg');"></div>
+        <div class="relative h-full flex flex-col justify-end p-6">
+          <h3 class="text-xl font-semibold text-white">Usuarios</h3>
+          <p class="text-blue-100 mt-1">Administrar clientes y permisos</p>
+          <button class="mt-3 self-start px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-md text-white text-sm font-medium hover:bg-opacity-30 transition-all">
+            Gestionar
+          </button>
         </div>
-        <div class="card">
-            <div class="card-background"
-                style="background-image: url('https://i.pinimg.com/474x/ba/4a/6f/ba4a6fdd8fb86ea36cfa834b17405bd4.jpg');">
-            </div>
-            <div class="card-footer">
-                <h2>Productos</h2>
-            </div>
+      </div>
+  
+      <div class="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-purple-600 opacity-80 group-hover:opacity-90 transition-opacity"></div>
+        <div class="absolute inset-0 bg-cover bg-center" 
+             style="background-image: url('https://i.pinimg.com/474x/ba/4a/6f/ba4a6fdd8fb86ea36cfa834b17405bd4.jpg');"></div>
+        <div class="relative h-full flex flex-col justify-end p-6">
+          <h3 class="text-xl font-semibold text-white">Vestidos</h3>
+          <p class="text-purple-100 mt-1">Catálogo y disponibilidad</p>
+          <button class="mt-3 self-start px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-md text-white text-sm font-medium hover:bg-opacity-30 transition-all">
+            Explorar
+          </button>
         </div>
-        <div class="card">
-            <div class="card-background"
-                style="background-image: url('https://i.pinimg.com/474x/62/34/f2/6234f2a95a986a0c670c2554e2ca7add.jpg');">
-            </div>
-            <div class="card-footer">
-                <h2>Rentas y ventas</h2>
-            </div>
+      </div>
+  
+      <div class="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-emerald-600 opacity-80 group-hover:opacity-90 transition-opacity"></div>
+        <div class="absolute inset-0 bg-cover bg-center" 
+             style="background-image: url('https://i.pinimg.com/474x/62/34/f2/6234f2a95a986a0c670c2554e2ca7add.jpg');"></div>
+        <div class="relative h-full flex flex-col justify-end p-6">
+          <h3 class="text-xl font-semibold text-white">Rentas y Ventas</h3>
+          <p class="text-emerald-100 mt-1">Transacciones y reportes</p>
+          <button class="mt-3 self-start px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-md text-white text-sm font-medium hover:bg-opacity-30 transition-all">
+            Ver más
+          </button>
         </div>
-    </section>
-
-
-    <section class="rentas-dashboard">
-        <h3>Dashboard de Rentas</h3>
-        <div class="dashboard-container">
-            <div class="dashboard-card">
-                <h4>Prenda más rentada</h4>
-                <p>
-                    {{ stats.productoMasRentado?.productoNombre || 'No disponible' }}
-                    <span *ngIf="stats.productoMasRentado">({{ stats.productoMasRentado.count }} alquileres)</span>
-                </p>
-            </div>
-            <div class="dashboard-card">
-                <h4>Usuario con más rentas</h4>
-                <p>
-                    {{ stats.usuarioMasActivo?.usuarioNombre || 'No disponible' }}
-                    <span *ngIf="stats.usuarioMasActivo">({{ stats.usuarioMasActivo.count }} rentas)</span>
-                </p>
-            </div>
-            <div class="dashboard-card">
-                <h4>Fecha con más rentas</h4>
-                <p>{{ stats.fechaMayorRenta || 'No disponible' }}</p>
-            </div>
+      </div>
+    </div>
+  
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-medium text-gray-700">Prenda más rentada</h3>
+          <i class="pi pi-tag text-blue-500"></i>
         </div>
-    </section>
-
-
-    <section class="chart-container">
-        <div class="card">
-            <div class="card-header">
-                <h3>Estadísticas por Fecha de Rentas</h3>
-            </div>
-            <div class="card-body">
-                <p-chart type="bar" [data]="chartDataFecha"></p-chart>
-            </div>
+        <p class="text-2xl font-bold mt-2 text-gray-800">
+          {{ stats.productoMasRentado?.productoNombre || 'N/A' }}
+        </p>
+        <p *ngIf="stats.productoMasRentado" class="text-sm text-gray-500 mt-1">
+          {{ stats.productoMasRentado.count }} alquileres
+        </p>
+      </div>
+  
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-medium text-gray-700">Usuario con más rentas</h3>
+          <i class="pi pi-user text-purple-500"></i>
         </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h3>Estadísticas de Rentas</h3>
-            </div>
-            <div class="card-body">
-                <p-chart type="pie" [data]="chartData"></p-chart>
-            </div>
+        <p class="text-2xl font-bold mt-2 text-gray-800">
+          {{ stats.usuarioMasActivo?.usuarioNombre || 'N/A' }}
+        </p>
+        <p *ngIf="stats.usuarioMasActivo" class="text-sm text-gray-500 mt-1">
+          {{ stats.usuarioMasActivo.count }} rentas
+        </p>
+      </div>
+  
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-medium text-gray-700">Fecha con más rentas</h3>
+          <i class="pi pi-calendar text-emerald-500"></i>
         </div>
-    </section>
-    <section class="chart-container">
-        <div class="card">
-            <div class="card-header">
-                <h3>Estadísticas de Rentas y Ventas por Año</h3>
-            </div>
-            <div class="card-body">
-                <p-chart type="line" [data]="chartDataAnual"></p-chart>
-            </div>
+        <p class="text-2xl font-bold mt-2 text-gray-800">
+          {{ stats.fechaMayorRenta || 'N/A' }}
+        </p>
+        <p *ngIf="stats.fechaMayorRenta" class="text-sm text-gray-500 mt-1">
+          Día más activo
+        </p>
+      </div>
+    </div>
+  
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Estadísticas por Fecha de Rentas</h3>
+          <button class="text-sm text-blue-500 hover:text-blue-700">Ver detalles</button>
         </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h3>Estadísticas de Rentas y Ventas por Mes</h3>
-            </div>
-            <div class="card-body">
-                <p-chart type="line" [data]="chartDataMensual"></p-chart>
-            </div>
+        <div class="h-80">
+          <p-chart type="bar" [data]="chartDataFecha"></p-chart>
         </div>
-    </section>
-
-
-
-    <!-- Tarjeta de notificaciones de comentarios pendientes -->
-    <!-- <section class="notifications-container">
-        <div class="notification-card">
-            <div class="notification-icon">
-                <i class="fa fa-commenting-o" aria-hidden="true"></i>
-            </div>
-            <div class="notification-content">
-                <h4>Comentarios Pendientes</h4>
-                <p>{{ commentCount || 0 }} nuevos</p>
-                <span class="date">{{ fechaTexto }}</span>
-                <button class="btn-notification" type="button" (click)="goToComments()">Ver Comentarios</button>
-            </div>
+      </div>
+  
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Distribución de Rentas</h3>
+          <button class="text-sm text-blue-500 hover:text-blue-700">Ver detalles</button>
         </div>
-    </section> -->
-</div>
+        <div class="h-80">
+          <p-chart type="pie" [data]="chartData"></p-chart>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Second Row of Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Rentas y Ventas por Año</h3>
+          <button class="text-sm text-blue-500 hover:text-blue-700">Ver histórico</button>
+        </div>
+        <div class="h-80">
+          <p-chart type="line" [data]="chartDataAnual"></p-chart>
+        </div>
+      </div>
+  
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800">Rentas y Ventas por Mes</h3>
+          <button class="text-sm text-blue-500 hover:text-blue-700">Ver análisis</button>
+        </div>
+        <div class="h-80">
+          <p-chart type="line" [data]="chartDataMensual"></p-chart>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Recent Activity (Opcional) -->
+    <div class="mt-8 bg-white rounded-xl shadow-sm overflow-hidden">
+      <div class="p-6 border-b border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-800">Actividad Reciente</h3>
+      </div>
+      <div class="divide-y divide-gray-100">
+        <div *ngFor="let activity of recentActivities" class="p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 mt-1">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center" 
+                   [ngClass]="{
+                     'bg-blue-100 text-blue-600': activity.type === 'renta',
+                     'bg-purple-100 text-purple-600': activity.type === 'venta',
+                     'bg-emerald-100 text-emerald-600': activity.type === 'registro'
+                   }">
+                <i [class]="activity.icon"></i>
+              </div>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="text-sm font-medium text-gray-800">{{ activity.title }}</p>
+              <p class="text-sm text-gray-500 mt-1">{{ activity.description }}</p>
+              <p class="text-xs text-gray-400 mt-2">{{ activity.time }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-gray-100 text-center">
+        <button class="text-sm text-blue-500 hover:text-blue-700 font-medium">
+          Ver toda la actividad
+        </button>
+      </div>
+    </div>
+  </div>
+  

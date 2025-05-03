@@ -7,13 +7,14 @@ import { VentayrentaService } from "../../../../shared/services/ventayrenta.serv
   selector: "app-home",
   templateUrl: "./home.view.html",
   styleUrls: [
-    "./home.view.scss",
+    // "./home.view.scss",
     // "./menuLateral.scss"
   ],
   encapsulation: ViewEncapsulation.None,
 })
 export class HomeView implements OnInit {
   // Propiedades para los gráficos
+  recentActivities: any;
   chartDataAnual: any;
   chartDataMensual: any;
   chartDataSemanal: any;

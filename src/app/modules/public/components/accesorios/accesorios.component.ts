@@ -3,7 +3,7 @@ import { Component, HostListener } from '@angular/core';
 @Component({
   selector: 'app-accesorios',
   templateUrl: './accesorios.component.html',
-  styleUrl: './accesorios.component.scss'
+  // styleUrl: './accesorios.component.scss'
 })
 export class AccesoriosComponent {
   isMobile: boolean = false;

@@ -49,7 +49,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from '../../shared/services/toast.service';
 import { ToastModule } from 'primeng/toast';
 import { ProductoService } from '../../shared/services/producto.service';
@@ -72,10 +72,11 @@ import { VentayrentaService } from '../../shared/services/ventayrenta.service';
 import { CategoriaComponent } from './components/categoria/categoria.component';
 import { CategoriaService } from '../../shared/services/categoria.service';
 import { ChartModule } from 'primeng/chart';
+import { SidebarModule } from 'primeng/sidebar';
 
 const VIEWS = [HomeView, FooterComponent];
 
-const MATERIALS = [ChartModule, DragDropModule,ButtonModule, DropdownModule, InputTextModule, CardModule,CalendarModule, InputNumberModule, ToastrModule,TabViewModule,
+const MATERIALS = [SidebarModule,ChartModule, DragDropModule,ButtonModule, DropdownModule, InputTextModule, CardModule,CalendarModule, InputNumberModule, ToastrModule,TabViewModule,
   AvatarModule, PaginatorModule,AvatarGroupModule, DialogModule,TableModule,IconFieldModule,InputIconModule
 ]
 @NgModule({
@@ -123,7 +124,7 @@ const MATERIALS = [ChartModule, DragDropModule,ButtonModule, DropdownModule, Inp
 
   ],
   imports: [ MATERIALS,ReactiveFormsModule,ToastModule ,CommonModule, AdminRoutingModule, FormsModule,HttpClientModule,],
-  providers: [VentayrentaService,
+  providers: [ConfirmationService,VentayrentaService,
     UsuarioService,
     ControlAdministrativaService,
     ClientesService,

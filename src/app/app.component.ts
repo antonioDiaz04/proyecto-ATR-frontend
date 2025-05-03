@@ -29,7 +29,7 @@ import { environment } from "../environments/environment";
     },
   ],
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss",'./alert.scss'],
+  // styleUrls: ["./app.component.scss",'./alert.scss'],
 })
 export class AppComponent implements OnInit {
   showWelcomeMessage = false;

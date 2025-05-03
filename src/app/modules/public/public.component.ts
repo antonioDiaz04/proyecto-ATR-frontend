@@ -5,7 +5,7 @@ import { SwPush } from "@angular/service-worker";
 @Component({
   selector: 'app-root',
   templateUrl: './public.component.html',
-  styleUrl: './public.component.css',
+  // styleUrl: './public.component.css',
 })
 export class PublicComponent implements OnInit {
   // title = 'frontend';

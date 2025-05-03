@@ -51,6 +51,8 @@ import { environment } from '../../../environments/environment';
 import { RecuparByPreguntaComponent } from './view/recuperar-password/recupar-by-pregunta/recupar-by-pregunta.component';
 import { RecuperarByEmailComponent } from './view/recuperar-password/recuperar-by-email/recuperar-by-email.component';
 import { HeaderModule } from '../../shared/components/header/header.module';
+import { DatosEmpresaService } from '../../shared/services/datos-empresa.service';
+import { SignInView } from './view/sign-in/sign-in.view';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,7 @@ import { HeaderModule } from '../../shared/components/header/header.module';
     // SignInView,
     VerificarCodigoView,
     RegistroView,
-    RecuparByPreguntaComponent,RecuperarByEmailComponent,
+    RecuparByPreguntaComponent,RecuperarByEmailComponent, SignInView,
     // LoginModalComponent,
   ],
   imports: [
@@ -93,6 +95,7 @@ import { HeaderModule } from '../../shared/components/header/header.module';
     //   provide: RECAPTCHA_V3_SITE_KEY,
     //   useValue: '6LereGcqAAAAAOYonCxeWIj-b9XAv8Y3hng--ype',
     // },
+    DatosEmpresaService ,
     SignInService,
     SessionService,
     mensageservice,

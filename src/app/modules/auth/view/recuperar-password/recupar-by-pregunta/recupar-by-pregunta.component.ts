@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-recupar-by-pregunta',
   templateUrl: './recupar-by-pregunta.component.html',
-  styleUrl: './recupar-by-pregunta.component.scss'
+  // styleUrl: './recupar-by-pregunta.component.scss'
 })
 export class RecuparByPreguntaComponent {
     @Output() regresar = new EventEmitter<void>(); // Emitir evento para regresar

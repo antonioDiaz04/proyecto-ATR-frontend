@@ -1,55 +1,88 @@
-<div class="product-section">
-  <h2 class="accessory-message">Completa tu look con nuestros accesorios</h2>
-  
-  <!-- Versión para escritorio (grid) -->
-  <div class="product-icons desktop-version">
-    <div class="icon-item">
-      <div class="icon">
-        <i class="pi pi-sparkles"></i>
+<div class="product-section bg-[#f8f5f2] py-20 px-6 sm:px-8">
+  <!-- Encabezado con tipografía fina -->
+  <div class="max-w-4xl mx-auto mb-16 text-center border-b border-[#e5e0db] pb-8">
+    <h2 class="font-serif text-3xl md:text-4xl font-light tracking-tight text-[#2a2a2a]">
+      <span class="block font-serif italic text-[#8a7a6a] text-xl mb-2">Curated Selection</span>
+      Complementos de edición limitada
+    </h2>
+  </div>
+
+  <!-- Grid de productos - Versión desktop -->
+  <div class="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+    <!-- Accesorio 1 - Oro -->
+    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
+      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
+        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+        </svg>
       </div>
-      <h3>ACCESORIOS</h3>
-      <p>Lleva tu look al siguiente nivel y complétalo con nuestros accesorios exclusivos</p>
+      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Joyeria fina</h3>
+      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
+        Piezas únicas elaboradas artesanalmente con metales preciosos.
+      </p>
+      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
     </div>
-   
-    <div class="icon-item">
-      <div class="icon">
-        <i class="pi pi-heart"></i>
+
+    <!-- Accesorio 2 - Perfumes -->
+    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
+      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
+        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"></path>
+        </svg>
       </div>
-      <h3>LIPSTICK</h3>
-      <p>Mirum est notare quam littera gothica, quam nunc putamus parum claram</p>
+      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Fragancias</h3>
+      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
+        Esencias personalizadas creadas por maestros perfumistas.
+      </p>
+      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
     </div>
-    
-    <div class="icon-item">
-      <div class="icon">
-        <i class="pi pi-bell"></i>
+
+    <!-- Accesorio 3 - Relojes -->
+    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
+      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
+        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
       </div>
-      <h3>NOTIFICATIONS</h3>
-      <p>Recibe notificaciones y sé el primero en conocer nuestras ofertas y descuentos exclusivos</p>
+      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Cronómetros</h3>
+      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
+        Relojes mecánicos con mecanismos suizos de edición numerada.
+      </p>
+      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
     </div>
-    
-    <div class="icon-item">
-      <div class="icon">
-        <i class="pi pi-users"></i>
+
+    <!-- Accesorio 4 - Exclusivo -->
+    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
+      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
+        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
       </div>
-      <h3>BE A CLIENT</h3>
-      <p>Únete a nuestra comunidad y disfruta de beneficios exclusivos para clientes</p>
+      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Concierge</h3>
+      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
+        Servicio personalizado para clientes distinguidos.
+      </p>
+      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
     </div>
   </div>
-  
-  <!-- Versión para móvil (carrusel) -->
-  <p-carousel *ngIf="isMobile" [value]="iconItems" [numVisible]="1" [numScroll]="1" 
-              [circular]="true" [autoplayInterval]="3000" [responsiveOptions]="responsiveOptions"
-              class="mobile-version">
-    <ng-template let-item pTemplate="item">
-      <div class="icon-item">
-        <div class="icon">
-          <i [class]="item.icon"></i>
-        </div>
-        <h3>{{item.title}}</h3>
-        <p>{{item.description}}</p>
+
+  <!-- Versión móvil (simplificada) -->
+  <div class="md:hidden space-y-6 max-w-md mx-auto">
+    <div class="bg-white p-8 text-center border border-[#f0ece6]">
+      <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center bg-[#faf7f3]">
+        <svg class="w-6 h-6 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+        </svg>
       </div>
-    </ng-template>
-  </p-carousel>
-
-
+      <h3 class="font-serif text-lg text-[#3a3a3a] mb-2">Joyeria fina</h3>
+      <p class="text-[#7a7a7a] font-light text-xs leading-relaxed">
+        Piezas únicas elaboradas artesanalmente con metales preciosos.
+      </p>
+    </div>
+  </div>
 </div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap');
+
+</style>

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-recuperar-by-telefono',
   templateUrl: './recuperar-by-telefono.component.html',
-  styleUrl: './recuperar-by-telefono.component.scss'
+  // styleUrl: './recuperar-by-telefono.component.scss'
 })
 export class RecuperarByTelefonoComponent {
 

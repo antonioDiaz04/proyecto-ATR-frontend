@@ -19,8 +19,8 @@ import AOS from 'aos';
   selector: "app-home",
   templateUrl: "./home.view.html",
   styleUrls: [
-    "./home.view.css",
-    "../../../../shared/styles/styles.scss",
+    // "./home.view.css",
+    // "../../../../shared/styles/styles.scss",
     "../../../../shared/styles/animations.scss",
   ],
 })

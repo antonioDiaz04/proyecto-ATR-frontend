@@ -76,7 +76,7 @@ import {
     HttpClientModule,
   ], // Importa las dependencias necesarias
   templateUrl: './login-modal.component.html',
-  styleUrls: ['./login-modal.component.scss'],
+
 })
 export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
   isLoading = false;
@@ -111,7 +111,7 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
   captcha = '';
 
   faltantes: string[] = []; // Lista de requisitos faltantes
-
+  showPassword: boolean = false;
   constructor(
     private indexedDbService: IndexedDbService,
     private msgs: mensageservice,
