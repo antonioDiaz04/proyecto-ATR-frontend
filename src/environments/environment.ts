@@ -4,8 +4,8 @@ export const environment = {
   // api: 'http://localhost:4000/api/v1', //!Local
   serviceWorker: true,
   
-  publicKey:"BFa7J38DsRrmv8rAvYPj-FJtDptkDdKNwwllIFVfY5kyQ53ZOUnD1ZijkYD4mPNKjB2ZcXBdnhy93pQEV5mxU5w",
-  privateKey:"h2Ktdk_-MgCRhP0JlNaAMWRVEwwFwvjbczHMisFxg84",
+  publicKey:"BFbYJL0v_jPOzh1TT4yK9-waY7QsGVtq1F1DQHUZdFa3bJRvlZQYZiRKpMjKap20Ch3M2r1r0rxtIHw15ydzLHY",
+  privateKey:"D-FwNDZuOjO0oIoepPSqrp4LdKG98lBYiRgqXtA7tCo",
     //para la autenticacion con firebase
   firebaseConfig : {
     apiKey: "AIzaSyB1qHkNRaakPbvjccyQjs49fHf5MH1HGPU",
