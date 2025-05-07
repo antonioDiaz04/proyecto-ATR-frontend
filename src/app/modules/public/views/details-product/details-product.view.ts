@@ -1,5 +1,13 @@
 import { Location } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { ProductoService } from '../../../../shared/services/producto.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IndexedDbService } from '../../commons/services/indexed-db.service';
@@ -10,6 +18,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 // declare const $: any;
 import AOS from 'aos';
 import $ from 'jquery';
+
 
 declare const Fancybox: any;
 
@@ -51,7 +60,7 @@ export class DetailsProductView implements OnInit, AfterViewInit {
   mainImageUrl: string = ''; // URL de la imagen principal
   showImages: boolean = false; // Variable para mostrar/ocultar las imágenes secundarias
   imagenes: any; // Sigue siendo un array de cadenas para imágenes adicionales en base64
-  selectedMainImage!: string
+  selectedMainImage!: string;
   // accesorios: any;
   productId!: any;
   Detalles: any = null; // Inicializado en null
@@ -81,46 +90,61 @@ export class DetailsProductView implements OnInit, AfterViewInit {
       },
     });
 
-    this.renderer.listen(this.mainImage.nativeElement, 'mousemove', (event: MouseEvent) => {
-      this.applyZoomEffect(event);
-    });
+    this.renderer.listen(
+      this.mainImage.nativeElement,
+      'mousemove',
+      (event: MouseEvent) => {
+        this.applyZoomEffect(event);
+      }
+    );
 
     this.renderer.listen(this.mainImage.nativeElement, 'mouseleave', () => {
       this.resetZoomEffect();
     });
-    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mousemove', (event: MouseEvent) => {
-      this.applyZoomEffectPreviewmainImage(event);
-    });
+    this.renderer.listen(
+      this.PreviewmainImage.nativeElement,
+      'mousemove',
+      (event: MouseEvent) => {
+        this.applyZoomEffectPreviewmainImage(event);
+      }
+    );
 
-    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mouseleave', () => {
-      this.resetZoomEffectPreviewmainImage();
-    });
+    this.renderer.listen(
+      this.PreviewmainImage.nativeElement,
+      'mouseleave',
+      () => {
+        this.resetZoomEffectPreviewmainImage();
+      }
+    );
   }
+
   calcularDescuento(precioAnterior: number, precioActual: number): number {
     return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
   }
 
   // Cambia la imagen principal y guarda la selección
-// changeMainImage(image: string): void {
-//   this.mainImageUrl = image;
-//   this.selectedMainImage = image;
-// }
+  // changeMainImage(image: string): void {
+  //   this.mainImageUrl = image;
+  //   this.selectedMainImage = image;
+  // }
 
-// Al pasar el mouse, cambia temporalmente la imagen principal
-onThumbnailHover(image: string): void {
-  // this.mainImageUrl = image;
-  this.selectedMainImage = image;
+  // Al pasar el mouse, cambia temporalmente la imagen principal
+  onThumbnailHover(image: string): void {
+    // this.mainImageUrl = image;
+    this.selectedMainImage = image;
 
-  this.mainImageUrl = this.selectedMainImage;
+    this.mainImageUrl = this.selectedMainImage;
+  }
 
-}
-
-// Al salir del hover, restaura la imagen principal seleccionada previamente
-resetMainImage(): void {
-  this.mainImageUrl = this.selectedMainImage;
-}
+  // Al salir del hover, restaura la imagen principal seleccionada previamente
+  resetMainImage(): void {
+    this.mainImageUrl = this.selectedMainImage;
+  }
   @ViewChild('mainImage', { static: false }) mainImage!: ElementRef;
-  @ViewChild('PreviewmainImage', { static: false }) PreviewmainImage!: ElementRef;
+  @ViewChild('PreviewmainImage', { static: false })
+  PreviewmainImage!: ElementRef;
+
+
   constructor(
     private location: Location,
     private indexedDbService: IndexedDbService,
@@ -139,6 +163,7 @@ resetMainImage(): void {
 
   ngOnInit() {
     this.isLoading = true;
+
     this.scrollToTop();
     this.ngxService.stop(); // Inicia el loader
     AOS.init({
@@ -148,7 +173,8 @@ resetMainImage(): void {
     const productId = this.activatedRoute.snapshot.params['id'];
 
     // Obtener detalles del producto
-    this.productoS_.obtenerDetalleProductoById(productId)
+    this.productoS_
+      .obtenerDetalleProductoById(productId)
       .subscribe((response: any) => {
         this.isLoading = false;
         this.Detalles = response;
@@ -162,20 +188,24 @@ resetMainImage(): void {
         // Preparar imágenes para el carrusel
         this.images = this.Detalles.imagenes.map((img: string) => ({
           itemImageSrc: img,
-          thumbnailImageSrc: img
+          thumbnailImageSrc: img,
         }));
 
         this.cdRef.detectChanges(); // Forzar la actualización del DOM
+
+     
       });
 
-
-      setTimeout(() => {
-        Fancybox.bind('[data-fancybox="gallery"]', {
-          // Aquí puedes agregar configuraciones adicionales si es necesario
-          // por ejemplo, velocidad de transición, etc.
-        });
-      }, 100);
+    setTimeout(() => {
+      Fancybox.bind('[data-fancybox="gallery"]', {
+        // Aquí puedes agregar configuraciones adicionales si es necesario
+        // por ejemplo, velocidad de transición, etc.
+      });
+    }, 100);
   }
+
+
+
   scrollToTop() {
     window.scrollTo(0, 0); // Esto lleva la página a la parte superior
   }
@@ -190,8 +220,8 @@ resetMainImage(): void {
   applyZoomEffect(event: MouseEvent): void {
     const image = this.mainImage.nativeElement;
     const rect = image.getBoundingClientRect(); // Obtiene la posición de la imagen en la pantalla
-    const x = (event.clientX - rect.left) / rect.width * 100;
-    const y = (event.clientY - rect.top) / rect.height * 100;
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
 
     this.renderer.setStyle(image, 'transform-origin', `${x}% ${y}%`);
     this.renderer.setStyle(image, 'transform', 'scale(2)');
@@ -221,11 +251,11 @@ resetMainImage(): void {
   }
   esFavorito: boolean = false;
 
-toggleFavorite(event: Event) {
-  event.stopPropagation(); // Evita que se active el click de la imagen
-  this.esFavorito = !this.esFavorito;
-  // Aquí puedes agregar la lógica para guardar como favorito
-}
+  toggleFavorite(event: Event) {
+    event.stopPropagation(); // Evita que se active el click de la imagen
+    this.esFavorito = !this.esFavorito;
+    // Aquí puedes agregar la lógica para guardar como favorito
+  }
   // Imagen principal del Detalles
 
   // // Lista de imágenes en miniatura
@@ -268,7 +298,7 @@ toggleFavorite(event: Event) {
       //     <div class="product-notification">
       //       <img src="${producto.imagenPrincipal}" alt="${producto.nombre}" class="product-image" />
       //       <div class="product-details">
-      //         <h4>${producto.nombre}</h4> 
+      //         <h4>${producto.nombre}</h4>
       //         <p>${producto.precio}</p>
       //       </div>
       //       <p>¿Deseas ir al carrito o iniciar sesión?</p>
@@ -291,7 +321,6 @@ toggleFavorite(event: Event) {
     }
   }
 
-
   goToCart() {
     // Lógica para ir al carrito
     console.log('Ir al carrito');
@@ -302,10 +331,9 @@ toggleFavorite(event: Event) {
     console.log('Iniciar sesión');
   }
 
-
   openModal(): void {
     Fancybox.show(
-      this.imagenes.map((src:any) => ({
+      this.imagenes.map((src: any) => ({
         src,
         type: 'image',
       }))
@@ -323,9 +351,8 @@ toggleFavorite(event: Event) {
     }
   }
   verDetalles(id: number) {
-    this.router.navigate(["/Detail/" + id]);
+    this.router.navigate(['/Detail/' + id]);
   }
-
 
   // }}}
   // Cambiar la imagen principal al hacer clic en una miniatura
@@ -356,6 +383,4 @@ toggleFavorite(event: Event) {
       this.selectedImageIndex = 0; // Volver a la primera imagen
     }
   }
-
-
 }

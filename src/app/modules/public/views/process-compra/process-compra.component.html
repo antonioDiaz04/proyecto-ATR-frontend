@@ -3,16 +3,16 @@
     <section class="order-summary">
       <h2>Order</h2>
       <div class="product">
-        <img [src]="Detalles.imagenPrincipal" [alt]="Detalles.nombre" />
+        <img [src]="Detalles.imagenes[0]" [alt]="Detalles.nombre" />
         <div class="details">
           <h3>{{ Detalles.nombre }}</h3>
           <p>Color: {{ Detalles.color }}</p>
-          <p>Size: {{ Detalles.tallaDisponible }}</p>
+          <p>Size: {{ Detalles.talla }}</p>
           <p class="price">
             ${{ Detalles.precio }}
           </p>
         </div>
-        <p>Cantidad: {{ Detalles.length }}</p>
+        <p>Cantidad: 1</p>
       </div>
     </section>
     <section class="payment-summary">
@@ -21,6 +21,8 @@
         <p>Order Summary: <span>${{ Detalles.precio }}</span></p>
         <button (click)="aplicarCupon()">Apply Coupon</button>
       </div>
+      <div #paypal *ngIf="Detalles?.disponible && Detalles?.opcionesTipoTransaccion === 'Venta'"
+            style="min-height: 45px; width: 100%;margin-top: 6px ;"></div>
     </section>
   </main>
 </div>

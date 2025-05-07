@@ -119,23 +119,25 @@
           <p><strong>Cantidad:</strong> <span>1</span></p>
         </div>
 
-        <!-- Botones de acción -->
-        <button *ngIf="Detalles.disponible"
-          (click)="Detalles.opcionesTipoTransaccion == 'renta' ? redirigirContinuarRenta(Detalles._id) : redirigirContinuarCompra(Detalles._id)"
-          class="ui add-to-cart rent button" [class.loading]="isLoadingBtn" [class.disabled]="isLoadingBtn">
-          {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'Me lo quiero probar' : 'Continuar con la compra' }}
-        </button>
-
-        <button (click)="apartarRentar(Detalles)" class="add-to-cart">
-          <i class="pi pi-shopping-cart"></i> Agregar a carrito
-        </button>
-
-        <!-- Compartir enlace -->
-        <div class="share-link">
-          <p><strong>Compartir:</strong></p>
-          <button class="share-button" title="Compartir enlace">
-            <i class="pi pi-share-alt"></i>
+        <div class="botones">
+          <!-- Botones de acción -->
+          <button *ngIf="Detalles.disponible"
+            (click)="Detalles.opcionesTipoTransaccion == 'renta' ? redirigirContinuarRenta(Detalles._id) : redirigirContinuarCompra(Detalles._id)"
+            class="ui add-to-cart rent button" [class.loading]="isLoadingBtn" [class.disabled]="isLoadingBtn">
+            {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'Me lo quiero probar' : 'Continuar con la compra' }}
           </button>
+
+          <button (click)="apartarRentar(Detalles)" class="add-to-cart">
+            <i class="pi pi-shopping-cart"></i> Agregar a carrito
+          </button>
+
+          <!-- Compartir enlace -->
+          <div class="share-link">
+            <p><strong>Compartir:</strong></p>
+            <button class="share-button" title="Compartir enlace">
+              <i class="pi pi-share-alt"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
