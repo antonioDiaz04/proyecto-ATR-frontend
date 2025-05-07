@@ -77,7 +77,7 @@ export class NotificacionService {
   }
 
   enviarNotificacionLlevaTuVestido(body:any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/llevate-carrito`, { body });
+    return this.http.post(`${this.apiUrl}/lleva-producto`, { body });
   }
 
   // Métodos de renta
