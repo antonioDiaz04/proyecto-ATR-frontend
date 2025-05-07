@@ -76,6 +76,10 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/llevate-carrito`, { token });
   }
 
+  enviarNotificacionLlevaTuVestido(body:any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/llevate-carrito`, { body });
+  }
+
   // Métodos de renta
   enviarNotificacionRentaExtendida(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/renta-extendida`, datos);

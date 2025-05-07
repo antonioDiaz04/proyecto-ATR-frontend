@@ -11,6 +11,9 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import AOS from 'aos';
 import $ from 'jquery';
 import { filter } from 'rxjs';
+import { SwPush } from '@angular/service-worker';
+import { NotificacionService } from '../../../../shared/services/notification.service';
+import { environment } from '../../../../../environments/environment';
 
 declare const Fancybox: any;
 
@@ -56,6 +59,8 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   selectedMainImage!: string
   // accesorios: any;
   productId!: any;
+  publicKey: string = environment .publicKey; // Este es el valor que debes obtener en la consola de Firebase.
+  
   Detalles: any = null; // Inicializado en null
   responsiveOptions: any[] = [
     {
@@ -130,6 +135,9 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private renderer: Renderer2,
     private cdRef: ChangeDetectorRef,
+    private swPush: SwPush,
+    private notificacionService_: NotificacionService,
+
     private ngxService: NgxUiLoaderService,
     private router: Router,
     private cartService: CartService,
@@ -151,15 +159,15 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     //   once: true, // Si `true`, la animación solo se ejecuta una vez
     // });
     const productId = this.activatedRoute.snapshot.params['id'];
-    this.obtenerProducto(productId);
-    this.sub = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        const productId = this.activatedRoute.snapshot.params['id'];
-        if (productId) {
-          this.obtenerProducto(productId); // Tu función para recargar el producto
-        }
-      });
+    // this.obtenerProducto(productId);
+    // this.sub = this.router.events
+    //   .pipe(filter(event => event instanceof NavigationEnd))
+    //   .subscribe(() => {
+    //     const productId = this.activatedRoute.snapshot.params['id'];
+    //     if (productId) {
+    //       this.obtenerProducto(productId); // Tu función para recargar el producto
+    //     }
+    //   });
 
 
 
@@ -170,32 +178,32 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     //   });
     // }, 100);
   }
-  obtenerProducto(id: string) {
-    // Obtener detalles del producto
+  // obtenerProducto(id: string) {
+  //   // Obtener detalles del producto
 
-    this.ngxService.start(); // Inicia el loader
-    this.productoS_.obtenerDetalleProductoById(id)
-      .subscribe((response: any) => {
-        this.ngxService.stop(); // Inicia el loader
+  //   this.ngxService.start(); // Inicia el loader
+  //   this.productoS_.obtenerDetalleProductoById(id)
+  //     .subscribe((response: any) => {
+  //       this.ngxService.stop(); // Inicia el loader
 
-        this.isLoading = false;
-        this.Detalles = response;
-        this.imagenes = this.Detalles.imagenes;
+  //       this.isLoading = false;
+  //       this.Detalles = response;
+  //       this.imagenes = this.Detalles.imagenes;
 
-        // Establecer la primera imagen como imagen principal
-        if (this.Detalles.imagenes && this.Detalles.imagenes.length > 0) {
-          this.mainImageUrl = this.Detalles.imagenes[0];
-        }
+  //       // Establecer la primera imagen como imagen principal
+  //       if (this.Detalles.imagenes && this.Detalles.imagenes.length > 0) {
+  //         this.mainImageUrl = this.Detalles.imagenes[0];
+  //       }
 
-        // Preparar imágenes para el carrusel
-        this.images = this.Detalles.imagenes.map((img: string) => ({
-          itemImageSrc: img,
-          thumbnailImageSrc: img
-        }));
+  //       // Preparar imágenes para el carrusel
+  //       this.images = this.Detalles.imagenes.map((img: string) => ({
+  //         itemImageSrc: img,
+  //         thumbnailImageSrc: img
+  //       }));
 
-        this.cdRef.detectChanges(); // Forzar la actualización del DOM
-      });
-  }
+  //       this.cdRef.detectChanges(); // Forzar la actualización del DOM
+  //     });
+  // }
   scrollToTop() {
     window.scrollTo(0, 0); // Esto lleva la página a la parte superior
   }
@@ -273,43 +281,23 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
       imagenes: producto.imagenes[0],
       opcionesTipoTransaccion: producto.opcionesTipoTransaccion,
     };
-
+  
     try {
-      // Guardar el producto en IndexedDB
-      // this.indexedDbService.guardarProducto(body2);
-
-      // Agregar el producto al carrito usando el servicio
       this.cartService.addToCart(body2);
-      console.error(body2);
-
-      // // Mostrar diálogo de confirmación
-      // this.confirmationService.confirm({
-      //   message: `
-      //     <div class="product-notification">
-      //       <img src="${producto.imagenPrincipal}" alt="${producto.nombre}" class="product-image" />
-      //       <div class="product-details">
-      //         <h4>${producto.nombre}</h4> 
-      //         <p>${producto.precio}</p>
-      //       </div>
-      //       <p>¿Deseas ir al carrito o iniciar sesión?</p>
-      //     </div>
-      //   `,
-      //   header: 'Producto agregado',
-      //   acceptLabel: 'Ir al carrito',
-      //   rejectLabel: 'Iniciar sesión',
-      //   accept: () => {
-      //     // Lógica para ir al carrito
-      //     this.goToCart();
-      //   },
-      //   reject: () => {
-      //     // Lógica para iniciar sesión
-      //     this.login();
-      //   },
-      // });
+      console.log('Producto agregado al carrito:', body2);
+  
+      // Enviar notificación push al usuario
+      const nombreProducto = producto.nombre;
+      const imagenProducto = producto.imagenes[0]; // Asegúrate de que sea una URL válida
+  
+      // Llama a generarToken y pasa los datos del producto
+      this.generarToken(nombreProducto, imagenProducto);
+  
     } catch (error) {
       console.error('Error al guardar el producto:', error);
     }
   }
+  
 
 
   goToCart() {
@@ -347,8 +335,6 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  // }}}
-  // Cambiar la imagen principal al hacer clic en una miniatura
   changeMainImage(image: string): void {
     this.selectedMainImage = image;
     this.mainImageUrl = this.selectedMainImage;
@@ -378,4 +364,71 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-}
+  generarToken(nombreProducto: string, imagenProducto: string): void {
+    const esLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    const esSeguro = location.protocol === 'https:' || esLocal;
+  
+    if (!esSeguro) {
+      console.error('Las notificaciones push solo funcionan en sitios HTTPS o localhost.');
+      alert('Debes acceder mediante HTTPS o localhost para usar notificaciones.');
+      return;
+    }
+  
+    if (!('serviceWorker' in navigator)) {
+      console.error('Este navegador no soporta Service Workers.');
+      alert('Tu navegador no soporta notificaciones push.');
+      return;
+    }
+  
+    if (!this.swPush || !this.swPush.isEnabled) {
+      console.warn('Push notifications no están habilitadas en este navegador.');
+      return;
+    }
+  
+    Notification.requestPermission().then((permiso) => {
+      if (permiso !== 'granted') {
+        console.warn('Permiso de notificaciones no concedido:', permiso);
+        alert('Debes permitir notificaciones para recibir alertas.');
+        return;
+      }
+  
+      navigator.serviceWorker.register('ngsw-worker.js')
+        .then(() => {
+          this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+            .then((sub) => {
+              const productoInfo = {
+                nombreProducto,
+                imagenProducto,
+              };
+              this.enviarNotificacion(sub, productoInfo);
+              console.log('Suscripción push exitosa:', sub);
+            })
+            .catch((err) => {
+              console.error('Error al suscribirse a notificaciones:', err);
+              alert('Hubo un problema al suscribirse a las notificaciones.');
+            });
+        })
+        .catch((error) => {
+          console.error('Error al registrar el Service Worker:', error);
+          alert('Fallo el registro del Service Worker.');
+        });
+    });
+  }
+  
+  enviarNotificacion(token: PushSubscription, productoInfo: { nombreProducto: string, imagenProducto: string }): void {
+    const body = {
+      token,
+      nombreProducto: productoInfo.nombreProducto,
+      imagenProducto: productoInfo.imagenProducto,
+    };
+  
+    this.notificacionService_.enviarNotificacionLlevaTuVestido(body).subscribe(
+      (response) => {
+        console.log("Notificación enviada:", response);
+      },
+      (error) => {
+        console.error("Error al enviar la notificación:", error);
+      }
+    );
+  }
+}  
