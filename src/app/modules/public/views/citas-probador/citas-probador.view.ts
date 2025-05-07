@@ -124,7 +124,7 @@ export class CitasProbadorView implements OnInit {
         .then(() => {
           this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
             .then((sub) => {
-              const token = JSON.parse(JSON.stringify(sub));
+              // const token = JSON.parse(sub));
               this.enviarNotificacion(sub);
               console.log('Suscripción push exitosa:', sub);
             })
@@ -145,7 +145,7 @@ export class CitasProbadorView implements OnInit {
   
 
   // Método para enviar el token de notificación al backend
-  enviarNotificacion(token: string): void {
+  enviarNotificacion(token: PushSubscription): void {
     this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe(
       (response) => {
         console.log("Notificación enviada:", response);
