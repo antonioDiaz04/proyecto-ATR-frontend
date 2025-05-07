@@ -47,24 +47,24 @@ export class AppComponent implements OnInit {
     private ngxService: NgxUiLoaderService,
     private sessionService: SessionService
   ) {
-    this.notificar();
+    // this.notificar();
   }
-  notificar() {
-    if (!this.swPush.isEnabled) {
-      console.warn("Service Workers no están habilitados o no son compatibles con este navegador.");
-      return;
-    }
+  // notificar() {
+  //   if (!this.swPush.isEnabled) {
+  //     console.warn("Service Workers no están habilitados o no son compatibles con este navegador.");
+  //     return;
+  //   }
   
-    this.swPush
-      .requestSubscription({ serverPublicKey: this.publicKey })
-      .then((sub) => {
-        const token = JSON.parse(JSON.stringify(sub));
-        console.log("JSON+++++++++", token);
-      })
-      .catch((err) => {
-        console.error("Error al suscribirse a notificaciones push:", err);
-      });
-  }
+  //   this.swPush
+  //     .requestSubscription({ serverPublicKey: this.publicKey })
+  //     .then((sub) => {
+  //       const token = JSON.parse(JSON.stringify(sub));
+  //       console.log("JSON+++++++++", token);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error al suscribirse a notificaciones push:", err);
+  //     });
+  // }
   
 
   ngOnInit() {

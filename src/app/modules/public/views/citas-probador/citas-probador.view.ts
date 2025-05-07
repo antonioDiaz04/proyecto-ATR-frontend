@@ -93,25 +93,37 @@ export class CitasProbadorView implements OnInit {
     }
   }
   generarToken(): void {
-    if ('serviceWorker' in navigator && this.swPush) {
-      this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
-        .then((sub) => {
-          const token = JSON.stringify(sub);
-          this.enviarNotificacion(token); // Enviar al backend
-        })
-        .catch((err) => {
-          console.error('Error al suscribirse a notificaciones:', err);
-          if (err instanceof Error) {
-            console.error('Detalles del error:', err.message, err.stack);
-          }
-          alert('Hubo un problema al suscribirse a las notificaciones.');
-        });
-    } else {
-      console.error('Service Workers no están habilitados en este navegador.');
-      alert('El navegador no soporta notificaciones push.');
+    // Verifica si el navegador soporta Service Workers y si el servicio está habilitado
+    if (!navigator.serviceWorker) {
+      console.error("Service Workers no están habilitados en este navegador.");
+      // return;
     }
+
+    if (!this.swPush.isEnabled) {
+      console.warn("Service Workers no están habilitados o no son compatibles con este navegador.");
+      // return;
+    }
+    // if ('serviceWorker' in navigator && this.swPush) {
+    this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+      .then((sub) => {
+        const token = JSON.parse(JSON.stringify(sub));
+        this.enviarNotificacion(token); // Enviar al backend
+        console.log("JSON+++++++++", token);
+        // 
+      })
+      .catch((err) => {
+        console.error('Error al suscribirse a notificaciones:', err);
+        if (err instanceof Error) {
+          console.error('Detalles del error:', err.message, err.stack);
+        }
+        alert('Hubo un problema al suscribirse a las notificaciones.');
+      });
+    // } else {
+    //   console.error('Service Workers no están habilitados en este navegador.');
+    //   alert('El navegador no soporta notificaciones push.');
+    // }
   }
-  
+
   // Método para enviar el token de notificación al backend
   enviarNotificacion(token: string): void {
     this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe(
@@ -134,8 +146,8 @@ export class CitasProbadorView implements OnInit {
       }
     );
   }
-  
-  
+
+
 
 
 
