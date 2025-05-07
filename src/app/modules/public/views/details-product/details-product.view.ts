@@ -159,18 +159,15 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     //   once: true, // Si `true`, la animación solo se ejecuta una vez
     // });
     const productId = this.activatedRoute.snapshot.params['id'];
-    // this.obtenerProducto(productId);
-    // this.sub = this.router.events
-    //   .pipe(filter(event => event instanceof NavigationEnd))
-    //   .subscribe(() => {
-    //     const productId = this.activatedRoute.snapshot.params['id'];
-    //     if (productId) {
-    //       this.obtenerProducto(productId); // Tu función para recargar el producto
-    //     }
-    //   });
-
-
-
+    this.obtenerProducto(productId);
+    this.sub = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const productId = this.activatedRoute.snapshot.params['id'];
+        if (productId) {
+          this.obtenerProducto(productId); // Tu función para recargar el producto
+        }
+      });
     // setTimeout(() => {
     //   Fancybox.bind('[data-fancybox="gallery"]', {
     //     // Aquí puedes agregar configuraciones adicionales si es necesario
@@ -178,32 +175,32 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     //   });
     // }, 100);
   }
-  // obtenerProducto(id: string) {
-  //   // Obtener detalles del producto
+  obtenerProducto(id: string) {
+    // Obtener detalles del producto
 
-  //   this.ngxService.start(); // Inicia el loader
-  //   this.productoS_.obtenerDetalleProductoById(id)
-  //     .subscribe((response: any) => {
-  //       this.ngxService.stop(); // Inicia el loader
+    this.ngxService.start(); // Inicia el loader
+    this.productoS_.obtenerDetalleProductoById(id)
+      .subscribe((response: any) => {
+        this.ngxService.stop(); // Inicia el loader
 
-  //       this.isLoading = false;
-  //       this.Detalles = response;
-  //       this.imagenes = this.Detalles.imagenes;
+        this.isLoading = false;
+        this.Detalles = response;
+        this.imagenes = this.Detalles.imagenes;
 
-  //       // Establecer la primera imagen como imagen principal
-  //       if (this.Detalles.imagenes && this.Detalles.imagenes.length > 0) {
-  //         this.mainImageUrl = this.Detalles.imagenes[0];
-  //       }
+        // Establecer la primera imagen como imagen principal
+        if (this.Detalles.imagenes && this.Detalles.imagenes.length > 0) {
+          this.mainImageUrl = this.Detalles.imagenes[0];
+        }
 
-  //       // Preparar imágenes para el carrusel
-  //       this.images = this.Detalles.imagenes.map((img: string) => ({
-  //         itemImageSrc: img,
-  //         thumbnailImageSrc: img
-  //       }));
+        // Preparar imágenes para el carrusel
+        this.images = this.Detalles.imagenes.map((img: string) => ({
+          itemImageSrc: img,
+          thumbnailImageSrc: img
+        }));
 
-  //       this.cdRef.detectChanges(); // Forzar la actualización del DOM
-  //     });
-  // }
+        this.cdRef.detectChanges(); // Forzar la actualización del DOM
+      });
+  }
   scrollToTop() {
     window.scrollTo(0, 0); // Esto lleva la página a la parte superior
   }
