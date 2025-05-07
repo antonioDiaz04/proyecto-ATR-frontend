@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-registro-terminos-condiciones',
   templateUrl: './registro-terminos-condiciones.component.html',
-  styleUrls: ['./registro-terminos-condiciones.component.scss'],
+  // styleUrls: ['./registro-terminos-condiciones.component.scss'],
 })
 export class RegistroTerminosCondicionesComponent {
   nuevosTerminos = {

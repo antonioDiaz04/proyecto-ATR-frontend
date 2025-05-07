@@ -101,6 +101,9 @@ export class CitasProbadorView implements OnInit {
         })
         .catch((err) => {
           console.error('Error al suscribirse a notificaciones:', err);
+          if (err instanceof Error) {
+            console.error('Detalles del error:', err.message, err.stack);
+          }
           alert('Hubo un problema al suscribirse a las notificaciones.');
         });
     } else {
@@ -109,8 +112,6 @@ export class CitasProbadorView implements OnInit {
     }
   }
   
-
-
   // Método para enviar el token de notificación al backend
   enviarNotificacion(token: string): void {
     this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe(
@@ -120,10 +121,21 @@ export class CitasProbadorView implements OnInit {
       },
       (error) => {
         console.error("Error al enviar la notificación:", error);
+        if (error instanceof Error) {
+          console.error('Detalles del error al enviar notificación:', error.message, error.stack);
+        }
         // Manejo de errores
+        if (error.status) {
+          console.error(`Status de error: ${error.status}`);
+        }
+        if (error.error) {
+          console.error('Respuesta del error:', error.error);
+        }
       }
     );
   }
+  
+  
 
 
 
