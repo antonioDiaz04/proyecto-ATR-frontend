@@ -43,7 +43,7 @@ declare const $: any;
   standalone: false,
 
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  // styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MessageService, ConfirmationService],
 })
@@ -76,7 +76,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   // Categorías de búsqueda
   suggestions: string[] = ['Color', 'Cuello', 'Talla', 'Material', 'Diseño', 'Manga', 'Estampado'];
   filteredSuggestions: string[] = [];
+  openRegisterModal(){
 
+  }
   darkMode = false;
   constructor(
     private indexedDbService: IndexedDbService,
@@ -183,19 +185,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     this.updateMenuItems();
   }
 
-  //
-  // loadCompanyData() {
-  //   this.datosEmpresaService.traerDatosEmpresa().subscribe(
-  //     (data) => {
-  //       this.empresaData = data[0]; // Guardar los datos en la variable
-  //       this.nombreDeLaPagina = this.empresaData?.tituloPagina;
-  //       this.imageUrl = this.empresaData?.logo;
-  //     },
-  //     (error) => {
-  //       console.error("Error al cargar los datos de la empresa:", error);
-  //     }
-  //   );
-  // }
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {

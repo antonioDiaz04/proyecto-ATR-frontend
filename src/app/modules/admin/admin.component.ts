@@ -7,7 +7,7 @@ import { RouterOutlet } from '@angular/router';
   // imports: [RouteArOutlet],
   // 
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  // styleUrl: './admin.component.scss'
 })
 export class AdminComponent {
   title = 'frontend';

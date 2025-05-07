@@ -1,56 +1,122 @@
-<div class="profile-edit-container">
-  <h1>Editar perfil</h1>
-  <p class="subtitle">
-    Mantén privados tus datos personales. Cualquier persona que pueda ver tu
-    perfil podrá ver la información que agregues aquí.
-  </p>
+<section class="contenedor-edicion bg-white p-8 rounded-lg w-full">
+  <!-- Encabezado -->
+  <header class="mb-8 text-start">
+    <h1 class="text-2xl font-medium text-gray-900 mb-2">Editar Perfil</h1>
+    <p class="text-gray-500 text-sm">
+      Mantén privados tus datos personales. Cualquier persona que pueda ver tu
+      perfil podrá ver la información que agregues aquí.
+    </p>
+  </header>
 
-  <div class="profile-picture">
-    <p-avatar
-      *ngIf="!profileImg"
-      [label]="getInitials(data.nombre)"
-      styleClass="mr-2"
-      size="xlarge"
-      shape="circle"
-    >
-    </p-avatar>
+  <!-- Foto de perfil -->
+  <section class="flex items-start mb-8 gap-6">
+    <figure class="relative">
+      <p-avatar
+        *ngIf="!profileImg"
+        [label]="getInitials(data.nombre)"
+        styleClass="mr-2"
+        size="xlarge"
+        shape="circle"
+        class="border border-gray-200"
+      ></p-avatar>
+      <p-avatar
+        *ngIf="profileImg"
+        [image]="profileImg"
+        styleClass="mr-2"
+        size="xlarge"
+        shape="circle"
+        class="border border-gray-200"
+      ></p-avatar>
+      <figcaption class="absolute -bottom-2 -right-2 bg-white rounded-full p-1 border border-gray-200">
+        <label for="file-upload" class="cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </label>
+        <input id="file-upload" type="file" (change)="onFileChange($event)" class="hidden"/>
+      </figcaption>
+    </figure>
+    <section>
+      <h3 class="font-medium text-gray-900 mb-1">{{ data.nombre }}</h3>
+      <p class="text-gray-500 text-sm">Miembro desde: {{ data.fechaRegistro | date:'longDate' }}</p>
+      <p class="text-gray-500 text-sm">Última actualización: {{ data.ultimaActualizacion | date:'medium' }}</p>
+    </section>
+  </section>
 
-    <p-avatar
-      *ngIf="profileImg"
-      [image]="profileImg"
-      styleClass="mr-2"
-      size="xlarge"
-      shape="circle"
-    >
-    </p-avatar>
+  <!-- Formulario -->
+  <form class="perfil-form text-start">
+    <section class="space-y-6 mb-8">
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Columna izquierda -->
+        <section class="space-y-6">
+          <section>
+            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+            <input
+              type="text"
+              id="nombre"
+              value="{{ data.nombre }}"
+              class="w-full border border-gray-200 p-3 rounded focus:outline-none focus:ring-1 focus:ring-gray-300"
+            />
+          </section>
+          
+          <section>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+            <input
+              type="email"
+              id="email"
+              value="{{ data.email }}"
+              class="w-full border border-gray-200 p-3 rounded focus:outline-none focus:ring-1 focus:ring-gray-300"
+            />
+          </section>
+        </section>
+        
+        <!-- Columna derecha -->
+        <section class="space-y-6">
+          <section>
+            <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+            <input
+              type="tel"
+              id="telefono"
+              value="{{ data.telefono }}"
+              class="w-full border border-gray-200 p-3 rounded focus:outline-none focus:ring-1 focus:ring-gray-300"
+            />
+          </section>
+          
+          <section>
+            <label for="direccion" class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+            <input
+              type="text"
+              id="direccion"
+              value="{{ data.direccion || 'No especificada' }}"
+              class="w-full border border-gray-200 p-3 rounded focus:outline-none focus:ring-1 focus:ring-gray-300"
+            />
+          </section>
+        </section>
+      </section>
+    </section>
 
-    <input type="file" (change)="onFileChange($event)" />
-  </div>
-
-  <form class="profile-form">
-    <div class="form-group-container">
-      <div class="form-group">
-        <label for="first-name">Nombre(s)</label>
-        <input type="text" id="first-name" value="{{ data.nombre }}" />
-      </div>
-
-      <div class="form-group">
-        <label for="last-name">Correo</label>
-        <input type="text" id="last-name" value="{{ data.email }}" />
-      </div>
-
-      <div class="form-group">
-        <label for="phone-number">Número telefónico</label>
-        <input type="text" id="phone-number" value="{{ data.telefono }}" />
-      </div>
-    </div>
-
-    <div class="button-group">
-      <button type="button" (click)="logout()" class="reset-btn">
+    <!-- Botones -->
+    <section class="flex flex-col sm:flex-row justify-start gap-3 border-t border-gray-100 pt-6">
+      <button
+        type="button"
+        (click)="logout()"
+        class="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors text-sm"
+      >
         Cerrar sesión
       </button>
-      <button type="button" class="reset-btn">Restablecer</button>
-      <button type="submit" class="save-btn">Guardar</button>
-    </div>
+      <button
+        type="button"
+        class="px-6 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors text-sm"
+      >
+        Restablecer
+      </button>
+      <button
+        type="submit"
+        class="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm"
+      >
+        Guardar cambios
+      </button>
+    </section>
   </form>
-</div>
+</section>

@@ -8,7 +8,7 @@ import { StorageService } from "../../../../shared/services/storage.service";
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss', "menuLateral.scss"],
+  // styleUrls: ['./header.component.scss', "menuLateral.scss"],
 
   encapsulation: ViewEncapsulation.None,
 })

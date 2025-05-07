@@ -41,7 +41,7 @@ interface Producto {
 @Component({
   selector: 'app-details-product',
   templateUrl: './details-product.view.html',
-  styleUrls: ['./details-product.view.scss', './info.scss', './carrucel.scss'],
+  // styleUrls: ['./details-product.view.scss', './info.scss', './carrucel.scss'],
 })
 export class DetailsProductView implements OnInit, AfterViewInit {
   isLoading: boolean = true;

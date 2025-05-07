@@ -1,22 +1,96 @@
-<!-- <pre>{{ politicas | json }}</pre> -->
+<div class="bg-white mt-32 min-h-screen py-12 px-6 md:px-12 lg:px-24">
+  <!-- Encabezado estilo Atelier -->
+  <div class="max-w-4xl mx-auto text-center mb-16">
+    <h1 class="text-3xl md:text-4xl font-light tracking-wider mb-4">ATELIER</h1>
+    <div class="w-24 h-px bg-black mx-auto mb-6"></div>
+    <p class="text-xl font-light italic mb-8">"La excelencia en cada detalle"</p>
+    <p class="text-xs tracking-widest">POLÍTICAS DE SERVICIO</p>
+  </div>
 
-<ng-container *ngIf="politicas?.length > 0; else elseTemplate">
-  <div data-aos="zoom-in-right" class="article-container">
-    <!-- Título principal "Políticas" -->
-    <h1 class="politicas-title">Políticas</h1>
+  <!-- Contenido principal -->
+  <div class="max-w-4xl mx-auto">
+    <ng-container *ngIf="politicas?.length > 0; else elseTemplate">
+      <div data-aos="fade-up" class="mb-12">
+        <!-- Información de confianza -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 border-b border-gray-200 pb-8">
+          <div>
+            <mat-icon class="text-gray-700">verified_user</mat-icon>
+            <h3 class="text-sm font-medium mt-2">Transparencia</h3>
+            <p class="text-xs text-gray-600 mt-1">Todas nuestras políticas están disponibles para consulta</p>
+          </div>
+          <div>
+            <mat-icon class="text-gray-700">update</mat-icon>
+            <h3 class="text-sm font-medium mt-2">Actualización</h3>
+            <p class="text-xs text-gray-600 mt-1">Última revisión: 15/06/2023</p>
+          </div>
+          <div>
+            <mat-icon class="text-gray-700">contact_support</mat-icon>
+            <h3 class="text-sm font-medium mt-2">¿Dudas?</h3>
+            <p class="text-xs text-gray-600 mt-1">Agenda una cita con nuestro equipo</p>
+          </div>
+        </div>
 
-    <div *ngFor="let politica of politicas" class="card">
-      <h2 class="title">{{ politica.titulo }}</h2>
-      <p class="subtitle">{{ politica.contenido }}</p>
-      <!-- <div class="meta-info">
-        <p>Versión: <span class="version">{{ politica.version }}</span></p>
-        <p>Estado: <span class="status">{{ politica.estado }}</span></p>
-      </div> -->
+        <!-- Listado de políticas -->
+        <div class="space-y-10">
+          <div *ngFor="let politica of politicas" class="border-b border-gray-100 pb-8">
+            <div class="flex items-start">
+              <div class="w-8 h-px bg-black mt-3 mr-4"></div>
+              <div>
+                <h2 class="text-lg font-medium tracking-wide mb-2">{{ politica.titulo }}</h2>
+                <p class="text-sm text-gray-700 leading-relaxed">{{ politica.contenido }}</p>
+                
+                <!-- Detalles adicionales -->
+                <div class="mt-4 flex flex-wrap gap-4 text-xs">
+                  <span *ngIf="politica.version" class="bg-gray-100 px-2 py-1">
+                    Versión: {{ politica.version }}
+                  </span>
+                  <span *ngIf="politica.estado" class="bg-gray-100 px-2 py-1">
+                    Estado: {{ politica.estado }}
+                  </span>
+                  <span *ngIf="politica.fecha" class="bg-gray-100 px-2 py-1">
+                    Vigencia: {{ politica.fecha | date }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de documentos -->
+        <div class="bg-gray-50 p-6 mt-12">
+          <h3 class="text-sm font-medium mb-4 tracking-wide">DOCUMENTOS LEGALES</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p class="text-xs font-medium mb-2">Términos y Condiciones</p>
+              <button class="text-xs underline flex items-center">
+                Descargar PDF <mat-icon class="ml-1 text-xs">download</mat-icon>
+              </button>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-2">Aviso de Privacidad</p>
+              <button class="text-xs underline flex items-center">
+                Descargar PDF <mat-icon class="ml-1 text-xs">download</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #elseTemplate>
+      <div class="text-center py-12 border border-gray-200">
+        <mat-icon class="text-gray-400 mb-4">info</mat-icon>
+        <p class="text-sm text-gray-600">Consulte con nuestro administrador para más información</p>
+        <button class="mt-4 text-xs border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors">
+          CONTACTAR ADMINISTRACIÓN
+        </button>
+      </div>
+    </ng-template>
+
+    <!-- Footer -->
+    <div class="text-center text-xs text-gray-500 mt-16 border-t border-gray-200 pt-8">
+      <p>ATELIER © 2023 - TODAS LAS POLÍTICAS SON CONFIDENCIALES</p>
+      <p class="mt-2">ACTUALIZADO POR ÚLTIMA VEZ: {{ today | date:'longDate' }}</p>
     </div>
   </div>
-</ng-container>
-
-<ng-template #elseTemplate>
-  <p class="fallback-message">Consulte con el administrador para más información.</p>
-</ng-template>
-
+</div>

@@ -17,7 +17,7 @@ import { NgxUiLoaderService } from "ngx-ui-loader";
 @Component({
   selector: "app-productos",
   templateUrl: "./productos.component.html",
-  styleUrls: ["./productos.component.scss"],
+  // styleUrls: ["./productos.component.scss"],
 })
 export class ProductosComponent implements OnInit {
   isMobile: boolean = false;

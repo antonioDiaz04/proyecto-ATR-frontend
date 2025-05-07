@@ -1,12 +1,37 @@
 <!-- app.component.html -->
-<app-header [isMobile]="isMobile"></app-header>
-  <app-breadcrumb  *ngIf="!isHomePage"></app-breadcrumb>
-<main class="content-all">
-  <router-outlet [isMobile]="isMobile"></router-outlet>
-</main>
+<div class="min-h-screen flex flex-col">
+  <!-- Header -->
+  <app-header [isMobile]="isMobile" class="w-full"></app-header>
 
-<button (click)="scrollToTop()" class="scroll-to-top-btn" *ngIf="showScrollButton">
-  <i class="pi pi-chevron-up"></i>
+  <!-- Main Content -->
+  <main class="flex-grow">
+    <!-- <app-breadcrumb *ngIf="!isHomePage" class="container mx-auto px-4 py-2"></app-breadcrumb> -->
+    
+    <div class="container mx-auto px-4 py-6">
+      <router-outlet [isMobile]="isMobile"></router-outlet>
+    </div>
+  </main>
+
+  <!-- Scroll to Top Button -->
+<button 
+(click)="scrollToTop()" 
+*ngIf="showScrollButton"
+@fadeInOut
+class="fixed bottom-6 right-6 z-50
+       bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 
+       text-white 
+       rounded-full p-3 md:p-4
+       shadow-xl hover:shadow-2xl
+       transition-all duration-300 ease-in-out 
+       transform hover:scale-110 active:scale-95
+       focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75
+       motion-safe:animate-bounce"
+aria-label="Ir al inicio"
+title="Volver arriba"
+>
+<i class="pi pi-chevron-up text-lg md:text-xl"></i>
 </button>
 
-<app-footer></app-footer>
+  <!-- Footer -->
+  <app-footer class="w-full"></app-footer>
+</div>

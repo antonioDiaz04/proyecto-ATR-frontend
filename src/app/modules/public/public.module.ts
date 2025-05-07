@@ -113,6 +113,7 @@ import { CsrfInterceptor } from '../../shared/services/csrf.interceptor';
 import { HeaderModule } from '../../shared/components/header/header.module';
 import { MisionVisionComponent } from './views/mision-vision/mision-vision.component';
 import { PreguntasComponent } from './views/preguntas/preguntas.component';
+import { NotificacionService } from '../../shared/services/notification.service';
 @NgModule({
   declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent],
   exports:[COMPONENTS],
@@ -130,7 +131,7 @@ import { PreguntasComponent } from './views/preguntas/preguntas.component';
   SessionService,
   mensageservice,
   UsuarioService,
-  ToastrService,CartService,
+  ToastrService,CartService,NotificacionService,
   MessageService,IndexedDbService,
   ConfirmationService,SignInService,
   SignUpService,ProductoService,UsuarioService,DatosEmpresaService,ControlAdministrativaService,ThemeServiceService],

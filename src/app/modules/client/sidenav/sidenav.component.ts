@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-client',
-  templateUrl: './client.component.html',
-  // styleUrl: './client.component.scss'
+  selector: 'app-sidenav',
+  templateUrl: './sidenav.component.html',
+  styles: ``
 })
-export class ClientComponent {
+export class SidenavComponent {
 constructor(private router:Router){}
 
  redirectToCliente(route: string): void {
@@ -19,5 +19,4 @@ constructor(private router:Router){}
     localStorage.removeItem("token");
     this.router.navigate(["/inicio"]);
   }
-
 }

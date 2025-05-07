@@ -1,100 +1,116 @@
 <!-- Paso 1: Solicitud de correo electrónico -->
-<div *ngIf="esFrmCorreo" class="container2">
-  <a href="javascript:void(0)" (click)="regresarOpciones()" class="regresar-link">
-    <i class="pi pi-arrow-left"></i> Volver
-  </a>
-  <h1>Recuperación de cuenta</h1>
-  <h2>Dirección de correo electrónico</h2>
-  <h5>
-    Ingresa tu correo para buscar tu cuenta y recuperar tu contraseña.
-  </h5>
-  <form [formGroup]="frmbuscarCorreo" (ngSubmit)="enviarYbuscarCorreo()" method="post">
-    <!-- <a href="javascript:void(0)" (click)="regresarCorreo()" class="regresar-link">
-      <i class="pi pi-arrow-left"></i> Volver
-    </a> -->
-    <div class="form-group">
-      <label for="email">Correo Electrónico:</label>
-      <input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required formControlName="email" type="email"
-        id="email" />
+<div *ngIf="esFrmCorreo" class="flex items-center justify-center px-4 py-12 bg-white">
+  <div class="w-full max-w-md">
+    <a href="javascript:void(0)" (click)="regresarOpciones()" class="flex items-center text-gray-600 hover:text-gray-900 mb-6">
+      <i class="pi pi-arrow-left mr-2 text-xs"></i>
+      <span class="text-xs tracking-wide">VOLVER</span>
+    </a>
+    
+    <div class="mb-8">
+      <div class="w-12 h-px bg-gray-800 mb-3"></div>
+      <h1 class="text-xl font-light text-gray-900 mb-1">Recuperación de cuenta</h1>
+      <p class="text-xs text-gray-500">
+        Introduce tu dirección de correo para buscar tu cuenta
+      </p>
     </div>
-    <br>
-    <p-button *ngIf="!isLoading" [disabled]="frmbuscarCorreo.invalid" iconPos="right" label="Buscar cuenta"
-      type="submit">
-    </p-button>
-    <button disabled *ngIf="isLoading" class="ui loading button">
-      Loading
-    </button>
-  </form>
-</div>
-<!-- Paso 2: Mostrar pregunta secreta -->
-<div *ngIf="esFrmPreguntaSecreta" class="container2">
-  <a href="javascript:void(0)" (click)="regresarCorreo()" class="regresar-link">
-    <i class="pi pi-arrow-left"></i> Volver
-  </a>
-  <h1>Recuperación de cuenta</h1>
-  <h2>Pregunta secreta</h2>
-  <h5>
-    Hola, <strong>{{ nombreUsuario }}</strong>. Responde tu pregunta secreta para continuar.
-  </h5>
-  <form [formGroup]="frmPreguntaSecreta" (ngSubmit)="verificarRespuesta()" method="post">
 
-    <div class="form-group">
-      <label for="pregunta">Pregunta secreta:</label>
-      <p>{{ preguntaSecreta }}</p>
-    </div>
-    <div class="form-group">
-      <label for="respuesta">Respuesta:</label>
-      <input required formControlName="respuesta" type="text" id="respuesta" />
-    </div>
-    <br>
-
-    <p-button *ngIf="!isLoading" [disabled]="frmPreguntaSecreta.invalid" iconPos="right" label="Verificar respuesta"
-      type="submit">
-    </p-button>
-    <button disabled *ngIf="isLoading" class="ui loading button">
-      Loading
-    </button>
-
-    <!-- <p-button (click)="regresarCorreo()" type="button">Volver</p-button> -->
-  </form>
-</div>
-
-<!-- Formulario para resetear la contraseña -->
-<div *ngIf="esFrmResetPassword" class="container2">
-  <a href="javascript:void(0)" (click)="regresarVerificacion()" class="regresar-link">
-    <i class="pi pi-arrow-left"></i> Volver
-  </a>
-  <h2>Actualiza tu Contraseña</h2>
-  <h5>Crea una nueva contraseña segura</h5>
-  <form [formGroup]="frmActualizaPassword" (ngSubmit)="actualizarPassword()" method="post">
-
-    <div class="form-group">
-      <label for="nueva">Nueva Contraseña</label>
-      <p-password formControlName="nueva" placeholder="Introduce tu contraseña" [toggleMask]="true" [feedback]="false"
-        [maxLength]="16" (input)="verificarPassword()"></p-password>
+    <form [formGroup]="frmbuscarCorreo" (ngSubmit)="enviarYbuscarCorreo()" class="space-y-6">
       <div>
-        <ul class="pass-req" *ngIf="faltantes && faltantes.length > 0">
-          <li *ngFor="let item of faltantes">{{ item }}</li>
-        </ul>
+        <label class="block text-xs text-gray-700 mb-1">CORREO ELECTRÓNICO</label>
+        <input type="email" formControlName="email"
+          class="w-full px-0 py-1 border-0 border-b border-gray-300 focus:border-gray-900 text-sm bg-transparent">
       </div>
 
-      <label for="confirma">Confirmar Contraseña</label>
-      <p-password formControlName="confirma" placeholder="Confirma tu contraseña" [toggleMask]="true" [feedback]="false"
-        [maxLength]="16" (input)="verificarCoincidencia()"></p-password>
-      <span *ngIf="!coincidenPasswords" class="text-danger">
-        Las contraseñas no coinciden.
-      </span>
+      <button type="submit" [disabled]="frmbuscarCorreo.invalid" 
+        class="w-full bg-gray-900 text-white py-2 text-xs tracking-wide hover:bg-gray-800 disabled:bg-gray-300">
+        BUSCAR CUENTA
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Paso 2: Mostrar pregunta secreta -->
+<div *ngIf="esFrmPreguntaSecreta" class="flex items-center justify-center px-4 py-12 bg-white">
+  <div class="w-full max-w-md">
+    <a href="javascript:void(0)" (click)="regresarCorreo()" class="flex items-center text-gray-600 hover:text-gray-900 mb-6">
+      <i class="pi pi-arrow-left mr-2 text-xs"></i>
+      <span class="text-xs tracking-wide">VOLVER</span>
+    </a>
+
+    <div class="mb-8">
+      <div class="w-12 h-px bg-gray-800 mb-3"></div>
+      <h1 class="text-xl font-light text-gray-900 mb-1">Verificación de seguridad</h1>
+      <p class="text-xs text-gray-500">
+        Hola, <strong class="text-gray-900">{{ nombreUsuario }}</strong>
+      </p>
     </div>
-    <br>
 
-    <p-button *ngIf="!isLoading"
-      [disabled]="this.faltantes.length != 0 || frmActualizaPassword.invalid || !coincidenPasswords" iconPos="right"
-      label="Restablecer Contraseña" type="submit">
-    </p-button>
-    <button disabled *ngIf="isLoading" class="ui loading button">
-      Loading
-    </button>
-    <!-- <p-button (click)="regresar()" type="button">Volver</p-button> -->
+    <form [formGroup]="frmPreguntaSecreta" (ngSubmit)="verificarRespuesta()" class="space-y-6">
+      <div>
+        <label class="block text-xs text-gray-700 mb-1">PREGUNTA SECRETA</label>
+        <p class="text-sm text-gray-600 border-b border-gray-200 pb-2">{{ preguntaSecreta }}</p>
+      </div>
 
-  </form>
+      <div>
+        <label class="block text-xs text-gray-700 mb-1">RESPUESTA</label>
+        <input type="text" formControlName="respuesta"
+          class="w-full px-0 py-1 border-0 border-b border-gray-300 focus:border-gray-900 text-sm bg-transparent">
+      </div>
+
+      <button type="submit" [disabled]="frmPreguntaSecreta.invalid" 
+        class="w-full bg-gray-900 text-white py-2 text-xs tracking-wide hover:bg-gray-800 disabled:bg-gray-300">
+        VERIFICAR RESPUESTA
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Paso 3: Resetear contraseña -->
+<div *ngIf="esFrmResetPassword" class="flex items-center justify-center px-4 py-12 bg-white">
+  <div class="w-full max-w-md">
+    <a href="javascript:void(0)" (click)="regresarVerificacion()" class="flex items-center text-gray-600 hover:text-gray-900 mb-6">
+      <i class="pi pi-arrow-left mr-2 text-xs"></i>
+      <span class="text-xs tracking-wide">VOLVER</span>
+    </a>
+
+    <div class="mb-8">
+      <div class="w-12 h-px bg-gray-800 mb-3"></div>
+      <h1 class="text-xl font-light text-gray-900 mb-1">Nueva contraseña</h1>
+      <p class="text-xs text-gray-500">Crea una contraseña segura</p>
+    </div>
+
+    <form [formGroup]="frmActualizaPassword" (ngSubmit)="actualizarPassword()" class="space-y-6">
+      <div>
+        <label class="block text-xs text-gray-700 mb-1">CONTRASEÑA</label>
+        <p-password formControlName="nueva" [toggleMask]="true" [feedback]="false"
+          inputStyleClass="w-full px-0 py-1 border-0 border-b border-gray-300 text-sm bg-transparent"
+          [style]="{'width':'100%'}" (input)="verificarPassword()"></p-password>
+        
+        <div *ngIf="faltantes?.length" class="mt-2 text-2xs text-gray-500">
+          <ul class="list-none pl-0">
+            <li *ngFor="let item of faltantes" class="flex items-start">
+              <span class="inline-block w-3 mr-1 text-gray-400">•</span>
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs text-gray-700 mb-1">CONFIRMAR CONTRASEÑA</label>
+        <p-password formControlName="confirma" [toggleMask]="true" [feedback]="false"
+          inputStyleClass="w-full px-0 py-1 border-0 border-b border-gray-300 text-sm bg-transparent"
+          [style]="{'width':'100%'}" (input)="verificarCoincidencia()"></p-password>
+        
+        <p *ngIf="!coincidenPasswords" class="text-2xs text-gray-500 mt-1">
+          Las contraseñas no coinciden
+        </p>
+      </div>
+
+      <button type="submit" [disabled]="faltantes.length || frmActualizaPassword.invalid || !coincidenPasswords" 
+        class="w-full bg-gray-900 text-white py-2 text-xs tracking-wide hover:bg-gray-800 disabled:bg-gray-300">
+        RESTABLECER CONTRASEÑA
+      </button>
+    </form>
+  </div>
 </div>

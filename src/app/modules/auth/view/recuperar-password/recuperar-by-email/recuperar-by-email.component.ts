@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   selector: 'app-recuperar-by-email',
   templateUrl: './recuperar-by-email.component.html',
   // template:  }},
-  styleUrl: './recuperar-by-email.component.scss'
+  // styleUrl: './recuperar-by-email.component.scss'
 })
 export class RecuperarByEmailComponent {
   @Output() regresar = new EventEmitter<void>(); // Emitir evento para regresar

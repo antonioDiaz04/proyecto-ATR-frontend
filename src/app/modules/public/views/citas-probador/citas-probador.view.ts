@@ -5,6 +5,10 @@ import { SessionService } from "../../../../shared/services/session.service";
 import { ERol } from "../../../../shared/constants/rol.enum";
 import { CartService } from "../../../../shared/services/cart.service";
 import { Location } from "@angular/common";
+import { NotificacionService } from "../../../../shared/services/notification.service";
+import { SwPush } from "@angular/service-worker";
+import { environment } from "../../../../../environments/environment";
+import { HttpClient } from "@angular/common/http";
 declare const $: any;
 
 export interface DressItem {
@@ -18,7 +22,6 @@ export interface DressItem {
 @Component({
   selector: "app-citas-probador",
   templateUrl: "./citas-probador.view.html",
-  styleUrls: ["./citas-probador.view.scss"],
 })
 export class CitasProbadorView implements OnInit {
   productosRenta: DressItem[] = [];
@@ -34,24 +37,30 @@ export class CitasProbadorView implements OnInit {
   selectedProductoRenta: DressItem | null = null;
   selectedProductoVenta: DressItem | null = null;
   userROL!: string;
+  publicKey: string = environment.publicKey; // Este es el valor que debes obtener en la consola de Firebase.
 
+  confirmarCompra() { }
   constructor(
+    private http: HttpClient,
+    private swPush: SwPush,
+    private notificacionService_: NotificacionService,
     private location: Location,
     private sessionService: SessionService,
     private indexedDbService: IndexedDbService,
     private router: Router,
     private cartService: CartService // Inyecta el servicio CartService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     try {
+      this.generarToken();
       // Obtener productos desde IndexedDB
       const productos = await this.indexedDbService.obtenerProductosApartados();
-      
+
       // Mostrar en consola los productos obtenidos de IndexedDB
       console.log("Productos obtenidos de IndexedDB:", productos);
       console.table(productos); // Esto mostrará los datos en formato de tabla
-      
+
       // Corregir el filtrado (nota la propiedad y el valor exacto)
       this.productosRenta = productos.filter(
         (item) => item.opcionesTipoTransaccion?.toLowerCase() === "renta"
@@ -63,9 +72,9 @@ export class CitasProbadorView implements OnInit {
       // Inicializar el carrito con los productos obtenidos
       this.cartService.initializeCart(productos);
       // const productos =this.cartService.loadCartItems();
-      console.log("=>"+productos)
+      console.log("=>" + productos)
 
-      this.calcularTotal();
+      // this.calcularTotal();
       this.initializeTabs();
     } catch (error) {
       console.error("Error al obtener productos apartados:", error);
@@ -83,10 +92,59 @@ export class CitasProbadorView implements OnInit {
       console.error("jQuery no está disponible.");
     }
   }
+  generarToken(): void {
+    if ('serviceWorker' in navigator && this.swPush) {
+      this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+        .then((sub) => {
+          const token = JSON.stringify(sub);
+          this.enviarNotificacion(token); // Enviar al backend
+        })
+        .catch((err) => {
+          console.error('Error al suscribirse a notificaciones:', err);
+          alert('Hubo un problema al suscribirse a las notificaciones.');
+        });
+    } else {
+      console.error('Service Workers no están habilitados en este navegador.');
+      alert('El navegador no soporta notificaciones push.');
+    }
+  }
+  
+
+
+  // Método para enviar el token de notificación al backend
+  enviarNotificacion(token: string): void {
+    this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe(
+      (response) => {
+        console.log("Notificación enviada:", response);
+        // Aquí puedes manejar la respuesta de la API si es necesario
+      },
+      (error) => {
+        console.error("Error al enviar la notificación:", error);
+        // Manejo de errores
+      }
+    );
+  }
+
+
+
+
+  // enviarNotificacion() {
+  //   this.notificacionService_.enviarNotificacionLlevateCarrito().subscribe(
+  //     (response) => {
+  //       console.log("Notificación enviada:", response);
+  //       // Aquí puedes manejar la respuesta de la API si es necesario
+  //     },
+  //     (error) => {
+  //       console.error("Error al enviar la notificación:", error);
+  //       // Manejo de errores
+  //     }
+  //   );
+  // }
+
 
   async deleteDressItem(id: string) {
     try {
-      
+
       // Eliminar el producto de las listas locales
       this.productosRenta = this.productosRenta.filter(
         (item) => item.id !== id
@@ -142,5 +200,5 @@ export class CitasProbadorView implements OnInit {
     this.mostrarModal = true;
   }
 
-  continuarCompraTotal() {}
+  continuarCompraTotal() { }
 }

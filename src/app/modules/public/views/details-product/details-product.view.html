@@ -1,209 +1,153 @@
-<p-confirmDialog></p-confirmDialog>
+<p-confirmDialog [style]="{borderRadius: '0px', padding: '2rem'}" 
+                 [breakpoints]="{'960px': '75vw', '640px': '90vw'}" 
+                 [draggable]="false"></p-confirmDialog>
 
-<div class="contiendescripcion">
-  <div class="volver">
-    <i class="pi pi-arrow-left" (click)="volver()">Atrás</i>
+<div class="w-full max-w-[90rem] mx-auto  text-[#2a2723] mt-20 p-8 lg:p-12">
+<!-- <div class="w-full max-w-[90rem] mx-auto bg-[#f9f7f4] text-[#2a2723] mt-20 p-8 lg:p-12"> -->
+  <!-- Luxury Header with Back Button -->
+  <div class="mb-8">
+    <button (click)="volver()" class="group flex items-center gap-2 text-[#9c8e7a] hover:text-[#2a2723] transition-colors duration-300">
+      <i class="pi pi-arrow-left text-lg"></i>
+      <span class="font-serif tracking-wider">RETURN TO COLLECTION</span>
+      <div class="w-0 h-px bg-[#d4c4a8] group-hover:w-4 transition-all duration-500"></div>
+    </button>
   </div>
-  <div class="product-detail-container" *ngIf="Detalles && !isLoading">
-    <div class="product-img">
-      <!-- Contador de imágenes (añadido) -->
-      <div class="image-counter">
-        {{ (Detalles.imagenes?.indexOf(mainImageUrl) || 0) + 1 }} / {{ Detalles.imagenes?.length || 0 }}
-      </div>
 
-      <!-- Thumbnail images (original) -->
-      <div class="thumbnail-images">
-        <ng-container *ngIf="Detalles.imagenes">
-          <img *ngFor="let image of Detalles.imagenes; let i = index" [src]="image" alt="Thumbnail"
-            (mouseenter)="onThumbnailHover(image)" (mouseleave)="resetMainImage()" (click)="changeMainImage(image)"
-            [class.selected]="image === mainImageUrl" class="thumbnail" />
-        </ng-container>
-      </div>
-      <!-- Product images (original con botón añadido) -->
-      <div class="product-images" style="position: relative;">
-        <img #mainImage *ngIf="mainImageUrl" [src]="mainImageUrl" alt="Product Main Image" class="main-image"
+  <!-- Product Content - Luxury Layout -->
+  <div *ngIf="Detalles && !isLoading" class="flex flex-col lg:flex-row gap-16">
+    
+    <!-- Image Gallery Section -->
+    <div class="flex flex-col w-full lg:w-1/2">
+      <!-- Main Image with Luxury Effects -->
+      <div class="relative w-full h-[500px] overflow-hidden mb-6 border border-[#e8e3db]">
+        <img #mainImage *ngIf="mainImageUrl" [src]="mainImageUrl" alt="Luxury Product"
+          class="w-full h-full object-cover transition-all duration-700 hover:scale-[1.02] cursor-zoom-in"
           (click)="openModal()" (mousemove)="applyZoomEffect($event)" (mouseleave)="resetZoomEffect()" />
+        
+        <!-- Image Counter - Minimalist -->
+        <div class="absolute top-4 right-4 bg-[#2a2723]/80 text-[#d4c4a8] text-xs px-3 py-1 font-light tracking-wider">
+          {{ (Detalles.imagenes?.indexOf(mainImageUrl) || 0) + 1 }} OF {{ Detalles.imagenes?.length || 0 }}
+        </div>
 
-        <!-- Botón de favoritos (añadido) -->
-        <button class="favorite-button" (click)="toggleFavorite($event)">
-          <svg [class.favorite-active]="esFavorito" viewBox="0 0 24 24">
-            <path
-              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        <!-- Favorite Button - Luxury -->
+        <button (click)="toggleFavorite($event)" class="absolute top-4 left-4 group">
+          <svg [class.active]="esFavorito" class="w-8 h-8 text-[#d4c4a8] hover:text-[#2a2723] fill-current transition-colors duration-500" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+                     C13.09 3.81 14.76 3 16.5 3 
+                     19.58 3 22 5.42 22 8.5
+                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
         </button>
       </div>
+
+      <!-- Thumbnails - Luxury Carousel -->
+      <div class="flex gap-3 overflow-x-auto py-2">
+        <ng-container *ngIf="Detalles.imagenes">
+          <img *ngFor="let img of Detalles.imagenes"
+            [src]="img"
+            (mouseenter)="onThumbnailHover(img)" 
+            (mouseleave)="resetMainImage()" 
+            (click)="changeMainImage(img)"
+            [class.selected-thumbnail]="img === mainImageUrl"
+            class="w-20 h-20 object-cover cursor-pointer border border-[#e8e3db] hover:border-[#2a2723] transition-all duration-300" />
+        </ng-container>
+      </div>
     </div>
 
-    <!-- Carrusel para móviles -->
-    <div class="image-carousel" *ngIf="!isLoading && Detalles.imagenes">
-      <p-galleria [value]="images" [activeIndex]="selectedImageIndex" [showIndicators]="true" [showThumbnails]="false"
-        [responsiveOptions]="responsiveOptions" [circular]="true" class="styled-galleria"
-        (activeIndexChange)="onImageChange($event)">
-        <ng-template pTemplate="item" let-item>
-          <img [src]="item.itemImageSrc" class="carousel-image" alt="Product Image" />
-        </ng-template>
-      </p-galleria>
-
-      <!-- Botones de navegación -->
-      <button class="carousel-nav left" (click)="prevImage()">
-        <i class="pi pi-chevron-left"></i>
-      </button>
-      <button class="carousel-nav right" (click)="nextImage()">
-        <i class="pi pi-chevron-right"></i>
-      </button>
-    </div>
-
-    <!-- informacion del producto -->
-    <div class="product-info" data-aos="zoom-in-down">
-      <h1 class="product-name">{{ Detalles.nombre }}</h1>
-
-      <div *ngIf="Detalles.disponible" class="availability disponible">
-        <i class="fas fa-store"></i>
-        <span>Disponible para
-          {{ Detalles.opcionesTipoTransaccion}}
-        </span>
+    <!-- Product Info - Luxury Typography -->
+    <div class="border border-[#e8e3db] p-2 w-full lg:w-1/2 flex flex-col gap-8"><div>
+        <h1 class="font-serif text-4xl tracking-tight mb-2">{{ Detalles.nombre }}</h1>
+        <p class="text-[#9c8e7a] font-light">Style #{{ Detalles.codigoProducto }}</p>
       </div>
 
-
-
-
-      <!-- 🚨 Mostrar mensaje si el producto no está disponible -->
-      <div class="availability" *ngIf="!Detalles.disponible">
-        <i class="pi pi-exclamation-triangle"></i>
-        <span>La renta para este producto o la publicación está pausada.</span>
+      <!-- Availability - Luxury Badge -->
+      <div *ngIf="Detalles.disponible" class="flex items-center gap-3">
+        <div class="w-3 h-3 bg-[#2a2723] rounded-full"></div>
+        <span class="text-[#6e6a63] text-sm tracking-wider">AVAILABLE FOR {{ Detalles.opcionesTipoTransaccion | uppercase }}</span>
       </div>
-      <div class="contenidoTExt">
-        <div class="price-content">
+      <div *ngIf="!Detalles.disponible" class="flex items-center gap-3">
+        <div class="w-3 h-3 bg-[#9c8e7a] rounded-full"></div>
+        <span class="text-[#6e6a63] text-sm tracking-wider">TEMPORARILY UNAVAILABLE</span>
+      </div>
 
-          <p class="price">$MX{{ Detalles.precioActual }}</p>
-          <p *ngIf="Detalles.mostrarPrecioAnterior" class="old-price">$MX{{ Detalles.precioAnterior }}</p>
+      <!-- Pricing - Luxury Display -->
+      <div class="flex flex-col gap-2 mt-4">
+        <div class="flex items-baseline gap-3">
+          <p class="font-serif text-3xl text-[#2a2723]">$MX{{ Detalles.precioActual | number }}</p>
+          <p *ngIf="Detalles.mostrarPrecioAnterior" class="text-[#9c8e7a] line-through text-sm">$MX{{ Detalles.precioAnterior | number }}</p>
         </div>
-
-        <div *ngIf="Detalles.nuevo" class="new-label">
-          <i class="fas fa-tag"></i>
-          <span>¡Nuevo!</span>
-        </div>
-      </div>
-      <div class="contenidoTExt">
-        <div class="price-content">
-          <span *ngIf="Detalles.mostrarPrecioAnterior && Detalles.precioAnterior > Detalles.precioActual"
-            class="discount-badge">
-            {{ calcularDescuento(Detalles.precioAnterior, Detalles.precioActual) }}% OFF
+        
+        <div *ngIf="Detalles.mostrarPrecioAnterior && Detalles.precioAnterior > Detalles.precioActual" class="flex flex-col gap-2">
+          <span class="bg-[#2a2723] text-[#d4c4a8] text-xs px-4 py-1 rounded-full w-max tracking-wider">
+            SAVE {{ calcularDescuento(Detalles.precioAnterior, Detalles.precioActual) }}%
           </span>
-          <span *ngIf="Detalles.mostrarPrecioAnterior && Detalles.precioAnterior > Detalles.precioActual"
-            class="savings-message">
-            ¡Ahorras MX$ {{ Detalles.precioAnterior - Detalles.precioActual | currency }}!
+          <span class="text-[#6e6a63] text-xs font-light">
+            You save MX$ {{ Detalles.precioAnterior - Detalles.precioActual | number }}
           </span>
         </div>
-
       </div>
-      <!-- Opciones del producto -->
-      <div class="product-options">
-        <h2>Acerca de este producto</h2>
-        <!-- Detalles del producto -->
-        <div class="product-detail">
-          <p><strong>Talla:</strong> <span>{{ Detalles.talla }}</span></p>
-        </div>
-        <div class="product-detail">
-          <p><strong>Color:</strong> <span>{{ Detalles.color }}</span></p>
-        </div>
-        <div class="product-detail">
-          <p><strong>Forma del cuello:</strong> <span>{{ Detalles.tipoCuello }}</span></p>
-        </div>
-        <div class="product-detail">
-          <p><strong>Estilo de la cola:</strong> <span>{{ Detalles.tipoCola }}</span></p>
-        </div>
 
-
-        <div class="product-detail">
-          <p><strong>Cantidad:</strong> <span>1</span></p>
+      <!-- Product Attributes - Luxury Grid -->
+      <div class="grid grid-cols-2 gap-6 text-sm text-[#6e6a63] mt-6">
+        <div class="border-b border-[#e8e3db] pb-2">
+          <p class="font-light tracking-wider">SIZE</p>
+          <p class="font-medium mt-1">{{ Detalles.talla }}</p>
         </div>
+        <div class="border-b border-[#e8e3db] pb-2">
+          <p class="font-light tracking-wider">COLOR</p>
+          <p class="font-medium mt-1">{{ Detalles.color }}</p>
+        </div>
+        <div class="border-b border-[#e8e3db] pb-2">
+          <p class="font-light tracking-wider">NECKLINE</p>
+          <p class="font-medium mt-1">{{ Detalles.tipoCuello }}</p>
+        </div>
+        <div class="border-b border-[#e8e3db] pb-2">
+          <p class="font-light tracking-wider">TRAIN</p>
+          <p class="font-medium mt-1">{{ Detalles.tipoCola }}</p>
+        </div>
+      </div>
 
         <div class="botones">
-          <!-- Botones de acción -->
-          <button *ngIf="Detalles.disponible"
+        <!-- Action Buttons - Luxury Style -->
+        <div class="flex flex-col gap-4 mt-8">
+        <button *ngIf="Detalles.disponible"
             (click)="Detalles.opcionesTipoTransaccion == 'renta' ? redirigirContinuarRenta(Detalles._id) : redirigirContinuarCompra(Detalles._id)"
-            class="ui add-to-cart rent button" [class.loading]="isLoadingBtn" [class.disabled]="isLoadingBtn">
-            {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'Me lo quiero probar' : 'Continuar con la compra' }}
+            class="bg-[#2a2723] hover:bg-[#1a1713] text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full text-center tracking-wider font-light">
+            {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'BOOK PRIVATE FITTING' : 'ADD TO WARDROBE' }}
           </button>
 
-          <button (click)="apartarRentar(Detalles)" class="add-to-cart">
-            <i class="pi pi-shopping-cart"></i> Agregar a carrito
-          </button>
+        <button (click)="apartarRentar(Detalles)"
+          class="border border-[#2a2723] text-[#2a2723] hover:bg-[#2a2723] hover:text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full flex items-center justify-center gap-3 tracking-wider font-light">
+          <i class="pi pi-shopping-cart"></i> ADD TO CART
+        </button>
+      </div>
 
-          <!-- Compartir enlace -->
-          <div class="share-link">
-            <p><strong>Compartir:</strong></p>
-            <button class="share-button" title="Compartir enlace">
-              <i class="pi pi-share-alt"></i>
-            </button>
-          </div>
+      <!-- Share Options - Minimalist -->
+      <div class="mt-8">
+        <p class="text-xs tracking-widest mb-3 text-[#9c8e7a]">SHARE THIS PIECE</p>
+        <div class="flex gap-4">
+          <button class="text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300" title="Share">
+            <i class="pi pi-share-alt"></i>
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="loading-container" *ngIf="!Detalles && isLoading">
-    <!-- Contenedor de imágenes -->
-    <div class="skeleton-image-section">
-      <!-- Columna con 3 tarjetas mini -->
-      <div class="skeleton-cards">
-        <p-skeleton width="70%" height="70px"></p-skeleton>
-        <p-skeleton width="70%" height="70px"></p-skeleton>
-        <p-skeleton width="70%" height="70px"></p-skeleton>
-      </div>
-
-      <!-- Contenedor grande para imagen principal -->
-      <div class="skeleton-container">
-        <p-skeleton width="100%" height="400px"></p-skeleton>
-      </div>
-    </div>
-
-    <!-- Contenedor de información del producto -->
-    <div class="loading-container-info">
-      <!-- Skeleton para el nombre del producto -->
-      <p-skeleton width="100%" height="40px"></p-skeleton>
-
-      <!-- Skeleton para la disponibilidad -->
-      <div class="skeleton-availability">
-        <p-skeleton width="20px" height="20px" shape="circle"></p-skeleton>
-        <p-skeleton width="40%" height="20px"></p-skeleton>
-      </div>
-
-      <!-- Skeleton para el precio -->
-      <p-skeleton width="30%" height="30px"></p-skeleton>
-
-      <!-- Skeleton para las opciones del producto -->
-      <div class="skeleton-options">
-        <p-skeleton width="50px" height="20px"></p-skeleton>
-        <p-skeleton width="60px" height="30px" shape="circle"></p-skeleton>
-
-        <p-skeleton width="50px" height="20px"></p-skeleton>
-        <p-skeleton width="60px" height="30px" shape="circle"></p-skeleton>
-
-        <p-skeleton width="50px" height="20px"></p-skeleton>
-        <p-skeleton width="60px" height="30px" shape="circle"></p-skeleton>
-      </div>
-
-      <!-- Skeleton para el botón -->
-      <p-skeleton width="80%" height="50px" borderRadius="10px"></p-skeleton>
-
-      <!-- Skeleton para compartir enlace -->
-      <div class="skeleton-share">
-        <p-skeleton width="80px" height="20px"></p-skeleton>
-        <p-skeleton width="40px" height="40px" shape="circle"></p-skeleton>
-      </div>
-    </div>
+  <!-- Product Description - Luxury Typography -->
+  <div *ngIf="Detalles && !isLoading" class="mt-16 border-t border-[#e8e3db] pt-12">
+    <h2 class="font-serif text-2xl tracking-tight mb-6">PRODUCT DETAILS</h2>
+    <p class="text-[#6e6a63] leading-relaxed text-base font-light max-w-3xl">{{ Detalles.descripcion }}</p>
   </div>
-  <div *ngIf="Detalles && !isLoading">
-    <h2 class="description-title">Descripción</h2>
-    <p class="description-summary">{{ Detalles.descripcion }}</p>
-  </div>
-  <!-- </div> -->
 </div>
-<!-- Modal de la imagen en pantalla completa -->
-<div class="image-modal" *ngIf="isViewImagen" (click)="closeModal($event)">
-  <img #PreviewmainImage (mousemove)="applyZoomEffectPreviewmainImage($event)"
-    (mouseleave)="resetZoomEffectPreviewmainImage()" [src]="Detalles.imagenPrincipal" alt="Imagen Ampliada"
-    class="modal-image" />
+
+<!-- Fullscreen Image Modal - Luxury Version -->
+<div class="image-modal fixed inset-0 bg-black/90 z-50 flex items-center justify-center" 
+     *ngIf="isViewImagen" 
+     (click)="closeModal($event)">
+  <img #PreviewmainImage 
+       [src]="Detalles.imagenPrincipal" 
+       alt="Imagen Ampliada"
+       class="modal-image max-w-[90vw] max-h-[90vh] object-contain" />
 </div>

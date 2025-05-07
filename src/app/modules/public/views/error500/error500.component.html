@@ -1,19 +1,45 @@
+<div class="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
+  <!-- Contenido principal -->
+  <div class="text-center max-w-md">
+    <!-- Ilustración minimalista -->
+    <div class="mb-10">
+      <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1738220295/Empty_State_Icons_placeholders_plmcqb.jpg" 
+           alt="Error 500" 
+           class="w-48 h-48 mx-auto object-contain opacity-90">
+    </div>
 
-<div class="error-container">
-  <div class="image-container">
-    <img
-      src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1738220295/Empty_State_Icons_placeholders_plmcqb.jpg"
-      alt="Error Image"
-      class="error-image"
-    />
+    <!-- Mensaje de error -->
+    <div class="mb-10">
+      <h1 class="text-4xl font-light text-gray-900 mb-4 tracking-tight">500</h1>
+      <div class="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
+      <h2 class="text-xl font-light text-gray-600 mb-3">Error del servidor</h2>
+      <p class="text-gray-500 text-sm font-light leading-relaxed">
+        Hemos encontrado un problema inesperado.<br>
+        Nuestro equipo técnico ya está trabajando en la solución.
+      </p>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <button (click)="goBack()"
+              class="px-6 py-2.5 border border-gray-300 text-sm text-gray-700 hover:border-gray-400 transition-colors">
+        Volver atrás
+      </button>
+      <button routerLink="/"
+              class="px-6 py-2.5 bg-gray-900 text-sm text-white hover:bg-gray-800 transition-colors">
+        Ir al inicio
+      </button>
+    </div>
+
+    <!-- Contacto -->
+    <div class="mt-10 text-xs text-gray-400">
+      <p>¿Necesitas ayuda inmediata?</p>
+      <p class="text-gray-600 mt-1">soporteatelier.com</p>
+    </div>
   </div>
-  <div class="overlay">
-    <h1 class="error-title">¡Error 500!</h1>
-    <p class="error-subtitle">
-      Lo sentimos, ha ocurrido un error inesperado en el servidor.<br />
-      Estamos trabajando para resolverlo lo antes posible.
-    </p>
-    <button pButton type="button" class="back-button" (click)="goBack()">Volver</button>
 
+  <!-- Footer -->
+  <div class="mt-16 text-center">
+    <p class="text-xs text-gray-300 tracking-widest">ATELIER © 2025</p>
   </div>
 </div>

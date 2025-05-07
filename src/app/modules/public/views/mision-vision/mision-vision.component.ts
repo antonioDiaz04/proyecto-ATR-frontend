@@ -4,7 +4,7 @@ import AOS from 'aos';
 @Component({
   selector: 'app-mision-vision',
   templateUrl: './mision-vision.component.html',
-  styleUrl: './mision-vision.component.scss'
+  // styleUrl: './mision-vision.component.scss'
 })
 export class MisionVisionComponent implements OnInit{
   // Datos de Misión y Visión

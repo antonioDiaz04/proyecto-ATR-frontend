@@ -1,210 +1,214 @@
-<p-toast></p-toast>
-<!-- <p-confirmdialog></p-confirmdialog> -->
-<!-- Loader transparente -->
-<ngx-ui-loader
-  [fgsColor]="'#FF69B4'"
-  [fgsSize]="40"
-  [overlayColor]="'rgba(0, 0, 0, 0)'" 
-  blur="10"
-  [pbColor]="'#FFA500'"
-  [hasProgressBar]="true"
-  [textColor]="'#FF69B4'" 
-  [textPosition]="'center-center'">
+<!-- Luxury Loader for Dresses -->
+<ngx-ui-loader [fgsColor]="'#e8b4bc'" [fgsSize]="40" [overlayColor]="'rgba(255,255,255,0.9)'" blur="5"
+  [pbColor]="'#d4a8b4'" [hasProgressBar]="true" [textColor]="'#6c4d5a'" [textPosition]="'center-center'">
 </ngx-ui-loader>
 
-<!-- <body> -->
-<header class="app-header" [ngClass]="{ scrolled: isScrolled }">
-  <!-- <nav> -->
-  <nav class="marquee-container" id="connection-exit" style="text-align: center">
-    <div class="marquee" id="item1">✨ ¡My happyyy place! ✨</div>
-    <div class="marquee" id="item2">🔥 ¡Aprovecha ahora! 🔥</div>
-    <div class="marquee" id="item3">✨¡Elige a tu gusto !✨</div>
-  </nav>
+<!-- Exclusive Dress Boutique Header -->
+<header class="w-full fixed top-0 z-50 bg-white text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
+  [ngClass]="{ 'bg-opacity-95 backdrop-blur-sm': isScrolled }">
 
-  <nav class="marquee-container" id="connection-status">
-    <div class="marquee1">No hay conexión a Internet</div>
-  </nav>
+  <!-- Main Container -->
+  <div class="container mx-auto px-4 lg:px-8">
+    <!-- First Row: Logo + Search + Icons -->
+    <div class="flex items-center justify-between py-3">
 
-  <!-- </nav> -->
-  <nav class="nav-one">
-    <nav class="navbar-one flex">
-      <div class="left flex">
-        <div class="email">
-          <i class="fa fa-map-marker-alt"></i>
-        </div>
-        <div class="call">
-          <i class="fa-brands fa-whatsapp"></i>
+      <!-- Logo and Mobile Menu -->
+      <div class="flex items-center w-1/4">
+        <button *ngIf="isMobile" (click)="showDialog()" class="text-xl focus:outline-none">
+          <i class="pi pi-bars"></i>
+        </button>
+
+        <a [routerLink]="'/inicio'" class="flex items-center h-8 ml-4">
+          <img class="h-8 transition-all duration-500 ease-in-out" [class.opacity-100]="isSticky"
+            [class.opacity-0]="!isSticky" [class.-translate-y-2]="!isSticky"
+            src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
+            alt="Atelier Dresses">
+
+          <span class="absolute text-2xl font-serif tracking-tight transition-all duration-500 ease-in-out"
+            [class.opacity-100]="!isSticky" [class.opacity-0]="isSticky" [class.translate-y-2]="isSticky">
+            Atelier
+          </span>
+        </a>
+      </div>
+
+      <!-- Dress Search -->
+      <div class="hidden md:flex flex-1 px-4 lg:px-8 max-w-xl">
+        <div class="relative w-full">
+          <input type="text" placeholder="Buscar vestidos de novia, fiesta..."
+            class="w-full pl-12 pr-4 py-2 bg-[#faf7f9] text-[#3d2e35] placeholder-[#a38f9b] focus:outline-none border-b border-[#d4a8b4] transition-all font-light">
+          <i class="pi pi-search absolute left-4 top-1/2 transform -translate-y-1/2 text-[#a38f9b]"></i>
         </div>
       </div>
-      <div class="right flex">
-        <div class="facebook">
-          <i class="fab fa-facebook"></i>
+
+      <!-- Action Icons -->
+      <div class="flex items-center justify-end space-x-5 w-1/4">
+        <!-- Shopping Bag -->
+        <button (click)="redirectTo('CitasProbador')" class="relative group">
+          <i class="pi pi-shopping-bag text-xl group-hover:text-[#d4a8b4] transition"></i>
+          <span
+            class="absolute -top-2 -right-2 bg-[#3d2e35] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {{ dressItemCount() }}
+          </span>
+        </button>
+
+        <!-- Usuario/Login -->
+        <div *ngIf="!isMobile" class="relative">
+          <ng-container *ngIf="!isLoggedIn; else userMenu">
+            <div class="flex space-x-2">
+              <!-- Botón Iniciar Sesión -->
+              <button (click)="openModal()" class="px-4 py-2 bg-white text-black border border-black rounded-none 
+                       hover:bg-gray-100 transition-colors text-sm font-medium">
+                Iniciar sesión
+              </button>
+
+              <!-- Botón Registro -->
+              <button routerLink="/auth/Sign-up" class="px-4 py-2 bg-black text-white rounded-none 
+                       hover:bg-gray-800 transition-colors text-sm font-medium">
+                Registrarse
+              </button>
+            </div>
+          </ng-container>
+
+          <ng-template #userMenu>
+            <div class="relative group">
+              <button class="flex items-center space-x-1">
+                <i class="pi pi-user text-xl text-gray-700"></i>
+                <span class="text-sm hidden lg:inline-block">Mi cuenta</span>
+              </button>
+              <div
+                class="absolute right-0 hidden group-hover:block bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-sm text-gray-700 z-50">
+                <div class="px-4 py-2 border-b border-gray-100 text-xs text-gray-500">Bienvenido/a</div>
+                <a (click)="redirectToCliente('perfil')" class="block px-4 py-2 hover:bg-gray-50 transition">Perfil</a>
+                <a (click)="redirectToCliente('compras')" class="block px-4 py-2 hover:bg-gray-50 transition">Mis
+                  compras</a>
+                <a (click)="redirectToCliente('favoritos')"
+                  class="block px-4 py-2 hover:bg-gray-50 transition">Favoritos</a>
+                <div class="border-t border-gray-100 mt-1"></div>
+                <a (click)="logout()" class="block px-4 py-2 text-red-500 hover:bg-gray-50 transition">Cerrar sesión</a>
+              </div>
+            </div>
+          </ng-template>
         </div>
-        <div class="instagram">
-          <i class="fab fa-instagram"></i>
+      </div>
+    </div>
+
+    <!-- Dress Categories Navigation -->
+    <nav class="hidden md:flex justify-center space-x-1 py-2 border-t border-[#f0e6eb]">
+      <a (click)="redirectTo('search')"
+        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group">
+        Nuestra colección
+      </a>
+
+      <a (click)="redirectTo('nuevos')"
+        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group overflow-hidden">
+        Nuevos Arrivos
+        <span class="absolute top-1 right-1 bg-[#d4a8b4] text-[#3d2e35] text-[8px] px-1 rounded-full">NEW</span>
+
+        <!-- Efecto de brillo deslizante -->
+        <span
+          class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 -translate-x-full group-hover:translate-x-full"></span>
+      </a>
+
+      <a (click)="redirectTo('ofertas')"
+        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group">
+        Ofertas Especiales
+      </a>
+      <a (click)="redirectTo('AcercaDe')"
+        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group">
+        Sobre Nosotros
+      </a>
+
+      <div class="relative group">
+        <button class="px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition flex items-center">
+          Más
+          <i class="pi pi-chevron-down text-xs ml-1"></i>
+        </button>
+        <div
+          class="absolute left-0 hidden group-hover:block bg-white border border-[#f0e6eb] shadow-sm mt-1 py-1 min-w-[180px] z-50">
+          <a (click)="redirectTo('Preguntas')"
+            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">FAQ</a>
+          <a (click)="redirectTo('MisionVision')"
+            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">Misión</a>
+          <a (click)="redirectTo('terminos')"
+            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">Términos</a>
+          <a (click)="redirectTo('politicas')"
+            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">Políticas</a>
         </div>
       </div>
     </nav>
-  </nav>
-  <nav class="navbar-second flex" [ngClass]="{ sticky: isSticky }">
-    <div  class="logo">
-      <a [routerLink]="'/inicio'">
-        <img *ngIf="isSticky"
-          src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
-          alt="logo sticky" class="logo1 logo-sticky" [ngClass]="{ visible: isSticky }" />
-        <span *ngIf="!isSticky" class="logo-text" [ngClass]="{ visible: !isSticky }">Atelier </span>
-        <!-- <span  *ngIf="!isSticky" class="logo-text" [ngClass]="{ visible: !isSticky }">Atelier Hgo </span> -->
-
-      </a>
-    </div>
-
-
-    <ul *ngIf="!isMobile" class="nav-menu flex">
-      <li><a (click)="redirectTo('search')">Productos</a></li>
-      <li><a (click)="redirectTo('AcercaDe')">Acerca de nosotros</a></li>
-      <li><a (click)="redirectTo('Preguntas')">Preguntas frecuentes</a></li>
-      <li><a (click)="redirectTo('MisionVision')">Misión y visión</a></li>
-      <li><a (click)="redirectTo('terminos')">Términos y condiciones</a></li>
-      <li><a (click)="redirectTo('politicas')">Políticas de privacidad</a></li>
-
-    </ul>
-
-    <ul class="nav-accion">
-      <!-- Versión Web -->
-      <!-- <li>
-            <div class="ui action input" *ngIf="!isMobile">
-              <input
-                type="text"
-                placeholder="Buscar en Atelier..."
-                [(ngModel)]="searchQuery"
-                (keyup.enter)="onSearch()"
-              />
-              <button class="ui icon button search-btn" (click)="onSearch()">
-                <i *ngIf="!isLoading" class="search icon"></i>
-                <i *ngIf="isLoading" class="spinner loading icon"></i>
-              </button>
-            </div>
-          </li> -->
-      <!-- Versión Móvil -->
-      <li>
-        
-        <div class="ui search" [ngClass]="{ loading: isLoading }">
-          <div class="ui icon input">
-            <input class="prompt" type="text" placeholder="Buscar en atelier..." [(ngModel)]="searchQuery"
-              (keyup.enter)="onSearch()" />
-            <i class="search icon" (click)="onSearch()"></i>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="counter-container" (click)="redirectTo('CitasProbador')">
-          <i class="pi pi-cart-arrow-down"></i>
-          <span class="counter-badge"><strong>{{ dressItemCount() }}</strong></span>
-          <!-- Mostrar la lista de productos
-          <div *ngFor="let item of cartItems">
-            {{ item.name }} - {{ item.price }}
-          </div> -->
-
-
-        </div>
-      </li>
-      <li class="IsMobile" *ngIf="!isMobile">
-        <ng-container *ngIf="!isLoggedIn; else userMenu">
-          <!-- <a tabindex="0" (click)="openModal()"> -->
-          <i class="pi pi-user" (click)="openModal()"></i>
-          <!-- </a> -->
-        </ng-container>
-
-        <ng-template #userMenu>
-          <div class="ui pointing dropdown">
-            <div class="ui grid">
-              <div class="row">
-                <div class="column">
-                  <i class="pi pi-user"></i>
-                </div>
-                Mi cuenta
-                <div class="column">
-                  <i class="dropdown icon"></i>
-                </div>
-              </div>
-            </div>
-            <div class="menu">
-              <div class="item" (click)="redirectToCliente('perfil')">
-                <i class="pi pi-user"></i> Mi perfil
-              </div>
-              <div class="item" (click)="redirectToCliente('compras')">
-                <i class="pi pi-cog"></i> Compras
-              </div>
-              <div class="item" (click)="logout()">
-                <i class="pi pi-sign-out"></i> Cerrar sesión
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </li>
-
-      <li *ngIf="isMobile">
-        <i (click)="showDialog()" class="fa-solid fa-bars-staggered"></i>
-      </li>
-    </ul>
-  </nav>
+  </div>
 </header>
 
-<!-- <body> -->
-<p-sidebar *ngIf="isMobile" [(visible)]="sidebarVisible" position="left" styleClass="w-30rem">
-  <ng-template pTemplate="header" style="justify-content: center">
-    <!-- <span class="font-semibold text-xl">Atelier</span> -->
-    <img style="weight: 25px; height: 25px; margin-right: 30px; margin-left: 30px"
-      src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730313785/images-AR/ic5srzm6tzqyrosaexan.png" alt=""
-      srcset="" />
-  </ng-template>
-
-  <!-- <div class="resize-handle" (mousedown)="startResizing($event)"></div> -->
-  <div class="menu-content">
-    <ul>
-      <li>
-        <a tabindex="0" (click)="redirectTo('inicio')">
-          <i class="pi pi-home"></i> Home
-        </a>
-      </li>
-      <li *ngFor="let item of items" (click)="item.command ? item.command({ originalEvent: $event }) : null">
-        <i [class]="item.icon"></i> {{ item.label }}
-      </li>
-      <!-- <li>
-            <a tabindex="0" (click)="redirectTo('Sign-in')">
-              <i class="pi pi-sign-in"></i> Iniciar sesión
-            </a>
-          </li>
-          <li>
-            <a tabindex="0" (click)="redirectTo('Sign-up')">
-              <i class="pi pi-user-plus"></i> Registrarme
-            </a>
-          </li>
-          <li>
-            <a tabindex="0" (click)="redirectTo('Config')">
-              <i class="pi pi-cog"></i> Configuración
-            </a>
-          </li> -->
-      <!-- <li>
-            <a tabindex="0" (click)="redirectTo('AcercaDe')">
-              <i class="pi pi-info-circle"></i> Acerca de Atelier
-            </a>
-          </li> -->
-    </ul>
+<!-- Mobile Search -->
+<div *ngIf="isMobile"
+  class="fixed top-16 left-0 right-0 bg-white z-40 px-4 py-2 shadow-sm md:hidden border-b border-[#f0e6eb]">
+  <div class="relative w-full">
+    <input type="text" placeholder="Buscar vestidos..."
+      class="w-full pl-10 pr-4 py-2 bg-[#faf7f9] text-[#3d2e35] placeholder-[#a38f9b] focus:outline-none border-b border-[#d4a8b4]">
+    <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-[#a38f9b]"></i>
   </div>
-  <ng-template #footer>
-    <div class="flex items-center gap-2">
-      <button pButton label="Account" icon="pi pi-user" class="w-full" outlined></button>
-      <button pButton label="Logout" icon="pi pi-sign-out" class="w-full" severity="danger" text></button>
+</div>
+
+<!-- Mobile Menu for Dresses -->
+<p-sidebar *ngIf="isMobile" [(visible)]="sidebarVisible" position="left" styleClass="w-80" [showCloseIcon]="false">
+  <ng-template pTemplate="header">
+    <div class="p-4 border-b border-[#f0e6eb]">
+      <img class="h-8"
+        src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730313785/images-AR/ic5srzm6tzqyrosaexan.png"
+        alt="Atelier Dresses">
     </div>
   </ng-template>
-  <!-- Mango para redimensionar -->
+
+  <ul class="space-y-2 p-4">
+    <li><a (click)="redirectTo('inicio')"
+        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-home"></i>
+        <span>Inicio</span></a></li>
+    <li><a (click)="redirectTo('vestidos-novia')"
+        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-star"></i>
+        <span>Vestidos de Novia</span></a></li>
+    <li><a (click)="redirectTo('vestidos-fiesta')"
+        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-heart"></i>
+        <span>Vestidos de Fiesta</span></a></li>
+    <li><a (click)="redirectTo('nuevos')"
+        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-bolt"></i>
+        <span>Nuevos Diseños</span></a></li>
+    <li><a (click)="redirectTo('ofertas')"
+        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-tag"></i>
+        <span>Ofertas</span></a></li>
+    <li><a (click)="redirectTo('renta-novia')"
+        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-calendar"></i>
+        <span>Renta Novia</span></a></li>
+    <li><a (click)="redirectTo('renta-fiesta')"
+        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i
+          class="pi pi-calendar-plus"></i> <span>Renta Fiesta</span></a></li>
+  </ul>
+
+  <ng-template pTemplate="footer">
+    <div class="p-4 border-t border-[#f0e6eb]">
+      <button class="w-full bg-[#3d2e35] text-white py-3 text-sm tracking-wide">Mi cuenta</button>
+    </div>
+  </ng-template>
 </p-sidebar>
 
-<!-- <div class="resize-handle" (mousedown)="startResizing($event)"></div> -->
 
-<!-- <app-results [buscar]="searchQuery"></app-results> -->
-
-<!-- Modal de inicio de sesión -->
+<!-- Modal login -->
 <app-login-modal *ngIf="isModalVisible" [isModalVisible]="isModalVisible"
   (mostrarFormulario)="cerrarModal($event)"></app-login-modal>
+
+<style>
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-marquee {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+</style>

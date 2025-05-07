@@ -19,6 +19,7 @@ import {
   isValidPhoneNumber,
 } from 'libphonenumber-js';
 import axios from 'axios';
+import { Location } from '@angular/common';
 // import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 declare const $: any;
@@ -26,10 +27,7 @@ declare const $: any;
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.view.html',
-  styleUrls: [
-    './registro.view.scss',
-    '../../../../shared/styles/notificaciones.scss',
-  ],
+  
 })
 export class RegistroView {
   currentStep = 1;
@@ -75,6 +73,7 @@ export class RegistroView {
     $('.ui.segment').modal('hide'); // Oculta el modal
   }
   constructor(
+    private location: Location,
     private router: Router,
     private msgs: mensageservice,
     private fb: FormBuilder,
@@ -191,45 +190,7 @@ export class RegistroView {
       this.ngxService.stop(); // stop foreground spinner of the master loader with 'default' taskId
     }, 5000);
 
-    // if (this.personalDataForm.invalid) {
-    //   // Recolecta los mensajes de error
-    //   let errorMessages = '';
-
-    //   if (this.personalDataForm.get('username')?.hasError('required')) {
-    //     errorMessages += '• El nombre es obligatorio.<br>';
-    //   }
-    //   if (this.personalDataForm.get('username')?.hasError('maxlength')) {
-    //     errorMessages += '• El nombre no puede tener más de 15 caracteres.<br>';
-    //   }
-
-    //   if (this.personalDataForm.get('email')?.hasError('required')) {
-    //     errorMessages += '• El correo es obligatorio.<br>';
-    //   }
-    //   if (this.personalDataForm.get('email')?.hasError('pattern')) {
-    //     errorMessages += '• El formato del correo no es válido.<br>';
-    //   }
-
-    //   if (this.personalDataForm.get('telefono')?.hasError('required')) {
-    //     errorMessages += '• El número telefónico es obligatorio.<br>';
-    //   }
-    //   if (this.personalDataForm.get('telefono')?.hasError('pattern')) {
-    //     errorMessages +=
-    //       '• El número telefónico debe contener exactamente 10 dígitos.<br>';
-    //   }
-
-    //   // Muestra el alert con los errores
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Errores en el formulario',
-    //     html: errorMessages,
-    //     confirmButtonText: 'Ok',
-    //   });
-    //   this.personalDataForm.markAllAsTouched(); // Marca todos los campos como tocados
-
-    //   // Desactiva el estado de carga
-    //   this.isLoadingBasic = false;
-    // } else {
-    this.showSpinner();
+     this.showSpinner();
     // isLoadingBasic
     const username = this.personalDataForm.get('username')?.value;
     const email = this.personalDataForm.get('email')?.value;
@@ -457,151 +418,9 @@ export class RegistroView {
     }
   }
 
-  // validacionesPassword = {
-  //   tieneMinuscula: false,
-  //   tieneMayuscula: false,
-  //   tieneNumero: false,
-  //   tieneSimbolo: false,
-  //   longitudMinima: false,
-  //   longitudMayor5: false,
-  //   tiene5CaracteresDiferentes: false,
-  // };
+ 
   coincidenPasswords = false;
 
-  // validacionesPassword = {
-  //   tieneMinuscula: false,
-  //   tieneMayuscula: false,
-  //   tieneNumero: false,
-  //   tieneSimbolo: false,
-  //   longitudMinima: false,
-  //   longitudMayor5: false,
-  //   tiene5CaracteresDiferentes: false,
-  // };
-
-  // verificarPassword() {
-  //   const password = this.credentialsForm.get('password')?.value || '';
-  //   // Contadores de los caracteres presentes
-  //   const mayusculas = (password.match(/[A-Z]/g) || []).length;
-  //   const minusculas = (password.match(/[a-z]/g) || []).length;
-  //   const numeros = (password.match(/[0-9]/g) || []).length;
-  //   const especiales = (password.match(/[!@#$&*]/g) || []).length;
-
-  //   // Requisitos mínimos
-  //   const mayusculasFaltantes = Math.max(3 - mayusculas, 0);
-  //   const minusculasFaltantes = Math.max(4 - minusculas, 0);
-  //   const numerosFaltantes = Math.max(4 - numeros, 0);
-  //   const especialesFaltantes = Math.max(5 - especiales, 0);
-  //   const longitudFaltante = Math.max(16 - password.length, 0);
-
-  //   // Generar un mensaje sobre lo que falta
-  //   this.faltantes = []; // Limpiar la lista de faltantes cada vez que se valide la contraseña
-
-  //   if (longitudFaltante > 0)
-  //     this.faltantes.push(`${longitudFaltante} caracteres más`);
-  //   if (mayusculasFaltantes > 0)
-  //     this.faltantes.push(`${mayusculasFaltantes} letras mayúsculas`);
-  //   if (minusculasFaltantes > 0)
-  //     this.faltantes.push(`${minusculasFaltantes} letras minúsculas`);
-  //   if (numerosFaltantes > 0)
-  //     this.faltantes.push(`${numerosFaltantes} números`);
-  //   if (especialesFaltantes > 0)
-  //     this.faltantes.push(`${especialesFaltantes} caracteres especiales`);
-
-  //   // Si no faltan requisitos, la contraseña es válida
-  //   if (this.faltantes.length === 0) {
-  //     this.passwordStrengthMessage =
-  //       'Contraseña válida con el formato adecuado';
-  //   } else {
-  //     this.passwordStrengthMessage = `Formato incompleto. Faltan: ${this.faltantes.join(
-  //       ', '
-  //     )}`;
-  //   }
-  // }
-
-  // // Verificar la fortaleza de la contraseña
-  // checkPasswordStrength(password: string) {
-  //   if (password.length < 8) {
-  //     this.passwordStrengthMessage =
-  //       'La contraseña debe tener al menos 8 caracteres.';
-  //     this.passwordStrengthClass = 'text-danger';
-  //   } else if (
-  //     !/[a-z]/.test(password) ||
-  //     !/[A-Z]/.test(password) ||
-  //     !/\d/.test(password)
-  //   ) {
-  //     this.passwordStrengthMessage =
-  //       'La contraseña debe contener letras y números.';
-  //     this.passwordStrengthClass = 'text-warning';
-  //   } else {
-  //     this.passwordStrengthMessage = 'Contraseña fuerte';
-  //     this.passwordStrengthClass = 'text-success';
-  //   }
-  // }
-
-  // Verificar si la contraseña está comprometida
-  // async checkIfPasswordIsPwned(password: string) {
-  //   const hash = await this.getPasswordHash(password);
-  //   const prefix = hash.slice(0, 5); // Primeros 5 caracteres
-  //   const suffix = hash.slice(5); // El resto del hash
-
-  //   try {
-  //     const response = await axios.get(
-  //       `https://api.pwnedpasswords.com/range/${prefix}`
-  //     );
-  //     const matches = response.data.split('\n');
-
-  //     this.isPasswordCompromised = false; // Resetear estado
-
-  //     for (let match of matches) {
-  //       const [matchHash, count] = match.split(':');
-  //       if (matchHash === suffix) {
-  //         this.isPasswordCompromised = true; // Contraseña comprometida
-  //         this.toastr.error(
-  //           `¡Esta contraseña ha sido comprometida! Se ha encontrado ${count} veces.`,
-  //           'Advertencia',
-  //           {
-  //             toastClass: 'toast error', // Aplica tus estilos personalizados
-  //           }
-  //         );
-  //         break;
-  //       }
-  //     }
-
-  //     if (!this.isPasswordCompromised) {
-  //       this.passwordStrengthClass = 'text-success'; // Si no está comprometida, mantener mensaje positivo
-  //     }
-  //   } catch (error) {
-  //     console.error('Error al verificar la contraseña', error);
-  //   }
-  // }
-
-  // Generar hash SHA-1 usando la Web Crypto API
-  // async getPasswordHash(password: string): Promise<string> {
-  //   const encoder = new TextEncoder();
-  //   const data = encoder.encode(password);
-  //   const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-  //   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  //   const hashHex = hashArray
-  //     .map((byte) => byte.toString(16).padStart(2, '0'))
-  //     .join('');
-  //   return hashHex.toUpperCase();
-  // }
-
-  // Validador de fuerza de la contraseña
-  // passwordStrengthValidator() {
-  //   return () => {
-  //     const password = this.credentialsForm.get('password')?.value || '';
-  //     const isValid =
-  //       /[a-z]/.test(password) &&
-  //       /[A-Z]/.test(password) &&
-  //       /\d/.test(password) &&
-  //       password.length >= 8;
-
-  //     return isValid ? null : { passwordStrength: true };
-  //   };
-  // }
-
-  // Verificar si las contraseñas coinciden
 
   verificarCoincidencia() {
     const password = this.credentialsForm.get('password')?.value;
@@ -647,6 +466,11 @@ export class RegistroView {
     }
   }
 
+
+  // 
+  volver() {
+    this.location.back();
+  }
   registroCliente(): void {
     if (this.personalDataForm.valid && this.credentialsForm.valid) {
       const username = this.personalDataForm.get('username')?.value;

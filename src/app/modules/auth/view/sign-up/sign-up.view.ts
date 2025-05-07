@@ -31,7 +31,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-sign-up-view',
   templateUrl: 'sign-up.view2.html',
-  styleUrls: ['./sign-up.view.scss', './listacard.scss'],
+  // styleUrls: ['./sign-up.view.scss', './listacard.scss'],
 })
 export class SignUpView implements OnInit, AfterViewInit {
   @Output() nextCallback = new EventEmitter<void>();

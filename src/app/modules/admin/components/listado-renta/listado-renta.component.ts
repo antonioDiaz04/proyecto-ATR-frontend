@@ -1,103 +1,50 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VentayrentaService } from '../../../../shared/services/ventayrenta.service';
+import { ProductoService } from '../../../../shared/services/producto.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-listado-renta',
   templateUrl: './listado-renta.component.html',
-  styleUrls: ['./listado-renta.component.scss']
+  // styleUrls: ['./listado-renta.component.scss']
 })
 export class ListadoRentaComponent implements OnInit {
-  vistaActual: string = 'agregar'; // Controla la vista actual ('agregar', 'eliminar', 'listar')
-  rentaForm!: FormGroup;
+  // vistaActual: string = 'agregar'; // Controla la vista actual ('agregar', 'eliminar', 'listar')
+  // rentaForm!: FormGroup;
   rentas: any[] = []; // Almacena las rentas obtenidas del backend
+  productos: any[] = []; // Almacena las rentas obtenidas del backend
   rentaId: string | null = null; // Almacena el ID de la renta que se está editando
-  constructor(private fb: FormBuilder, private ventaYrentaS_: VentayrentaService) {}
+  constructor(private confirmationService: ConfirmationService, private productoS: ProductoService, private fb: FormBuilder, private ventaYrentaS_: VentayrentaService) { }
 
   ngOnInit(): void {
-    this.rentaForm = this.fb.group({
-      usuarioId: ['', Validators.required],
-      productoId: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
-      metodoPago: ['', Validators.required],
-      precioRenta: ['', Validators.required],
-      estado: ['Pendiente', Validators.required]
-    });
-
-    // Cargar rentas al iniciar
     this.obtenerRentas();
   }
-  guardarRenta(): void {
-    if (this.rentaForm.valid) {
-      const rentaData = this.rentaForm.value;
-  
-      if (this.rentaId) {
-        // Editar renta existente
-        this.ventaYrentaS_.editarRenta(this.rentaId, rentaData).subscribe(
-          (res) => {
-            console.log('Renta actualizada:', res);
-            alert('Renta actualizada exitosamente');
-            this.rentaForm.reset();
-            this.rentaId = null; // Limpiar el ID después de editar
-            this.vistaActual = 'listar'; // Volver a la vista de listado
-            this.obtenerRentas(); // Actualizar la lista de rentas
-          },
-          (error) => {
-            console.error('Error al actualizar renta:', error);
-          }
-        );
-      } else {
-        // Crear nueva renta
-        this.ventaYrentaS_.crearRenta(rentaData).subscribe(
-          (res) => {
-            console.log('Renta creada:', res);
-            alert('Renta creada exitosamente');
-            this.rentaForm.reset();
-            this.vistaActual = 'listar'; // Volver a la vista de listado
-            this.obtenerRentas(); // Actualizar la lista de rentas
-          },
-          (error) => {
-            console.error('Error al crear renta:', error);
-          }
-        );
+
+
+  getProductos() {
+    this.productoS.obtenerProductos().subscribe(
+      (response) => {
+        this.productos = response;
+      },
+      (err) => {
+        console.log(err);
       }
-    }
+    );
   }
-  crearRenta(): void {
-    if (this.rentaForm.valid) {
-      const rentaData = this.rentaForm.value;
-  
-      if (this.rentaId) {
-        // Editar renta existente
-        this.ventaYrentaS_.editarRenta(this.rentaId, rentaData).subscribe(
-          (res) => {
-            console.log('Renta actualizada:', res);
-            alert('Renta actualizada exitosamente');
-            this.rentaForm.reset();
-            this.rentaId = ''; // Limpiar el ID después de editar
-            this.obtenerRentas(); // Actualizar la lista de rentas
-          },
-          (error) => {
-            console.error('Error al actualizar renta:', error);
-          }
-        );
-      } else {
-        // Crear nueva renta
-        this.ventaYrentaS_.crearRenta(rentaData).subscribe(
-          (res) => {
-            console.log('Renta creada:', res);
-            alert('Renta creada exitosamente');
-            this.rentaForm.reset();
-            this.obtenerRentas(); // Actualizar la lista de rentas
-          },
-          (error) => {
-            console.error('Error al crear renta:', error);
-          }
-        );
-      }
-    }
+
+  sidebarVisible = false;
+
+  abrirFormulario(vistaActual: any) {
+    // this.vistaActual == vistaActual;
+    this.sidebarVisible = true;
   }
+
+  cerrarSidebar() {
+    this.sidebarVisible = false;
+  }
+
+
 
   eliminarRenta(): void {
     if (this.rentaId) {
@@ -123,13 +70,14 @@ export class ListadoRentaComponent implements OnInit {
         this.rentas = res.rentas.map((renta: any) => {
           const fechaInicio = new Date(renta.detallesRenta.fechaInicio);
           const fechaFin = new Date(renta.detallesRenta.fechaFin);
-          
+
           return {
             ...renta,
             usuarioNombre: renta.usuario?.nombre || 'Usuario no disponible',
+            usuarioE: renta.usuario?.email || 'Usuario no disponible',
             productoNombre: renta.producto?.nombre || 'Producto no disponible',
             categoriaNombre: renta.producto?.idCategoria?.nombre || 'Sin categoría', // Nueva propiedad
-            estado: renta.estado , // Nueva propiedad
+            estado: renta.estado, // Nueva propiedad
             detallesRenta: {
               ...renta.detanllesRenta,
               fechaInicio: fechaInicio.toISOString().split('T')[0],
@@ -144,12 +92,42 @@ export class ListadoRentaComponent implements OnInit {
       }
     );
   }
-  
+  // Métodos para calcular días adicionales, multas y totales
+  calcularDuracion(renta: any): number {
+    const inicio = new Date(renta.detallesRenta.fechaInicio);
+    const fin = new Date(renta.detallesRenta.fechaFin);
+    return Math.ceil((fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  calcularDiasAdicionales(renta: any): number {
+    if (renta.estado === 'Completado') return 0;
+
+    const fechaFin = new Date(renta.detallesRenta.fechaFin);
+    const hoy = new Date();
+    const diffTime = hoy.getTime() - fechaFin.getTime();
+    return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+  }
+
+  calcularMulta(renta: any): number {
+    const diasAdicionales = this.calcularDiasAdicionales(renta);
+    if (diasAdicionales <= 0) return 0;
+
+    const valorDiario = renta.detallesPago.precioRenta / this.calcularDuracion(renta);
+    return diasAdicionales * (valorDiario * 0.2); // 20% del valor diario por día
+  }
+
+  calcularTotal(renta: any): number {
+    return renta.detallesPago.precioRenta + this.calcularMulta(renta);
+  }
+
+  // formatearPrecio(precio: number): string {
+  //   return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(precio);
+  // }
   // Función auxiliar para formatear precio
   formatearPrecio(precio: number): string {
-    return new Intl.NumberFormat('es-MX', { 
-      style: 'currency', 
-      currency: 'MXN' 
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN'
     }).format(precio);
   }
   eliminarRentaPorId(rentaId: string): void {
@@ -166,26 +144,186 @@ export class ListadoRentaComponent implements OnInit {
       );
     }
   }
-  editarRenta(renta: any): void {
-    this.vistaActual = 'editar'; // Cambiar a la vista de edición
-    this.rentaId = renta._id; // Guardar el ID de la renta seleccionada
-    this.rentaForm.patchValue({
-      usuarioId: renta.usuario,
-      productoId: renta.producto?._id || '',
-      fechaInicio: renta.detallesRenta.fechaInicio.split('T')[0], // Formatear la fecha
-      fechaFin: renta.detallesRenta.fechaFin.split('T')[0], // Formatear la fecha
-      metodoPago: renta.detallesPago.metodoPago,
-      precioRenta: renta.detallesPago.precioRenta,
-      estado: renta.estado,
-    });
-  }
 
-   formatearFecha(fecha: string): string {
+
+  formatearFecha(fecha: string): string {
     const date = new Date(fecha);
     const dia = date.getDate().toString().padStart(2, '0');
     const mes = (date.getMonth() + 1).toString().padStart(2, '0'); // Los meses comienzan desde 0
     const anio = date.getFullYear();
     return `${dia}/${mes}/${anio}`;
+  }
+  cancelarEdicion() {
+
+  }
+  openUserSearch() {
+
+  }
+  // filtrarRentas(event: any) { }
+  getStatusClass(estado: string): string {
+    switch (estado) {
+      case 'Pendiente':
+        return 'bg-warning text-white';
+      case 'Aprobada':
+        return 'bg-success text-white';
+      case 'Cancelada':
+        return 'bg-danger text-white';
+      default:
+        return '';
+    }
+  }
+
+// En tu componente (ej: gestion-rentas.component.ts)
+
+// Variables para las estadísticas (debes calcularlas según tus datos)
+rentasActivas: number = 0;  // Rentas con estado 'Activo'
+nuevasRentas: number = 0;    // Rentas creadas en los últimos 7 días
+variacionNuevas: number = 0; // % de cambio vs semana anterior
+multasPendientes: number = 0;// Multas no pagadas
+multasPagadas: number = 0;   // Multas pagadas
+maxRentas: number = 100;     // Máximo esperado para la barra de progreso (ajusta según necesidad)
+
+// Datos para el mini gráfico histórico (ejemplo)
+historialRentas: any[] = [
+  { day: 'L', value: 5 },
+  { day: 'M', value: 7 },
+  { day: 'M', value: 6 },
+  { day: 'J', value: 8 },
+  { day: 'V', value: 10 },
+  { day: 'S', value: 12 },
+  { day: 'D', value: 8 },
+  // ... repetir para 30 días o como necesites
+];
+
+// Método para calcular las estadísticas (llamarlo al cargar/actualizar datos)
+calcularEstadisticas(): void {
+  const ahora = new Date();
+  const hace7dias = new Date(ahora.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const hace14dias = new Date(ahora.getTime() - 14 * 24 * 60 * 60 * 1000);
+  
+  // Calcular valores
+  this.rentasActivas = this.rentas.filter(r => r.estado === 'Activo').length;
+  
+  this.nuevasRentas = this.rentas.filter(r => {
+    const fechaRenta = new Date(r.fechaCreacion);
+    return fechaRenta >= hace7dias;
+  }).length;
+  
+  const nuevasSemanaAnterior = this.rentas.filter(r => {
+    const fechaRenta = new Date(r.fechaCreacion);
+    return fechaRenta >= hace14dias && fechaRenta < hace7dias;
+  }).length;
+  
+  this.variacionNuevas = nuevasSemanaAnterior > 0 ? 
+    Math.round(((this.nuevasRentas - nuevasSemanaAnterior) / nuevasSemanaAnterior) * 100) : 100;
+  
+  // Asumiendo que tus rentas tienen una propiedad 'multas'
+  this.multasPendientes = this.rentas.reduce((total, renta) => 
+    total + (renta.multas?.filter((m:any) => !m.pagada).length || 0), 0);
+  
+  this.multasPagadas = this.rentas.reduce((total, renta) => 
+    total + (renta.multas?.filter((m:any)  => m.pagada).length || 0), 0);
+  
+  // Máximo para la barra de progreso (puedes ajustar esto)
+  this.maxRentas = Math.max(this.rentas.length * 1.3, 50); // 30% más que el actual o mínimo 50
+}
+// ççççççççterminar
+
+
+  // 
+  rentasFiltradas: any[] = [];
+  filtroTexto: string = '';
+  filtroEstado: string = '';
+  campoOrden: string = 'detallesRenta.fechaInicio';
+  ordenAscendente: boolean = false;
+  paginaActual: number = 1;
+  itemsPorPagina: number = 10;
+  mostrarModalImagenes: boolean = false;
+  imagenesProducto: string[] = [];
+  filtrarRentas(): void {
+    this.rentasFiltradas = this.rentas.filter(renta => {
+      const coincideTexto = 
+        renta.productoNombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
+        renta.usuarioNombre.toLowerCase().includes(this.filtroTexto.toLowerCase());
+
+      const coincideEstado = this.filtroEstado ? renta.estado === this.filtroEstado : true;
+
+      return coincideTexto && coincideEstado;
+    });
+
+    this.ordenarRentas();
+    this.paginaActual = 1;
+  }
+
+  ordenarPor(campo: string): void {
+    if (this.campoOrden === campo) {
+      this.ordenAscendente = !this.ordenAscendente;
+    } else {
+      this.campoOrden = campo;
+      this.ordenAscendente = true;
+    }
+    this.ordenarRentas();
+  }
+
+  ordenarRentas(): void {
+    this.rentasFiltradas.sort((a, b) => {
+      let valorA = this.obtenerValorPropiedad(a, this.campoOrden);
+      let valorB = this.obtenerValorPropiedad(b, this.campoOrden);
+
+      if (typeof valorA === 'string') valorA = valorA.toLowerCase();
+      if (typeof valorB === 'string') valorB = valorB.toLowerCase();
+
+      if (valorA < valorB) return this.ordenAscendente ? -1 : 1;
+      if (valorA > valorB) return this.ordenAscendente ? 1 : -1;
+      return 0;
+    });
+  }
+
+  obtenerValorPropiedad(objeto: any, ruta: string): any {
+    return ruta.split('.').reduce((o, i) => o?.[i], objeto);
+  }
+
+
+
+  // Funcionalidades adicionales
+  verImagenGrande(imagenes: string[]): void {
+    this.imagenesProducto = imagenes || [];
+    this.mostrarModalImagenes = true;
+  }
+
+  verDetallesRenta(renta: any): void {
+    // this.dialogService.open(DetalleRentaComponent, {
+    //   header: `Detalles de renta`,
+    //   width: '70%',
+    //   data: { renta: renta }
+    // });
+  }
+
+  confirmarEliminacion(renta: any): void {
+    this.confirmationService.confirm({
+      message: `¿Estás seguro de eliminar la renta de "${renta.productoNombre}"?`,
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.eliminarRentaPorId(renta._id);
+      }
+    });
+  }
+
+  generarContrato(renta: any): void {
+    // Lógica para generar contrato PDF
+    console.log('Generando contrato para:', renta);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.rentasFiltradas.length / this.itemsPorPagina);
+  }
+
+  get rentasPaginadas(): any[] {
+    const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
+    return this.rentasFiltradas.slice(inicio, inicio + this.itemsPorPagina);
   }
 
 }

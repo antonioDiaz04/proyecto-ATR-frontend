@@ -1,106 +1,263 @@
-<div class="sidebar">
-    <h3>Gestión de Rentas</h3>
-    <ul class="menu">
-        <li>
-            <button pButton type="button" label="Agregar Renta" icon="pi pi-plus" class="p-button-success"
-                (click)="vistaActual = 'agregar'"></button>
-        </li>
-        <!-- <li>
-            <button pButton type="button" label="Eliminar Renta" icon="pi pi-trash" class="p-button-danger"
-                (click)="vistaActual = 'eliminar'"></button>
-        </li> -->
-        <li>
-            <button pButton type="button" label="Listar Rentas" icon="pi pi-list" class="p-button-info"
-                (click)="vistaActual = 'listar'"></button>
-        </li>
-    </ul>
-</div>
-<div class="contenido">
-    <!-- Vista para Agregar o Editar Renta -->
-    <ng-template [ngIf]="vistaActual === 'agregar' || vistaActual === 'editar'">
-      <h3>{{ vistaActual === 'editar' ? 'Editar Renta' : 'Agregar Renta' }}</h3>
-      <form [formGroup]="rentaForm" (ngSubmit)="guardarRenta()">
-        <div class="p-fluid">
-          <div class="p-field">
-            <label for="usuarioId">Usuario ID</label>
-            <input id="usuarioId" type="text" formControlName="usuarioId" pInputText placeholder="Ingrese el ID del usuario" />
+<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+    <!-- Encabezado con estadísticas y filtros -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex flex-col lg:flex-row justify-between gap-6">
+        <!-- Resumen estadístico -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1">
+          <!-- Tarjeta Total Rentas -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Total Rentas</h3>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ rentas.length }}</p>
+            <div class="mt-2 h-2 bg-gray-100 rounded-full">
+              <div class="h-2 bg-[#d4c4a8] rounded-full" [style.width.%]="(rentas.length/maxRentas)*100"></div>
+            </div>
           </div>
-          <div class="p-field">
-            <label for="productoId">Producto ID</label>
-            <input id="productoId" type="text" formControlName="productoId" pInputText placeholder="Ingrese el ID del producto" />
+
+          <!-- Tarjeta Rentas Activas -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Activas</h3>
+            <p class="mt-1 text-2xl font-semibold text-green-600">{{ rentasActivas }}</p>
+            <span class="text-xs text-gray-500">{{ (rentasActivas/rentas.length)*100 | number:'1.0-0' }}% del
+              total</span>
           </div>
-          <div class="p-field">
-            <label for="fechaInicio">Fecha de Inicio</label>
-            <input id="fechaInicio" type="date" formControlName="fechaInicio" pInputText />
+
+          <!-- Tarjeta Nuevas Rentas -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Nuevas (7d)</h3>
+            <p class="mt-1 text-2xl font-semibold text-blue-600">{{ nuevasRentas }}</p>
+            <span *ngIf="nuevasRentas > 0" class="inline-flex items-center text-xs text-green-600">
+              <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M12 7a1 1 0 01-1 1H9v1h2a1 1 0 110 2H9v1h2a1 1 0 110 2H9v1a1 1 0 11-2 0v-1H5a1 1 0 110-2h2v-1H5a1 1 0 110-2h2V8H5a1 1 0 010-2h2V5a1 1 0 112 0v1h2a1 1 0 011 1z"
+                  clip-rule="evenodd" />
+              </svg>
+              {{ variacionNuevas }}% vs semana anterior
+            </span>
           </div>
-          <div class="p-field">
-            <label for="fechaFin">Fecha de Fin</label>
-            <input id="fechaFin" type="date" formControlName="fechaFin" pInputText />
-          </div>
-          <div class="p-field">
-            <label for="metodoPago">Método de Pago</label>
-            <input id="metodoPago" type="text" formControlName="metodoPago" pInputText placeholder="Ingrese el método de pago" />
-          </div>
-          <div class="p-field">
-            <label for="estadoRenta">Estado</label>
-            <select 
-              id="estadoRenta"
-              formControlName="estado"
-              class="p-inputtext p-component" 
-              style="width: 100%">
-              <option value="" disabled selected>Seleccione el estado</option>
-              <option value="Pendiente">Pendiente</option>
-              <option value="Activo">Activo</option>
-              <option value="Completado">Completado</option>
-              <option value="Cancelado">Cancelado</option>
-            </select>
-          </div>
-          <div class="p-field">
-            <label for="precioRenta">Precio de Renta</label>
-            <input id="precioRenta" type="number" formControlName="precioRenta" pInputText placeholder="Ingrese el precio de la renta" />
+
+          <!-- Tarjeta Multas -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Multas</h3>
+            <p class="mt-1 text-2xl font-semibold text-red-600">{{ multasPendientes }}</p>
+            <span class="text-xs text-gray-500">{{ multasPagadas }} pagadas</span>
           </div>
         </div>
-        <button pButton type="submit" label="Guardar" icon="pi pi-check" class="p-button-success"></button>
-      </form>
-    </ng-template>
-  
-    <ng-template [ngIf]="vistaActual === 'listar'">
-      <h3>Listado de Rentas</h3>
-      <p-table [value]="rentas" [paginator]="true" [rows]="10" [responsive]="true">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Usuario</th>
-            <th>Producto</th>
-            <th>Categoria</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Fin</th>
-            <th>Días</th>
-            <th>Precio</th>
-            <th>Método de Pago</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-renta>
 
+        <!-- Mini gráfico histórico (placeholder) -->
+        <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-xs w-full lg:w-64">
+          <h3 class="text-sm font-medium text-gray-500 mb-2">Rentas últimos 30 días</h3>
+          <div class="h-20">
+            <!-- Aquí iría tu gráfico de historial (usarías una librería como Chart.js) -->
+            <div class="flex items-end h-full gap-px">
+              <div *ngFor="let day of historialRentas" class="bg-[#d4c4a8] flex-1" [style.height.%]="day.value*2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de acciones y filtros -->
+      <div class="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-xl font-semibold text-gray-900">Gestión de Rentas</h2>
+          <p class="text-sm text-gray-500 mt-1">Resumen completo de rentas y contratos</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <div class="relative">
+            <input type="text" [(ngModel)]="filtroTexto" placeholder="Buscar..."
+              class="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm w-full sm:w-64 focus:ring-1 focus:ring-[#d4c4a8] focus:border-[#d4c4a8]">
+            <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <select [(ngModel)]="filtroEstado"
+            class="px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-[#d4c4a8]">
+            <option value="">Todos los estados</option>
+            <option value="Activo">Activo</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Completado">Completado</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+          <button
+            class="px-4 py-2 bg-[#2a2723] text-white text-sm rounded-md hover:bg-[#3a3630] transition-colors flex items-center gap-1"
+            (click)="abrirFormulario('agregar')">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Nueva Renta
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla alargada -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-white">
           <tr>
-            <td>{{ renta.usuarioNombre }}</td>
-            <td>{{ renta.productoNombre }}</td>
-            <td>{{ renta.categoriaNombre }}</td>
-            <td>{{ renta.detallesRenta.fechaInicio }}</td>
-            <td>{{ renta.detallesRenta.fechaFin }}</td>
-            <td>{{ renta.detallesRenta.duracionDias }}</td>
-            <td>{{ renta.precioRenta }}</td>
-            <td>{{ renta.detallesPago.metodoPago }}</td>
-            <td>{{ renta.estado }}</td>
-            <td>
-              <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-info mr-2" 
-                      (click)="editarRenta(renta)"></button>
-              <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger" 
-                      (click)="eliminarRentaPorId(renta._id)"></button>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('productoNombre')">
+              Producto
+              <span *ngIf="campoOrden === 'productoNombre'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('usuarioNombre')">
+              Cliente
+              <span *ngIf="campoOrden === 'usuarioNombre'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('detallesRenta.fechaInicio')">
+              Fechas
+              <span *ngIf="campoOrden === 'detallesRenta.fechaInicio'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valores</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('estado')">
+              Estado
+              <span *ngIf="campoOrden === 'estado'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recogida</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let renta of rentas" class="hover:bg-gray-50 transition-colors"
+            [ngClass]="{'bg-amber-50': renta.estado === 'Pendiente', 'bg-red-50': calcularDiasAdicionales(renta) > 0}">
+
+            <!-- Columna Producto -->
+            <td class="px-6 py-4">
+              <div class="flex items-center min-w-[200px]">
+                <div class="flex-shrink-0 h-10 w-10 rounded overflow-hidden border border-gray-200">
+                  <img [src]="renta.producto?.imagenes[0] || 'assets/default-product.jpg'" alt="Producto"
+                    class="h-full w-full object-cover" (click)="verImagenGrande(renta.producto?.imagenes)"
+                    title="Ver imágenes">
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900 truncate max-w-[180px]" [title]="renta.productoNombre">
+                    {{ renta.productoNombre }}
+                  </div>
+                  <div class="text-xs text-[#9c8e7a]">{{ renta.categoriaNombre }}</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Columna Cliente -->
+            <td class="px-6 py-4 min-w-[150px]">
+              <div class="text-sm text-gray-900 font-medium">{{ renta.usuarioNombre }}</div>
+              <div class="text-xs text-gray-500 truncate max-w-[150px]">{{ renta.usuarioE }}</div>
+            </td>
+
+            <!-- Columna Fechas -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">
+                {{ renta.detallesRenta.fechaInicio | date:'dd/MM/yyyy' }}
+              </div>
+              <div class="text-sm text-gray-900">
+                {{ renta.detallesRenta.fechaFin | date:'dd/MM/yyyy' }}
+              </div>
+              <div class="text-xs mt-1"
+                [ngClass]="{'text-green-600': calcularDiasAdicionales(renta) === 0, 'text-red-600': calcularDiasAdicionales(renta) > 0}">
+                {{ calcularDuracion(renta) }} días
+                <span *ngIf="calcularDiasAdicionales(renta) > 0">
+                  (+{{ calcularDiasAdicionales(renta) }})
+                </span>
+              </div>
+            </td>
+
+            <!-- Columna Valores -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">
+                {{ renta.detallesPago.precioRenta | currency }}
+              </div>
+              <div class="text-xs text-gray-500 line-through">
+                {{ renta.producto?.precio | currency }}
+              </div>
+              <div *ngIf="calcularMulta(renta) > 0" class="text-xs text-red-600 mt-1"></div>
+              Multa: {{ calcularMulta(renta) | currency }}
+            </td>
+
+            <!-- Columna Estado -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900 font-medium">{{ renta.estado }}</div>
+              <div *ngIf="renta.estado === 'Pendiente'" class="text-xs text-red-600 mt-1">Vencida</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900 font-medium">{{ renta.recogida }}</div>
+              <div *ngIf="!renta.recogida" class="text-xs text-red-600 mt-1">NA</div>
+              <div *ngIf="renta.recogida === 'Pendiente'" class="text-xs text-red-600 mt-1">Pendiente</div>
+              <div class="text-sm text-gray-900 font-medium">{{ renta.recogida }}</div>
+              <div *ngIf="renta.recogida === 'Recogido'" class="text-xs text-green-600 mt-1">Recogido</div>
+            </td>
+
+            <!-- Columna Acciones -->
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+              <button class="text-blue-600 hover:text-blue-900">
+                Editar
+              </button>
+              <button class="text-red-600 hover:text-red-900">
+                Eliminar
+              </button>
             </td>
           </tr>
-        </ng-template>
-      </p-table>
-    </ng-template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación y resumen -->
+    <div class="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="text-sm text-gray-500">
+        Mostrando {{ rentasFiltradas.length }} de {{ rentas.length }} registros
+      </div>
+      <div class="flex items-center space-x-2">
+        <button class="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
+          [disabled]="paginaActual === 1" (click)="paginaActual = paginaActual - 1">
+          Anterior
+        </button>
+        <span class="text-sm text-gray-700">
+          Página {{ paginaActual }} de {{ totalPaginas }}
+        </span>
+        <button class="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
+          [disabled]="paginaActual === totalPaginas" (click)="paginaActual = paginaActual + 1">
+          Siguiente
+        </button>
+      </div>
+    </div>
   </div>
+
+  <!-- Modal para imágenes -->
+  <p-dialog header="Imágenes del producto" [(visible)]="mostrarModalImagenes" [style]="{width: '80vw'}">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div *ngFor="let imagen of imagenesProducto" class="border rounded overflow-hidden">
+        <img [src]="imagen" alt="Imagen producto" class="w-full h-48 object-cover">
+      </div>
+    </div>
+  </p-dialog>
+
+  <!-- Confirmación de eliminación -->
+  <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
+</div>
+<p-sidebar [(visible)]="sidebarVisible" position="right" [modal]="true" [style]="{width: '750px'}" [baseZIndex]="10000"
+  [dismissable]="false">
+
+  <h3 class="text-2xl font-bold text-gray-800 mb-6">
+    <!-- {{ vistaActual === 'editar' ? 'Editar Renta' : ' Agregar Renta' }} -->
+  </h3>
+  <!-- 
+  [renta]="rentaSeleccionada"
+  (cerrarFormulario)="cerrarFormulario()"
+  (actualizarRentas)="actualizarRentas($event)"
+  (eliminarRenta)="eliminarRenta($event)"> -->
+  <app-registro-renta>
+  </app-registro-renta>
+</p-sidebar>

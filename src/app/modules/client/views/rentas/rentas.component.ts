@@ -8,7 +8,6 @@ import { Location } from "@angular/common";
 @Component({
   selector: "app-rentas",
   templateUrl: "./rentas.component.html",
-  styleUrls: ["../../style.scss"],
 })
 export class RentasComponent {
   userROL!: string;

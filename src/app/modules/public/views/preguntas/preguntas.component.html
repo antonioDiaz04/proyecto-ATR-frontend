@@ -1,20 +1,110 @@
-<div data-aos="zoom-in-right" class="about-container">
+<div  class="bg-white mt-32 py-16 px-6 md:px-12 lg:px-24">
+  <!-- Encabezado estilo Atelier mejorado -->
+  <div class="max-w-7xl mx-auto text-center mb-16">
+    <h1 class="text-3xl md:text-4xl font-light tracking-wider mb-4">ATELIER</h1>
+    <div class="w-24 h-px bg-black mx-auto mb-6"></div>
+    <p class="text-xl font-light italic mb-8">"La elegancia es la única belleza que nunca desaparece"</p>
+    <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
+      <p class="text-xs tracking-widest">BY APPOINTMENT ONLY</p>
+      <span class="hidden md:block text-gray-400">|</span>
+      <p class="text-xs tracking-widest">CLIENT SERVICES</p>
+    </div>
+  </div>
 
-  <!-- Sección Preguntas Frecuentes -->
-  <div class="faq-section">
-    <h2>Preguntas Frecuentes</h2>
+  <!-- Sección de búsqueda y categorías -->
+  <div data-aos="fade-up" class="max-w-3xl mx-auto mb-12">
+    <div class="relative mb-8">
+      <input type="text" placeholder="Buscar en preguntas frecuentes..." 
+             class="w-full px-4 py-3 border-b border-gray-300 focus:border-black focus:outline-none text-sm">
+      <svg class="absolute right-0 top-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+    </div>
+    
+    <div class="flex flex-wrap gap-2 justify-center mb-8">
+      <button class="px-4 py-2 text-xs border border-black hover:bg-black hover:text-white transition-colors">ENVÍOS</button>
+      <button class="px-4 py-2 text-xs border border-black hover:bg-black hover:text-white transition-colors">DEVOLUCIONES</button>
+      <button class="px-4 py-2 text-xs border border-black hover:bg-black hover:text-white transition-colors">TALLAS</button>
+      <button class="px-4 py-2 text-xs border border-black hover:bg-black hover:text-white transition-colors">CITAS</button>
+      <button class="px-4 py-2 text-xs border border-black hover:bg-black hover:text-white transition-colors">PAGOS</button>
+    </div>
+  </div>
 
-    <div class="faq-list">
-      <div class="faq-item" *ngFor="let faq of faqs; let i = index">
-        <button class="faq-question" (click)="toggleFAQ(i)" [attr.aria-expanded]="faq.isOpen">
-          {{ faq.question }}
-          <span class="toggle-icon">{{ faq.isOpen ? '−' : '+' }}</span>
-        </button>
+  <!-- Lista de FAQs mejorada -->
+  <div data-aos="fade-up" class="max-w-3xl mx-auto space-y-1 mb-16">
+    <div *ngFor="let faq of faqs; let i = index" class="border-b border-gray-200">
+      <button 
+        (click)="toggleFAQ(i)" 
+        [attr.aria-expanded]="faq.isOpen"
+        class="w-full flex justify-between items-start py-6 text-left focus:outline-none group"
+      >
+        <div>
+          <!-- <span class="text-xs text-gray-500 block mb-1">{{ faq.category }}</span> -->
+          <span class="text-sm md:text-base font-medium tracking-wide group-hover:text-gray-600 transition-colors">{{ faq.question }}</span>
+        </div>
+        <span class="text-gray-500 text-lg ml-4 transform transition-transform duration-200" 
+              [class.rotate-45]="faq.isOpen">+</span>
+      </button>
 
-        <div class="faq-answer" [class.active]="faq.isOpen">
-          <p>{{ faq.answer }}</p>
+      <div class="overflow-hidden transition-all duration-300 ease-in-out" 
+           [class.max-h-0]="!faq.isOpen"
+           [class.max-h-96]="faq.isOpen">
+        <div class="pb-8 text-sm text-gray-600">
+          <p class="mb-4">{{ faq.answer }}</p>
+          <!-- <div *ngIf="faq.additionalInfo" class="bg-gray-50 p-4 text-xs">
+            <p class="font-medium mb-2">INFORMACIÓN ADICIONAL:</p>
+            <p>{{ faq.additionalInfo }}</p>
+          </div> -->
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Sección de pregunta personalizada -->
+  <div class="max-w-3xl mx-auto border-t border-gray-200 pt-12 mb-8">
+    <h3 class="text-lg font-light tracking-wide mb-6">¿NO ENCUENTRAS TU RESPUESTA?</h3>
+    <p class="text-sm text-gray-600 mb-6">Envíanos tu consulta y nuestro equipo de atención al cliente te responderá en un plazo de 24 horas.</p>
+    
+    <form class="space-y-6">
+      <div>
+        <label class="block text-xs text-gray-700 mb-2 tracking-wider">TU PREGUNTA</label>
+        <textarea class="w-full px-0 py-1 border-0 border-b border-gray-300 focus:border-black text-sm bg-transparent h-20"></textarea>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-xs text-gray-700 mb-2 tracking-wider">NOMBRE</label>
+          <input type="text" class="w-full px-0 py-1 border-0 border-b border-gray-300 focus:border-black text-sm bg-transparent">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-700 mb-2 tracking-wider">EMAIL</label>
+          <input type="email" class="w-full px-0 py-1 border-0 border-b border-gray-300 focus:border-black text-sm bg-transparent">
+        </div>
+      </div>
+      
+      <button type="submit" class="border border-black px-8 py-3 text-xs tracking-widest hover:bg-black hover:text-white transition-colors mt-6">
+        ENVIAR PREGUNTA
+      </button>
+    </form>
+  </div>
+
+  <!-- Información de contacto adicional -->
+  <div class="max-w-3xl mx-auto text-center pt-8 border-t border-gray-200">
+    <p class="text-xs text-gray-500 mb-4">PARA ASISTENCIA INMEDIATA</p>
+    <div class="flex flex-col md:flex-row justify-center gap-6 mb-6">
+      <a href="tel:+525555555555" class="text-sm flex items-center justify-center gap-2">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+        </svg>
+        +52 55 5555 5555
+      </a>
+      <a href="mailto:clientes@atelier.com" class="text-sm flex items-center justify-center gap-2">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+        clientesatelier.com
+      </a>
+    </div>
+    <p class="text-xs text-gray-500">HORARIO DE ATENCIÓN: LUNES A VIERNES 10:00 - 18:00</p>
   </div>
 </div>

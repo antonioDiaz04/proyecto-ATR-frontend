@@ -1,21 +1,52 @@
-<div class="floating-header">
-  <!-- Logo y texto "Atelier" -->
-  <div class="logo-container">
-    <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1726493852/images-AR/cirf6qlatrjdkuj81fwy.jpg" alt="Logo" class="logo-image">
-    <span class="logo-text">Atelier</span>
-  </div>
-
-  <div class="admin-info">
-    <!-- <span class="date">{{fechaTexto}}</span> -->
-  </div>
-
-  <div class="profile-menu" *ngIf="isLoggedIn">
-    <div class="avatar" (click)="toggleMenu()">
-      <img src="https://dummyimage.com/40x40/ccc/aaa&text=2x2" alt="Placeholder">
+<header class="w-full fixed top-0 left-0 z-50 bg-gray-100 shadow-md backdrop-blur-lg transition-all duration-300">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+    
+    <!-- Logo y Texto "Atelier" -->
+    <div class="flex items-center space-x-4">
+      <img 
+        src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1726493852/images-AR/cirf6qlatrjdkuj81fwy.jpg" 
+        alt="Logo" 
+        class="h-10 w-auto rounded-md shadow-md transform transition duration-300 hover:scale-105"
+      >
+      <span class="text-2xl font-bold text-[#4A3F35] tracking-tight">Atelier</span>
     </div>
-    <div class="menu" *ngIf="menuOpen">
-      <a href="admin/configuracion/perfil-administradorl">Mi Perfil</a>
-      <a (click)="logout()">Cerrar Sesión</a>
+    
+    <!-- Menú de Opciones Rápidas -->
+    <div class="hidden lg:flex space-x-6 text-[#4A3F35]">
+      <a href="/rentas" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Rentas</a>
+      <a href="/ventas" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Ventas</a>
+      <a href="/usuarios" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Usuarios</a>
+      <a href="/terminos" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Términos</a>
+      <a href="/politicas" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Políticas</a>
+      <a href="/misionvision" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Misión/Visión</a>
     </div>
+
+    <!-- Información de Admin -->
+    <div class="hidden lg:flex items-center space-x-4 text-[#6E5C4B]">
+      <span class="text-sm font-medium">{{fechaTexto}}</span>
+    </div>
+
+    <!-- Menú de Perfil y Avatar -->
+    <div class="relative">
+      <div class="flex items-center space-x-2">
+        <!-- Avatar -->
+        <div class="relative cursor-pointer" (click)="toggleMenu()">
+          <img 
+            src="https://dummyimage.com/40x40/ccc/aaa&text=2x2" 
+            alt="Avatar" 
+            class="w-10 h-10 rounded-full border-2 border-[#8C5A3C] hover:border-[#6E5C4B] transition duration-200"
+          >
+        </div>
+        <!-- Menú desplegable -->
+        <div 
+          *ngIf="menuOpen" 
+          class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 text-[#4A3F35] z-10 transition-all duration-200 ease-in-out transform scale-95 origin-top-right"
+        >
+          <a href="admin/configuracion/perfil-administrador" class="block px-4 py-2 hover:bg-gray-100 transition-all">Mi Perfil</a>
+          <a (click)="logout()" class="block px-4 py-2 text-red-500 hover:bg-gray-100 transition-all">Cerrar Sesión</a>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div>
+</header>

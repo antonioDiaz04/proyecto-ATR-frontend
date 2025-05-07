@@ -11,7 +11,7 @@ import { EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-recuperacion-password',
   templateUrl: './recuperar-password.view.html',
-  styleUrls: ['./recuperar-password.view.scss'],
+  // styleUrls: ['./recuperar-password.view.scss'],
 })
 export class RecuperarPasswordView {
     // Variables
