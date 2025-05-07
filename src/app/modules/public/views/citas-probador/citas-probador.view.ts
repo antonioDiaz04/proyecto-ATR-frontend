@@ -125,8 +125,8 @@ export class CitasProbadorView implements OnInit {
           this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
             .then((sub) => {
               const token = JSON.parse(JSON.stringify(sub));
-              this.enviarNotificacion(token);
-              console.log('Suscripción push exitosa:', token);
+              this.enviarNotificacion(sub);
+              console.log('Suscripción push exitosa:', sub);
             })
             .catch((err) => {
               console.error('Error al suscribirse a notificaciones:', err);
