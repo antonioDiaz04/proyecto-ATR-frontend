@@ -14,7 +14,7 @@ export class ListadoRentaComponent implements OnInit {
   // rentaForm!: FormGroup;
   rentas: any[] = []; // Almacena las rentas obtenidas del backend
   productos: any[] = []; // Almacena las rentas obtenidas del backend
-  rentaId: string | null = null; // Almacena el ID de la renta que se está editando
+  rentaId!: string; // Almacena el ID de la renta que se está editando
   constructor(private confirmationService: ConfirmationService, private productoS: ProductoService, private fb: FormBuilder, private ventaYrentaS_: VentayrentaService) { }
 
   ngOnInit(): void {
@@ -35,53 +35,49 @@ export class ListadoRentaComponent implements OnInit {
 
   sidebarVisible = false;
 
-  abrirFormulario(vistaActual: any) {
+  abrirFormulario() {
     // this.vistaActual == vistaActual;
+    // this.rentaId = id;
     this.sidebarVisible = true;
+
+  }
+  editarRenta(id: string) {
+    // this.vistaActual == vistaActual;
+    this.rentaId = id;
+    this.sidebarVisible = true;
+
   }
 
   cerrarSidebar() {
     this.sidebarVisible = false;
   }
+  
 
 
 
-  eliminarRenta(): void {
-    if (this.rentaId) {
-      this.ventaYrentaS_.cancelarRenta({ rentaId: this.rentaId }).subscribe(
-        (res) => {
-          console.log('Renta eliminada:', res);
-          alert('Renta eliminada exitosamente');
-          this.rentaId = '';
-          this.obtenerRentas(); // Actualizar la lista de rentas
-        },
-        (error) => {
-          console.error('Error al eliminar renta:', error);
-        }
-      );
-    } else {
-      alert('Por favor, ingrese un ID de renta válido');
-    }
-  }
+  
 
   obtenerRentas(): void {
     this.ventaYrentaS_.obtenerRentas().subscribe(
       (res) => {
         this.rentas = res.rentas.map((renta: any) => {
-          const fechaInicio = new Date(renta.detallesRenta.fechaInicio);
-          const fechaFin = new Date(renta.detallesRenta.fechaFin);
+          const fechaRecoge = new Date(renta.detallesRenta.fechaRecoge);
+          const fechaRegreso = new Date(renta.detallesRenta.fechaRegreso);
 
           return {
             ...renta,
             usuarioNombre: renta.usuario?.nombre || 'Usuario no disponible',
             usuarioE: renta.usuario?.email || 'Usuario no disponible',
+            usuarioT: renta.usuario?.telefono	 || 'Usuario no disponible',
             productoNombre: renta.producto?.nombre || 'Producto no disponible',
-            categoriaNombre: renta.producto?.idCategoria?.nombre || 'Sin categoría', // Nueva propiedad
+            precioActual: renta.producto?.precioActual, // Nueva propiedad
+            precioAnterior: renta.producto?.precio, // Nueva propiedad
+            isOferta: renta.producto?.isOferta || "si", // Nueva propiedad
             estado: renta.estado, // Nueva propiedad
             detallesRenta: {
               ...renta.detanllesRenta,
-              fechaInicio: fechaInicio.toISOString().split('T')[0],
-              fechaFin: fechaFin.toISOString().split('T')[0]
+              fechaRecoge: fechaRecoge.toISOString().split('T')[0],
+              fechaRegreso: fechaRegreso.toISOString().split('T')[0]
             },
             precioFormateado: this.formatearPrecio(renta.detallesPago.precioRenta)
           };
@@ -94,17 +90,17 @@ export class ListadoRentaComponent implements OnInit {
   }
   // Métodos para calcular días adicionales, multas y totales
   calcularDuracion(renta: any): number {
-    const inicio = new Date(renta.detallesRenta.fechaInicio);
-    const fin = new Date(renta.detallesRenta.fechaFin);
+    const inicio = new Date(renta.detallesRenta.fechaRecoge);
+    const fin = new Date(renta.detallesRenta.fechaRegreso);
     return Math.ceil((fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24));
   }
 
   calcularDiasAdicionales(renta: any): number {
     if (renta.estado === 'Completado') return 0;
 
-    const fechaFin = new Date(renta.detallesRenta.fechaFin);
+    const fechaRegreso = new Date(renta.detallesRenta.fechaRegreso);
     const hoy = new Date();
-    const diffTime = hoy.getTime() - fechaFin.getTime();
+    const diffTime = hoy.getTime() - fechaRegreso.getTime();
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   }
 
@@ -144,6 +140,61 @@ export class ListadoRentaComponent implements OnInit {
       );
     }
   }
+  // Add these properties to your component
+selectedRentas: string[] = []; // Array to store selected rental IDs
+allRentasSelected = false;
+
+// Method to toggle selection of a single rental
+toggleRentaSelection(rentaId: string): void {
+  const index = this.selectedRentas.indexOf(rentaId);
+  if (index === -1) {
+    this.selectedRentas.push(rentaId);
+  } else {
+    this.selectedRentas.splice(index, 1);
+  }
+  this.allRentasSelected = this.selectedRentas.length === this.rentas.length;
+}
+
+// Method to check if a rental is selected
+isRentaSelected(rentaId: string): boolean {
+  return this.selectedRentas.includes(rentaId);
+}
+
+// Method to toggle all rentals selection
+toggleAllRentas(event: Event): void {
+  const isChecked = (event.target as HTMLInputElement).checked;
+  this.allRentasSelected = isChecked;
+  
+  if (isChecked) {
+    this.selectedRentas = this.rentas.map(renta => renta._id);
+  } else {
+    this.selectedRentas = [];
+  }
+}
+cancelar(){
+  this.selectedRentas = []; // Clear selected rentals
+  this.allRentasSelected = false; // Reset the select all checkbox
+  this.obtenerRentas(); // Refresh the list of rentals
+}
+// Updated method to delete multiple rentals
+eliminarRentasSeleccionadas(): void {
+  if (this.selectedRentas.length === 0) return;
+  
+  if (confirm(`¿Estás seguro de que deseas eliminar las ${this.selectedRentas.length} rentas seleccionadas?`)) {
+    this.ventaYrentaS_.eliminarRentasSeleccionadas(this.selectedRentas).subscribe(
+      (res) => {
+        console.log('Rentas eliminadas:', res);
+        alert(`${this.selectedRentas.length} rentas eliminadas exitosamente`);
+        this.selectedRentas = [];
+        this.allRentasSelected = false;
+        this.obtenerRentas(); // Refresh the list
+      },
+      (error) => {
+        console.error('Error al eliminar rentas:', error);
+      }
+    );
+  }
+}
 
 
   formatearFecha(fecha: string): string {
@@ -234,7 +285,7 @@ calcularEstadisticas(): void {
   rentasFiltradas: any[] = [];
   filtroTexto: string = '';
   filtroEstado: string = '';
-  campoOrden: string = 'detallesRenta.fechaInicio';
+  campoOrden: string = 'detallesRenta.fechaRecoge';
   ordenAscendente: boolean = false;
   paginaActual: number = 1;
   itemsPorPagina: number = 10;
@@ -283,6 +334,18 @@ calcularEstadisticas(): void {
     return ruta.split('.').reduce((o, i) => o?.[i], objeto);
   }
 
+  eliminarRenta(id:any): void {
+    this.ventaYrentaS_.eliminarRenta(id).subscribe(
+      (res) => {
+        console.log('Renta eliminada:', res);
+        alert('Renta eliminada exitosamente');
+        this.obtenerRentas(); // Actualizar la lista de rentas
+      },
+      (error) => {
+        console.error('Error al eliminar renta:', error);
+      }
+    );
+  }
 
 
   // Funcionalidades adicionales

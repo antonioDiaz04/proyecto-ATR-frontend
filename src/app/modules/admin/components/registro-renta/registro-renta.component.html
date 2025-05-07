@@ -1,5 +1,8 @@
 <form [formGroup]="rentaForm" (ngSubmit)="guardarRenta()" class="space-y-6 max-w-4xl mx-auto">
-
+    <h3 class="text-xl font-bold mb-4">
+        {{vistaActual}}
+        <span class="text-sm text-gray-500">({{vistaActual}})</span>
+    </h3>
     <!-- Sección de información principal -->
     <div class="bg-white p-6 rounded-lg">
         <h3 class="text-xl font-semibold text-gray-800 mb-5 border-b pb-3 flex items-center">
@@ -14,29 +17,81 @@
         </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+            <!-- Campo de búsqueda de usuario -->
+            <div class="relative">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cliente*</label>
+                <div class="relative">
+                    <input type="text" [(ngModel)]="usuarioBusqueda" [ngModelOptions]="{standalone: true}"
+                        (input)="filtrarUsuarios()" (focus)="onFocus()" (blur)="onBlur()"
+                        placeholder="Buscar cliente existente o escribir nuevo"
+                        class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a] focus:border-[#9c8e7a]">
+
+
+                    <!-- Sugerencias de usuarios -->
+                    <div *ngIf="mostrarSugerencias && usuariosFiltrados.length > 0"
+                        class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-auto">
+                        <ul>
+                            <li *ngFor="let usuario of usuariosFiltrados" (mousedown)="seleccionarUsuario(usuario)"
+                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                <div class="font-medium">{{usuario.nombre}}</div>
+                                <div class="text-sm text-gray-600">{{usuario.email}} | {{usuario.telefono}}</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Opción para nuevo usuario -->
+                    <div *ngIf="mostrarSugerencias && usuarioBusqueda.length >= 2 && usuariosFiltrados.length === 0"
+                        class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200">
+                        <div (mousedown)="registrarNuevoUsuario()" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            <span class="text-[#9c8e7a]">Registrar nuevo cliente:</span> "{{usuarioBusqueda}}"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mostrar datos del usuario seleccionado -->
+            <div *ngIf="usuarioSeleccionado" class="bg-gray-50 p-4 rounded-md flex items-start justify-between">
+                <div>
+                    <h3 class="font-medium text-gray-900"> Nombre: {{usuarioSeleccionado.nombre}}</h3>
+                    <p class="text-sm text-gray-600">Correo:{{usuarioSeleccionado.email}}</p>
+                    <p class="text-sm text-gray-600">Telefono:{{usuarioSeleccionado.telefono}}</p>
+                </div>
+                <button (click)="deseleccionarUsuario()" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Campos normales (se muestran cuando no hay usuario seleccionado) -->
+            <div *ngIf="!usuarioSeleccionado">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo*</label>
-                <input type="text" formControlName="nombreCompleto" placeholder="Ej: María González"
+                <input type="text" formControlName="nombre" placeholder="Ej: María González"
                     class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a] focus:border-[#9c8e7a]">
             </div>
 
-            <div>
+            <div *ngIf="!usuarioSeleccionado">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
                 <input type="email" formControlName="email" placeholder="Ej: cliente@ejemplo.com"
-                    class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
+                    class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a] focus:border-[#9c8e7a]">
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono*</label>
-                <input type="tel" formControlName="telefono" placeholder="Ej: +52 55 1234 5678"
-                    class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
+
+            <div *ngIf="!usuarioSeleccionado">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Telefono*</label>
+                <input type="telefono" formControlName="telefono" placeholder="Ej: 7712345678"
+                    class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a] focus:border-[#9c8e7a]">
+            </div>
+            <div *ngIf="!usuarioSeleccionado">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Direccion*</label>
+                <input type="text" formControlName="direccion" placeholder="Ej: Calle Ejemplo 123, Ciudad"
+                    class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a] focus:border-[#9c8e7a]">
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                <input type="text" formControlName="direccion" placeholder="Calle, número, colonia"
-                    class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
-            </div>
+
+            <!-- ... otros campos ... -->
         </div>
     </div>
 
@@ -59,21 +114,26 @@
                 <select formControlName="productoId"
                     class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
                     <option value="" disabled selected>Seleccione un producto</option>
-                    <option *ngFor="let producto of productos" [value]="producto.id">
+                    <option *ngFor="let producto of productos" [value]="producto._id">
                         {{producto.nombre}} ({{producto.precioDia | currency}}/día)
                     </option>
                 </select>
             </div>
-
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Fecha ocupaciòn*</label>
+                <input type="date" formControlName="fechaOcupacion"
+                    class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
+            </div>
             <div class="grid grid-cols-2 gap-4">
+
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio*</label>
-                    <input type="date" formControlName="fechaInicio"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha recoge*</label>
+                    <input type="date" formControlName="fechaRecoge"
                         class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin*</label>
-                    <input type="date" formControlName="fechaFin"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha regreso*</label>
+                    <input type="date" formControlName="fechaRegreso"
                         class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
                 </div>
             </div>
@@ -90,7 +150,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Estado*</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Estado de renta*</label>
                 <select formControlName="estado"
                     class="w-full p-3 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#9c8e7a]">
                     <option value="" disabled selected>Seleccione estado</option>
@@ -143,31 +203,14 @@
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Impuestos (%)</label>
-                <div class="relative">
-                    <input type="number" formControlName="tasaImpuestos" value="10"
-                        class="w-full pr-8 p-2 text-sm border border-gray-300 rounded text-right">
-                    <span class="absolute right-3 top-2.5 text-gray-500">%</span>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Total a Pagar</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-2.5 text-gray-500">$</span>
-                    <input type="number" formControlName="precioRenta"
-                        class="w-full pl-8 p-2 text-sm border border-gray-300 rounded font-medium">
-                </div>
-            </div>
             <div class="mt-6 pt-4 border-t">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Comisión (%)</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Total a Pagar</label>
                         <div class="relative">
-                            <input type="number" formControlName="tasaComision" value="20"
-                                class="w-full pr-8 p-2 text-sm border border-gray-300 rounded text-right">
-                            <span class="absolute right-3 top-2.5 text-gray-500">%</span>
+                            <span class="absolute left-3 top-2.5 text-gray-500">$</span>
+                            <input type="number" formControlName="precioRenta"
+                                class="w-full pl-8 p-2 text-sm border border-gray-300 roundedfont-medium">
                         </div>
                     </div>
                     <div>
@@ -325,14 +368,13 @@
             Cancelar
         </button>
         <button type="submit"
-            class="px-6 py-2 bg-[#2a2723] text-white rounded-md hover:bg-[#3a3630] transition-colors flex items-center"
-            [disabled]="!rentaForm.valid">
+            class="px-6 py-2 bg-[#2a2723] text-white rounded-md hover:bg-[#3a3630] transition-colors flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                     clip-rule="evenodd" />
             </svg>
-            {{ vistaActual === 'editar' ? 'Actualizar Renta' : 'Guardar Renta' }}
+            {{ vistaActual}}
         </button>
     </div>
 </form>

@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { HeaderComponent } from './header.component';
 import { LoginModalComponent } from '../login-modal/login-modal.component'; // Adjust the path as needed
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { ProductoService } from '../../services/producto.service';
 
 @NgModule({
   declarations: [

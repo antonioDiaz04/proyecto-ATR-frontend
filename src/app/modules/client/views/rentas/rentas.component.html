@@ -1,83 +1,116 @@
-<div class="contenedor-rentas p-6">
+<div class=" max-w-full">
   <!-- Bolsa de Rentas -->
-  <div class="bolsa-rentas bg-white shadow-sm rounded-lg p-6">
-    <h2 class="text-2xl font-medium mb-6 text-gray-900">Mis Rentas</h2>
+  <div class="bolsa-rentas  rounded-lg p-8 shadow-xs">
+    <h2 class="text-2xl font-light text-gray-800 mb-6 tracking-tight">Mis Rentas</h2>
     
-    <!-- Barra de Búsqueda -->
-    <div class="contenedor-busqueda mb-6">
-      <div class="flex">
+    <!-- Barra de Búsqueda mejorada -->
+    <div class="contenedor-busqueda mb-8">
+      <div class="relative flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
         <input
           type="text"
           placeholder="Buscar producto..."
           [(ngModel)]="searchTerm"
-          class="border border-gray-200 p-3 w-full focus:outline-none focus:ring-1 focus:ring-gray-300"
+          class="border-0 border-b border-gray-100 pl-10 pr-4 py-2 w-full focus:outline-none focus:ring-0 focus:border-gray-300 text-sm text-gray-700 placeholder-gray-400 transition-colors"
         />
-        <button class="bg-black text-white px-4 hover:bg-gray-800 transition-colors">Buscar</button>
+        <button class="ml-4 bg-gray-800 text-white px-4 py-2 text-xs font-light tracking-wide hover:bg-gray-700 transition-colors">
+          Buscar
+        </button>
       </div>
     </div>
 
-    <!-- Items de Renta -->
-    <div class="item-renta mb-6 pb-6 border-b border-gray-100" *ngFor="let renta of bolsaDeRentas">
-      <div class="detalles-renta mb-4">
-        <div class="grid grid-cols-4 gap-4 mb-4">
-          <div class="col-span-1">
-            <p class="text-gray-500 text-sm">
-              Fecha Renta: {{ renta.detallesRenta.fechaInicio | date: "shortDate" }} - {{ renta.detallesRenta.fechaFin | date: "shortDate" }}
-            </p>
+    <!-- Items de Renta refinados -->
+    <div class="item-renta mb-8 pb-8 border-b border-gray-50 last:border-0" *ngFor="let renta of bolsaDeRentas">
+      <div class="bg-white p-6 mb-6">
+        <!-- Encabezado de renta con diseño más limpio -->
+        <div class="grid grid-cols-4 gap-4 mb-4 text-xs text-gray-500 font-light tracking-wide">
+          <div>
+            <span class="block text-gray-400 text-[0.7rem] uppercase mb-1">Fecha Renta</span>
+            {{ renta.detallesRenta.fechaInicio | date: "shortDate" }} - {{ renta.detallesRenta.fechaFin | date: "shortDate" }}
           </div>
-          <div class="col-span-1">
-            <p class="text-gray-500 text-sm">
-              Devuelto: 15/10/2023
-            </p>
+          <div>
+            <span class="block text-gray-400 text-[0.7rem] uppercase mb-1">Devuelto</span>
+            15/10/2023
           </div>
-          <div class="col-span-1">
-            <p class="text-red-500 text-sm">
-              Multa: +$10
-            </p>
+          <div>
+            <span class="block text-gray-400 text-[0.7rem] uppercase mb-1">Multa</span>
+            <span class="text-red-500">+$10</span>
           </div>
-          <div class="col-span-1">
-            <p class="text-gray-500 text-sm">Estado: {{ renta.estado }}</p>
+          <div>
+            <span class="block text-gray-400 text-[0.7rem] uppercase mb-1">Estado</span>
+            <span class="font-medium">{{ renta.estado }}</span>
           </div>
         </div>
         
-        <div>
-          <h3 class="text-xl font-medium mt-2 text-gray-900">{{ renta.producto.nombre }}</h3>
-          <p class="text-gray-600">Precio: ${{ renta.producto.precio }}</p>
-          <p class="text-gray-600">Duración: {{ renta.detallesRenta.duracionDias }} días</p>
-          <p class="font-medium text-gray-900">Total: ${{ renta.producto.precio * renta.detallesRenta.duracionDias }}</p>
-          
-          <img
-            *ngIf="renta.producto.imagenPrincipal"
-            [src]="renta.producto.imagenPrincipal"
-            [alt]="renta.producto.nombre"
-            class="mt-4 rounded-md w-48 h-32 object-cover"
-          />
-          
-          <div class="flex gap-3 mt-4">
-            <button
-              (click)="verDetalles(renta.producto._id)"
-              class="bg-black text-white px-4 py-2 hover:bg-gray-800 transition-colors text-sm"
-            >
-              Detalles del Producto
-            </button>
-            <button 
-              class="text-black border border-black bg-white px-4 py-2 hover:bg-gray-50 transition-colors text-sm"
-            >
-              Detalles de la Renta
-            </button>
+        <!-- Cuerpo del producto -->
+        <div class="flex gap-6">
+          <div class="flex-shrink-0">
+            <img
+              *ngIf="renta.producto.imagenPrincipal"
+              [src]="renta.producto.imagenPrincipal"
+              [alt]="renta.producto.nombre"
+              class="rounded-md w-40 h-28 object-cover shadow-xs"
+            />
           </div>
-        </div>
-      </div>
-      
-      <div class="contenedor-estado">
-        <p class="estado {{ renta.estado }} text-xs font-medium">Estado {{ renta.estado }}</p>
+          <div class="flex-grow">
+            <h3 class="text-lg font-normal text-gray-700 mb-1">{{ renta.producto.nombre }}</h3>
+            <div class="grid grid-cols-3 gap-4 text-sm text-gray-500 mb-3">
+              <div>
+                <span class="block text-gray-400 text-xs mb-0.5">Precio</span>
+                ${{ renta.producto.precio }}
+              </div>
+              <div>
+                <span class="block text-gray-400 text-xs mb-0.5">Duración</span>
+                {{ renta.detallesRenta.duracionDias }} días
+              </div>
+              <div>
+                <span class="block text-gray-400 text-xs mb-0.5">Total</span>
+                <span class="font-medium text-gray-700">${{ renta.producto.precio * renta.detallesRenta.duracionDias }}</span>
+              </div>
+            </div>
+            
+            <!-- Botones con estilo más fino -->
+            <div class="flex gap-3 mt-4">
+              <button
+                (click)="verDetalles(renta.producto._id)"
+                class="bg-gray-800 text-white px-4 py-1.5 text-xs font-light tracking-wide hover:bg-gray-700 transition-colors"
+              >
+                Detalles del Producto
+              </button>
+              <button 
+                class="text-gray-700 border border-gray-200 bg-white px-4 py-1.5 text-xs font-light tracking-wide hover:bg-gray-50 transition-colors"
+              >
+                Detalles de la Renta
+              </button>
+            </div>
+          </div>
+        </div><!-- Estado refinado -->
+      <div class="contenedor-estado flex items-center gap-3 text-xs">
+        <span class="px-2 py-1 rounded-full {{ renta.estado === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }} font-medium">
+          {{ renta.estado | uppercase }}
+        </span>
         <ng-container *ngIf="renta.isRecogido; else elseTemplate">
-          <p class="text-green-600 text-sm">Recogido en tienda</p>
+          <span class="text-green-600 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Recogido en tienda
+          </span>
         </ng-container>
         <ng-template #elseTemplate>
-          <p class="text-red-600 text-sm">Pendiente de recoger</p>
+          <span class="text-red-500 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Pendiente de recoger
+          </span>
         </ng-template>
       </div>
+      </div>
+      
+      
     </div>
   </div>
 </div>

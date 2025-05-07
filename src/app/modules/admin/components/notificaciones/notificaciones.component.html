@@ -1,1 +1,216 @@
-<p>notificaciones works!</p>
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="text-4xl font-light text-gray-900 mb-4">Comentarios y Reseñas</h1>
+            <p class="text-lg text-gray-600">Gestión de interacciones con clientes</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200 mb-8">
+            <button *ngFor="let tab of ['reviews', 'questions', 'notifications']" [class.border-b-2]="activeTab === tab"
+                [class.border-rose-500]="activeTab === tab" [class.text-rose-600]="activeTab === tab"
+                [class.text-gray-500]="activeTab !== tab" class="px-6 py-3 text-lg font-medium focus:outline-none"
+                (click)="activeTab = tab">
+                {{
+                tab === 'reviews' ? 'Reseñas' :
+                tab === 'questions' ? 'Preguntas' : 'Notificaciones'
+                }}
+            </button>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div *ngIf="activeTab === 'reviews'" class="space-y-12">
+            <!-- Approved Reviews -->
+            <section data-aos="fade-up">
+                <h2 class="text-2xl font-light text-gray-800 mb-6">Reseñas Aprobadas</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div *ngFor="let review of reviews"
+                        class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center mb-4">
+                            <img [src]="review.usuario.avatar" [alt]="review.usuario.nombre"
+                                class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <h3 class="font-medium text-gray-900">{{ review.usuario.nombre }}</h3>
+                                <div class="flex mt-1">
+                                    <span *ngFor="let star of getStars(review.calificacion); let i = index"
+                                        class="text-amber-400">★</span>
+                                </div>
+                                <span [ngClass]="{
+                                    'text-gray-500': review.estado == 'pendiente',
+                                    'text-green-600': review.estado == 'aprobada',
+                                    'text-red-600': review.estado == 'rechazada'
+                                  }" class="font-medium">
+                                    {{ review.estado }}
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mb-2">{{ review.contenido }}</p>
+                        <p class="text-sm text-gray-500">{{ review.fecha | date:'mediumDate' }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pending Reviews -->
+            <section data-aos="fade-up">
+                <h2 class="text-2xl font-light text-gray-800 mb-6">Reseñas Pendientes</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="py-3 px-4 text-left text-gray-700">
+                                    <input type="checkbox" [checked]="allSelected" (change)="toggleSelectAll()"
+                                        class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded">
+                                </th>
+                                <th class="py-3 px-4 text-left text-gray-700">Cliente</th>
+                                <th class="py-3 px-4 text-left text-gray-700">Calificación</th>
+                                <th class="py-3 px-4 text-left text-gray-700">Comentario</th>
+                                <th class="py-3 px-4 text-left text-gray-700">Etado</th>
+                                <th class="py-3 px-4 text-left text-gray-700">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let review of reviews" class="border-t border-gray-200 hover:bg-gray-50">
+                                <td class="py-4 px-4">
+                                    <input type="checkbox" [checked]="isSelected(review._id)"
+                                        (change)="toggleSelection(review._id)"
+                                        class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded">
+                                </td>
+                                <td class="py-4 px-4">
+                                    <div class="flex items-center">
+                                        <img [src]="review.usuario.avatar" [alt]="review.usuario.nombre"
+                                            class="w-10 h-10 rounded-full mr-3">
+                                        <span>{{ review.usuario.nombre }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <div class="flex text-amber-400">
+                                        <span *ngFor="let star of getStars(review.calificacion); let i = index">★</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 text-gray-700">{{ review.contenido }}</td>
+                                <td class="py-4 px-4">
+                                    <span [ngClass]="{
+                        'text-gray-500': review.estado == 'pendiente',
+                        'text-green-600': review.estado == 'aprobada',
+                        'text-red-600': review.estado == 'rechazada'
+                      }" class="font-medium">
+                                        {{ review.estado }}
+                                    </span>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <button (click)="approveReview(review)"
+                                        class="text-green-600 hover:text-green-800 mr-3">
+                                        Aprobar
+                                    </button>
+                                    <button (click)="rejectReview(review)" class="text-rose-600 hover:text-rose-800">
+                                        Rechazar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="py-4 px-4 text-right">
+                                    <!-- <button (click)="approveSelectedReviews()"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                                        Aprobar Seleccionadas
+                                    </button>
+                                    <button (click)="rejectSelectedReviews()"
+                                        class="ml-3 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                                        Rechazar Seleccionadas
+                                    </button> -->
+                                    <!-- Botón para eliminar seleccionados -->
+                                    <button (click)="eliminarReseniasSeleccionadas()"
+                                        class="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors"
+                                        [disabled]="selectedIds.length === 0">
+                                        Eliminar seleccionados ({{selectedIds.length}})
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </section>
+        </div>
+
+        <!-- Questions Tab -->
+        <div *ngIf="activeTab == 'questions'" class="space-y-12" data-aos="fade-up">
+            <!-- Existing Questions -->
+            <section>
+                <h2 class="text-2xl font-light text-gray-800 mb-6">Preguntas de Clientes</h2>
+                <div class="space-y-6">
+                    <div *ngFor="let question of questions" class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <img [src]="question.usuario.avatar" [alt]="question.usuario.nombre"
+                                class="w-10 h-10 rounded-full mr-4">
+                            <div>
+                                <h3 class="font-medium text-gray-900">{{ question.usuario.nombre }}</h3>
+                                <p class="text-sm text-gray-500">{{ question.fecha | date:'mediumDate' }}</p>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <p class="text-gray-700 font-medium mb-2">Pregunta:</p>
+                            <p class="text-gray-600">{{ question.pregunta }}</p>
+                        </div>
+                        <div *ngIf="question.respuesta" class="bg-gray-50 p-4 rounded">
+                            <p class="text-gray-700 font-medium mb-2">Respuesta:</p>
+                            <p class="text-gray-600">{{ question.respuesta }}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submit Question Form -->
+            <section class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-light text-gray-800 mb-4">Enviar Nueva Pregunta</h2>
+                <form [formGroup]="questionForm" (ngSubmit)="submitQuestion()">
+                    <div class="mb-4">
+                        <label for="nombre" class="block text-gray-700 mb-2">Nombre</label>
+                        <input type="text" id="nombre" formControlName="nombre"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500">
+                    </div>
+                    <div class="mb-4">
+                        <label for="pregunta" class="block text-gray-700 mb-2">Tu Pregunta</label>
+                        <textarea id="pregunta" formControlName="pregunta" rows="4"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="px-6 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors">
+                        Enviar Pregunta
+                    </button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div *ngIf="activeTab === 'notifications'" class="space-y-12" data-aos="fade-up">
+            <section class="bg-white p-6 rounded-lg shadow-sm max-w-2xl mx-auto">
+                <h2 class="text-2xl font-light text-gray-800 mb-6">Enviar Notificación</h2>
+                <form [formGroup]="notificationForm" (ngSubmit)="sendNotification()">
+                    <div class="mb-4">
+                        <label for="titulo" class="block text-gray-700 mb-2">Título</label>
+                        <input type="text" id="titulo" formControlName="titulo"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500">
+                    </div>
+                    <div class="mb-4">
+                        <label for="mensaje" class="block text-gray-700 mb-2">Mensaje</label>
+                        <textarea id="mensaje" formControlName="mensaje" rows="4"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"></textarea>
+                    </div>
+                    <div class="mb-6 flex items-center">
+                        <input type="checkbox" id="enviarATodos" formControlName="enviarATodos"
+                            class="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded">
+                        <label for="enviarATodos" class="ml-2 block text-gray-700">Enviar a todos los
+                            suscriptores</label>
+                    </div>
+                    <button type="submit"
+                        class="px-6 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 transition-colors">
+                        Enviar Notificación
+                    </button>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>

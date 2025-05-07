@@ -1,44 +1,36 @@
-<div class="pt-2 pb-2 px-6 items-center text-center justify-center " >
-  <span class="block italic font-light text-[#9c8e7a] text-xl">Haute Couture</span>
-  <div class="relative flex items-center justify-center">
-    <div class="flex-grow border-t border-[#9c8e7a]"></div>
-    <h2 class="font-serif text-4xl md:text-5xl text-center text-[#2a2723] tracking-tight leading-[1.1] mx-4 shrink-0">
-      Nuestra colección de lujo
-    </h2>
-    <div class="flex-grow border-t border-[#9c8e7a]"></div>
-  </div>
-  
-</div>
+
 <!-- Versión Desktop - Carrusel de Lujo -->
-<div class="w-full  mb-2" *ngIf="!isLoading && !isMobile">
-  <p-carousel 
-    [value]="productos" 
-    [numVisible]="4" 
-    [numScroll]="1" 
-    [circular]="true"
-    [responsiveOptions]="responsiveOptions"
-    styleClass="luxury-carousel"
-  >
+<div class="w-full px-6 mb-2" *ngIf="!isLoading && !isMobile">
+  <div class="pt-2 pb-2 px-10 items-center text-center justify-center ">
+    <span class="block italic font-light text-[#9c8e7a] text-xl">Haute Couture</span>
+    <div class="relative flex items-center justify-center">
+      <div class="flex-grow border-t border-[#9c8e7a]"></div>
+      <h2 class="font-serif text-4xl md:text-5xl text-center text-[#2a2723] tracking-tight leading-[1.1] mx-4 shrink-0">
+        Nuestra colección de lujo
+      </h2>
+      <div class="flex-grow border-t border-[#9c8e7a]"></div>
+    </div>
+  </div>
+  <p-carousel [value]="productos" [numVisible]="4" [numScroll]="1" [circular]="true"
+    [responsiveOptions]="responsiveOptions" styleClass="luxury-carousel">
     <ng-template let-producto pTemplate="item">
-      <div class="bg-white flex flex-col h-[480px] border border-[#e8e3db] hover:shadow-lg transition-all duration-500" style="width: 350px;">    
+      <div class="bg-white flex flex-col h-[480px] border border-[#e8e3db] hover:shadow-lg transition-all duration-500"
+        style="width: 350px;">
         <!-- Imagen con efectos de lujo -->
         <div class="relative w-full overflow-hidden group" (click)="verDetalles(producto._id)" style="height: 350px;">
-          <img 
-            [src]="producto.imagenes[0]" 
-            [alt]="producto.nombre" 
+          <img [src]="producto.imagenes[0]" [alt]="producto.nombre"
             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            (mouseenter)="cambiarImagen(producto, $event)"
-            (mouseleave)="restaurarImagen(producto, $event)"
-          />
-          
+            (mouseenter)="cambiarImagen(producto, $event)" (mouseleave)="restaurarImagen(producto, $event)" />
+
           <!-- Badge Nuevo - Estilo lujo -->
-          <div *ngIf="producto.isNuevo" class="absolute top-3 left-3 bg-[#2a2723] text-[#d4c4a8] text-xs px-3 py-1 tracking-wider">
+          <div *ngIf="producto.isNuevo"
+            class="absolute top-3 left-3 bg-[#2a2723] text-[#d4c4a8] text-xs px-3 py-1 tracking-wider">
             NUEVO INGRESO
           </div>
-          
+
           <!-- Descuento - Estilo refinado -->
-          <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual" 
-               class="absolute top-3 right-3 bg-[#d4c4a8] text-[#2a2723] text-xs px-3 py-1 tracking-wider">
+          <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
+            class="absolute top-3 right-3 bg-[#d4c4a8] text-[#2a2723] text-xs px-3 py-1 tracking-wider">
             -{{ calcularDescuento(producto.precioAnterior, producto.precioActual) }}%
           </div>
         </div>
@@ -49,12 +41,12 @@
             <h3 class="font-serif text-lg text-[#2a2723] mb-2 tracking-tight">
               {{ producto.nombre }}
             </h3>
-            
+
             <p class="text-xs text-[#9c8e7a] mb-3 font-light">
               Talla: {{ producto.talla }} | Color: {{ producto.color }}
             </p>
           </div>
-          
+
           <div>
             <!-- Precios - Diseño elegante -->
             <div class="flex items-baseline gap-2">
@@ -65,10 +57,10 @@
                 MX$ {{ producto.precioAnterior | currency }}
               </span>
             </div>
-            
+
             <!-- Ahorro - Texto discreto -->
-            <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual" 
-                 class="mt-1 text-[#6e6a63] text-xs">
+            <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
+              class="mt-1 text-[#6e6a63] text-xs">
               Ahorras MX$ {{ producto.precioAnterior - producto.precioActual | currency }}
             </div>
           </div>
@@ -82,22 +74,18 @@
 <div *ngIf="!isLoading && isMobile" class="grid grid-cols-2 gap-4 px-4">
   <div *ngFor="let producto of productos" class="bg-white border border-[#e8e3db]">
     <div class="relative" (click)="verDetalles(producto._id)">
-      <img 
-        [src]="producto.imagenes[0]" 
-        [alt]="producto.nombre" 
-        class="w-full h-48 object-cover"
-      />
-      
+      <img [src]="producto.imagenes[0]" [alt]="producto.nombre" class="w-full h-48 object-cover" />
+
       <div *ngIf="producto.isNuevo" class="absolute top-2 left-2 bg-[#2a2723] text-[#d4c4a8] text-xs px-2 py-1">
         NUEVO
       </div>
     </div>
-    
+
     <div class="p-3">
       <h3 class="font-serif text-sm text-[#2a2723] truncate">
         {{ producto.nombre }}
       </h3>
-      
+
       <div class="mt-1">
         <span class="text-sm text-[#2a2723] font-medium">
           MX$ {{ producto.precioActual | currency }}
@@ -111,7 +99,7 @@
 </div>
 
 <!-- Skeleton Loading - Estilo minimalista -->
-<div *ngIf="isLoading" class="flex justify-center gap-6">
+<div *ngIf="isLoading" class="flex justify-center mb-6 gap-6">
   <div *ngFor="let item of skeletonItems" class="bg-white w-80 h-[480px] border border-[#e8e3db]">
     <p-skeleton width="100%" height="320px" borderRadius="0"></p-skeleton>
     <div class="p-4">
@@ -124,17 +112,17 @@
 
 <!-- Estilos personalizados para el carrusel -->
 <style>
-.luxury-carousel .p-carousel-indicators .p-carousel-indicator button {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #e8e3db;
-  transition: all 0.3s;
-}
+  .luxury-carousel .p-carousel-indicators .p-carousel-indicator button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #e8e3db;
+    transition: all 0.3s;
+  }
 
-.luxury-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
-  background-color: #2a2723;
-  width: 20px;
-  border-radius: 4px;
-}
+  .luxury-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+    background-color: #2a2723;
+    width: 20px;
+    border-radius: 4px;
+  }
 </style>

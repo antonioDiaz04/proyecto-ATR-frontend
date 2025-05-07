@@ -9,7 +9,7 @@ import { NotificacionesComponent } from './views/notificaciones/notificaciones.c
 const routes: Routes = [
     {
       path: "",
-      redirectTo: "cuenta",
+      redirectTo: "perfil",
       pathMatch: "full",
     },
     {

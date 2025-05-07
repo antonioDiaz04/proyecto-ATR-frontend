@@ -1,44 +1,100 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { ProductoService } from '../../../../shared/services/producto.service';
 import { VentayrentaService } from '../../../../shared/services/ventayrenta.service';
+import { UsuarioService } from '../../../../shared/services/usuario.service';
 
 @Component({
   selector: 'app-registro-renta',
   templateUrl: './registro-renta.component.html',
   styleUrl: './registro-renta.component.scss'
 })
-export class RegistroRentaComponent implements OnInit {
-  rentaId: string | null = null; // Almacena el ID de la renta que se está editando
+export class RegistroRentaComponent implements OnInit, OnChanges {
+  @Input() rentaId: string | null = null;
+  // rentaId: string | null = null; // Almacena el ID de la renta que se está editando
   vistaActual: string = 'agregar'; // Controla la vista actual ('agregar', 'eliminar', 'listar')
   productos: any[] = []; // Almacena los productos obtenidos del backend
   rentaForm!: FormGroup;
-
+  // isNuevo :boolean=false; // Tipo de cliente (Cliente o Empresa)
   productoSeleccionado: any | null = null;
   pagos: any[] = [];
   nuevoPago = { monto: 0, metodo: 'Efectivo' };
 
-  constructor(   private confirmationService: ConfirmationService,private productoS:ProductoService,private fb: FormBuilder, private ventaYrentaS_: VentayrentaService) {
+  constructor(private us: UsuarioService,
+    private confirmationService: ConfirmationService, private productoS: ProductoService, private fb: FormBuilder, private ventaYrentaS_: VentayrentaService) {
     this.rentaForm = this.fb.group({
-      nombreCompleto: ['', Validators.required],
+      nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       telefono: ['', Validators.required],
       direccion: [''],
       productoId: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
+      fechaOcupacion: ['', Validators.required],
+      fechaRecoge: ['', Validators.required],
+      fechaRegreso: ['', Validators.required],
       metodoPago: ['', Validators.required],
       estado: ['Pendiente', Validators.required],
       precioBase: [0],
       precioTotal: [0],
       notas: [''],
-      terminos: [false, Validators.requiredTrue]
+      terminos: [false, Validators.requiredTrue],
+      dias: ['', [Validators.required, Validators.min(1)]],
+      subtotal: ['', Validators.required],
+      precioRenta: ['', Validators.required],
+      liquido: ['', Validators.required],
     });
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['rentaId'] && this.rentaId !== undefined && this.rentaId !== null) {
+      console.log('rentaId recibido:', this.rentaId); // ✅ Imprime el ID recibido
+  
+      this.vistaActual = 'editar'; // Cambiar a la vista de edición si se proporciona un ID de renta
+      this.ventaYrentaS_.detalleRentaById(this.rentaId).subscribe(
+        (res) => {
+          if (!res || res.length === 0) return;
+  
+          this.rentaForm.patchValue({
+            nombre: res[0].usuario.nombre,
+            email: res[0].usuario.email,
+            telefono: res[0].usuario.telefono,
+            direccion: res[0].usuario.direccion,
+            productoId: res[0].producto._id,
+            fechaOcupacion: res[0].detallesRenta.fechaOcupacion?.split('T')[0],
+            fechaRecoge: res[0].detallesRenta.fechaRecoge?.split('T')[0],
+            fechaRegreso: res[0].detallesRenta.fechaRegreso?.split('T')[0],
+            dias: res[0].detallesRenta.duracionDias,
+            metodoPago: res[0].detallesPago.metodoPago,
+            precioRenta: res[0].detallesPago.precioRenta,
+            estado: res[0].estado,
+            notas: res[0].notas,
+            subtotal: res[0].detallesPago.subtotal || null,
+            precioBase: res[0].detallesPago.precioBase || null,
+            precioTotal: res[0].detallesPago.precioTotal || null,
+            liquido: res[0].detallesPago.liquido || null,
+          });
+        },
+        (error) => {
+          console.error('Error al obtener los detalles de la renta:', error);
+        }
+      );
+    } else {
+      this.vistaActual = 'agregar';
+    }
+  }
+  
+  
+
   ngOnInit(): void {
+    if (this.rentaId !== undefined && this.rentaId !== null) {
+      this.vistaActual = 'editar';
+    } else {
+      this.vistaActual = 'agregar';
+    }
+  
+    this.cargarTodosUsuarios();
     this.getProductos(); // Obtener los productos al iniciar el componente
   }
+  
   getProductos() {
     this.productoS.obtenerProductos().subscribe(
       (response) => {
@@ -56,109 +112,96 @@ export class RegistroRentaComponent implements OnInit {
     this.vistaActual = 'listar'; // Volver a la vista de listado
   }
   calcularDias(): number {
-    const fechaInicio = new Date(this.rentaForm.value.fechaInicio);
-    const fechaFin = new Date(this.rentaForm.value.fechaFin);
-    const diffTime = fechaFin.getTime() - fechaInicio.getTime();
+    const fechaRecoge = new Date(this.rentaForm.value.fechaRecoge);
+    const fechaRegreso = new Date(this.rentaForm.value.fechaRegreso);
+    const diffTime = fechaRegreso.getTime() - fechaRecoge.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convertir a días
   }
   calcularDiasAdicionales(renta: any): number {
     if (renta.estado === 'Completado') return 0;
-    
-    const fechaFin = new Date(renta.detallesRenta.fechaFin);
+
+    const fechaRegreso = new Date(renta.detallesRenta.fechaRegreso);
     const hoy = new Date();
-    const diffTime = hoy.getTime() - fechaFin.getTime();
+    const diffTime = hoy.getTime() - fechaRegreso.getTime();
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   }
 
 
-
-  editarRenta(renta: any): void {
-    this.vistaActual = 'editar'; // Cambiar a la vista de edición
-    this.rentaId = renta._id; // Guardar el ID de la renta seleccionada
-    this.rentaForm.patchValue({
-      usuarioId: renta.usuario,
-      productoId: renta.producto?._id || '',
-      fechaInicio: renta.detallesRenta.fechaInicio.split('T')[0], // Formatear la fecha
-      fechaFin: renta.detallesRenta.fechaFin.split('T')[0], // Formatear la fecha
-      metodoPago: renta.detallesPago.metodoPago,
-      precioRenta: renta.detallesPago.precioRenta,
-      estado: renta.estado,
-    });
-  }
   guardarRenta(): void {
+    console.log("pasando");
+    
     if (this.rentaForm.valid) {
+      console.log("paso");
       const rentaData = this.rentaForm.value;
   
-      if (this.rentaId) {
+      // Construir el objeto de usuario dependiendo del tipo
+      let usuarioData: any;
+      if (this.usuarioSeleccionado) {
+        // Cliente frecuente
+        usuarioData = {
+          _id: this.usuarioSeleccionado._id,
+          isNuevo: false,
+        };
+      } else {
+        // Cliente nuevo
+        usuarioData = {
+          nombre: rentaData.nombre,
+          email: rentaData.email,
+          telefono: rentaData.telefono,
+          isNuevo: true
+        };
+      }
+  
+      // Armar el objeto final de renta
+      const nuevaRenta = {
+        ...rentaData,
+        usuario: usuarioData
+      };
+  
+      console.log('Renta a guardar:', nuevaRenta);
+  
+      if (this.rentaId !== undefined && this.rentaId !== null && this.rentaId !== '') {
         // Editar renta existente
-        this.ventaYrentaS_.editarRenta(this.rentaId, rentaData).subscribe(
-          (res) => {
+        this.ventaYrentaS_.editarRenta(this.rentaId, nuevaRenta).subscribe({
+          next: (res) => {
             console.log('Renta actualizada:', res);
             alert('Renta actualizada exitosamente');
             this.rentaForm.reset();
-            this.rentaId = null; // Limpiar el ID después de editar
-            this.vistaActual = 'listar'; // Volver a la vista de listado
-            // this.obtenerRentas(); // Actualizar la lista de rentas
+            this.usuarioSeleccionado = null;
+            this.vistaActual = 'listar';
           },
-          (error) => {
+          error: (error) => {
             console.error('Error al actualizar renta:', error);
           }
-        );
+        });
       } else {
         // Crear nueva renta
-        this.ventaYrentaS_.crearRenta(rentaData).subscribe(
-          (res) => {
+        this.ventaYrentaS_.crearRenta(nuevaRenta).subscribe({
+          next: (res) => {
             console.log('Renta creada:', res);
             alert('Renta creada exitosamente');
             this.rentaForm.reset();
-            this.vistaActual = 'listar'; // Volver a la vista de listado
-            // this.obtenerRentas(); // Actualizar la lista de rentas
+            this.rentaId = '';
+            this.usuarioSeleccionado = null;
+            this.vistaActual = 'listar';
           },
-          (error) => {
+          error: (error) => {
             console.error('Error al crear renta:', error);
           }
-        );
+        });
       }
-    }
-  }
-
-
-
-  crearRenta(): void {
-    if (this.rentaForm.valid) {
-      const rentaData = this.rentaForm.value;
-  
-      if (this.rentaId) {
-        // Editar renta existente
-        this.ventaYrentaS_.editarRenta(this.rentaId, rentaData).subscribe(
-          (res) => {
-            console.log('Renta actualizada:', res);
-            alert('Renta actualizada exitosamente');
-            this.rentaForm.reset();
-            this.rentaId = ''; // Limpiar el ID después de editar
-            // this.obtenerRentas(); // Actualizar la lista de rentas
-          },
-          (error) => {
-            console.error('Error al actualizar renta:', error);
-          }
-        );
-      } else {
-        // Crear nueva renta
-        this.ventaYrentaS_.crearRenta(rentaData).subscribe(
-          (res) => {
-            console.log('Renta creada:', res);
-            alert('Renta creada exitosamente');
-            this.rentaForm.reset();
-            // this.obtenerRentas(); // Actualizar la lista de rentas
-          },
-          (error) => {
-            console.error('Error al crear renta:', error);
-          }
-        );
-      }
+    } else {
+      console.log("Formulario inválido. Controles con errores:");
+      Object.keys(this.rentaForm.controls).forEach(key => {
+        const controlErrors = this.rentaForm.get(key)?.errors;
+        if (controlErrors) {
+          console.log(`- ${key}:`, controlErrors);
+        }
+      });
     }
   }
   
+
   get saldoPendiente(): number {
     const total = this.rentaForm.get('precioTotal')?.value || 0;
     const pagado = this.pagos.reduce((sum, pago) => sum + pago.monto, 0);
@@ -181,11 +224,98 @@ export class RegistroRentaComponent implements OnInit {
 
   calcularSaldos(): void {
     let saldoAcumulado = this.rentaForm.get('precioTotal')?.value || 0;
-    
+
     this.pagos.forEach(pago => {
       saldoAcumulado -= pago.monto;
       pago.saldo = saldoAcumulado;
       pago.estado = saldoAcumulado <= 0 ? 'Completado' : 'Aplicado';
     });
+  }
+  // 
+  usuarioBusqueda: string = '';
+  todosUsuarios: any[] = [];
+  usuariosFiltrados: any[] = [];
+  usuarioSeleccionado: any = null;
+  mostrarSugerencias: boolean = false;
+  cargarTodosUsuarios() {
+    this.us.getUsuarios().subscribe(
+      (usuarios) => {
+        this.todosUsuarios = usuarios;
+        // alert(" cargar usuarios")
+      },
+      (error) => {
+        // alert("Error al cargar usuarios")
+        console.error('Error al cargar usuarios:', error);
+      }
+    );
+  }
+
+  filtrarUsuarios() {
+    if (this.usuarioBusqueda.length >= 2) {
+      const termino = this.usuarioBusqueda.toLowerCase();
+      this.usuariosFiltrados = this.todosUsuarios.filter(usuario =>
+        usuario.nombre.toLowerCase().includes(termino) ||
+        usuario.email.toLowerCase().includes(termino) ||
+        usuario.telefono.toLowerCase().includes(termino)
+      );
+      this.mostrarSugerencias = true;
+    } else {
+      this.usuariosFiltrados = [];
+      this.mostrarSugerencias = false;
+    }
+  }
+
+  seleccionarUsuario(usuario: any) {
+    this.usuarioSeleccionado = usuario;
+    // this.isNuevo = usuario.isNuevo || false; // Asignar el tipo de cliente
+    this.rentaForm.patchValue({
+      usuarioId: usuario._id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      telefono: usuario.telefono,
+      direccion: usuario.direccion
+    });
+    this.mostrarSugerencias = false;
+    this.usuarioBusqueda = '';
+  }
+
+
+  deseleccionarUsuario() {
+    this.usuarioSeleccionado = null;
+    // this.isNuevo =true; // Asignar el tipo de cliente
+    this.rentaForm.patchValue({
+      usuarioId: '',
+      nombre: '',
+      email: '',
+      telefono: '',
+      direccion: ''
+    });
+  }
+
+
+  registrarNuevoUsuario() {
+    // this.isNuevo =true;
+    this.usuarioSeleccionado = null;
+    this.rentaForm.patchValue({
+      nombre: this.usuarioBusqueda,
+      email: '',
+      telefono: '',
+      direccion: '',
+      usuarioId: '' // asegurarse de que no quede un ID previo
+    });
+    this.mostrarSugerencias = false;
+  }
+
+
+  onFocus() {
+    if (this.usuarioBusqueda.length >= 2) {
+      this.mostrarSugerencias = true;
+    }
+  }
+
+  onBlur() {
+    setTimeout(() => {
+      this.mostrarSugerencias = false;
+    }, 200);
   }
 }

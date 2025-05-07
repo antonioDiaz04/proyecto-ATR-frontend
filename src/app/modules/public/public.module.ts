@@ -114,6 +114,7 @@ import { HeaderModule } from '../../shared/components/header/header.module';
 import { MisionVisionComponent } from './views/mision-vision/mision-vision.component';
 import { PreguntasComponent } from './views/preguntas/preguntas.component';
 import { NotificacionService } from '../../shared/services/notification.service';
+import { ReseniaService } from '../../shared/services/resenia.service';
 @NgModule({
   declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent],
   exports:[COMPONENTS],
@@ -128,12 +129,12 @@ import { NotificacionService } from '../../shared/services/notification.service'
     useClass: CsrfInterceptor,
     multi: true, // Permite múltiples interceptores
   },VentayrentaService,Toast,MessageService,provideClientHydration(), [provideHttpClient(withFetch())],
-  SessionService,
+  SessionService,ReseniaService,
   mensageservice,
-  UsuarioService,
+  UsuarioService,ProductoService,
   ToastrService,CartService,NotificacionService,
   MessageService,IndexedDbService,
   ConfirmationService,SignInService,
-  SignUpService,ProductoService,UsuarioService,DatosEmpresaService,ControlAdministrativaService,ThemeServiceService],
+  SignUpService,UsuarioService,DatosEmpresaService,ControlAdministrativaService,ThemeServiceService],
 })
 export class PublicModule {}

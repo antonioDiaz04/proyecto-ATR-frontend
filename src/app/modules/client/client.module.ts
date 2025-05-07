@@ -19,6 +19,8 @@ import { HeaderModule } from '../../shared/components/header/header.module';
 import { NotificacionesComponent } from './views/notificaciones/notificaciones.component';
 import { DatosEmpresaService } from '../../shared/services/datos-empresa.service';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { ProductoService } from '../../shared/services/producto.service';
+import { ReseniaService } from '../../shared/services/resenia.service';
 
 
 @NgModule({
@@ -30,11 +32,14 @@ import { SidenavComponent } from './sidenav/sidenav.component';
     NotificacionesComponent,
     SidenavComponent,
   ],
-  imports: [HeaderModule, 
+  imports: [
+    
+    HeaderModule,
     CommonModule,  ButtonModule,AvatarModule,AvatarGroupModule,
     ClientRoutingModule,FormsModule
   ]
   ,providers: [DatosEmpresaService,
+
     SessionService,UsuarioService,StorageService,
     VentayrentaService,provideClientHydration(), [provideHttpClient(withFetch())]
     

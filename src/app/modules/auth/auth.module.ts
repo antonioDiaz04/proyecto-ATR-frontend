@@ -53,6 +53,7 @@ import { RecuperarByEmailComponent } from './view/recuperar-password/recuperar-b
 import { HeaderModule } from '../../shared/components/header/header.module';
 import { DatosEmpresaService } from '../../shared/services/datos-empresa.service';
 import { SignInView } from './view/sign-in/sign-in.view';
+import { ProductoService } from '../../shared/services/producto.service';
 
 @NgModule({
   declarations: [
@@ -90,6 +91,7 @@ import { SignInView } from './view/sign-in/sign-in.view';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
+    // ProductoService,
     // importProvidersFrom(RecaptchaV3Module),
     // {
     //   provide: RECAPTCHA_V3_SITE_KEY,

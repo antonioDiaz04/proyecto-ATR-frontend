@@ -73,6 +73,7 @@ import { CategoriaComponent } from './components/categoria/categoria.component';
 import { CategoriaService } from '../../shared/services/categoria.service';
 import { ChartModule } from 'primeng/chart';
 import { SidebarModule } from 'primeng/sidebar';
+import { ReseniaService } from '../../shared/services/resenia.service';
 
 const VIEWS = [HomeView, FooterComponent];
 
@@ -127,7 +128,7 @@ const MATERIALS = [SidebarModule,ChartModule, DragDropModule,ButtonModule, Dropd
   providers: [ConfirmationService,VentayrentaService,
     UsuarioService,
     ControlAdministrativaService,
-    ClientesService,
+    ClientesService,ReseniaService,
     StorageService,CategoriaService,
     SessionService,ProductoService,
     DatosEmpresaService,Toast, MessageService, provideClientHydration(), [provideHttpClient(withFetch())],

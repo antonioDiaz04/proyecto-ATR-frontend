@@ -25,7 +25,7 @@ export const routes: Routes = [
     loadChildren: () => import('../app/modules/auth/auth.module').then(m=>m.AuthModule)
   },
   {
-  canActivate: [clientGuard], // Solo usuarios autenticados pueden acceder
+  // canActivate: [clientGuard], // Solo usuarios autenticados pueden acceder
     path: 'cuenta',
     loadChildren: () => import('../app/modules/client/client.module').then(m=>m.ClientModule)
   },

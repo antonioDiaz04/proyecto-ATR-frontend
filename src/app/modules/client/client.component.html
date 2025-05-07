@@ -4,12 +4,13 @@
   <app-sidenav></app-sidenav>
 
   <!-- Main Content -->
-  <div class="box ml-64 p-6 w-[calc(100%-16rem)]">
-    <a routerLink="/inicio" class="back-link mb-4 inline-flex items-center gap-2 text-blue-600 hover:text-blue-800">
+  <div class="box ml-64 w-[calc(100%-16rem)]">
+    
+    <div class=" bg-gray-100 p-10 rounded">
+      <a routerLink="/inicio" class="back-link mb-4 inline-flex items-center gap-2 text-blue-600 hover:text-blue-800">
       <i class="pi pi-arrow-left"></i>
       <span>Inicio</span>
     </a>
-    <div class="mt-4">
       <router-outlet></router-outlet>
     </div>
   </div>
