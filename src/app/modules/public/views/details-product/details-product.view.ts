@@ -1,15 +1,7 @@
 import { Location } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ProductoService } from '../../../../shared/services/producto.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IndexedDbService } from '../../commons/services/indexed-db.service';
 import { CartService } from '../../../../shared/services/cart.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -18,7 +10,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 // declare const $: any;
 import AOS from 'aos';
 import $ from 'jquery';
-
+import { filter } from 'rxjs';
 
 declare const Fancybox: any;
 
@@ -43,7 +35,7 @@ interface Producto {
   templateUrl: './details-product.view.html',
   // styleUrls: ['./details-product.view.scss', './info.scss', './carrucel.scss'],
 })
-export class DetailsProductView implements OnInit, AfterViewInit {
+export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   isLoading: boolean = true;
   isLoadingBtn: boolean = false;
   images: any[] = []; // Change to any[] to hold the required data
@@ -55,6 +47,7 @@ export class DetailsProductView implements OnInit, AfterViewInit {
   selectedColor: string = '';
   selectedSize: string = '';
   // sizes: any[] = [];
+  private sub: any;
   isViewImagen: boolean = false;
   // productosRelacionados: any;
   mainImageUrl: string = ''; // URL de la imagen principal
@@ -83,12 +76,12 @@ export class DetailsProductView implements OnInit, AfterViewInit {
   ];
 
   ngAfterViewInit(): void {
-    Fancybox.bind('[data-fancybox="gallery"]', {
-      Toolbar: false,
-      Thumbs: {
-        autoStart: true,
-      },
-    });
+    // Fancybox.bind('[data-fancybox="gallery"]', {
+    //   Toolbar: false,
+    //   Thumbs: {
+    //     autoStart: true,
+    //   },
+    // });
 
     this.renderer.listen(
       this.mainImage.nativeElement,
@@ -134,6 +127,7 @@ export class DetailsProductView implements OnInit, AfterViewInit {
     this.selectedMainImage = image;
 
     this.mainImageUrl = this.selectedMainImage;
+
   }
 
   // Al salir del hover, restaura la imagen principal seleccionada previamente
@@ -161,21 +155,46 @@ export class DetailsProductView implements OnInit, AfterViewInit {
     // this.id=require.para
   }
 
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
   ngOnInit() {
+    // this.ngxService.start(); // Inicia el loader
     this.isLoading = true;
 
     this.scrollToTop();
-    this.ngxService.stop(); // Inicia el loader
-    AOS.init({
-      duration: 650, // Duración de la animación en milisegundos
-      once: true, // Si `true`, la animación solo se ejecuta una vez
-    });
+    // AOS.init({
+    //   duration: 650, // Duración de la animación en milisegundos
+    //   once: true, // Si `true`, la animación solo se ejecuta una vez
+    // });
     const productId = this.activatedRoute.snapshot.params['id'];
+    this.obtenerProducto(productId);
+    this.sub = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const productId = this.activatedRoute.snapshot.params['id'];
+        if (productId) {
+          this.obtenerProducto(productId); // Tu función para recargar el producto
+        }
+      });
 
+
+
+    // setTimeout(() => {
+    //   Fancybox.bind('[data-fancybox="gallery"]', {
+    //     // Aquí puedes agregar configuraciones adicionales si es necesario
+    //     // por ejemplo, velocidad de transición, etc.
+    //   });
+    // }, 100);
+  }
+  obtenerProducto(id: string) {
     // Obtener detalles del producto
-    this.productoS_
-      .obtenerDetalleProductoById(productId)
+
+    this.ngxService.start(); // Inicia el loader
+    this.productoS_.obtenerDetalleProductoById(id)
       .subscribe((response: any) => {
+        this.ngxService.stop(); // Inicia el loader
+
         this.isLoading = false;
         this.Detalles = response;
         this.imagenes = this.Detalles.imagenes;
@@ -195,13 +214,6 @@ export class DetailsProductView implements OnInit, AfterViewInit {
 
      
       });
-
-    setTimeout(() => {
-      Fancybox.bind('[data-fancybox="gallery"]', {
-        // Aquí puedes agregar configuraciones adicionales si es necesario
-        // por ejemplo, velocidad de transición, etc.
-      });
-    }, 100);
   }
 
 

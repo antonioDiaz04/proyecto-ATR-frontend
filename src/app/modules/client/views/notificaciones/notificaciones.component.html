@@ -1,28 +1,129 @@
-<div class="notifications-container">
-    <h2>Notificaciones</h2>
-    <ul>
-      <li *ngFor="let notification of notifications" [ngClass]="{
-        'high-priority': notification.priority === 'high',
-        'medium-priority': notification.priority === 'medium',
-        'low-priority': notification.priority === 'low'
-      }">
-        <div class="notification-header">
-          <span class="notification-type">{{ notification.type === 'comment' ? 'Comentario' : 'Producto' }}</span>
-          <span class="notification-date">{{ notification.date | date: 'medium' }}</span>
-          <button class="delete-button" (click)="deleteNotification(notification.id)">Eliminar</button>
+<div class="w-full h-max p-6 font-sans  rounded-lg shadow-sm">
+  <!-- Header con pestañas -->
+  <div class="flex justify-between items-center mb-6 border-b border-gray-200">
+    <h2 class="text-xl font-semibold text-gray-700 flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+      Notificaciones
+    
+    </h2>
+    
+    <!-- Modifica la sección de pestañas así: -->
+<div class="flex space-x-4">
+  <button *ngFor="let tab of tabs" 
+          [class.border-b-2]="activeTab === tab.id"
+          [class.border-indigo-500]="activeTab === tab.id"
+          [class.text-indigo-600]="activeTab === tab.id"
+          [class.text-gray-500]="activeTab !== tab.id"
+          class="px-3 py-2 text-sm font-medium focus:outline-none"
+          (click)="activeTab = tab.id"> <!-- Ahora no hay error de tipo -->
+    {{tab.name}}
+  </button>
+</div>
+  </div>
+
+  <!-- Contador y acciones -->
+  <div class="flex justify-between items-center mb-4">
+    <p class="text-sm text-gray-500">
+      Mostrando {{filteredNotifications.length}} de {{notifications.length}} notificaciones
+    </p>
+    <div class="flex space-x-2">
+      <button (click)="markAllAsRead()" class="text-sm text-indigo-600 hover:text-indigo-800 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        Marcar todas como leídas
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de notificaciones -->
+  <ul class="space-y-3">
+    <li *ngFor="let notification of filteredNotifications" 
+        class="relative p-5 rounded-lg border border-gray-200 hover:border-indigo-200 bg-white hover:shadow-xs transition-all"
+        [class.bg-gray-50]="notification.read"
+        [class.border-indigo-300]="!notification.read">
+      
+      <!-- Punto de no leído -->
+      <div *ngIf="!notification.read" class="absolute top-4 right-4 h-2 w-2 bg-indigo-500 rounded-full"></div>
+      
+      <!-- Cabecera de notificación -->
+      <div class="flex justify-between items-start mb-2">
+        <div class="flex items-center">
+          <!-- Icono según tipo -->
+          <span class="flex items-center justify-center h-8 w-8 rounded-full mr-3 bg-indigo-100 text-indigo-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getNotificationIcon(notification.type)" />
+            </svg>
+          </span>
+          <div>
+            <h3 class="font-medium text-gray-800">{{ notification.title }}</h3>
+            <p *ngIf="notification.customer" class="text-xs text-gray-500">
+              Cliente: {{ notification.customer }}
+            </p>
+          </div>
         </div>
-        <div class="notification-body">
-          <p>{{ notification.message }}</p>
-          <span *ngIf="notification.status" class="notification-status" [ngClass]="{
-            'pending': notification.status === 'pending',
-            'approved': notification.status === 'approved',
-            'rejected': notification.status === 'rejected',
-            'purchased': notification.status === 'purchased',
-            'returned': notification.status === 'returned'
-          }">
-            Estado: {{ notification.status }}
+        <span class="text-xs text-gray-400">{{ notification.date | date:'short' }}</span>
+      </div>
+      
+      <!-- Cuerpo de notificación -->
+      <div class="pl-11">
+        <p class="text-gray-600 text-sm mb-3">{{ notification.message }}</p>
+        
+        <!-- Detalles adicionales -->
+        <div class="flex flex-wrap gap-2 mb-3">
+          <div *ngIf="notification.product" class="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-700">
+            {{ notification.product }}
+          </div>
+          
+          <div *ngIf="notification.rating" class="flex items-center text-xs px-2 py-1 bg-amber-50 rounded-full text-amber-700">
+            <span class="mr-1">Valoración:</span>
+            <span class="text-amber-500">
+              {{'★'.repeat(notification.rating) + '☆'.repeat(5 - notification.rating)}}
+            </span>
+          </div>
+          
+          <div *ngIf="notification.price" class="text-xs px-2 py-1 bg-green-50 rounded-full text-green-700">
+            ${{ notification.price | number:'1.2-2' }}
+          </div>
+          
+          <div *ngIf="notification.dueDate" class="text-xs px-2 py-1 bg-blue-50 rounded-full text-blue-700">
+            Vence: {{ notification.dueDate | date:'shortDate' }}
+          </div>
+        </div>
+        
+        <!-- Estado -->
+        <div *ngIf="notification.status" class="inline-block">
+          <span class="text-xs px-2 py-1 rounded-full font-medium" 
+                [ngClass]="getStatusColor(notification.status)">
+            {{ notification.status | titlecase }}
           </span>
         </div>
-      </li>
-    </ul>
+        
+        <!-- Acciones -->
+        <div class="mt-4 flex space-x-3 border-t border-gray-100 pt-3">
+          <button (click)="markAsRead(notification.id)" 
+                  class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+            {{ notification.read ? '✓ Leída' : 'Marcar como leída' }}
+          </button>
+          <button (click)="deleteNotification(notification.id)" 
+                  class="text-xs text-gray-500 hover:text-gray-700 font-medium flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+  
+  <!-- Mensaje cuando no hay notificaciones -->
+  <div *ngIf="filteredNotifications.length == 0" class="text-center py-10 text-gray-500">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+    <p class="mt-2">No hay notificaciones en esta categoría</p>
   </div>
+</div>

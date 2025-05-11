@@ -26,19 +26,10 @@ export class VentayrentaService {
     return this.http.get<any[]>(`${this.apiUrl}/proceso/comprasByidUser/${usuarioId}`);
   }
 
-
-
-
-
-
-
-
   // Obtener todas las rentas
   obtenerRentas(): Observable<any> {
     return this.http.get(`${this.apiUrl}/obtenerRentas`);
   }
-
-
   // Crear una nueva renta
   crearRenta(renta: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/crearRenta`, renta);
@@ -52,7 +43,12 @@ export class VentayrentaService {
   }
   // Eliminar una renta
   eliminarRenta(rentaId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/eliminarRenta/${rentaId}`);
+    return this.http.delete(`${this.apiUrl}/rentaId/${rentaId}`);
+  }
+  // Eliminar rentas
+  eliminarRentasSeleccionadas(rentaIds: string[]): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/rentasSeleccionadas/`, {  // Cambié el método a DELETE
+      body: { rentaIds }});
   }
 
   // Listar rentas de un usuario específico
@@ -63,5 +59,8 @@ export class VentayrentaService {
   // Obtener productos rentados por un usuario
   obtenerProductosRentadosByIdUser(usuarioId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/rentasByidUser/${usuarioId}`);
+  }
+  detalleRentaById(rentaId: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/rentaByIdProducto/${rentaId}`);
   }
 }

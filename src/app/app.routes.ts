@@ -17,7 +17,7 @@ export const routes: Routes = [
     },
   {
     path: 'admin',
-    canActivate: [adminGuard],
+    // canActivate: [adminGuard],
     loadChildren: () => import('../app/modules/admin/admin.module').then(m=>m.AdminModule)
   },
   {
@@ -25,7 +25,7 @@ export const routes: Routes = [
     loadChildren: () => import('../app/modules/auth/auth.module').then(m=>m.AuthModule)
   },
   {
-  canActivate: [clientGuard], // Solo usuarios autenticados pueden acceder
+  // canActivate: [clientGuard], // Solo usuarios autenticados pueden acceder
     path: 'cuenta',
     loadChildren: () => import('../app/modules/client/client.module').then(m=>m.ClientModule)
   },

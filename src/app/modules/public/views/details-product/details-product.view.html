@@ -24,7 +24,6 @@
           class="w-full h-full object-cover transition-all duration-700 hover:scale-[1.02] cursor-zoom-in"
           (click)="openModal()" (mousemove)="applyZoomEffect($event)" (mouseleave)="resetZoomEffect()" />
         
-        <!-- Image Counter - Minimalist -->
         <div class="absolute top-4 right-4 bg-[#2a2723]/80 text-[#d4c4a8] text-xs px-3 py-1 font-light tracking-wider">
           {{ (Detalles.imagenes?.indexOf(mainImageUrl) || 0) + 1 }} OF {{ Detalles.imagenes?.length || 0 }}
         </div>

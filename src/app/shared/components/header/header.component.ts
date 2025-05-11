@@ -35,19 +35,19 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToastModule } from 'primeng/toast';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ProductoService } from '../../services/producto.service';
 
 declare const $: any;
 
 @Component({
   selector: 'app-header',
   standalone: false,
-
   templateUrl: './header.component.html',
   // styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService,  ProductoService, ConfirmationService],
 })
-export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
   isScrolled = false;
   sidebarVisible = false;
   @Input() isMobile = false;
@@ -76,11 +76,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   // Categorías de búsqueda
   suggestions: string[] = ['Color', 'Cuello', 'Talla', 'Material', 'Diseño', 'Manga', 'Estampado'];
   filteredSuggestions: string[] = [];
-  openRegisterModal(){
+  openRegisterModal() {
 
   }
   darkMode = false;
   constructor(
+    private PRODUCTOSERVICE_: ProductoService,
     private indexedDbService: IndexedDbService,
     private ngxService: NgxUiLoaderService,
     private sessionService: SessionService,
@@ -143,7 +144,81 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     }
   }
 
+  busquedaProducto: string = '';
+  mostrarDropdown: boolean = false;
+  productosFiltrados: any[] = [];
+  todosLosProductos!: any[];
+  cargarProductos() {
+    this.isLoading = true; // Mostrar el skeleton al cargar
+    this.PRODUCTOSERVICE_.obtenerProductos().subscribe(
+      (response) => {
+        this.ngxService.stop(); // Inicia el loader
+
+        // console.log("📦 Productos recibidos:");
+        this.todosLosProductos = response;
+        // this.numVisibleProducts = Math.min(5, this.productos.length);
+        this.isLoading = false; // Ocultar el skeleton
+      },
+      (error) => {
+        console.error("❌ Error al cargar los productos:");
+        this.isLoading = false; // Ocultar el skeleton en caso de error
+      }
+    );
+  }
+  limpiarBusqueda(): void {
+    this.busquedaProducto = '';
+    this.productosFiltrados = [];
+    this.mostrarDropdown = false;
+  }
+  
+  filtrarProductos(): void {
+    const texto = this.busquedaProducto.trim().toLowerCase();
+    if (!texto) {
+      this.productosFiltrados = [];
+      return;
+    }
+  
+    this.productosFiltrados = this.todosLosProductos.filter(p => {
+      return (
+        (p.nombre && p.nombre.toLowerCase().includes(texto)) ||
+        (p.color && p.color.toLowerCase().includes(texto)) ||
+        (p.talla && p.talla.toLowerCase().includes(texto)) ||
+        (p.tipoCuello && p.tipoCuello.toLowerCase().includes(texto)) ||
+        (p.tipoCola && p.tipoCola.toLowerCase().includes(texto)) ||
+        (p.tipoCapas && p.tipoCapas.toLowerCase().includes(texto)) ||
+        (p.tipoHombro && p.tipoHombro.toLowerCase().includes(texto)) ||
+        (p.precioActual && p.precioActual.toString().includes(texto)) ||
+        (p.precioAnterior && p.precioAnterior.toString().includes(texto))
+      );
+    });
+  }
+  
+
+  resaltarCoincidencia(texto: string): string {
+    const query = this.busquedaProducto.trim();
+    if (!query) return texto;
+
+    const regex = new RegExp(`(${query})`, 'gi');
+    return texto.replace(regex, '<b>$1</b>');
+  }
+
+  seleccionarProducto(producto: any): void {
+    console.log('Producto seleccionado:', producto);
+    this.busquedaProducto = producto.nombre;
+    this.mostrarDropdown = false;
+    this.router.navigate(["/Detail/" + producto._id]);
+
+  }
+
+  ocultarDropdownConRetraso(): void {
+    setTimeout(() => {
+      this.mostrarDropdown = false;
+    }, 200); // pequeño delay para permitir clic en sugerencia
+  }
+
+
   async ngOnInit() {
+    this.cargarProductos();
     try {
       this.checkInternetConnection();
       const productos = await this.indexedDbService.obtenerProductosApartados();
@@ -162,7 +237,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     } catch (error) {
       console.error("Error al obtener productos apartados");
     }
+
   }
+
 
 
   @HostListener("window:online")
@@ -186,32 +263,32 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   }
 
 
-  ngAfterViewInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      const nativeElement = this.elementRef.nativeElement;
+  // ngAfterViewInit() {
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     const nativeElement = this.elementRef.nativeElement;
 
-      // Inicializar Semantic UI Dropdown
-      $(nativeElement).find(".ui.dropdown").dropdown();
+  //     // Inicializar Semantic UI Dropdown
+  //     $(nativeElement).find(".ui.dropdown").dropdown();
 
-      // Inicializar búsqueda con contenido
-      $(nativeElement)
-        .find(".ui.search")
-        .search({
+  //     // Inicializar búsqueda con contenido
+  //     $(nativeElement)
+  //       .find(".ui.search")
+  //       .search({
 
-          onSelect: (result: any) => {
-            console.log("Seleccionado:", result.title);
-          },
-        });
+  //         onSelect: (result: any) => {
+  //           console.log("Seleccionado:", result.title);
+  //         },
+  //       });
 
-      // Mostrar resultados al hacer focus en el input
-      $(nativeElement)
-        .find("input")
-        .on("focus", (event: FocusEvent) => {
-          const target = event.target as HTMLInputElement;
-          $(target).parent().find(".ui.search").search("showResults");
-        });
-    }
-  }
+  //     // Mostrar resultados al hacer focus en el input
+  //     $(nativeElement)
+  //       .find("input")
+  //       .on("focus", (event: FocusEvent) => {
+  //         const target = event.target as HTMLInputElement;
+  //         $(target).parent().find(".ui.search").search("showResults");
+  //       });
+  //   }
+  // }
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
@@ -221,18 +298,35 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   }
 
 
-  onSearch() {
-    this.isLoading = true;
-    this.ngxService.start(); // Inicia el loader
-    // Reemplaza con la llamada real a la API de búsqueda
-    setTimeout(() => {
-      this.isLoading = false;
-      this.router.navigate(["/search", this.searchQuery]);
-      this.ngxService.stop(); // Detiene el loader
-      // Implementa tu lógica de búsqueda aquí
-      console.log("Buscando:", this.searchQuery);
-    }, 2000);
+filtrarPorCategoria(categoria: string) {
+    // this.isLoading = true; // Mostrar el skeleton al cargar
+    // this.ngxService.start(); // Inicia el loader
+    // this.PRODUCTOSERVICE_.filtrarPorCategoria(categoria).subscribe(
+    //   (response) => {
+    //     this.ngxService.stop(); // Detiene el loader
+    //     this.isLoading = false; // Ocultar el skeleton
+    //     this.router.navigate(["/search", categoria]);
+    //   },
+    //   (error) => {
+    //     console.error("❌ Error al cargar los productos por categoría:", error);
+    //     this.isLoading = false; // Ocultar el skeleton en caso de error
+    //   }
+    // );
   }
+
+
+  // onSearch() {
+  //   this.isLoading = true;
+  //   this.ngxService.start(); // Inicia el loader
+  //   // Reemplaza con la llamada real a la API de búsqueda
+  //   setTimeout(() => {
+  //     this.isLoading = false;
+  //     this.router.navigate(["/search", this.searchQuery]);
+  //     this.ngxService.stop(); // Detiene el loader
+  //     // Implementa tu lógica de búsqueda aquí
+  //     console.log("Buscando:", this.searchQuery);
+  //   }, 2000);
+  // }
 
   showDialog() {
     this.sidebarVisible = true;
@@ -244,13 +338,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
     this.popupVisible = !this.popupVisible;
   }
 
-  @HostListener("document:click", ["$event"])
-  onClickOutside(event: Event) {
-    const clickedInside = this.elementRef.nativeElement.contains(event.target);
-    if (!clickedInside) {
-      this.popupVisible = false;
-    }
-  }
+  // @HostListener("document:click", ["$event"])
+  // onClickOutside(event: Event) {
+  //   const clickedInside = this.elementRef.nativeElement.contains(event.target);
+  //   if (!clickedInside) {
+  //     this.popupVisible = false;
+  //   }
+  // }
 
   updateMenuItems() {
     this.isLoggedIn = this.isUserLoggedIn();
@@ -351,22 +445,22 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges, OnDest
   }
 
   // Resalta coincidencias en negrita
-  highlightMatch(suggestion: string): string {
-    const query = this.searchQuery;
-    if (!query) return suggestion;
-    const regex = new RegExp(`(${query})`, 'gi');
-    return suggestion.replace(regex, `<b>$1</b>`);
-  }
+  // highlightMatch(suggestion: string): string {
+  //   const query = this.searchQuery;
+  //   if (!query) return suggestion;
+  //   const regex = new RegExp(`(${query})`, 'gi');
+  //   return suggestion.replace(regex, `<b>$1</b>`);
+  // }
 
   // Selecciona una sugerencia y ejecuta la búsqueda
-  selectSuggestion(suggestion: string): void {
-    this.searchQuery = suggestion;
-    this.onSearch();
-  }
+  // selectSuggestion(suggestion: string): void {
+  //   this.searchQuery = suggestion;
+  //   this.onSearch();
+  // }
   // Oculta las sugerencias al perder el foco (con retraso para permitir selección)
-  hideSuggestions(): void {
-    setTimeout(() => {
-      this.showSuggestions = false;
-    }, 200);
-  }
+  // hideSuggestions(): void {
+  //   setTimeout(() => {
+  //     this.showSuggestions = false;
+  //   }, 200);
+  // }
 }

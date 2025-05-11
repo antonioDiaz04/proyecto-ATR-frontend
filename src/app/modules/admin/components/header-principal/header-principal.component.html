@@ -1,24 +1,25 @@
-<header class="w-full fixed top-0 left-0 z-50 bg-gray-100 shadow-md backdrop-blur-lg transition-all duration-300">
+<header class="w-full fixed top-0 left-0 z-50 bg-[#fff5e0] shadow-md backdrop-blur-lg transition-all duration-300">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-    
+
     <!-- Logo y Texto "Atelier" -->
     <div class="flex items-center space-x-4">
-      <img 
-        src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1726493852/images-AR/cirf6qlatrjdkuj81fwy.jpg" 
-        alt="Logo" 
-        class="h-10 w-auto rounded-md shadow-md transform transition duration-300 hover:scale-105"
-      >
+      <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1726493852/images-AR/cirf6qlatrjdkuj81fwy.jpg"
+        alt="Logo" class="h-10 w-auto rounded-md shadow-md transform transition duration-300 hover:scale-105">
       <span class="text-2xl font-bold text-[#4A3F35] tracking-tight">Atelier</span>
     </div>
-    
+
     <!-- Menú de Opciones Rápidas -->
     <div class="hidden lg:flex space-x-6 text-[#4A3F35]">
-      <a href="/rentas" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Rentas</a>
-      <a href="/ventas" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Ventas</a>
-      <a href="/usuarios" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Usuarios</a>
-      <a href="/terminos" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Términos</a>
-      <a href="/politicas" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Políticas</a>
-      <a href="/misionvision" class="text-sm font-medium hover:text-[#8C5A3C] transition duration-200">Misión/Visión</a>
+      <a href="/rentas" class="text-lg font-normal uppercase  hover:text-[#8C5A3C] transition duration-200">Rentas</a>
+      <a href="/ventas" class="text-lg font-normal uppercase  hover:text-[#8C5A3C] transition duration-200">Ventas</a>
+      <a href="/usuarios"
+        class="text-lg font-normal uppercase  hover:text-[#8C5A3C] transition duration-200">Usuarios</a>
+      <a href="/terminos"
+        class="text-lg font-normal uppercase  hover:text-[#8C5A3C] transition duration-200">Términos</a>
+      <a href="/politicas"
+        class="text-lg font-normal uppercase  hover:text-[#8C5A3C] transition duration-200">Políticas</a>
+      <a href="/misionvision"
+        class="text-lg font-normal uppercase  hover:text-[#8C5A3C] transition duration-200">Misión/Visión</a>
     </div>
 
     <!-- Información de Admin -->
@@ -27,26 +28,68 @@
     </div>
 
     <!-- Menú de Perfil y Avatar -->
-    <div class="relative">
-      <div class="flex items-center space-x-2">
-        <!-- Avatar -->
-        <div class="relative cursor-pointer" (click)="toggleMenu()">
-          <img 
-            src="https://dummyimage.com/40x40/ccc/aaa&text=2x2" 
-            alt="Avatar" 
-            class="w-10 h-10 rounded-full border-2 border-[#8C5A3C] hover:border-[#6E5C4B] transition duration-200"
-          >
-        </div>
-        <!-- Menú desplegable -->
-        <div 
-          *ngIf="menuOpen" 
-          class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 text-[#4A3F35] z-10 transition-all duration-200 ease-in-out transform scale-95 origin-top-right"
-        >
-          <a href="admin/configuracion/perfil-administrador" class="block px-4 py-2 hover:bg-gray-100 transition-all">Mi Perfil</a>
-          <a (click)="logout()" class="block px-4 py-2 text-red-500 hover:bg-gray-100 transition-all">Cerrar Sesión</a>
+
+    <!-- Admin Section -->
+    <div class="flex items-center gap-4">
+      <!-- Current Date -->
+      <div>
+        <h4 class="font-semibold text-gray-800">{{ admin.nombre }} {{ admin.apellidos }}</h4>
+        <span class="hidden lg:block text-sm font-medium text-[#6E5C4B]">
+          {{ currentDate | date:'fullDate' }}
+        </span>
+      </div>
+
+
+      <!-- Profile Dropdown -->
+      <div class="relative" (clickOutside)="menuOpen = false">
+        <!-- Avatar Button -->
+        <button (click)="toggleMenu()" class="flex items-center gap-2 focus:outline-none" aria-label="User menu">
+          <div class="relative">
+            <img [src]="fotoDePerfil || 'assets/images/default-avatar.png'" alt="User profile"
+              class="w-10 h-10 rounded-full border-2 border-[#4A3F35] object-cover">
+            <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white"
+              [class.bg-green-500]="admin.estadoCuenta.estado === 'activa'"
+              [class.bg-red-500]="admin.estadoCuenta.estado !== 'activa'"></span>
+          </div>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div *ngIf="menuOpen && isLoggedIn"
+          class="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-xl overflow-hidden z-50" @fadeInOut>
+          <!-- User Info -->
+          <div class="p-4 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+              <img [src]="fotoDePerfil || 'assets/images/default-avatar.png'"
+                class="w-12 h-12 rounded-full object-cover" alt="User avatar">
+              <div>
+                <h4 class="font-semibold text-gray-800">{{ admin.nombre }} {{ admin.apellidos }}</h4>
+                <p class="text-sm text-gray-600">{{ admin.email }}</p>
+                <small class="text-xs text-gray-400">
+                  Last login: {{ currentDate | date:'medium' }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Menu Items -->
+          <ul class="py-1">
+            <li>
+              <a (click)="redirectTo('perfil')"
+                class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 cursor-pointer">
+                <i class="fas fa-user-edit mr-3 text-gray-400"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li class="border-t border-gray-100 my-1"></li>
+            <li>
+              <a (click)="logout()" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-
   </div>
 </header>

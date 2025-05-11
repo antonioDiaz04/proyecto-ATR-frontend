@@ -1,74 +1,263 @@
-<div class="profile-edit-container">
-  <h1>Editar perfil</h1>
-  <p class="subtitle">
-    Mantén privados tus datos personales. Cualquier persona que pueda ver tu
-    perfil podrá ver la información que agregues aquí.
-  </p>
+<div class="profile-dashboard-container">
+  <div #scrollContainer class="profile-scroll-container">
+    <div class="profile-header" [class.header-hidden]="headerHidden">
+      <h2><i class="pi pi-user"></i> Perfil de Administrador</h2>
+      <p>Gestiona tu información personal y configuración de cuenta</p>
+    </div>
+    <div class="profile-content">
+      <div class="profile-card">
+        <div class="avatar-section">
+          <div class="avatar-wrapper">
+            <p-avatar [image]="profileImg" size="xlarge" shape="circle" styleClass="admin-avatar animated-avatar"
+              [style]="{
+                width: '180px',
+                height: '180px',
+                'object-fit': 'cover',
+                border: '4px solid #ffffff',
+                'box-shadow': '0 8px 25px rgba(0, 0, 0, 0.15)'
+              }">
+            </p-avatar>
 
-  <div class="profile-picture">
-    <p-avatar
-      *ngIf="!profileImg"
-      [label]="getInitials(data.nombre)"
-      styleClass="mr-2"
-      size="xlarge"
-      shape="circle"
-    ></p-avatar>
+            <!-- Acciones para cambiar foto -->
+            <div class="avatar-actions">
+              <label for="profile-upload"
+                class="upload-button border border-gray-300 rounded px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
+                <i class="pi pi-camera"></i> Cambiar foto
+              </label>
+              <input type="file" id="profile-upload" accept="image/jpeg, image/png, image/jpg"
+                (change)="onFileChange($event)" class="file-input" #fileInput />
+            </div>
+            <p-progressBar *ngIf="uploadProgress !== null" [value]="uploadProgress" [showValue]="false"
+              styleClass="mt-2" style="height: 6px">
+            </p-progressBar>
+          </div>
+          <h3>
+            {{ profileForm.value.nombre }} {{ profileForm.value.apellidos }}
+          </h3>
 
-    <p-avatar
-      *ngIf="profileImg"
-      [image]="profileImg"
-      styleClass="mr-2"
-      size="xlarge"
-      shape="circle"
-    ></p-avatar>
+          <p class="account-status" [ngClass]="{
+              'text-success': estadoCuenta.estado === 'activa',
+              'text-warning': estadoCuenta.estado !== 'activa'
+            }" style="font-weight: bold">
+          {{ estadoCuenta.estado | uppercase }}
+          </p>
+        </div>
 
-    <input type="file" (change)="onFileChange($event)" />
+        <!-- ...existing code... -->
+        <form [formGroup]="profileForm" (ngSubmit)="saveChanges()" class="space-y-8">
+          <!-- Información Personal -->
+          <div class="mb-8">
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <i class="pi pi-id-card"></i> Información Personal
+              </h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-1">
+                <label for="nombre" class="text-sm font-medium">Nombre(s)*</label>
+                <input type="text" id="nombre" formControlName="nombre" pInputText [readonly]="!editMode"
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200" />
+                <small *ngIf="f['nombre'].touched && f['nombre'].errors" class="text-xs text-red-500">
+                  <span *ngIf="f['nombre'].errors?.['required']">Este campo es requerido</span>
+                  <span *ngIf="f['nombre'].errors?.['maxlength']">Máximo 50 caracteres</span>
+                </small>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="apellidos" class="text-sm font-medium">Apellidos*</label>
+                <input type="text" id="apellidos" placeholder="Ingrese su apellido" formControlName="apellidos"
+                  pInputText [readonly]="!editMode"
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200" />
+                <small *ngIf="f['apellidos'].touched && f['apellidos'].errors" class="text-xs text-red-500">
+                  <span *ngIf="f['apellidos'].errors?.['required']">Este campo es requerido</span>
+                  <span *ngIf="f['apellidos'].errors?.['maxlength']">Máximo 50 caracteres</span>
+                </small>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="edad" class="text-sm font-medium">Edad</label>
+                <input type="number" id="edad" formControlName="edad" pInputText placeholder="Ingrese su edad"
+                  [readonly]="!editMode" min="18" max="100"
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200" />
+                <small *ngIf="f['edad'].touched && f['edad'].errors" class="text-xs text-red-500">
+                  <span *ngIf="f['edad'].errors?.['min']">Debe ser mayor de 18 años</span>
+                  <span *ngIf="f['edad'].errors?.['max']">Edad no válida</span>
+                </small>
+              </div>
+              <div class="flex flex-col gap-1 md:col-span-2">
+                <label for="direccion" class="text-sm font-medium">Dirección</label>
+                <textarea id="direccion" formControlName="direccion" pInputTextarea
+                  placeholder="Ingrese su dirección..." [readonly]="!editMode" rows="3" maxlength="200"
+                  (input)="updateCharCount($event)"
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200"></textarea>
+                <small *ngIf="f['direccion'].touched && f['direccion'].errors" class="text-xs text-red-500">
+                  <span *ngIf="f['direccion'].errors?.['maxlength']">
+                    Máximo 200 caracteres ({{ currentChars }}/200)
+                  </span>
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seguridad -->
+          <div class="mb-8">
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <i class="pi pi-lock"></i> Seguridad
+              </h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-1">
+                <label for="contrasena" class="text-sm font-medium">Nueva Contraseña</label>
+                <input id="contrasena" formControlName="contrasena" placeholder="Ingrese nueva contraseña" pInputText
+                  [disabled]="!editMode" [readonly]="!editMode" required
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200" />
+                <small *ngIf="f['contrasena'].touched && f['contrasena'].errors" class="text-xs text-red-500">
+                  <span *ngIf="f['contrasena'].errors?.['minlength']">Mínimo 8 caracteres</span>
+                </small>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="confirmarContrasena" class="text-sm font-medium">Confirmar Contraseña</label>
+                <input id="confirmarContrasena" formControlName="confirmarContrasena"
+                  placeholder="Confirme la nueva contraseña" [disabled]="!editMode" pInputText [readonly]="!editMode"
+                  required
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200" />
+                <small *ngIf="f['confirmarContrasena'].touched && profileForm.errors?.['mismatch']"
+                  class="text-xs text-red-500">
+                  Las contraseñas no coinciden
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contacto -->
+          <div class="mb-8">
+            <div class="mb-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <i class="pi pi-envelope"></i> Información de Contacto
+              </h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-1">
+                <label for="telefono" class="text-sm font-medium">Teléfono*</label>
+                <input type="tel" id="telefono" formControlName="telefono" pInputText pKeyFilter="int" maxlength="12"
+                  minlength="10" placeholder="Ej: 5512345678" [readonly]="!editMode"
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200" />
+                <small *ngIf="f['telefono'].touched && f['telefono'].errors" class="text-xs text-red-500">
+                  <div *ngIf="f['telefono'].errors?.['required']">
+                    <i class="pi pi-exclamation-circle"></i> Este campo es obligatorio.
+                  </div>
+                  <div *ngIf="f['telefono'].errors?.['minlength'] || f['telefono'].errors?.['maxlength']">
+                    <i class="pi pi-exclamation-circle"></i> Debe tener entre 10 y 12 dígitos.
+                  </div>
+                  <div *ngIf="f['telefono'].errors?.['pattern']">
+                    <i class="pi pi-exclamation-circle"></i> Ingrese un numero de telefono valido
+                  </div>
+                </small>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="correo" class="text-sm font-medium">Correo Electrónico*</label>
+                <input type="email" id="correo" formControlName="correo" pInputText required
+                  placeholder="ejemplo@dominio.com" [readonly]="!editMode"
+                  class="border border-gray-300 rounded px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-200" />
+                <small *ngIf="f['correo'].touched && f['correo'].errors" class="text-xs text-red-500">
+                  <div *ngIf="f['correo'].errors?.['required']">
+                    <i class="pi pi-exclamation-circle"></i> Este campo es obligatorio.
+                  </div>
+                  <div *ngIf="f['correo'].errors?.['email'] || f['correo'].errors?.['invalidEmail']">
+                    <i class="pi pi-exclamation-circle"></i> Ingrese un correo válido (ej: usuariodominio.com).
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+            <button pButton type="button" label="Cerrar Sesión" icon="pi pi-sign-out" (click)="logout()"
+              class="border border-gray-300 rounded px-4 py-2 text-gray-700 hover:bg-gray-100 transition"></button>
+            <div class="flex gap-2">
+              <button pButton type="button" label="Cancelar" icon="pi pi-times" (click)="toggleEditMode()"
+                *ngIf="editMode"
+                class="border border-gray-300 rounded px-4 py-2 text-gray-700 hover:bg-gray-100 transition"></button>
+              <button pButton type="submit" label="Guardar Cambios" icon="pi pi-check" *ngIf="editMode"
+                class="border border-gray-300 rounded px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
+                [disabled]="profileForm.invalid || loading"></button>
+              <button pButton type="button" label="Editar Perfil" icon="pi pi-pencil" (click)="toggleEditMode()"
+                *ngIf="!editMode"
+                class="border border-gray-300 rounded px-4 py-2 text-gray-700 hover:bg-gray-100 transition"></button>
+            </div>
+          </div>
+        </form>
+        <!-- ...existing code... -->
+      </div>
+
+      <!-- Tarjeta lateral con todos los nuevos datos -->
+      <div class="profile-side-card">
+        <div class="info-card">
+          <h3><i class="pi pi-info-circle"></i> Detalles de Cuenta</h3>
+
+          <div class="info-item">
+            <span class="info-label">Rol:</span>
+            <span class="info-value">Empleado</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Miembro desde:</span>
+            <span class="info-value">{{
+              profileForm.value.fechaDeRegistro | date : "mediumDate"
+              }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Estado de cuenta:</span>
+            <span class="info-value" [ngClass]="{
+                'text-success': estadoCuenta.estado === 'activa',
+                'text-warning': estadoCuenta.estado !== 'activa'
+              }">
+              {{ estadoCuenta.estado | uppercase }}
+            </span>
+          </div>
+        </div>
+
+        <div class="security-card">
+          <h3><i class="pi pi-shield"></i> Seguridad</h3>
+
+          <div class="security-item">
+            <i class="pi" [ngClass]="{
+                'pi-check-circle text-success':
+                  estadoCuenta.intentosFallidos <
+                  estadoCuenta.intentosPermitidos,
+                'pi-exclamation-circle text-warning':
+                  estadoCuenta.intentosFallidos >=
+                  estadoCuenta.intentosPermitidos
+              }"></i>
+            <span>
+              Intentos fallidos: {{ estadoCuenta.intentosFallidos }}/{{
+              estadoCuenta.intentosPermitidos
+              }}
+            </span>
+          </div>
+
+          <div class="security-item" *ngIf="estadoCuenta.fechaUltimoIntentoFallido">
+            <i class="pi pi-clock"></i>
+            <span>
+              Último intento fallido:
+              {{ estadoCuenta.fechaUltimoIntentoFallido | date : "short" }}
+            </span>
+          </div>
+
+          <div class="security-item" *ngIf="estadoCuenta.tiempoDeBloqueo > 0">
+            <i class="pi pi-lock"></i>
+            <span>
+              Tiempo de bloqueo: {{ estadoCuenta.tiempoDeBloqueo }} segundos
+            </span>
+          </div>
+
+          <div class="security-item" *ngIf="estadoCuenta.vecesDeBloqueos > 0">
+            <i class="pi pi-history"></i>
+            <span> Veces bloqueado: {{ estadoCuenta.vecesDeBloqueos }} </span>
+          </div>
+
+          <button pButton label="Ver actividad completa" icon="pi pi-list" class="p-button-text p-button-sm"></button>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <form class="profile-form">
-    <div class="form-group-container">
-      <div class="form-group">
-        <label for="first-name">Nombre(s)</label>
-        <input
-          type="text"
-          id="first-name"
-          [(ngModel)]="data.nombre"
-          name="firstName"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="last-name">Apellidos</label>
-        <input
-          type="text"
-          id="last-name"
-          [(ngModel)]="data.apellidos"
-          name="lastName"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="phone-number">Número telefónico</label>
-        <input
-          type="text"
-          id="phone-number"
-          [(ngModel)]="data.telefono"
-          name="phoneNumber"
-        />
-      </div>
-    </div>
-
-    <div class="button-group">
-      <i
-        (click)="logout()"
-        style="cursor: pointer;"
-        class="pi pi-sign-out"
-        >Cerrar sesión</i
-      >
-      <button type="button" class="reset-btn">Restablecer</button>
-      <button type="button" (click)="saveChanges()" class="save-btn">
-        Guardar
-      </button>
-    </div>
-  </form>
 </div>

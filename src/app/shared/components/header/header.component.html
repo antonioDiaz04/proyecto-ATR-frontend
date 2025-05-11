@@ -4,13 +4,13 @@
 </ngx-ui-loader>
 
 <!-- Exclusive Dress Boutique Header -->
-<header class="w-full fixed top-0 z-50 bg-white text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
+<header class="w-full fixed top-0 z-50 bg-[#faf9f7] text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
   [ngClass]="{ 'bg-opacity-95 backdrop-blur-sm': isScrolled }">
-
   <!-- Main Container -->
-  <div class="container mx-auto px-4 lg:px-8">
+  <div class="container mx-auto px-2 lg:px-20 lg:py-2"> <!-- Increased lateral padding -->
+
     <!-- First Row: Logo + Search + Icons -->
-    <div class="flex items-center justify-between py-3">
+    <div class="flex items-center justify-between py-2 lg:px-2"> <!-- Increased lateral padding -->
 
       <!-- Logo and Mobile Menu -->
       <div class="flex items-center w-1/4">
@@ -31,14 +31,61 @@
         </a>
       </div>
 
-      <!-- Dress Search -->
-      <div class="hidden md:flex flex-1 px-4 lg:px-8 max-w-xl">
-        <div class="relative w-full">
-          <input type="text" placeholder="Buscar vestidos de novia, fiesta..."
-            class="w-full pl-12 pr-4 py-2 bg-[#faf7f9] text-[#3d2e35] placeholder-[#a38f9b] focus:outline-none border-b border-[#d4a8b4] transition-all font-light">
-          <i class="pi pi-search absolute left-4 top-1/2 transform -translate-y-1/2 text-[#a38f9b]"></i>
+      <!-- Product Search -->
+      <div class="relative w-full max-w-3xl mx-auto"> <!-- Cambiar a max-w-3xl para mayor ancho -->
+        <input type="text" [(ngModel)]="busquedaProducto" [ngModelOptions]="{standalone: true}"
+          (input)="filtrarProductos()" (focus)="mostrarDropdown = true" (blur)="ocultarDropdownConRetraso()"
+          placeholder="Buscar vestidos de novia, fiesta..."
+          class="w-full pl-12 pr-10 py-2 text-sm bg-white text-[#2e2e2e] placeholder-gray-400 border border-gray-200 rounded-none focus:ring-0 focus:border-[#c0bab3] focus:outline-none transition-all duration-150 ease-in-out">
+
+        <i class="pi pi-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+
+        <button *ngIf="busquedaProducto" type="button" (click)="limpiarBusqueda()"
+          class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
+          <i class="pi pi-times"></i>
+        </button>
+
+        <!-- Dropdown de sugerencias -->
+        <div *ngIf="mostrarDropdown"
+          class="absolute mt-2 w-full bg-white border border-[#c0bab3] rounded-md shadow-lg z-10 max-h-60 overflow-hidden">
+          <div class="flex border-b border-gray-200">
+            <div class="w-1/4 bg-[#fdfcfc] p-4"> <!-- Categorías a la izquierda (más estrecho y fijo) -->
+              <h4 class="font-medium text-gray-700">Opciones</h4>
+              <ul class="space-y-1">
+                <li class="text-sm text-gray-600">Nuevos Arrivos</li>
+                <li class="text-sm text-gray-600">Ofertas Especiales</li>
+                <li class="text-sm text-gray-600">Más Vendidos</li>
+              </ul>
+            </div>
+            <div class="w-3/4 max-h-60 overflow-auto"> <!-- Productos a la derecha (más ancho y desplazable) -->
+              <ul>
+                <li *ngFor="let producto of productosFiltrados" (mousedown)="seleccionarProducto(producto)"
+                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-[#ebe3db] last:border-b-0 flex items-center gap-3">
+
+                  <!-- Imagen del producto -->
+                  <img [src]="producto.imagenes[0]" alt="img" class="w-10 h-10 object-cover rounded-md border">
+
+                  <!-- Texto con resaltado -->
+                  <div class="flex flex-col">
+                    <div class="font-medium text-sm text-gray-800" [innerHTML]="resaltarCoincidencia(producto.nombre)">
+                    </div>
+                    <div class="text-xs text-gray-500">{{producto.talla}} • {{producto.precio | currency}}</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- No hay resultados -->
+        <div *ngIf="mostrarDropdown && busquedaProducto.length >= 2 && productosFiltrados.length === 0"
+          class="absolute mt-2 w-full bg-white border border-gray-200 rounded-md shadow-sm z-10 text-sm text-gray-500 p-3">
+          No se encontraron productos para "{{ busquedaProducto }}"
         </div>
       </div>
+
+
+
 
       <!-- Action Icons -->
       <div class="flex items-center justify-end space-x-5 w-1/4">
@@ -56,13 +103,13 @@
           <ng-container *ngIf="!isLoggedIn; else userMenu">
             <div class="flex space-x-2">
               <!-- Botón Iniciar Sesión -->
-              <button (click)="openModal()" class="px-4 py-2 bg-white text-black border border-black rounded-none 
+              <button (click)="openModal()" class="px-4 uppercase py-2 bg-transparent text-[#807c77] border border-[#aba69f] rounded-none 
                        hover:bg-gray-100 transition-colors text-sm font-medium">
                 Iniciar sesión
               </button>
 
               <!-- Botón Registro -->
-              <button routerLink="/auth/Sign-up" class="px-4 py-2 bg-black text-white rounded-none 
+              <button routerLink="/auth/Sign-up" class="px-4 uppercase py-2 bg-[#403e3c] text-white rounded-none 
                        hover:bg-gray-800 transition-colors text-sm font-medium">
                 Registrarse
               </button>
@@ -140,14 +187,14 @@
 </header>
 
 <!-- Mobile Search -->
-<div *ngIf="isMobile"
+<!-- <div *ngIf="isMobile"
   class="fixed top-16 left-0 right-0 bg-white z-40 px-4 py-2 shadow-sm md:hidden border-b border-[#f0e6eb]">
   <div class="relative w-full">
     <input type="text" placeholder="Buscar vestidos..."
       class="w-full pl-10 pr-4 py-2 bg-[#faf7f9] text-[#3d2e35] placeholder-[#a38f9b] focus:outline-none border-b border-[#d4a8b4]">
     <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-[#a38f9b]"></i>
   </div>
-</div>
+</div> -->
 
 <!-- Mobile Menu for Dresses -->
 <p-sidebar *ngIf="isMobile" [(visible)]="sidebarVisible" position="left" styleClass="w-80" [showCloseIcon]="false">
