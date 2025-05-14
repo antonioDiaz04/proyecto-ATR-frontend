@@ -53,20 +53,20 @@ const routes: Routes = [
         component: HomeView,
       },
       {
-        path: 'lista-categorias',
+        path: 'categorias',
         component: CategoriaComponent,
       },
       {
-        path: 'control-clientes',
+        path: 'control-usuarios',
         component: ControlClientesView,
         children: [
           {
-            path: 'lista-clientes',
+            path: 'lista-usuarios',
             component: ListadoClientesComponent,
           },
           {
             path: '',
-            redirectTo: 'lista-clientes',
+            redirectTo: 'lista-usuarios',
             pathMatch: 'full',
           },
         ],

@@ -4,8 +4,20 @@
 </ngx-ui-loader>
 
 <!-- Exclusive Dress Boutique Header -->
-<header class="w-full fixed top-0 z-50 bg-[#faf9f7] text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
+<header
+  class="w-full fixed top-0 z-50 bg-[#faf9f7] text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
   [ngClass]="{ 'bg-opacity-95 backdrop-blur-sm': isScrolled }">
+  <div class="container-marquee hidden md:flex">
+    <div class="phrase">Descuentos hasta el <span class="highlight">-50%</span> en prendas seleccionadas por tiempo
+      limitado</div>
+    <div class="phrase">Ventas exclusivas <span class="highlight">solo aquí</span>, accede antes que nadie a las nuevas
+      colecciones</div>
+    <div class="phrase">Renta de lujo en <span class="highlight">Atelier</span>, ideal para eventos, galas y momentos
+      únicos</div>
+    <div class="phrase">Estilo y elegancia en <span class="highlight">cada prenda</span>, diseñadas para destacar tu
+      personalidad</div>
+
+  </div>
   <!-- Main Container -->
   <div class="container mx-auto px-2 lg:px-20 lg:py-2"> <!-- Increased lateral padding -->
 
@@ -24,10 +36,10 @@
             src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
             alt="Atelier Dresses">
 
-          <span class="absolute text-2xl font-serif tracking-tight transition-all duration-500 ease-in-out"
-            [class.opacity-100]="!isSticky" [class.opacity-0]="isSticky" [class.translate-y-2]="isSticky">
-            Atelier
-          </span>
+          <img class="absolute h-8 transition-all duration-500 ease-in-out" [class.opacity-100]="!isSticky"
+            [class.opacity-0]="isSticky" [class.translate-y-2]="isSticky"
+            src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730313785/images-AR/ic5srzm6tzqyrosaexan.png"
+            alt="Atelier Logo">
         </a>
       </div>
 
@@ -36,7 +48,7 @@
         <input type="text" [(ngModel)]="busquedaProducto" [ngModelOptions]="{standalone: true}"
           (input)="filtrarProductos()" (focus)="mostrarDropdown = true" (blur)="ocultarDropdownConRetraso()"
           placeholder="Buscar vestidos de novia, fiesta..."
-          class="w-full pl-12 pr-10 py-2 text-sm bg-white text-[#2e2e2e] placeholder-gray-400 border border-gray-200 rounded-none focus:ring-0 focus:border-[#c0bab3] focus:outline-none transition-all duration-150 ease-in-out">
+          class="w-full pl-12 pr-10 py-2 text-sm bg-white text-[#2e2e2e] placeholder-gray-400 border-b border-[#c0bab3] focus:ring-0 focus:border-[#c0bab3] focus:outline-none transition-all duration-150 ease-in-out">
 
         <i class="pi pi-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
 
@@ -243,19 +255,65 @@
   (mostrarFormulario)="cerrarModal($event)"></app-login-modal>
 
 <style>
-  @keyframes marquee {
+  .container-marquee {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 1em;
+    font-weight: bold;
+    height: 1.5em;
+    overflow: hidden;
+    position: relative;
+    background: #000000;
+    color: #fff;
+  }
+
+  .phrase {
+    position: absolute;
+    opacity: 0;
+    animation: rotate 16s linear infinite;
+  }
+
+  .phrase:nth-child(2) {
+    animation-delay: 4s;
+  }
+
+  .phrase:nth-child(3) {
+    animation-delay: 8s;
+  }
+
+  .phrase:nth-child(4) {
+    animation-delay: 12s;
+  }
+
+  .highlight {
+    color: #d4af37;
+    /* Amarillo plateado / dorado claro */
+  }
+
+  @keyframes rotate {
     0% {
-      transform: translateX(100%);
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    10% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    30% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    40% {
+      opacity: 0;
+      transform: translateY(-100%);
     }
 
     100% {
-      transform: translateX(-100%);
+      opacity: 0;
     }
-  }
-
-  .animate-marquee {
-    display: inline-block;
-    white-space: nowrap;
-    animation: marquee 20s linear infinite;
   }
 </style>

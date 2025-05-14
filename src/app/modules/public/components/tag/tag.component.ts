@@ -37,19 +37,20 @@ export class TagComponent implements OnInit {
   ];
   cards = [
     {
-      image: 'https://www.shutterstock.com/image-photo/young-woman-blonde-hair-poses-600nw-2476791279.jpg',
+      // image: 'https://i.pinimg.com/736x/48/76/59/4876591c766fe6fd9319d8f027ed562b.jpg',
+      image: 'https://i.pinimg.com/736x/48/76/59/4876591c766fe6fd9319d8f027ed562b.jpg',
       title: 'Descubre la esencia de la elegancia con nuestro exclusivo vestido.',
       text: `Cada pliegue y cada detalle han sido diseñados para resaltar tu belleza única. 
             Imagina deslizarte en un evento, sintiendo cómo todas las miradas se posan en ti...`
     },
     {
-      image: 'https://www.shutterstock.com/image-photo/portrait-gorgeous-elegant-sensual-blonde-600nw-2231380795.jpg',
+      image: 'https://i.pinimg.com/736x/cd/a0/ed/cda0ede52a89fa31a43df88cdf40c203.jpg',
       title: 'Redefine tu estilo con nuestro cautivador vestido.',
       text: `Cada detalle ha sido meticulosamente diseñado para realzar tu silueta y resaltar tu personalidad. 
             Este vestido no es solo una prenda; es una experiencia...`
     },
     {
-      image: 'https://img.freepik.com/foto-gratis/retrato-modelo-morena-linda-hermosa-mujer-vestido-casual-verano-maquillaje-aislado-blanco-longitud-total_158538-14436.jpg',
+      image: 'https://i.pinimg.com/736x/d4/6c/d7/d46cd70e1c54875305bfbb7343fd0dad.jpg',
       title: 'Redefine tu estilo con nuestro cautivador vestido.',
       text: `Cada detalle ha sido meticulosamente diseñado para realzar tu silueta y resaltar tu personalidad. 
             Este vestido no es solo una prenda; es una experiencia...`

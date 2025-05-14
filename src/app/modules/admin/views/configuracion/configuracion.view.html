@@ -1,9 +1,69 @@
-<section #seccionVista>
-  <!-- <div>
-    <h2>Configuración</h2>
-  </div> -->
+<section class="configuracion-container  min-h-screen p-6">
+  <!-- Encabezado -->
+  <div class="border-b border-gray-200 pb-4 mb-6 flex items-center">
+    <i class="pi pi-cog text-red-500 text-3xl mr-3"></i>
+    <div>
+      <h1 class="text-2xl font-light text-gray-800 inline-block border-b-2 border-red-500 pb-1">Configuración del Sistema</h1>
+      <p class="text-sm text-gray-500 mt-1">Administración de parámetros y configuraciones generales</p>
+    </div>
+  </div>
 
-  <section>
+  <!-- Tabs basados en URL -->
+  <div class="border-b border-gray-200 mb-6">
+    <nav class="flex space-x-1">
+      <a 
+        *ngFor="let tab of tabs"
+        [routerLink]="['/admin/configuracion', tab.path]"
+        routerLinkActive="border-red-500 text-red-600 bg-red-50"
+        class="px-4 py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center"
+        >
+        <!-- [routerLinkActiveOptions]="{exact: tab.exact}" -->
+        <i [class]="tab.icon + ' mr-2'"></i>
+        {{ tab.title }}
+      </a>
+    </nav>
+  </div>
+
+  <!-- Contenido dinámico basado en ruta -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <!-- Resumen de configuración (ruta vacía) -->
+    <div *ngIf="isActiveTab('')" class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="p-4 border-l-4 border-red-500">
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Configuraciones Activas</h3>
+          <div class="flex items-baseline">
+            <span class="text-3xl font-light text-gray-800 mr-2">24</span>
+            <span class="text-xs font-medium text-green-500">+3 este mes</span>
+          </div>
+        </div>
+        <div class="p-4 border-l-4 border-blue-500">
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Documentos Legales</h3>
+          <div class="flex items-baseline">
+            <span class="text-3xl font-light text-gray-800 mr-2">5</span>
+            <span class="text-xs font-medium text-blue-500">3 actualizados</span>
+          </div>
+        </div>
+        <div class="p-4 border-l-4 border-amber-500">
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Notificaciones</h3>
+          <div class="flex items-baseline">
+            <span class="text-3xl font-light text-gray-800 mr-2">12</span>
+            <span class="text-xs text-gray-500">pendientes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-4 border border-amber-100 bg-amber-50 rounded-lg flex items-start">
+          <i class="pi pi-exclamation-circle text-amber-500 mr-3 mt-0.5"></i>
+          <div>
+            <p class="text-sm font-medium text-gray-800">3 configuraciones requieren revisión</p>
+            <p class="text-xs text-gray-500 mt-1">Actualizar antes del 30/06/2023</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenedor para componentes hijos -->
     <router-outlet></router-outlet>
-  </section>
+  </div>
 </section>

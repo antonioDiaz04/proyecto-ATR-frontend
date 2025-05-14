@@ -2,12 +2,12 @@
 <ngx-ui-loader
   *ngIf="firstTime"
   [bgsOpacity]="0.5"
-  [bgsColor]="'#ebe3db'"
+  [bgsColor]="'#000000'"
   [bgsPosition]="'bottom-right'"
   [bgsSize]="20"
   [bgsType]="'ball-spin-clockwise'"
   blur="10"
-  [fgsColor]="'#FF69B4'"  
+  [fgsColor]="'#FFFFFF'"  
   [fgsPosition]="'center-center'"
   [fgsSize]="60"
   [fgsType]="'ball-spin-clockwise'"
@@ -18,32 +18,31 @@
   masterLoaderId="'master'"
   [overlayBorderRadius]="'0'"
   [overlayColor]="'rgba(0, 0, 0, 0)'" 
-  [pbColor]="'#FFA500'" 
+  [pbColor]="'#FFFFFF'" 
   [pbDirection]="'ltr'"
   [pbThickness]="3"
   [hasProgressBar]="true"
   [text]="'Atelier'"
-  [textColor]="'#333b43'"
+  [textColor]="'#000000'"
   [textPosition]="'center-center'">
 </ngx-ui-loader>
 
 <!-- ✅ Loader de Carga (procesos como búsqueda) -->
+<!-- [fgsType]="'none'" -->
 <ngx-ui-loader
   *ngIf="isLoading"
-  [fgsColor]="'#FF69B4'"
-  [fgsSize]="40"
-  [overlayColor]="'rgba(0, 0, 0, 0)'" 
-  blur="10"
-  [pbColor]="'#FFA500'"
+  [overlayColor]="'rgba(0, 0, 0, 0)'"
+  blur="0"
+  [pbColor]="'#FFFFFF'"
   [hasProgressBar]="true"
-  [textColor]="'#FF69B4'" 
+  [textColor]="'#000000'"
   [textPosition]="'center-center'">
 </ngx-ui-loader>
 
 
 <router-outlet/>
 <!-- Modal de bienvenida -->
-<div class="modal-overlay" *ngIf="showWelcomeMessage">
+<!-- <div class="modal-overlay" *ngIf="showWelcomeMessage"> -->
   <!-- <div class="modal">
     <h2>Bienvenido</h2>
     <p>¡Bienvenido! Parece que es tu primera vez aquí.</p>
