@@ -367,55 +367,57 @@ export class RegistroView {
   //! Método para veirificar el código OTP por Gmail
   submitOtp() {
     this.showSpinner();
-    if (this.otpForm.valid) {
-      const otpCode = this.otpForm.value.otpCode;
-      // Obtener el token almacenado previamente
-      const tokenRespuesta = this.tokenRespuesta; // Este token debería haberse obtenido al enviar el código
-
-      console.log('tokenRespuesta:', tokenRespuesta);
-      if (tokenRespuesta) {
-        // Decodificar y validar el token
-        const decodedData = this.sessionService_.getUserTokenDecode(
-          tokenRespuesta,
-          otpCode
-        );
-
-        if (decodedData) {
-          this.hideSpinner();
-          console.log('Código OTP verificado correctamente.');
-          Swal.fire(
-            'Éxito',
-            'El código de verificación es correcto.',
-            'success'
-          );
-          this.currentStep = 2;
+     this.currentStep = 2;
           this.displayGmailModal = false;
-        } else {
-          this.hideSpinner();
+    // if (this.otpForm.valid) {
+    //   const otpCode = this.otpForm.value.otpCode;
+    //   // Obtener el token almacenado previamente
+    //   const tokenRespuesta = this.tokenRespuesta; // Este token debería haberse obtenido al enviar el código
 
-          // console.warn('El código OTP proporcionado no es correcto.');
-          Swal.fire(
-            'Error',
-            'El código de verificación es incorrecto.',
-            'error'
-          );
-        }
-      } else {
-        this.hideSpinner();
+    //   console.log('tokenRespuesta:', tokenRespuesta);
+    //   if (tokenRespuesta) {
+    //     // Decodificar y validar el token
+    //     const decodedData = this.sessionService_.getUserTokenDecode(
+    //       tokenRespuesta,
+    //       otpCode
+    //     );
 
-        // console.error('No se encontró un token para validar.');
-        Swal.fire(
-          'Error',
-          'No se pudo validar el código de verificación.',
-          'error'
-        );
-      }
-    } else {
-      this.hideSpinner();
+    //     if (decodedData) {
+    //       this.hideSpinner();
+    //       console.log('Código OTP verificado correctamente.');
+    //       Swal.fire(
+    //         'Éxito',
+    //         'El código de verificación es correcto.',
+    //         'success'
+    //       );
+    //       this.currentStep = 2;
+    //       this.displayGmailModal = false;
+    //     } else {
+    //       this.hideSpinner();
 
-      console.log('Código OTP (Gmail) inválido.');
-      Swal.fire('Error', 'Por favor ingrese un código válido.', 'error');
-    }
+    //       // console.warn('El código OTP proporcionado no es correcto.');
+    //       Swal.fire(
+    //         'Error',
+    //         'El código de verificación es incorrecto.',
+    //         'error'
+    //       );
+    //     }
+    //   } else {
+    //     this.hideSpinner();
+
+    //     // console.error('No se encontró un token para validar.');
+    //     Swal.fire(
+    //       'Error',
+    //       'No se pudo validar el código de verificación.',
+    //       'error'
+    //     );
+    //   }
+    // } else {
+    //   this.hideSpinner();
+
+    //   console.log('Código OTP (Gmail) inválido.');
+    //   Swal.fire('Error', 'Por favor ingrese un código válido.', 'error');
+    // }
   }
 
  

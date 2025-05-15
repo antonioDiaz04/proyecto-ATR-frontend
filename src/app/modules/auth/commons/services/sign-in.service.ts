@@ -18,7 +18,7 @@ export class SignInService {
   // Login con email y contraseña
   signIn(request: ISingInRequest): Observable<IToken> {
     return this.http.post<IToken>(
-      `${environment.api}/autentificacion/signIn`,
+      `${environment.api}/auth/login`,
       request
     );
   }

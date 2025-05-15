@@ -8,11 +8,11 @@ import { UsuarioService } from '../../../../shared/services/usuario.service';
 @Component({
   selector: 'app-registro-renta',
   templateUrl: './registro-renta.component.html',
-  styleUrl: './registro-renta.component.scss'
+  // styleUrl: './registro-renta.component.scss'
 })
 export class RegistroRentaComponent implements OnInit, OnChanges {
   @Input() rentaId: string | null = null;
-  // rentaId: string | null = null; // Almacena el ID de la renta que se está editando
+ 
   vistaActual: string = 'agregar'; // Controla la vista actual ('agregar', 'eliminar', 'listar')
   productos: any[] = []; // Almacena los productos obtenidos del backend
   rentaForm!: FormGroup;

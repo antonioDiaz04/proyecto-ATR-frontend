@@ -31,8 +31,17 @@ export class UsuarioService {
 
   checkEmailExists(email: string): Observable<any> {
     return this.http.post<any>(
-      environment.api + '/usuarios/check-email',
+      environment.api + '/auth/verificarCorreo',
       { email },
+      {
+        withCredentials: true,
+      }
+    );
+  }
+  checkTelefonoExists(telefono: string): Observable<any> {
+    return this.http.post<any>(
+      environment.api + '/auth/verificarTelefono',
+      { telefono },
       {
         withCredentials: true,
       }
@@ -56,15 +65,7 @@ export class UsuarioService {
       body
     );
   }
-  checkTelefonoExists(telefono: string): Observable<any> {
-    return this.http.post<any>(
-      environment.api + '/usuarios/check-telefono',
-      { telefono },
-      {
-        withCredentials: true,
-      }
-    );
-  }
+  
   checkCode(code: number): Observable<any> {
     return this.http.post<any>(
       environment.api + '/usuarios/check-code',
@@ -88,7 +89,7 @@ export class UsuarioService {
   }
 
   register(usuario: Usuario): Observable<any> {
-    return this.http.post<any>(environment.api + '/usuarios', usuario, {
+    return this.http.post<any>(environment.api + '/auth/register', usuario, {
       withCredentials: true,
     });
   }

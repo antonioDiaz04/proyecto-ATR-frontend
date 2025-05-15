@@ -18,7 +18,7 @@ export class ProductoService {
     // fd.append('description', description);
     // fd.append('image', photo);
     // fd.append('image', producto);
-    return this.http.post<Producto>(`${environment.api}/producto/`,producto);
+    return this.http.post<Producto>(`${environment.api}/productos/`,producto);
   }
   crearRenta(data:any): Observable<Producto> {
    

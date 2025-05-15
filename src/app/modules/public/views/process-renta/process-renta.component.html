@@ -1,126 +1,117 @@
-<div class="container">
-  <div class="contenido">
-    <!-- Formulario a la izquierda -->
-    <div class="formulario-renta">
-      <h2>Formulario de Renta</h2>
-      <form  #rentaForm="ngForm" (ngSubmit)="onSubmit()" class="renta-form">
-        <div class="form-row">
-          <div class="field">
-            <label for="arrendador">Arrendador</label>
-            <input
-              type="text"
-              [(ngModel)]="usuarioId"
-
-              id="arrendador"
-              placeholder="Nombre del arrendador"
-              required
-            />
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Formulario de Renta -->
+    <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Formulario de Renta</h2>
+      <form #rentaForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="arrendador" class="block text-sm font-medium text-gray-700">Arrendador</label>
+            <input type="text" [(ngModel)]="usuarioId" id="arrendador"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Nombre del arrendador" required />
           </div>
-          <div class="field">
-            <label for="arrendatario">Arrendatario</label>
-            <input
-            [(ngModel)]="arrendatario"
-
-              type="text"
-              id="arrendatario"
-              placeholder="Nombre del arrendatario"
-              required
-            />
+          <div class="space-y-2">
+            <label for="arrendatario" class="block text-sm font-medium text-gray-700">Arrendatario</label>
+            <input [(ngModel)]="arrendatario" type="text" id="arrendatario"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Nombre del arrendatario" required />
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label for="fechaInicio">Fecha de Inicio</label>
-            <input
-            [(ngModel)]="fechaInicio"
-
-              type="date"
-              id="fechaInicio"
-              value="2025-02-25" 
-              required
-            />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="fechaInicio" class="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
+            <input [(ngModel)]="fechaInicio" type="date" id="fechaInicio"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              required />
           </div>
-          <div class="field">
-            <label for="fechaFin">Fecha de Fin (10 días después)</label>
-            <input
-              type="date"
-              [(ngModel)]="fechaFin"
-
-              id="fechaFin"
-              value="2025-03-07" 
-              required
-              min="2025-02-25"
-              max="2025-03-07" 
-            />
+          <div class="space-y-2">
+            <label for="fechaFin" class="block text-sm font-medium text-gray-700">Fecha de Fin</label>
+            <input type="date" [(ngModel)]="fechaFin" id="fechaFin"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              required />
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label for="direccionInmueble">Dirección del Inmueble</label>
-            <input
-            [(ngModel)]="direccionInmueble"
-
-              type="text"
-              id="direccionInmueble"
-              placeholder="Dirección del inmueble"
-              required
-            />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="direccionInmueble" class="block text-sm font-medium text-gray-700">Dirección del
+              Inmueble</label>
+            <input [(ngModel)]="direccionInmueble" type="text" id="direccionInmueble"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Dirección del inmueble" required />
           </div>
-          <div class="field">
-            <label for="montoRenta">Monto de la Renta</label>
-            <input
-            [(ngModel)]="montoRenta"
-
-              type="number"
-              id="montoRenta"
-              placeholder="Monto de la renta"
-              required
-            />
+          <div class="space-y-2">
+            <label for="montoRenta" class="block text-sm font-medium text-gray-700">Monto de la Renta</label>
+            <input [(ngModel)]="montoRenta" type="number" id="montoRenta"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Monto de la renta" [value]="Detalles?.precio" required />
           </div>
         </div>
 
-        <button 
-        [disabled]="!rentaForm.valid"
-        type="submit" class="ui button primary">
+        <button [disabled]="!rentaForm.valid" type="submit"
+          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
           Generar Contrato
         </button>
       </form>
     </div>
 
-    <!-- Detalles a la derecha -->
-    <div class="detalles-producto card">
-      <div *ngIf="!isLoading && Detalles" class="producto-detalles">
-        <h2>Producto seleccionado</h2>
-        <div class="producto-imagen">
-          <img [src]="Detalles.imagenPrincipal" alt="{{ Detalles.nombre }}" />
+    <!-- Detalles del Producto -->
+    <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-6">
+      <div *ngIf="!isLoading && Detalles" class="space-y-6">
+        <h2 class="text-2xl font-bold text-gray-800">Detalles del Vestido</h2>
 
-        </div>
-        <!-- Detalles a la derecha -->
-        <div class="info">
-          <p class="nombre">{{ Detalles.nombre }}</p>
-
-          <div class="info-row">
-            <p class="precio-label">Precio:</p>
-            <p class="precio">$ {{ Detalles.precio }}</p>
-          </div>
-          <div class="info-row precio">
-            <p class="total-label">Total:</p>
-            <p class="total">$ {{ Detalles.precio }}</p>
+        <!-- Carousel de imágenes -->
+        <div class="relative">
+          <img [src]="Detalles.imagenes[0]" alt="{{ Detalles.nombre }}" class="w-full h-96 object-cover rounded-lg" />
+          <div class="flex mt-2 space-x-2 overflow-x-auto pb-2">
+            <div *ngFor="let img of Detalles.imagenes" class="flex-shrink-0">
+              <img [src]="img" alt="" class="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-80"
+                (click)="Detalles.imagenes[0] = img" />
+            </div>
           </div>
         </div>
-        <div class="btns">
-          <button type="submit"
-          [disabled]="!rentaForm.valid"
-          class="ui button primary">
-            Continuar el pago
-          </button>
-          <button type="submit" class="ui button custom-button">
-            Pagar después
-          </button>
-          
+
+        <!-- Información del producto -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold text-gray-900">{{ Detalles.nombre }}</h3>
+
+          <div class="text-sm text-gray-600 space-y-2">
+            <p><span class="font-medium">Color:</span> {{ Detalles.color | titlecase }}</p>
+            <p><span class="font-medium">Talla:</span> {{ Detalles.talla }}</p>
+            <p><span class="font-medium">Material:</span> Poliéster con lentejuelas</p>
+            <p><span class="font-medium">Características:</span> Sin mangas, escote en V, holán en hombros, cierre de
+              cremallera trasero</p>
+          </div>
+
+          <div class="border-t pt-4 space-y-2">
+            <div class="flex justify-between">
+              <p class="text-sm font-medium text-gray-500">Precio por día:</p>
+              <p class="text-base font-medium text-gray-900">$ {{ Detalles.precio | number }}</p>
+            </div>
+
+            <div class="flex justify-between items-center pt-2">
+              <p class="text-sm font-medium text-gray-500">Total estimado:</p>
+              <p class="text-lg font-bold text-indigo-600">$ {{ calcularTotalRenta() | number }}</p>
+            </div>
+          </div>
         </div>
+
+        <!-- Opciones de pago -->
+        <div class="space-y-4 pt-4 border-t">
+          <div #paypal class="min-h-[45px] w-full mt-2"></div>
+
+          <button type="button"
+            class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Reservar sin pago inmediato
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div *ngIf="isLoading" class="flex justify-center items-center h-64">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
       </div>
     </div>
   </div>
