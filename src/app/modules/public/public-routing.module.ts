@@ -19,6 +19,7 @@ import { ProcessRentaComponent } from "./views/process-renta/process-renta.compo
 import { ProcessCompraComponent } from "./views/process-compra/process-compra.component";
 import { MisionVisionComponent } from "./views/mision-vision/mision-vision.component";
 import { PreguntasComponent } from "./views/preguntas/preguntas.component";
+import { NuevosLlegadasView } from "./views/nuevos-llegadas/nuevos-llegadas.view";
 
 const routes: Routes = [
   {
@@ -44,6 +45,14 @@ const routes: Routes = [
         data: {
           title: "AcercaDe",
           breadcrumb: "Acerca de la empresa",
+        },
+      },
+      {
+        path: "Nuevos",
+        component: NuevosLlegadasView,
+        data: {
+          title: "Nuevos",
+          breadcrumb: "Nuevos",
         },
       },
       {

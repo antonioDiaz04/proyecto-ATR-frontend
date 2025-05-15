@@ -21,7 +21,7 @@ interface Resenia {
 @Component({
   selector: 'app-comentarios',
   templateUrl: './comentarios.component.html',
-  // styleUrl: './comentarios.component.scss'
+  styleUrl: './comentarios.component.scss'
 })
 export class ComentariosComponent implements OnInit {
   

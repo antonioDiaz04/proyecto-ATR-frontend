@@ -5,19 +5,15 @@
 
 <!-- Exclusive Dress Boutique Header -->
 <header
-  class="w-full fixed top-0 z-50 bg-[#faf9f7] text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
+  class="w-full fixed top-0 z-50  text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
   [ngClass]="{ 'bg-opacity-95 backdrop-blur-sm': isScrolled }">
-  <div class="container-marquee hidden md:flex">
-    <div class="phrase">Descuentos hasta el <span class="highlight">-50%</span> en prendas seleccionadas por tiempo
-      limitado</div>
-    <div class="phrase">Ventas exclusivas <span class="highlight">solo aquí</span>, accede antes que nadie a las nuevas
-      colecciones</div>
-    <div class="phrase">Renta de lujo en <span class="highlight">Atelier</span>, ideal para eventos, galas y momentos
-      únicos</div>
-    <div class="phrase">Estilo y elegancia en <span class="highlight">cada prenda</span>, diseñadas para destacar tu
-      personalidad</div>
-
-  </div>
+<div class="container-marquee md:flex transition-opacity duration-500 ease-in-out"
+     [ngClass]="{ 'hidden-marquee': isScrolled }">
+  <div class="phrase">Descuentos hasta el <span class="highlight">-50%</span> en prendas seleccionadas por tiempo limitado</div>
+  <div class="phrase">Ventas exclusivas <span class="highlight">solo aquí</span>, accede antes que nadie a las nuevas colecciones</div>
+  <div class="phrase">Renta de lujo en <span class="highlight">Atelier</span>, ideal para eventos, galas y momentos únicos</div>
+  <div class="phrase">Estilo y elegancia en <span class="highlight">cada prenda</span>, diseñadas para destacar tu personalidad</div>
+</div>
   <!-- Main Container -->
   <div class="container mx-auto px-2 lg:px-20 lg:py-2"> <!-- Increased lateral padding -->
 
@@ -48,7 +44,7 @@
         <input type="text" [(ngModel)]="busquedaProducto" [ngModelOptions]="{standalone: true}"
           (input)="filtrarProductos()" (focus)="mostrarDropdown = true" (blur)="ocultarDropdownConRetraso()"
           placeholder="Buscar vestidos de novia, fiesta..."
-          class="w-full pl-12 pr-10 py-2 text-sm bg-white text-[#2e2e2e] placeholder-gray-400 border-b border-[#c0bab3] focus:ring-0 focus:border-[#c0bab3] focus:outline-none transition-all duration-150 ease-in-out">
+          class="w-full pl-12 pr-10 py-2 text-sm bg-white text-[#161616] placeholder-gray-400 border-b border-[#64625e] focus:ring-0 focus:border-[#9a958f] focus:outline-none transition-all duration-150 ease-in-out">
 
         <i class="pi pi-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
 
@@ -59,7 +55,7 @@
 
         <!-- Dropdown de sugerencias -->
         <div *ngIf="mostrarDropdown"
-          class="absolute mt-2 w-full bg-white border border-[#c0bab3] rounded-md shadow-lg z-10 max-h-60 overflow-hidden">
+          class="absolute mt-2 w-full bg-white border border-[#96928d] rounded-md shadow-lg z-10 max-h-60 overflow-hidden">
           <div class="flex border-b border-gray-200">
             <div class="w-1/4 bg-[#fdfcfc] p-4"> <!-- Categorías a la izquierda (más estrecho y fijo) -->
               <h4 class="font-medium text-gray-700">Opciones</h4>
@@ -158,14 +154,14 @@
         Nuestra colección
       </a>
 
-      <a (click)="redirectTo('nuevos')"
+      <a (click)="redirectTo('Nuevos')"
         class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group overflow-hidden">
         Nuevos Arrivos
         <span class="absolute top-1 right-1 bg-[#d4a8b4] text-[#3d2e35] text-[8px] px-1 rounded-full">NEW</span>
 
         <!-- Efecto de brillo deslizante -->
         <span
-          class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 -translate-x-full group-hover:translate-x-full"></span>
+          class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 -translate-x-full group-hover:translate-x-full"></span>
       </a>
 
       <a (click)="redirectTo('ofertas')"
@@ -253,7 +249,6 @@
 <!-- Modal login -->
 <app-login-modal *ngIf="isModalVisible" [isModalVisible]="isModalVisible"
   (mostrarFormulario)="cerrarModal($event)"></app-login-modal>
-
 <style>
   .container-marquee {
     justify-content: center;
@@ -261,17 +256,20 @@
     display: flex;
     font-size: 1em;
     font-weight: bold;
-    height: 1.5em;
+    height: 1.5em; /* Ajusta la altura según lo necesites */
     overflow: hidden;
     position: relative;
     background: #000000;
     color: #fff;
+    transition: opacity 0.5s ease-in-out, height 0s 0.5s; /* Añadir transición para la altura */
   }
 
   .phrase {
     position: absolute;
+    font-family: 'Times New Roman', Times, serif;
     opacity: 0;
     animation: rotate 16s linear infinite;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
   }
 
   .phrase:nth-child(2) {
@@ -287,8 +285,7 @@
   }
 
   .highlight {
-    color: #d4af37;
-    /* Amarillo plateado / dorado claro */
+    color: #d4af37; /* Amarillo plateado / dorado claro */
   }
 
   @keyframes rotate {
@@ -296,24 +293,30 @@
       opacity: 0;
       transform: translateY(100%);
     }
-
     10% {
       opacity: 1;
       transform: translateY(0);
     }
-
     30% {
       opacity: 1;
       transform: translateY(0);
     }
-
     40% {
       opacity: 0;
       transform: translateY(-100%);
     }
-
     100% {
       opacity: 0;
     }
+  }
+
+  /* Nueva clase para ocultar el marquee sin dejar espacio */
+  .hidden-marquee {
+    height: 0; /* Elimina la altura para no dejar espacio */
+    opacity: 0; /* Asegura que la opacidad sea 0 */
+    padding: 0; /* Asegúrate de que no haya relleno */
+    margin: 0; /* Asegúrate de que no haya margen */
+    overflow: hidden; /* Oculta cualquier contenido adicional */
+    transition: opacity 0.5s ease-in-out, height 0s 0.5s; /* Transición para suavizar el cambio */
   }
 </style>

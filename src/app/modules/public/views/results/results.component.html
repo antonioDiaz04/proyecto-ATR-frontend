@@ -1,6 +1,6 @@
 <main class="min-h-screen flex flex-col mt-20 px-6 md:px-12 lg:px-24">
- <!-- Imagen y título centrados con imagen más grande -->
-<!-- <div class="relative mb-8 w-full aspect-[3/1] mx-auto overflow-hidden shadow-md">
+  <!-- Imagen y título centrados con imagen más grande -->
+  <!-- <div class="relative mb-8 w-full aspect-[3/1] mx-auto overflow-hidden shadow-md">
   <img
     src="https://i.pinimg.com/736x/ec/9a/13/ec9a13208b0f32e88cf8cda0743142b6.jpg"
     alt="Promotional Banner"
@@ -82,7 +82,7 @@
       <div *ngIf="!isLoading && hasResults" class="results-wrapper">
         <div class="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
           <div *ngFor="let product of filteredProducts"
-            class="product-card bg-white overflow-hidden hover:shadow-lg transition-all duration-500 border border-[#e8e3db] group">
+            class="product-card  overflow-hidden hover:shadow-lg w-60 transition-all duration-500 group">
 
             <!-- Imagen del producto con efecto hover -->
             <div class="relative overflow-hidden aspect-square">
@@ -105,13 +105,18 @@
 
             <!-- Información del producto  -->
             <div class="card-info p-5">
-              <h3 class="product-name text-xl font-serif text-[#2a2723] mb-3 tracking-tight">{{ product.nombre }}</h3>
+              <h3 class="product-name text-sm font-serif text-[#2a2723] mb-3 tracking-tight">{{ product.nombre }}</h3>
 
               <div class="price-section mb-4">
                 <p class="product-price text-lg text-[#2a2723] font-medium">
-                  {{ product.precio | currency:'MXN':'symbol':'1.2-2' }}
+                  {{ product.precioActual | currency:'MXN':'symbol':'1.2-2' }}
+                </p>
+                <p class="product-price text-lg text-[#a9a9a9] line-through">
+                  <!-- Estilo tachado para el precio anterior -->
+                  {{ product.precioAnterior | currency:'MXN':'symbol':'1.2-2' }}
                 </p>
               </div>
+
 
               <!-- Acciones - Botones discretos  -->
               <div class="product-actions flex gap-3">

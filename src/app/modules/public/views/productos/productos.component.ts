@@ -29,23 +29,6 @@ export class ProductosComponent implements OnInit {
   rows = 7; // Número de elementos por página
   skeletonItems: any[] = Array(5).fill({}); // Array de 6 elementos para el skeleton
   productos: any = []; // Inicializamos como array vacío
-  // responsiveOptions = [
-  //   {
-  //     breakpoint: "1024px",
-  //     numVisible: 3.5, // Producto central completo y los laterales a la mitad
-  //     numScroll: 1,
-  //   },
-  //   {
-  //     breakpoint: "768px",
-  //     numVisible: 2.5, // Dos productos completos y uno a la mitad
-  //     numScroll: 1,
-  //   },
-  //   {
-  //     breakpoint: "500px",
-  //     numVisible: 1.5, // Uno completo y el siguiente a la mitad
-  //     numScroll: 1,
-  //   },
-  // ];
   responsiveOptions = [
     {
       breakpoint: '1400px',

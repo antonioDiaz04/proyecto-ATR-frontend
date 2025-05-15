@@ -8,7 +8,8 @@
 <!-- review.component.html -->
 <div class="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto p-4">
   <!-- Sección de Reseñas -->
-  <div class="flex-1 rounded-lg shadow-sm p-6 bg-[#f9f8f6]">
+  <div class="flex-1 rounded-lg shadow-sm p-6 reviews-container">
+    
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-serif font-light text-[#2a2a2a] tracking-tight">Opiniones de Clientes</h2>
       <div class="flex items-center">
@@ -20,7 +21,7 @@
       </div>
     </div>
 
-    <div class="max-h-[500px] overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-[#d8d2cc] scrollbar-track-transparent">
+    <div class="max-h-[500px] overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-[#d8d2cc] scrollbar-track-transparent reviews-content">
       <div *ngFor="let review of reviews" class="bg-white p-6 rounded-lg shadow-xs hover:shadow-sm transition-shadow duration-200 border border-[#e5e0db]">
         <div class="flex items-center gap-4 mb-3">
           <img [src]="review.usuario.avatar" [alt]="review.usuario.nombre" class="w-10 h-10 rounded-full object-cover border border-[#e5e0db]">
@@ -42,7 +43,6 @@
         <p class="text-[#4a4a4a] text-sm leading-relaxed font-serif">"{{review.contenido}}"</p>
         <div class="flex justify-between items-center mt-2">
           <p class="text-[#6b5d4d] text-xs">{{review.fecha}}</p>
-          <!-- <p class="text-[#6b5d4d] text-xs" *ngIf="review.correo">{{review.correo}}</p> -->
         </div>
       </div>
     </div>
