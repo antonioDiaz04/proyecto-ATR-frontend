@@ -9,7 +9,6 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 @Component({
   selector: 'app-process-compra',
   templateUrl: './process-compra.component.html',
-  styleUrl: './process-compra.component.scss'
 })
 export class ProcessCompraComponent implements OnInit  {
  isLoading: boolean = false;

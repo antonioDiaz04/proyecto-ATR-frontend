@@ -4,17 +4,9 @@ import { ControlAdministrativaService } from '../../../../shared/services/contro
 import { Termino } from '../../../../shared/interfaces/terminosYCondiciones';
 import AOS from 'aos';
 
-// interface Termino {
-//   _id: string;
-//   titulo: string;
-//   contenido: string;
-//   // Agrega aquí otros campos si los hay
-// }
-
 @Component({
   selector: 'app-terminos',
   templateUrl: './terminos.component.html',
-  // styleUrls: ['./terminos.component.scss']
 })
 export class TerminosComponent implements OnInit {
   terminos: Termino[] = [];
@@ -53,8 +45,6 @@ export class TerminosComponent implements OnInit {
       },
     });
   }
-
-
 
   // Método para formatear el contenido con saltos de línea
   formatContent(content: string): string {
