@@ -90,8 +90,12 @@
                 [src]="product.imagenes[0]" [alt]="product.nombre" (click)="viewProductDetails(product._id)">
 
               <!-- Badge de renta/nuevo  -->
-              <div *ngIf="product.opcionesTipoTransaccion === 'renta' || product.nuevo"
+              <div *ngIf="product.opcionesTipoTransaccion === 'renta' || product.opcionesTipoTransaccion === 'Venta'|| product.nuevo"
                 class="absolute top-4 right-4 flex flex-col gap-2">
+                <span *ngIf="product.opcionesTipoTransaccion === 'Venta'"
+                  class="text-[#2a2723] text-xs px-3 py-1 tracking-wider font-light">
+                  VENTA
+                </span>
                 <span *ngIf="product.opcionesTipoTransaccion === 'renta'"
                   class="bg-[#2a2723] text-[#d4c4a8] text-xs px-3 py-1 tracking-wider font-light">
                   RENTA
