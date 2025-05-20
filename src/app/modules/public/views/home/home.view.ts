@@ -21,7 +21,7 @@ import AOS from 'aos';
   styleUrls: [
     // "./home.view.css",
     // "../../../../shared/styles/styles.scss",
-    "../../../../shared/styles/animations.scss",
+    // "../../../../shared/styles/animations.scss",
   ],
 })
 export class HomeView implements OnInit {
