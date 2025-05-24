@@ -11,7 +11,7 @@
   <!-- Marquee (hidden on mobile) -->
   <div  *ngIf="!isMobile" class="container-marquee md:flex transition-opacity duration-500 ease-in-out hidden sm:flex"
        [ngClass]="{ 'hidden-marquee': isScrolled }">
-    <div class="phrase text-xs sm:text-sm md:text-base">Descuentos hasta el <span class="highlight">-50%</span> en prendas seleccionadas por tiempo limitado</div>
+    <div class="phrase text-xs sm:text-sm md:text-base"> Descuentos hasta el <span class="highlight">-50% 🔥</span> en prendas seleccionadas por tiempo limitado</div>
     <div class="phrase text-xs sm:text-sm md:text-base">Ventas exclusivas <span class="highlight">solo aquí</span>, accede antes que nadie a las nuevas colecciones</div>
     <div class="phrase text-xs sm:text-sm md:text-base">Renta de lujo en <span class="highlight">Atelier</span>, ideal para eventos, galas y momentos únicos</div>
     <div class="phrase text-xs sm:text-sm md:text-base">Estilo y elegancia en <span class="highlight">cada prenda</span>, diseñadas para destacar tu personalidad</div>
@@ -74,7 +74,7 @@
               <h4 class="font-medium text-gray-700 text-xs sm:text-sm">Opciones</h4>
               <ul class="space-y-1 mt-1">
                 <li class="text-xs sm:text-sm text-gray-600">Nuevos Arrivos</li>
-                <li class="text-xs sm:text-sm text-gray-600">Ofertas Especiales</li>
+                <li class="text-xs sm:text-sm text-gray-600">Ofertas Especiales 🔥</li>
                 <li class="text-xs sm:text-sm text-gray-600">Más Vendidos</li>
               </ul>
             </div>
@@ -173,7 +173,7 @@
 
       <a (click)="redirectTo('ofertas')"
         class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
-        Ofertas Especiales
+        Ofertas Especiales 🔥
       </a>
       <a (click)="redirectTo('look')"
         class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
@@ -184,23 +184,7 @@
         Sobre Nosotros
       </a>
 
-      <div class="relative group">
-        <button class="px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition flex items-center">
-          Más
-          <i class="pi pi-chevron-down text-[10px] sm:text-xs ml-1"></i>
-        </button>
-        <div
-          class="absolute left-0 hidden group-hover:block bg-white border border-[#f0e6eb] shadow-sm mt-1 py-1 min-w-[180px] z-50">
-          <a (click)="redirectTo('Preguntas')"
-            class="uppercase cursor-pointer block px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm hover:bg-[#faf7f9] font-light">FAQ</a>
-          <a (click)="redirectTo('MisionVision')"
-            class="uppercase cursor-pointer block px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm hover:bg-[#faf7f9] font-light">Misión</a>
-          <a (click)="redirectTo('terminos')"
-            class="uppercase cursor-pointer block px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm hover:bg-[#faf7f9] font-light">Términos</a>
-          <a (click)="redirectTo('politicas')"
-            class="uppercase cursor-pointer block px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm hover:bg-[#faf7f9] font-light">Políticas</a>
-        </div>
-      </div>
+      
     </nav>
   </div>
 </header>

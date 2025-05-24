@@ -40,9 +40,8 @@ export class RegistoProductoComponent implements OnInit {
     this.productoForm = this.fb.group({
       imagenes: this.fb.array([]),
       nombre: ["", [Validators.required]],
-      talla: ["", [Validators.required]],
-      altura: ["", [Validators.required, Validators.min(30)]],
-      cintura: ["", [Validators.required, Validators.min(20)]],
+      // altura: ["", [Validators.required, Validators.min(30)]],
+      // cintura: ["", [Validators.required, Validators.min(20)]],
       color: ["", [Validators.required]],
       precioAnterior: [0, [Validators.required, Validators.min(0)]],
       precioActual: [0, [Validators.required, Validators.min(0)]],
@@ -112,8 +111,8 @@ export class RegistoProductoComponent implements OnInit {
     this.productoForm.patchValue({
       nombre: producto.nombre || "",
       talla: producto.talla || "",
-      altura: producto.altura || "",
-      cintura: producto.cintura || "",
+      // altura: producto.altura || "",
+      // cintura: producto.cintura || "",
       color: producto.color || "",
       precio: producto.precio || 0,
       opcionesTipoTransaccion: producto.tipoVenta || "Venta", // Asegúrate de que coincida con el campo en el FormGroup
