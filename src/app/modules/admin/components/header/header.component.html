@@ -67,6 +67,15 @@
         </a>
       </li>
       <li>
+        <a routerLink="/admin/control-Accesorios/lista-Accesorios" [class.active]="selectedLink === 'lista-Accesorios'"
+          (click)="selectLink('lista-Accesorios')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-box text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Accesorios</span>
+        </a>
+      </li>
+      <li>
         <a routerLink="/admin/categorias" [class.active]="selectedLink == 'categorias'"
           (click)="selectLink('categorias')"
           class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">

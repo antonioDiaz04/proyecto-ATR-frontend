@@ -1,17 +1,20 @@
-  .reviews-container {
-    position: relative;
-    background: rgba(255, 255, 255, 0.8); /* Fondo con opacidad */
-    border-radius: 0.5rem;
-    overflow: hidden;
+.reviews-container {
+  position: relative;
+  transition: all 0.3s ease;
+}
 
-    /* Máscara solo en la parte inferior */
-    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-    mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-  }
+.reviews-content {
+  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  transition: mask-image 0.3s ease, -webkit-mask-image 0.3s ease;
+}
 
-  .reviews-content {
-    position: relative;
-    z-index: 1;
-  }
+.reviews-content.mask-disabled {
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+/* Efecto hover para las tarjetas */
+.review-card:hover {
+  transform: translateY(-2px);
+}

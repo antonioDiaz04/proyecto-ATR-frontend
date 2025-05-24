@@ -80,14 +80,15 @@
 
       <!-- Grid de productos - Versión premium -->
       <div *ngIf="!isLoading && hasResults" class="results-wrapper">
-        <div class="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+        <div class="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
           <div *ngFor="let product of filteredProducts"
-            class="product-card  overflow-hidden hover:shadow-lg w-60 transition-all duration-500 group">
+            class="product-card  overflow-hidden hover:shadow-lg w-50 transition-all duration-500 group">
 
             <!-- Imagen del producto con efecto hover -->
             <div class="relative overflow-hidden aspect-square">
               <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                [src]="product.imagenes[0]" [alt]="product.nombre" (click)="viewProductDetails(product._id)">
+                [src]="product.imagenes[0]" [alt]="product.nombre" (click)="viewProductDetails(product._id)"
+                 (mouseenter)="cambiarImagen(product, $event)" (mouseleave)="restaurarImagen(product, $event)">
 
               <!-- Badge de renta/nuevo  -->
               <div *ngIf="product.opcionesTipoTransaccion === 'renta' || product.opcionesTipoTransaccion === 'Venta'|| product.nuevo"
@@ -126,17 +127,10 @@
               <div class="product-actions flex gap-3">
                 <button
                   class="quick-view-btn flex-1 bg-white text-[#2a2723] border border-[#2a2723] hover:bg-[#2a2723] hover:text-[#d4c4a8] py-2 px-4 text-sm font-light tracking-wider transition-colors duration-300"
-                  (click)="viewProductDetails(product._id)">
-                  VER DETALLES
+                 (click)="apartarRentar(product)">
+                  ADD CART
                 </button>
-                <button (click)="apartarRentar(product)"
-                  class="add-to-cart-btn bg-[#2a2723] text-[#d4c4a8] hover:bg-[#d4c4a8] hover:text-[#2a2723] p-2 transition-colors duration-300 border border-[#2a2723]">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </button>
+                
               </div>
             </div>
           </div>

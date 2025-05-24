@@ -17,9 +17,6 @@ interface Product {
 @Component({
   selector: 'app-listado-accesorio',
   templateUrl: './listado-accesorio.component.html',
-  styleUrls: ['./listado-accesorio.component.scss',
-    '../../../../shared/styles/tablePrime.scss'
-  ],
   providers: [MessageService] // Proveedor para mostrar mensajes
 })
 export class ListadoAccesorioComponent implements OnInit {
@@ -58,14 +55,21 @@ export class ListadoAccesorioComponent implements OnInit {
   onGlobalFilter(event: Event) {
     const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
     this.allProducts = this.allProducts.filter(product => product.nombre.toLowerCase().includes(searchValue));
+    if(!searchValue){
+      this.getProducts();
+    }
   }
 
   editProduct(product: Product) {
     this.selectedProduct = product; // Establece el producto seleccionado para editar
     this.open(); // Abre el modal para edición
   }
+  deleteProduct(product: Product) {
+    this.selectedProduct = product; // Establece el producto seleccionado para eliminar
+    this.open(); // Abre el modal para confirmación de eliminación
+  }
 
-  deleteProduct(id: string) {
+  confirmarEliminar() {
     if (confirm('¿Estás seguro de que deseas eliminar este accesorio?')) {
       // this.productService.deleteProduct(id).subscribe(
       //   () => {
@@ -78,6 +82,9 @@ export class ListadoAccesorioComponent implements OnInit {
       //   }
       // );
     }
+  }
+  countAvailableProducts() {
+    return this.allProducts.filter(product => product.estado.disponible).length; // Cuenta los productos disponibles
   }
 
   onPageChange(event:any) {

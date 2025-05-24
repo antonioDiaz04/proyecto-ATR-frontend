@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductoService } from '../../../../shared/services/producto.service';
 import { HttpClient } from '@angular/common/http';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-process-compra',
@@ -26,6 +27,7 @@ export class ProcessCompraComponent implements OnInit  {
   publicKey: string = environment.publicKey;
 
   constructor(
+    private location: Location,
     private swPush: SwPush,
     private activatedRoute: ActivatedRoute,
     private productoS_: ProductoService,
@@ -114,5 +116,8 @@ export class ProcessCompraComponent implements OnInit  {
 
   aplicarCupon(){
     
+  }
+  volver() {
+    this.location.back();
   }
 }

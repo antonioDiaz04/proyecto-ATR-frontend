@@ -5,11 +5,12 @@ import { SwPush } from "@angular/service-worker";
 import { environment } from "../../../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { NgxUiLoaderService } from "ngx-ui-loader";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-process-renta",
   templateUrl: "./process-renta.component.html",
-  styleUrls: ["./process-renta.component.scss"],
+  // styleUrls: ["./process-renta.component.scss"],
 })
 export class ProcessRentaComponent implements OnInit {
   isLoading: boolean = false;
@@ -27,6 +28,7 @@ export class ProcessRentaComponent implements OnInit {
   publicKey: string = environment.publicKey;
 
   constructor(
+    private location: Location,
     private swPush: SwPush,
     private activatedRoute: ActivatedRoute,
     private productoS_: ProductoService,
@@ -54,7 +56,9 @@ export class ProcessRentaComponent implements OnInit {
       },
     });
   }
-
+ volver() {
+    this.location.back();
+  }
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -88,14 +92,14 @@ export class ProcessRentaComponent implements OnInit {
         })
         .catch((err) => {
           console.error("Error al suscribirse a notificaciones:", err);
-          alert(
-            "Hubo un problema al suscribirse a las notificaciones. Por favor, asegúrese de que el navegador soporte Service Workers."
-          );
+          // alert(
+          //   "Hubo un problema al suscribirse a las notificaciones. Por favor, asegúrese de que el navegador soporte Service Workers."
+          // );
           this.isLoading = false; // Desactiva el loader en caso de error
         });
     } else {
       console.error("Service Workers no están habilitados en este navegador.");
-      alert("El navegador no soporta notificaciones push.");
+      // alert("El navegador no soporta notificaciones push.");
       this.isLoading = false; // Desactiva el loader si no es compatible
     }
   }

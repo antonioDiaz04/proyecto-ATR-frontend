@@ -1,88 +1,72 @@
-<div class="product-section bg-[#f8f5f2]  px-6 sm:px-8">
-  <!-- Encabezado con tipografía fina -->
-  <div class="max-w-4xl mx-auto mb-16 text-center border-b border-[#e5e0db] pb-8">
-    <h2 class="font-serif text-3xl md:text-4xl font-light tracking-tight text-[#2a2a2a]">
-      <span class="block font-serif italic text-[#8a7a6a] text-xl mb-2">Curated Selection</span>
-      Complementos de edición limitada
+<div class="product-section bg-[#f8f5f2] px-8 sm:px-12">
+  <!-- Encabezado con espacio negativo controlado -->
+  <div class="max-w-5xl mx-auto mb-20 text-center">
+    <h2 class="font-serif text-4xl md:text-5xl font-light text-[#2a2a2a] relative">
+      <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 w-24 h-px bg-[#e5e0db]"></span>
+      <span class="block font-serif italic text-[#8a7a6a] text-2xl mb-3 tracking-[0.1em]">Edición Oro</span>
+      <span class="inline-block mt-3 px-6">Accesorios con Marco Flotante</span>
+      <span class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-16 h-px bg-[#b8a17a] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
     </h2>
   </div>
-  
-  <!-- Grid de productos - Versión desktop -->
-  <div class="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-    <!-- Accesorio 1 - Oro -->
-    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
-      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
-        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-        </svg>
-      </div>
-      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Joyeria fina</h3>
-      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
-        Piezas únicas elaboradas artesanalmente con metales preciosos.
-      </p>
-      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
-    </div>
 
-    <!-- Accesorio 2 - Perfumes -->
-    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
-      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
-        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"></path>
-        </svg>
+  <!-- Grid con bordes aislados -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-16 max-w-8xl mx-auto">
+    <div *ngFor="let accesorio of accesorios" class="group relative">
+      
+      <!-- Contenedor principal con espacio aislado -->
+      <div class="w-60 h-60 mx-auto p-1"> <!-- Padding interno mínimo -->
+        
+        <!-- Marco flotante con transformación 3D -->
+        <div class="relative w-full h-full before:absolute before:inset-[-12px] before:border-[0.7px] 
+            before:border-[#e5e0db] before:rounded-full before:transition-all before:duration-700 
+            before:opacity-100 before:scale-95 group-hover:before:scale-100 group-hover:before:border-[#b8a17a]
+            group-hover:before:inset-[-15px] group-hover:before:shadow-[0_10px_30px_rgba(184,161,122,0.15)]">
+          
+          <!-- Contenedor de imagen con overflow oculto -->
+          <div class="relative w-full h-full overflow-hidden rounded-full bg-white">
+            <img [src]="accesorio.imagenPrincipal" [alt]="accesorio.nombre" 
+                 class="w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] 
+                 group-hover:scale-[1.03] group-hover:brightness-105">
+            
+            <!-- Overlay de lujo con espacio negativo -->
+            <div class="absolute inset-[-1px] border border-transparent transition-all duration-500 
+                group-hover:border-[#b8a17a]/30 group-hover:inset-[-8px]"></div>
+          </div>
+        </div>
       </div>
-      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Fragancias</h3>
-      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
-        Esencias personalizadas creadas por maestros perfumistas.
-      </p>
-      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
-    </div>
 
-    <!-- Accesorio 3 - Relojes -->
-    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
-      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
-        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
+      <!-- Texto con alineación precisa -->
+      <div class="mt-10 text-center px-4 relative">
+        <h3 class="font-serif text-2xl text-[#3a3a3a] mb-2 relative inline-block">
+          {{accesorio.nombre}}
+          <span class="absolute left-0 bottom-0 w-full h-px bg-[#b8a17a] transform scale-x-0 
+              origin-left transition-transform duration-500 group-hover:scale-x-100"></span>
+        </h3>
+        <p class="text-xs text-[#7a7a7a] font-light tracking-[0.1em] uppercase mt-4 
+            transition-all duration-300 group-hover:text-[#8a7a6a]">
+          Exclusivo 2025
+        </p>
       </div>
-      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Cronómetros</h3>
-      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
-        Relojes mecánicos con mecanismos suizos de edición numerada.
-      </p>
-      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
-    </div>
 
-    <!-- Accesorio 4 - Exclusivo -->
-    <div class="group relative overflow-hidden bg-white p-8 text-center border border-[#f0ece6] hover:border-[#d4c8b8] transition-all duration-500">
-      <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center bg-[#faf7f3] group-hover:bg-[#f5f1ea] transition-colors">
-        <svg class="w-8 h-8 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+      <!-- Indicador de posición flotante -->
+      <div class="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-4 opacity-0 
+          group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700">
+        <svg class="w-5 h-5 text-[#b8a17a]" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="1" fill="currentColor" class="animate-pulse"/>
         </svg>
       </div>
-      <h3 class="font-serif text-xl text-[#3a3a3a] mb-3 tracking-wide">Concierge</h3>
-      <p class="text-[#7a7a7a] font-light text-sm leading-relaxed max-w-xs mx-auto">
-        Servicio personalizado para clientes distinguidos.
-      </p>
-      <div class="absolute inset-0 border border-transparent group-hover:border-[#b8a17a] pointer-events-none transition-all duration-300"></div>
-    </div>
-  </div>
-
-  <!-- Versión móvil (simplificada) -->
-  <div class="md:hidden space-y-6 max-w-md mx-auto">
-    <div class="bg-white p-8 text-center border border-[#f0ece6]">
-      <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center bg-[#faf7f3]">
-        <svg class="w-6 h-6 text-[#b8a17a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-        </svg>
-      </div>
-      <h3 class="font-serif text-lg text-[#3a3a3a] mb-2">Joyeria fina</h3>
-      <p class="text-[#7a7a7a] font-light text-xs leading-relaxed">
-        Piezas únicas elaboradas artesanalmente con metales preciosos.
-      </p>
     </div>
   </div>
 </div>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap');
-
+  @keyframes float-circle {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.05); }
+  }
+  
+  .animate-pulse {
+    animation: float-circle 2.5s ease-in-out infinite;
+  }
 </style>

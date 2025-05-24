@@ -1,9 +1,43 @@
-<!-- <section #seccionVista>
-  <div>
-    <h2>Gestion de Accesorios</h2>
+<section class="productos-container">
+
+  <!-- Encabezado con icono de vestido -->
+  <div class="border-b border-gray-200 pb-4 mb-6 flex items-center">
+    <i class="pi pi-tag text-red-500 text-3xl mr-3"></i>
+    <div>
+      <h1 class="text-2xl font-light text-gray-800 inline-block border-b-2 border-red-500 pb-1">Gestión de accesorios</h1>
+      <p class="text-sm text-gray-500 mt-1">Administración completa del inventario</p>
+    </div>
   </div>
- -->
-  <!-- <section> -->
+
+  <!-- Tabs y botón de acción -->
+  <div class="flex justify-between items-center mb-6 border-b border-gray-200">
+    <!-- Tabs -->
+    <nav class="flex">
+      <ul class="flex">
+        <li>
+          <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+            <i class="pi pi-list mr-2 text-gray-400"></i>
+            Listado Completo
+          </a>
+        </li>
+        <li>
+          <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+            <i class="pi pi-box mr-2 text-gray-400"></i>
+            Inventario
+          </a>
+        </li>
+      </ul>
+    </nav>
+    
+    <!-- Botón de acción -->
+    <button class="flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors shadow-sm">
+      <i class="pi pi-plus mr-2"></i> Agregar accesorio
+    </button>
+  </div>
+
+
+  <!-- Contenedor del router outlet -->
+  <section>
     <router-outlet></router-outlet>
-  <!-- </section>
-</section> -->
+  </section>
+</section>

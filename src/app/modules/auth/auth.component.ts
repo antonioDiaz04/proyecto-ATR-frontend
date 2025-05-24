@@ -9,8 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AuthComponent {
 
-
-
   constructor(private Location: Location, private router: Router) {
 
     // This is the constructor of the AuthComponent
