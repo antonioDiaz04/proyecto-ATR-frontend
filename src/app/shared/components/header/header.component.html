@@ -258,14 +258,15 @@
       </div>
     </ng-container>
 
+    <!-- Menú tipo "detalles" para Mi Cuenta en móvil -->
     <ng-template #userMenu>
-      <div class="relative group">
-        <button class="flex items-center space-x-1">
+      <details class="group w-full">
+        <summary class="flex items-center space-x-1 cursor-pointer py-2 px-2 rounded hover:bg-gray-100 transition">
           <i class="pi pi-user text-lg sm:text-xl text-gray-700"></i>
-          <span class="text-xs sm:text-sm hidden lg:inline-block">Mi cuenta</span>
-        </button>
-        <div
-          class="absolute right-0 hidden group-hover:block bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-xs sm:text-sm text-gray-700 z-50">
+          <span class="text-xs sm:text-sm">Mi cuenta</span>
+          <i class="pi pi-chevron-down ml-auto text-xs"></i>
+        </summary>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-xs sm:text-sm text-gray-700 z-50">
           <div class="px-3 py-1 sm:px-4 sm:py-2 border-b border-gray-100 text-xs text-gray-500">Bienvenido/a</div>
           <a (click)="redirectToCliente('perfil')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Perfil</a>
           <a (click)="redirectToCliente('compras')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Mis compras</a>
@@ -273,7 +274,7 @@
           <div class="border-t border-gray-100 mt-1"></div>
           <a (click)="logout()" class="block px-3 py-1 sm:px-4 sm:py-2 text-red-500 hover:bg-gray-50 transition">Cerrar sesión</a>
         </div>
-      </div>
+      </details>
     </ng-template>
   </div>
 

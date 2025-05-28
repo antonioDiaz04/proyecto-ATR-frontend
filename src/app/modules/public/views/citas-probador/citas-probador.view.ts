@@ -16,7 +16,7 @@ export interface DressItem {
   nombre: string;
   precio: number;
   imagenes: any;
-  categoria: string; // Asegúrate de que la interfaz incluya la propiedad `categoria`
+  categoria: string;
 }
 
 @Component({
@@ -37,9 +37,10 @@ export class CitasProbadorView implements OnInit {
   selectedProductoRenta: DressItem | null = null;
   selectedProductoVenta: DressItem | null = null;
   userROL!: string;
-  publicKey: string = environment.publicKey; // Este es el valor que debes obtener en la consola de Firebase.
+  publicKey: string = environment.publicKey;
+  pushPermission: NotificationPermission = 'default';
+  pushSupportInfo: {supported: boolean, message: string} = {supported: false, message: ''};
 
-  confirmarCompra() { }
   constructor(
     private http: HttpClient,
     private swPush: SwPush,
@@ -48,20 +49,17 @@ export class CitasProbadorView implements OnInit {
     private sessionService: SessionService,
     private indexedDbService: IndexedDbService,
     private router: Router,
-    private cartService: CartService // Inyecta el servicio CartService
+    private cartService: CartService
   ) { }
 
   async ngOnInit() {
     try {
-      this.generarToken();
+      this.checkPushSupport();
+      
       // Obtener productos desde IndexedDB
       const productos = await this.indexedDbService.obtenerProductosApartados();
-
-      // Mostrar en consola los productos obtenidos de IndexedDB
       console.log("Productos obtenidos de IndexedDB:", productos);
-      console.table(productos); // Esto mostrará los datos en formato de tabla
-
-      // Corregir el filtrado (nota la propiedad y el valor exacto)
+      
       this.productosRenta = productos.filter(
         (item) => item.opcionesTipoTransaccion?.toLowerCase() === "renta"
       );
@@ -69,17 +67,181 @@ export class CitasProbadorView implements OnInit {
         (item) => item.opcionesTipoTransaccion?.toLowerCase() === "venta"
       );
 
-      // Inicializar el carrito con los productos obtenidos
       this.cartService.initializeCart(productos);
-      // const productos =this.cartService.loadCartItems();
-      console.log("=>" + productos)
-
-      // this.calcularTotal();
       this.initializeTabs();
     } catch (error) {
       console.error("Error al obtener productos apartados:", error);
+      this.showErrorAlert("Error al cargar los productos");
     }
   }
+
+  /**
+   * Verifica el soporte para notificaciones push
+   */
+  private checkPushSupport(): void {
+    this.pushSupportInfo = this.getPushSupportInfo();
+    this.pushPermission = Notification.permission;
+    console.log('Estado de notificaciones:', this.pushSupportInfo);
+  }
+
+  /**
+   * Obtiene información detallada sobre el soporte de push
+   */
+  private getPushSupportInfo(): {supported: boolean, message: string} {
+    const info = {
+      supported: true,
+      message: 'Notificaciones push soportadas'
+    };
+
+    // Verificar características necesarias
+    if (!('serviceWorker' in navigator)) {
+      info.supported = false;
+      info.message = 'Service Workers no soportados en este navegador';
+      return info;
+    }
+
+    if (!('PushManager' in window)) {
+      info.supported = false;
+      info.message = 'Push API no soportada en este navegador';
+      return info;
+    }
+
+    if (!this.swPush || !this.swPush.isEnabled) {
+      info.supported = false;
+      info.message = 'Push notifications deshabilitadas en la configuración del navegador';
+      return info;
+    }
+
+    // Verificar si es iOS (tiene limitaciones)
+    if (this.isIos()) {
+      info.supported = false;
+      info.message = 'iOS tiene limitaciones con notificaciones push en PWAs';
+      return info;
+    }
+
+    // Verificar si es localhost sin HTTPS
+    if (this.isLocalhost() && !this.isSecure()) {
+      info.supported = false;
+      info.message = 'Se requiere HTTPS para notificaciones push (excepto en localhost)';
+      return info;
+    }
+
+    return info;
+  }
+
+  /**
+   * Solicita permiso para notificaciones push
+   */
+  async requestPushPermission(): Promise<void> {
+    if (!this.pushSupportInfo.supported) {
+      this.showErrorAlert(this.pushSupportInfo.message);
+      return;
+    }
+
+    try {
+      // Paso 1: Registrar Service Worker
+      const registration = await this.registerServiceWorker();
+      
+      // Paso 2: Solicitar permiso
+      const permission = await Notification.requestPermission();
+      this.pushPermission = permission;
+      
+      if (permission === 'granted') {
+        // Paso 3: Suscribirse a notificaciones
+        const sub = await this.swPush.requestSubscription({
+          serverPublicKey: this.publicKey
+        });
+        
+        // Paso 4: Enviar suscripción al backend
+        await this.enviarNotificacion(sub);
+        
+        this.showSuccessAlert('Notificaciones habilitadas con éxito');
+              } else if (permission === 'denied') {
+                this.showWarningAlert('Has bloqueado las notificaciones. Puedes cambiar esto en la configuración de tu navegador.');
+      }
+    } catch (error) {
+      console.error('Error en requestPushPermission:', error);
+      this.handlePushError(error);
+    }
+  }
+
+  /**
+   * Registra el Service Worker
+   */
+  private async registerServiceWorker(): Promise<ServiceWorkerRegistration> {
+    try {
+      const workerUrl = 'ngsw-worker.js';
+      
+      if (navigator.serviceWorker.controller) {
+        return navigator.serviceWorker.ready;
+      }
+
+      const registration = await navigator.serviceWorker.register(workerUrl, {
+        scope: '/',
+        type: 'module'
+      });
+      
+      console.log('Service Worker registrado:', registration);
+      return registration;
+    } catch (error) {
+      console.error('Error registrando Service Worker:', error);
+      throw new Error(`No se pudo registrar el Service Worker: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  // ========== NOTIFICACIONES PUSH ==========
+  
+
+  /**
+   * Maneja errores de notificaciones push
+   */
+  private handlePushError(error: unknown): void {
+    let message = 'Error desconocido al configurar notificaciones';
+    
+    if (error instanceof Error) {
+      if (error.message.includes('denied')) {
+        message = 'Permiso denegado para notificaciones';
+      } else if (error.message.includes('service worker')) {
+        message = 'Error en el Service Worker. Recarga la página e intenta nuevamente.';
+      } else if (error.message.includes('VAPID')) {
+        message = 'Error de configuración. Contacta al soporte técnico.';
+      } else {
+        message = error.message;
+      }
+    }
+    
+    this.showErrorAlert(message);
+    console.error('Detalles del error:', error);
+  }
+
+
+  // ========== HELPERS ==========
+
+  private isIos(): boolean {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
+  private isLocalhost(): boolean {
+    return ['localhost', '127.0.0.1'].includes(location.hostname);
+  }
+
+  private isSecure(): boolean {
+    return location.protocol === 'https:' || this.isLocalhost();
+  }
+
+  private showErrorAlert(message: string): void {
+    alert(`❌ Error: ${message}`);
+  }
+
+  private showWarningAlert(message: string): void {
+    alert(`⚠ Advertencia: ${message}`);
+  }
+
+  private showSuccessAlert(message: string): void {
+    alert(`✅ Éxito: ${message}`);
+  }
+
+  // ========== MÉTODOS EXISTENTES ==========
 
   volver() {
     this.location.back();
@@ -92,118 +254,23 @@ export class CitasProbadorView implements OnInit {
       console.error("jQuery no está disponible.");
     }
   }
-  generarToken(): void {
-    const esLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-    const esSeguro = location.protocol === 'https:' || esLocal;
-  
-    if (!esSeguro) {
-      console.error('Las notificaciones push solo funcionan en sitios HTTPS o localhost.');
-      alert('Debes acceder mediante HTTPS o localhost para usar notificaciones.');
-      return;
+  confirmarCompra() {
+    if (this.isUserLoggedIn()) {
+      this.router.navigate(["/public/citas-probador/confirmar-compra"]);
+    } else {
+      this.showErrorAlert("Acceso denegado. Solo los clientes pueden realizar compras.");
     }
-  
-    if (!('serviceWorker' in navigator)) {
-      console.error('Este navegador no soporta Service Workers.');
-      alert('Tu navegador no soporta notificaciones push.');
-      return;
-    }
-  
-    if (!this.swPush || !this.swPush.isEnabled) {
-      console.warn('Push notifications no están habilitadas en este navegador.');
-      return;
-    }
-  
-    Notification.requestPermission().then((permiso) => {
-      if (permiso !== 'granted') {
-        console.warn('Permiso de notificaciones no concedido:', permiso);
-        alert('Debes permitir notificaciones para recibir alertas.');
-        return;
-      }
-  
-      navigator.serviceWorker.register('ngsw-worker.js') // Asegúrate que esta ruta sea correcta
-        .then(() => {
-          this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
-            .then((sub) => {
-              // const token = JSON.parse(sub));
-              this.enviarNotificacion(sub);
-              console.log('Suscripción push exitosa:', sub);
-            })
-            .catch((err) => {
-              console.error('Error al suscribirse a notificaciones:', err);
-              if (err instanceof Error) {
-                console.error('Detalles del error:', err.message, err.stack);
-              }
-              alert('Hubo un problema al suscribirse a las notificaciones.');
-            });
-        })
-        .catch((error) => {
-          console.error('Error al registrar el Service Worker:', error);
-          alert('Fallo el registro del Service Worker. Revisa la consola para más detalles.');
-        });
-    });
   }
-  
-
-  // Método para enviar el token de notificación al backend
-  enviarNotificacion(token: PushSubscription): void {
-    this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe(
-      (response) => {
-        console.log("Notificación enviada:", response);
-        // Aquí puedes manejar la respuesta de la API si es necesario
-      },
-      (error) => {
-        console.error("Error al enviar la notificación:", error);
-        if (error instanceof Error) {
-          console.error('Detalles del error al enviar notificación:', error.message, error.stack);
-        }
-        // Manejo de errores
-        if (error.status) {
-          console.error(`Status de error: ${error.status}`);
-        }
-        if (error.error) {
-          console.error('Respuesta del error:', error.error);
-        }
-      }
-    );
-  }
-
-
-
-
-
-
-  // enviarNotificacion() {
-  //   this.notificacionService_.enviarNotificacionLlevateCarrito().subscribe(
-  //     (response) => {
-  //       console.log("Notificación enviada:", response);
-  //       // Aquí puedes manejar la respuesta de la API si es necesario
-  //     },
-  //     (error) => {
-  //       console.error("Error al enviar la notificación:", error);
-  //       // Manejo de errores
-  //     }
-  //   );
-  // }
-
 
   async deleteDressItem(id: string) {
     try {
-
-      // Eliminar el producto de las listas locales
-      this.productosRenta = this.productosRenta.filter(
-        (item) => item.id !== id
-      );
-      this.productosVenta = this.productosVenta.filter(
-        (item) => item.id !== id
-      );
-
-      // Eliminar el producto del carrito
+      this.productosRenta = this.productosRenta.filter(item => item.id !== id);
+      this.productosVenta = this.productosVenta.filter(item => item.id !== id);
       this.cartService.removeFromCart(id);
-
-      // Recalcular el total
       this.calcularTotal();
     } catch (error) {
       console.error("Error al eliminar el producto:", error);
+      this.showErrorAlert("Error al eliminar el producto");
     }
   }
 
@@ -230,12 +297,12 @@ export class CitasProbadorView implements OnInit {
 
   continuarCompra(data: any, tipo: string): void {
     this.isLoggedIn = this.isUserLoggedIn();
-
     this.productoSeleccionado = data;
+    
     if (this.isLoggedIn) {
       this.mostrarModal = true;
     } else {
-      alert("Acceso denegado. Solo los clientes pueden iniciar sesión.");
+      this.showErrorAlert("Acceso denegado. Solo los clientes pueden iniciar sesión.");
     }
   }
 
@@ -245,4 +312,20 @@ export class CitasProbadorView implements OnInit {
   }
 
   continuarCompraTotal() { }
+
+  // Método para enviar el token de notificación al backend
+  enviarNotificacion(token: PushSubscription): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe({
+        next: (response) => {
+          console.log("Notificación enviada:", response);
+          resolve();
+        },
+        error: (error) => {
+          console.error("Error al enviar la notificación:", error);
+          reject(error);
+        }
+      });
+    });
+  }
 }
