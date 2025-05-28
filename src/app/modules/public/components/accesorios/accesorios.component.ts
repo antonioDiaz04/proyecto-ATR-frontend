@@ -12,7 +12,7 @@ export class AccesoriosComponent {
   responsiveOptions: any[] = [];
 
   accesorios :any[] = [];
-
+numVisible: number = 4; // Número visible por defecto
   ngOnInit() {
     this.checkScreenSize();
     this.setupIconItems();
@@ -30,6 +30,26 @@ export class AccesoriosComponent {
         console.error('Error al obtener accesorios:', err);
       }
     });
+  
+
+    this.responsiveOptions = [
+      {
+        breakpoint: '640px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '641px',
+        numVisible: 3,
+        numScroll: 1
+      },
+      {
+        breakpoint: '1024px',
+        numVisible: 5,
+        numScroll: 1
+      }
+    ];
+  
   }
 
 
