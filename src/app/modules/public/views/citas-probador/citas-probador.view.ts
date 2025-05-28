@@ -115,8 +115,8 @@ export class CitasProbadorView implements OnInit {
         serverPublicKey: this.publicKey
       });
 
-      // Guardar en IndexedDB si se desea persistir la suscripción (opcional)
-      // await this.indexedDbService.guardarSuscripcion(newSubscription);
+      // ✅ Guardar la suscripción en IndexedDB
+      await this.indexedDbService.guardarSuscripcion(newSubscription);
 
       await this.enviarNotificacion(newSubscription);
       this.showSuccessAlert('Notificaciones habilitadas con éxito');

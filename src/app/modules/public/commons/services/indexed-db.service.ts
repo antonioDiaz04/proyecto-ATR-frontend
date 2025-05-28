@@ -161,4 +161,23 @@ export class IndexedDbService {
       }
     });
   }
+
+
+
+  // indexed-db.service.ts
+async guardarSuscripcion(subscription: PushSubscription): Promise<void> {
+  if (!this.db) {
+    console.error('La base de datos no está inicializada');
+    return;
+  }
+  const subJSON = subscription.toJSON();
+  const transaction = this.db.transaction('suscripciones', 'readwrite');
+  const store = transaction.objectStore('suscripciones');
+  await new Promise<void>((resolve, reject) => {
+    const request = store.put(subJSON, 'actual');
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
 }
