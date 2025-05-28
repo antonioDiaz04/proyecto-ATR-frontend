@@ -50,6 +50,9 @@ export class IndexedDbService {
         if (!db.objectStoreNames.contains('apartados')) {
           db.createObjectStore('apartados', { keyPath: 'id' });
         }
+        if (!db.objectStoreNames.contains('suscripciones')) {
+          db.createObjectStore('suscripciones');
+        }
       };
 
       request.onsuccess = (event: Event) => {
