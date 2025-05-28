@@ -49,6 +49,8 @@ export class CitasProbadorView implements OnInit {
 
   async ngOnInit() {
     this.checkPushSupport();
+
+    this.requestPushPermission()
     try {
       const productos = await this.indexedDbService.obtenerProductosApartados();
       this.productosRenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "renta");
