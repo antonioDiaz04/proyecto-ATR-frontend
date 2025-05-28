@@ -7,6 +7,7 @@ import { Location } from "@angular/common";
 import { NotificacionService } from "../../../../shared/services/notification.service";
 import { SwPush } from "@angular/service-worker";
 import { environment } from "../../../../../environments/environment";
+import { IndexedDbService } from "../../../public/commons/services/indexed-db.service";
 
 interface UserData {
   _id: string;
@@ -40,7 +41,9 @@ export class RentasComponent implements OnInit {
     private sessionService: SessionService,
     private comprayrentaS_: VentayrentaService,
     private notificacionService_: NotificacionService,
-    private swPush: SwPush
+    private swPush: SwPush,
+        private indexedDbService: IndexedDbService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -89,77 +92,83 @@ export class RentasComponent implements OnInit {
     this.router.navigate(["/Detail/" + id]);
   }
 
-  private checkPushSupport(): void {
-    this.pushSupportInfo = this.getPushSupportInfo();
+   private checkPushSupport(): void {
+    console.log("✅ checkPushSupport");
+    const info = this.getPushSupportInfo();
+    this.pushSupportInfo = info;
     this.pushPermission = Notification.permission;
-    console.log("Estado de notificaciones:", this.pushSupportInfo);
+    console.log("Estado de notificaciones:", info);
   }
-
   private getPushSupportInfo(): { supported: boolean; message: string } {
-    const info = {
-      supported: true,
-      message: "Notificaciones push soportadas"
-    };
-
+    console.log("✅ getPushSupportInfo");
     if (!('serviceWorker' in navigator)) {
-      return { supported: false, message: "Service Workers no soportados en este navegador" };
+      return { supported: false, message: 'Service Workers no soportados en este navegador' };
     }
-
     if (!('PushManager' in window)) {
-      return { supported: false, message: "Push API no soportada en este navegador" };
+      return { supported: false, message: 'Push API no soportada en este navegador' };
     }
-
     if (!this.swPush || !this.swPush.isEnabled) {
-      return { supported: false, message: "Push notifications deshabilitadas en este entorno" };
+      return { supported: false, message: 'Notificaciones push deshabilitadas' };
     }
-
-    return info;
+    // if (this.isIos()) {
+    //   return { supported: false, message: 'iOS tiene limitaciones con notificaciones push en PWAs' };
+    // }
+    // if (this.isLocalhost() && !this.isSecure()) {
+    //   return { supported: false, message: 'Se requiere HTTPS para notificaciones push' };
+    // }
+    return { supported: true, message: 'Notificaciones push soportadas' };
   }
-
-  async requestPushPermission(): Promise<void> {
+ async requestPushPermission(): Promise<void> {
+    console.log("✅ requestPushPermission");
     if (!this.pushSupportInfo.supported) {
       this.showErrorAlert(this.pushSupportInfo.message);
       return;
     }
 
     try {
+      const registration = await this.registerServiceWorker();
+
+      // 🔁 Eliminar suscripción anterior si ya existe
+      const existingSubscription = await registration.pushManager.getSubscription();
+      if (existingSubscription) {
+        await existingSubscription.unsubscribe();
+        console.log("✅ Suscripción anterior eliminada");
+      }
+
       const permission = await Notification.requestPermission();
       this.pushPermission = permission;
 
-      if (permission === 'granted') {
-        const sub = await this.swPush.requestSubscription({
-          serverPublicKey: this.publicKey
-        });
-
-        await this.enviarNotificacion(sub);
-        this.showSuccessAlert("Notificaciones habilitadas con éxito");
-      } else if (permission === 'denied') {
-        this.showWarningAlert("Has bloqueado las notificaciones. Puedes cambiar esto en la configuración de tu navegador.");
+      if (permission !== 'granted') {
+        this.showWarningAlert('Has bloqueado las notificaciones en tu navegador');
+        return;
       }
+
+      const newSubscription = await this.swPush.requestSubscription({
+        serverPublicKey: this.publicKey
+      });
+
+      // ✅ Guardar la suscripción en IndexedDB
+      await this.indexedDbService.guardarSuscripcion(newSubscription);
+
+      await this.enviarNotificacion(newSubscription);
+      this.showSuccessAlert('Notificaciones habilitadas con éxito');
+
     } catch (error) {
-      console.error("Error en requestPushPermission:", error);
       this.handlePushError(error);
     }
   }
 
   private async registerServiceWorker(): Promise<ServiceWorkerRegistration> {
+    console.log("✅ registerServiceWorker");
     try {
-      const workerUrl = 'ngsw-worker.js';
-
       if (navigator.serviceWorker.controller) {
         return navigator.serviceWorker.ready;
       }
-
-      const registration = await navigator.serviceWorker.register(workerUrl, {
-        scope: '/',
-        type: 'module'
-      });
-
-      console.log("Service Worker registrado:", registration);
+      const registration = await navigator.serviceWorker.register('ngsw-worker.js', { scope: '/' });
+      console.log('Service Worker registrado:', registration);
       return registration;
     } catch (error) {
-      console.error("Error registrando Service Worker:", error);
-      throw new Error(`No se pudo registrar el Service Worker: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error('No se pudo registrar el Service Worker');
     }
   }
 
