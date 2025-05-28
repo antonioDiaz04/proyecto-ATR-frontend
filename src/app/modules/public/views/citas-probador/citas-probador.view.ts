@@ -92,17 +92,35 @@ export class CitasProbadorView implements OnInit {
       this.showErrorAlert(this.pushSupportInfo.message);
       return;
     }
+
     try {
       const registration = await this.registerServiceWorker();
+
+      // 🔁 Eliminar suscripción anterior si ya existe
+      const existingSubscription = await registration.pushManager.getSubscription();
+      if (existingSubscription) {
+        await existingSubscription.unsubscribe();
+        console.log("✅ Suscripción anterior eliminada");
+      }
+
       const permission = await Notification.requestPermission();
       this.pushPermission = permission;
-      if (permission === 'granted') {
-        const sub = await this.swPush.requestSubscription({ serverPublicKey: this.publicKey });
-        await this.enviarNotificacion(sub);
-        this.showSuccessAlert('Notificaciones habilitadas con éxito');
-      } else if (permission === 'denied') {
+
+      if (permission !== 'granted') {
         this.showWarningAlert('Has bloqueado las notificaciones en tu navegador');
+        return;
       }
+
+      const newSubscription = await this.swPush.requestSubscription({
+        serverPublicKey: this.publicKey
+      });
+
+      // Guardar en IndexedDB si se desea persistir la suscripción (opcional)
+      // await this.indexedDbService.guardarSuscripcion(newSubscription);
+
+      await this.enviarNotificacion(newSubscription);
+      this.showSuccessAlert('Notificaciones habilitadas con éxito');
+
     } catch (error) {
       this.handlePushError(error);
     }
@@ -110,7 +128,9 @@ export class CitasProbadorView implements OnInit {
 
   private async registerServiceWorker(): Promise<ServiceWorkerRegistration> {
     try {
-      if (navigator.serviceWorker.controller) return navigator.serviceWorker.ready;
+      if (navigator.serviceWorker.controller) {
+        return navigator.serviceWorker.ready;
+      }
       const registration = await navigator.serviceWorker.register('ngsw-worker.js', { scope: '/' });
       console.log('Service Worker registrado:', registration);
       return registration;
@@ -128,7 +148,6 @@ export class CitasProbadorView implements OnInit {
     });
   }
 
-  // Métodos auxiliares y de navegación
   volver(): void {
     this.location.back();
   }
@@ -182,7 +201,6 @@ export class CitasProbadorView implements OnInit {
     this.mostrarModal = true;
   }
 
-  // Métodos utilitarios
   private initializeTabs(): void {
     const jQueryAvailable = typeof window !== 'undefined' && (window as any).$;
     if (jQueryAvailable) {
