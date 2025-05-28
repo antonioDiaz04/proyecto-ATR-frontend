@@ -45,9 +45,12 @@ export class CitasProbadorView implements OnInit {
     private indexedDbService: IndexedDbService,
     private router: Router,
     private cartService: CartService
-  ) {}
+  ) {
+    console.log("✅ constructor");
+  }
 
   async ngOnInit() {
+    console.log("✅ ngOnInit");
     this.checkPushSupport();
 
     this.requestPushPermission()
@@ -64,6 +67,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   private checkPushSupport(): void {
+    console.log("✅ checkPushSupport");
     const info = this.getPushSupportInfo();
     this.pushSupportInfo = info;
     this.pushPermission = Notification.permission;
@@ -71,6 +75,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   private getPushSupportInfo(): { supported: boolean; message: string } {
+    console.log("✅ getPushSupportInfo");
     if (!('serviceWorker' in navigator)) {
       return { supported: false, message: 'Service Workers no soportados en este navegador' };
     }
@@ -90,6 +95,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   async requestPushPermission(): Promise<void> {
+    console.log("✅ requestPushPermission");
     if (!this.pushSupportInfo.supported) {
       this.showErrorAlert(this.pushSupportInfo.message);
       return;
@@ -129,6 +135,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   private async registerServiceWorker(): Promise<ServiceWorkerRegistration> {
+    console.log("✅ registerServiceWorker");
     try {
       if (navigator.serviceWorker.controller) {
         return navigator.serviceWorker.ready;
@@ -142,6 +149,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   private enviarNotificacion(token: PushSubscription): Promise<void> {
+    console.log("✅ enviarNotificacion");
     return new Promise((resolve, reject) => {
       this.notificacionService.enviarNotificacionLlevateCarrito(token).subscribe({
         next: () => resolve(),
@@ -151,10 +159,12 @@ export class CitasProbadorView implements OnInit {
   }
 
   volver(): void {
+    console.log("✅ volver");
     this.location.back();
   }
 
   confirmarCompra(): void {
+    console.log("✅ confirmarCompra");
     if (this.isUserLoggedIn()) {
       this.router.navigate(["/public/citas-probador/confirmar-compra"]);
     } else {
@@ -163,6 +173,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   deleteDressItem(id: string): void {
+    console.log("✅ deleteDressItem", id);
     this.productosRenta = this.productosRenta.filter(p => p.id !== id);
     this.productosVenta = this.productosVenta.filter(p => p.id !== id);
     this.cartService.removeFromCart(id);
@@ -170,16 +181,19 @@ export class CitasProbadorView implements OnInit {
   }
 
   setTipoCompra(tipo: string): void {
+    console.log("✅ setTipoCompra", tipo);
     this.tipoCompra = tipo;
     this.calcularTotal();
   }
 
   calcularTotal(): void {
+    console.log("✅ calcularTotal");
     const productos = this.tipoCompra === 'renta' ? this.productosRenta : this.productosVenta;
     this.totalCompra = productos.reduce((total, item) => total + item.precio, 0);
   }
 
   isUserLoggedIn(): boolean {
+    console.log("✅ isUserLoggedIn");
     const user = this.sessionService.getUserData();
     if (user) {
       this.userROL = user.rol;
@@ -189,6 +203,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   continuarCompra(producto: DressItem): void {
+    console.log("✅ continuarCompra", producto);
     this.isLoggedIn = this.isUserLoggedIn();
     if (this.isLoggedIn) {
       this.productoSeleccionado = producto;
@@ -199,11 +214,13 @@ export class CitasProbadorView implements OnInit {
   }
 
   mostrarResumen(producto: DressItem): void {
+    console.log("✅ mostrarResumen", producto);
     this.productoSeleccionado = producto;
     this.mostrarModal = true;
   }
 
   private initializeTabs(): void {
+    console.log("✅ initializeTabs");
     const jQueryAvailable = typeof window !== 'undefined' && (window as any).$;
     if (jQueryAvailable) {
       (window as any).$('.menu .item').tab();
@@ -211,6 +228,7 @@ export class CitasProbadorView implements OnInit {
   }
 
   private handlePushError(error: unknown): void {
+    console.log("✅ handlePushError", error);
     const msg = error instanceof Error ? error.message : String(error);
     const alertMsg = msg.includes('denied') ? 'Permiso denegado para notificaciones' :
       msg.includes('service worker') ? 'Error en el Service Worker. Recarga la página' :
@@ -219,32 +237,39 @@ export class CitasProbadorView implements OnInit {
   }
 
   private handleError(message: string, error: unknown): void {
+    console.log("✅ handleError", message, error);
     console.error(message, error);
     this.showErrorAlert(message);
   }
 
   private showErrorAlert(message: string): void {
+    console.log("✅ showErrorAlert", message);
     alert(`❌ Error: ${message}`);
   }
 
   private showWarningAlert(message: string): void {
+    console.log("✅ showWarningAlert", message);
     alert(`⚠ Advertencia: ${message}`);
   }
 
   private showSuccessAlert(message: string): void {
+    console.log("✅ showSuccessAlert", message);
     alert(`✅ Éxito: ${message}`);
   }
 
   private isIos(): boolean {
+    console.log("✅ isIos");
     return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
 
   private isLocalhost(): boolean {
+    console.log("✅ isLocalhost");
     return ['localhost', '127.0.0.1'].includes(location.hostname);
   }
 
   private isSecure(): boolean {
+    console.log("✅ isSecure");
     return location.protocol === 'https:' || this.isLocalhost();
   }
 }
