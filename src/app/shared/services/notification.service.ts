@@ -85,7 +85,7 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/renta-extendida`, datos);
   }
 
-  enviarNotificacionRecordatorioDevolucionRenta(datos: any): Observable<any> {
+  enviarNotificacionRecordatorioDevolucionRenta(datos: PushSubscription): Observable<any> {
     return this.http.post(`${this.apiUrl}/recordatorio-devolucion-renta`, datos);
   }
 
