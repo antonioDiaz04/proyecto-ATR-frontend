@@ -9,10 +9,6 @@ import { SwPush } from "@angular/service-worker";
 import { environment } from "../../../../../environments/environment";
 import { IndexedDbService } from "../../../public/commons/services/indexed-db.service";
 
-interface UserData {
-  _id: string;
-  rol: ERol;
-}
 
 @Component({
   selector: "app-rentas",
@@ -46,7 +42,7 @@ export class RentasComponent implements OnInit {
     
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (this.isUserLoggedIn()) {
       this.obtenerComprasById(this.userData);
     }
@@ -118,7 +114,7 @@ export class RentasComponent implements OnInit {
     // }
     return { supported: true, message: 'Notificaciones push soportadas' };
   }
- async requestPushPermission(): Promise<void> {
+async requestPushPermission(): Promise<void> {
     console.log("✅ requestPushPermission");
     if (!this.pushSupportInfo.supported) {
       this.showErrorAlert(this.pushSupportInfo.message);
@@ -184,24 +180,15 @@ export class RentasComponent implements OnInit {
     alert(`✅ Éxito: ${message}`);
   }
 
-  private handlePushError(error: unknown): void {
-    let message = "Error desconocido al configurar notificaciones";
-
-    if (error instanceof Error) {
-      if (error.message.includes("denied")) {
-        message = "Permiso denegado para notificaciones";
-      } else if (error.message.includes("service worker")) {
-        message = "Error en el Service Worker. Recarga la página e intenta nuevamente.";
-      } else if (error.message.includes("VAPID")) {
-        message = "Error de configuración. Contacta al soporte técnico.";
-      } else {
-        message = error.message;
-      }
-    }
-
-    this.showErrorAlert(message);
-    console.error("Detalles del error:", error);
+ private handlePushError(error: unknown): void {
+    console.log("✅ handlePushError", error);
+    const msg = error instanceof Error ? error.message : String(error);
+    const alertMsg = msg.includes('denied') ? 'Permiso denegado para notificaciones' :
+      msg.includes('service worker') ? 'Error en el Service Worker. Recarga la página' :
+      msg.includes('VAPID') ? 'Error de configuración de notificaciones' : msg;
+    this.showErrorAlert(alertMsg);
   }
+
 
   enviarNotificacion(token: PushSubscription): Promise<void> {
     return new Promise((resolve, reject) => {

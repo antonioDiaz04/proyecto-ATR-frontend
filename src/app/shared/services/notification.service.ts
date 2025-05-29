@@ -86,10 +86,10 @@ export class NotificacionService {
   }
 
   enviarNotificacionRecordatorioDevolucionRenta(datos: PushSubscription): Observable<any> {
-    return this.http.post(`${this.apiUrl}/recordatorio-devolucion-renta`, datos);
+    return this.http.post(`${this.apiUrl}/recordatorio-devolucion-renta`, { datos });
   }
 
   enviarNotificacionMotivacionRenta(datos: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/motivacion-renta`, datos);
+    return this.http.post(`${this.apiUrl}/motivacion-renta`, { datos });
   }
 }
