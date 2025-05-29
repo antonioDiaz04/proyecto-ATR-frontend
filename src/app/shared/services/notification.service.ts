@@ -72,11 +72,11 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/agradecimiento-compra`, datos);
   }
 
-  enviarNotificacionLlevateCarrito(token:PushSubscription): Observable<any> {
+  enviarNotificacionLlevateCarrito(token: PushSubscription): Observable<any> {
     return this.http.post(`${this.apiUrl}/llevate-carrito`, { token });
   }
 
-  enviarNotificacionLlevaTuVestido(body:any): Observable<any> {
+  enviarNotificacionLlevaTuVestido(body: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/lleva-producto`, { body });
   }
 
@@ -86,6 +86,7 @@ export class NotificacionService {
   }
 
   enviarNotificacionRecordatorioDevolucionRenta(datos: PushSubscription): Observable<any> {
+    console.log(datos)
     return this.http.post(`${this.apiUrl}/recordatorio-devolucion-renta`, { datos });
   }
 
