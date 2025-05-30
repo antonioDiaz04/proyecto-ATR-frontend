@@ -6,44 +6,52 @@
 </div>
 
 <!-- review.component.html -->
-<div class="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto p-4">
+<div class="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto p-4">
   <!-- Sección de Reseñas -->
-  <div class="flex-1 rounded-lg shadow-sm p-6 bg-[#f9f8f6]">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-serif font-light text-[#2a2a2a] tracking-tight">Opiniones de Clientes</h2>
-      <div class="flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#8a7a6a]" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+  <div class="flex-1 rounded-xl shadow-md p-6 reviews-container bg-white/90 backdrop-blur-sm border border-[#f0e9e3]">
+    <!-- Encabezado mejorado -->
+    <div class="flex justify-between items-center mb-6 pb-4 border-b border-[#f0e9e3]">
+      <h2 class="text-2xl font-serif font-medium text-[#2a2a2a] tracking-tight">Opiniones de Clientes</h2>
+      <div class="flex items-center bg-[#f9f6f2] px-3 py-1 rounded-full">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#d4a017]" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
         <span class="ml-1 text-[#4a4a4a] font-medium">4.8</span>
         <span class="text-[#6b5d4d] text-sm ml-2">({{reviews.length}} opiniones)</span>
       </div>
     </div>
 
-    <div class="max-h-[500px] overflow-y-auto pr-4 space-y-6 scrollbar-thin scrollbar-thumb-[#d8d2cc] scrollbar-track-transparent">
-      <div *ngFor="let review of reviews" class="bg-white p-6 rounded-lg shadow-xs hover:shadow-sm transition-shadow duration-200 border border-[#e5e0db]">
+    <!-- Contenedor de opiniones con detección de scroll -->
+    <div #reviewsContent
+      class="max-h-[500px] overflow-y-auto pr-3 space-y-6 scrollbar-thin scrollbar-thumb-[#d8d2cc]/80 scrollbar-track-transparent hover:scrollbar-thumb-[#d8d2cc] transition-colors duration-300 reviews-content"
+      (scroll)="onReviewsScroll()">
+      <div *ngFor="let review of reviews; let last = last"
+        class="bg-white p-6 rounded-xl shadow-xs hover:shadow-md transition-all duration-300 border border-[#e5e0db] hover:border-[#d4c9bb] group"
+        #reviewCard>
         <div class="flex items-center gap-4 mb-3">
-          <img [src]="review.usuario.avatar" [alt]="review.usuario.nombre" class="w-10 h-10 rounded-full object-cover border border-[#e5e0db]">
+          <img [src]="review.usuario.avatar" [alt]="review.usuario.nombre"
+            class="w-10 h-10 rounded-full object-cover border-2 border-[#e5e0db] group-hover:border-[#d4a017] transition-colors duration-200">
           <div class="text-sm">
             <p class="font-serif font-medium text-[#3a3a3a]">{{review.usuario.nombre}}</p>
+            <p class="text-[#6b5d4d] text-xs mt-1">{{review.fecha}}</p>
           </div>
         </div>
-        
-        <div class="flex gap-1 mb-2">
-          <svg *ngFor="let star of getStars(review.calificacion); let i = index" 
-              class="w-4 h-4" 
-              [class.text-[#ffbb2a]]="star" 
-              [class.text-[#d8d2cc]]="!star"
-              fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+
+        <div class="flex gap-1 mb-3">
+          <svg *ngFor="let star of getStars(review.calificacion); let i = index" class="w-4 h-4"
+            [class.text-[#d4a017]]="star" [class.text-[#d8d2cc]]="!star" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
         </div>
-        
+
         <p class="text-[#4a4a4a] text-sm leading-relaxed font-serif">"{{review.contenido}}"</p>
-        <div class="flex justify-between items-center mt-2">
-          <p class="text-[#6b5d4d] text-xs">{{review.fecha}}</p>
-          <!-- <p class="text-[#6b5d4d] text-xs" *ngIf="review.correo">{{review.correo}}</p> -->
-        </div>
+
+        <!-- <div *ngIf="review.respuesta" class="mt-4 pl-4 border-l-2 border-[#e5e0db]">
+        <p class="text-[#6b5d4d] text-xs font-medium mb-1">Respuesta del negocio:</p>
+        <p class="text-[#4a4a4a] text-sm">{{review.respuesta}}</p>
+      </div> -->
       </div>
     </div>
   </div>
@@ -51,83 +59,152 @@
   <!-- Formulario Elegante -->
   <div class="w-full lg:w-96 bg-white rounded-lg shadow-sm p-6 h-fit border border-[#e5e0db]">
     <h3 class="text-xl font-serif font-light text-[#2a2a2a] mb-6 tracking-tight">Comparte tu Opinión</h3>
-    
+
     <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="space-y-4">
       <div>
         <label for="nombre" class="block text-sm font-serif font-medium text-[#4a4a4a] mb-1">Nombre</label>
-        <input type="text" id="nombre" formControlName="nombre" 
-               class="w-full px-4 py-2 border border-[#d8d2cc] rounded-lg focus:ring-1 focus:ring-[#8a7a6a] focus:border-[#8a7a6a] transition-all font-serif text-[#3a3a3a] placeholder-[#a89f94]"
-               placeholder="Ej. María Pérez">
-        <div *ngIf="reviewForm.get('nombre')?.touched && reviewForm.get('nombre')?.errors" class="text-[#8a4a3a] text-xs mt-1 font-serif">
+        <input type="text" id="nombre" formControlName="nombre"
+          class="w-full px-4 py-2 border border-[#d8d2cc] rounded-lg focus:ring-1 focus:ring-[#8a7a6a] focus:border-[#8a7a6a] transition-all font-serif text-[#3a3a3a] placeholder-[#a89f94]"
+          placeholder="Ej. María Pérez">
+        <div *ngIf="reviewForm.get('nombre')?.touched && reviewForm.get('nombre')?.errors"
+          class="text-[#8a4a3a] text-xs mt-1 font-serif">
           <span *ngIf="reviewForm.get('nombre')?.errors?.['required']">El nombre es requerido</span>
         </div>
       </div>
       <div>
         <label for="email" class="block text-sm font-serif font-medium text-[#4a4a4a] mb-1">Correo</label>
-        <input type="email" id="email" formControlName="correo" 
-               class="w-full px-4 py-2 border border-[#d8d2cc] rounded-lg focus:ring-1 focus:ring-[#8a7a6a] focus:border-[#8a7a6a] transition-all font-serif text-[#3a3a3a] placeholder-[#a89f94]"
-               placeholder="tu@correo.com">
-        <div *ngIf="reviewForm.get('correo')?.touched && reviewForm.get('correo')?.errors" class="text-[#8a4a3a] text-xs mt-1 font-serif">
+        <input type="email" id="email" formControlName="correo"
+          class="w-full px-4 py-2 border border-[#d8d2cc] rounded-lg focus:ring-1 focus:ring-[#8a7a6a] focus:border-[#8a7a6a] transition-all font-serif text-[#3a3a3a] placeholder-[#a89f94]"
+          placeholder="tu@correo.com">
+        <div *ngIf="reviewForm.get('correo')?.touched && reviewForm.get('correo')?.errors"
+          class="text-[#8a4a3a] text-xs mt-1 font-serif">
           <span *ngIf="reviewForm.get('correo')?.errors?.['required']">El correo es requerido</span>
           <span *ngIf="reviewForm.get('correo')?.errors?.['email']">Ingresa un correo válido</span>
         </div>
       </div>
-      
+
       <div>
         <label class="block text-sm font-serif font-medium text-[#4a4a4a] mb-1">Calificación</label>
         <div class="flex items-center space-x-1">
-          <button type="button" *ngFor="let star of [1,2,3,4,5]" 
-                  (click)="reviewForm.get('calificacion')?.setValue(star)"
-                  class="focus:outline-none">
-            <svg class="w-8 h-8" [class.text-[#ffbb2a]]="star <= reviewForm.get('calificacion')?.value" 
-                 [class.text-[#d8d2cc]]="star > reviewForm.get('calificacion')?.value" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          <button type="button" *ngFor="let star of [1,2,3,4,5]"
+            (click)="reviewForm.get('calificacion')?.setValue(star)" class="focus:outline-none">
+            <svg class="w-8 h-8" [class.text-[#ffbb2a]]="star <= reviewForm.get('calificacion')?.value"
+              [class.text-[#d8d2cc]]="star > reviewForm.get('calificacion')?.value" fill="currentColor"
+              viewBox="0 0 20 20">
+              <path
+                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
           </button>
         </div>
       </div>
-      
+
       <div>
         <label for="comment" class="block text-sm font-serif font-medium text-[#4a4a4a] mb-1">Tu Opinión</label>
         <textarea id="comment" formControlName="contenido" rows="4"
-                  class="w-full px-4 py-2 border border-[#d8d2cc] rounded-lg focus:ring-1 focus:ring-[#8a7a6a] focus:border-[#8a7a6a] transition-all font-serif text-[#3a3a3a] placeholder-[#a89f94]"
-                  placeholder="Describe tu experiencia..."></textarea>
-        <div *ngIf="reviewForm.get('contenido')?.touched && reviewForm.get('contenido')?.errors" class="text-[#8a4a3a] text-xs mt-1 font-serif">
+          class="w-full px-4 py-2 border border-[#d8d2cc] rounded-lg focus:ring-1 focus:ring-[#8a7a6a] focus:border-[#8a7a6a] transition-all font-serif text-[#3a3a3a] placeholder-[#a89f94]"
+          placeholder="Describe tu experiencia..."></textarea>
+        <div *ngIf="reviewForm.get('contenido')?.touched && reviewForm.get('contenido')?.errors"
+          class="text-[#8a4a3a] text-xs mt-1 font-serif">
           <span *ngIf="reviewForm.get('contenido')?.errors?.['required']">La opinión es requerida</span>
           <span *ngIf="reviewForm.get('contenido')?.errors?.['minlength']">Mínimo 20 caracteres</span>
         </div>
       </div>
-      
-      <button type="submit" 
-              [disabled]="reviewForm.invalid"
-              class="w-full bg-[#6b5d4d] hover:bg-[#5a4d3f] text-white py-2 px-4 rounded-lg transition-all disabled:bg-[#a89f94] disabled:cursor-not-allowed font-serif">
+
+      <button type="submit" [disabled]="reviewForm.invalid"
+        class="w-full bg-[#6b5d4d] hover:bg-[#5a4d3f] text-white py-2 px-4 rounded-lg transition-all disabled:bg-[#a89f94] disabled:cursor-not-allowed font-serif">
         Enviar Opinión
       </button>
     </form>
-    
+
     <!-- Información adicional -->
     <div class="mt-8 pt-6 border-t border-[#e5e0db]">
       <h4 class="text-sm font-serif font-medium text-[#4a4a4a] mb-2">Normas para Opiniones</h4>
       <ul class="text-xs text-[#6b5d4d] space-y-1 font-serif">
         <li class="flex items-start">
           <svg class="h-3 w-3 text-[#8a7a6a] mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd" />
           </svg>
           Sé específico sobre tu experiencia
         </li>
         <li class="flex items-start">
           <svg class="h-3 w-3 text-[#8a7a6a] mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd" />
           </svg>
           Enfócate en características del producto/servicio
         </li>
         <li class="flex items-start">
           <svg class="h-3 w-3 text-[#8a7a6a] mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd" />
           </svg>
           Tu correo no será publicado
         </li>
       </ul>
+    </div>
+  </div>
+</div>
+
+<div class="max-w-6xl mx-auto px-4 py-12">
+  <h3 class="text-xs font-medium tracking-[0.2em] text-gray-500 uppercase mb-8 text-center">Sobre Atelier</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Tarjeta 1: Venta de Vestidos -->
+    <div class="flex flex-col p-8 font-sans bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+      <div class="mb-4 space-y-3 text-gray-800">
+        <p class="text-2xl font-light leading-[1.3]">Venta de Vestidos</p>
+        <p class="text-2xl font-light leading-[1.3]">Encuentra una selección de vestidos elegantes y modernos para cada ocasión. Disponibles en varias tallas y estilos.</p>
+      </div>
+      <!-- <div class="my-6 flex justify-center">
+        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80" 
+             alt="Venta de vestidos" 
+             class="rounded-lg object-cover h-48 w-full">
+      </div> -->
+      <div class="mt-4 mb-6 space-y-3 text-gray-800">
+        <p class="text-2xl font-light leading-[1.3]">Compra tu vestido favorito y luce espectacular en tu evento.</p>
+      </div>
+      <div class="text-right mt-auto">
+        <p class="text-sm font-medium text-gray-700">Variedad y Calidad</p>
+      </div>
+    </div>
+    <!-- Tarjeta 2: Renta de Vestidos -->
+    <div class="flex flex-col p-8 font-sans bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+      <div class="mb-4 space-y-3 text-gray-800">
+        <p class="text-2xl font-light leading-[1.3]">Renta de Vestidos</p>
+        <p class="text-2xl font-light leading-[1.3]">Renta vestidos exclusivos para tus eventos especiales. Opciones para todos los gustos y necesidades.</p>
+      </div>
+      <!-- <div class="my-6 flex justify-center">
+        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" 
+             alt="Renta de vestidos" 
+             class="rounded-lg object-cover h-48 w-full">
+      </div> -->
+      <div class="mt-4 mb-6 space-y-3 text-gray-800">
+        <p class="text-2xl font-light leading-[1.3]">Elige, renta y disfruta sin preocupaciones. Fácil, rápido y seguro.</p>
+      </div>
+      <div class="text-right mt-auto">
+        <p class="text-sm font-medium text-gray-700">Practicidad y Estilo</p>
+      </div>
+    </div>
+    <!-- Tarjeta 3: Asesoría Personalizada -->
+    <div class="flex flex-col p-8 font-sans bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+      <div class="mb-4 space-y-3 text-gray-800">
+        <p class="text-2xl font-light leading-[1.3]">Asesoría Personalizada</p>
+        <p class="text-2xl font-light leading-[1.3]">Recibe ayuda para elegir el vestido ideal según tu evento y preferencias. Atención profesional y cercana.</p>
+      </div>
+      <!-- <div class="my-6 flex justify-center">
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" 
+             alt="Asesoría personalizada" 
+             class="rounded-lg object-cover h-48 w-full">
+      </div> -->
+      <div class="mt-4 mb-6 space-y-3 text-gray-800">
+        <p class="text-2xl font-light leading-[1.3]">Te acompañamos para que encuentres el look perfecto para tu ocasión.</p>
+      </div>
+      <div class="text-right mt-auto">
+        <p class="text-sm font-medium text-gray-700">Atención Especial</p>
+      </div>
     </div>
   </div>
 </div>

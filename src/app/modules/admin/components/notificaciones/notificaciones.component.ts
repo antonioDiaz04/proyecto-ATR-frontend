@@ -32,9 +32,9 @@ interface Pregunta {
   // styleUrl: './notificaciones.component.scss'
 })
 export class NotificacionesComponent implements OnInit {
-  activeTab: string = 'reseñas'; // Tab activo por defecto
+  activeTab: string = 'reviews'; // Tab activo por defecto
   tabs: { name: string; icon: string }[] = [
-    { name: 'reseñas', icon: 'fa-solid fa-star' },
+    { name: 'reviews', icon: 'fa-solid fa-star' },
     { name: 'preguntas', icon: 'fa-solid fa-question' },
     { name: 'notificaciones', icon: 'fa-solid fa-bell' }
   ];

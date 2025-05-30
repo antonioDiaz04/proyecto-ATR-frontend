@@ -29,23 +29,6 @@ export class ProductosComponent implements OnInit {
   rows = 7; // Número de elementos por página
   skeletonItems: any[] = Array(5).fill({}); // Array de 6 elementos para el skeleton
   productos: any = []; // Inicializamos como array vacío
-  // responsiveOptions = [
-  //   {
-  //     breakpoint: "1024px",
-  //     numVisible: 3.5, // Producto central completo y los laterales a la mitad
-  //     numScroll: 1,
-  //   },
-  //   {
-  //     breakpoint: "768px",
-  //     numVisible: 2.5, // Dos productos completos y uno a la mitad
-  //     numScroll: 1,
-  //   },
-  //   {
-  //     breakpoint: "500px",
-  //     numVisible: 1.5, // Uno completo y el siguiente a la mitad
-  //     numScroll: 1,
-  //   },
-  // ];
   responsiveOptions = [
     {
       breakpoint: '1400px',
@@ -246,10 +229,14 @@ export class ProductosComponent implements OnInit {
 
 
   // Función para cambiar la imagen al hacer hover
-  cambiarImagen(producto: any, event: MouseEvent) {
+   cambiarImagen(producto: any, event: MouseEvent) {
     const imgElement = event.target as HTMLImageElement;
-    if (producto.imagenes.length > 1) {
-      imgElement.src = producto.imagenes[1]; // Cambiar a la segunda imagen
+    if (!producto._hoverIndex) {
+      producto._hoverIndex = 0;
+    }
+    if (producto.imagenes && producto.imagenes.length > 1) {
+      producto._hoverIndex = (producto._hoverIndex + 1) % producto.imagenes.length;
+      imgElement.src = producto.imagenes[producto._hoverIndex];
     }
   }
 

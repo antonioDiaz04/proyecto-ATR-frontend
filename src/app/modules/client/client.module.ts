@@ -21,6 +21,8 @@ import { DatosEmpresaService } from '../../shared/services/datos-empresa.service
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { ProductoService } from '../../shared/services/producto.service';
 import { ReseniaService } from '../../shared/services/resenia.service';
+import { NotificacionService } from '../../shared/services/notification.service';
+import { SidebarModule } from 'primeng/sidebar';
 
 
 @NgModule({
@@ -33,16 +35,26 @@ import { ReseniaService } from '../../shared/services/resenia.service';
     SidenavComponent,
   ],
   imports: [
-    
     HeaderModule,
-    CommonModule,  ButtonModule,AvatarModule,AvatarGroupModule,
-    ClientRoutingModule,FormsModule
-  ]
-  ,providers: [DatosEmpresaService,
-
-    SessionService,UsuarioService,StorageService,
-    VentayrentaService,provideClientHydration(), [provideHttpClient(withFetch())]
-    
+    SidebarModule,
+    CommonModule,
+    ButtonModule,
+    AvatarModule,
+    AvatarGroupModule,
+    ClientRoutingModule,
+    FormsModule
+  ],
+  providers: [
+    DatosEmpresaService,
+    NotificacionService,
+    ProductoService,
+    ReseniaService,
+    SessionService,
+    UsuarioService,
+    StorageService,
+    VentayrentaService,
+    provideClientHydration(),
+    [provideHttpClient(withFetch())]
   ],
 })
 export class ClientModule { }

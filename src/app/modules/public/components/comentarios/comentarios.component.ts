@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 declare var $: any;
 import AOS from 'aos';
@@ -21,9 +21,9 @@ interface Resenia {
 @Component({
   selector: 'app-comentarios',
   templateUrl: './comentarios.component.html',
-  // styleUrl: './comentarios.component.scss'
+  styleUrl: './comentarios.component.scss'
 })
-export class ComentariosComponent implements OnInit {
+export class ComentariosComponent implements OnInit,AfterViewInit {
   
   
   
@@ -107,4 +107,37 @@ export class ComentariosComponent implements OnInit {
       console.log('New review submitted:', nuevaReseña);
     }
   }
+
+  @ViewChild('reviewsContent') reviewsContent!: ElementRef;
+@ViewChildren('reviewCard') reviewCards!: QueryList<ElementRef>;
+
+ngAfterViewInit() {
+  this.checkScroll();
+}
+
+onReviewsScroll() {
+  this.checkScroll();
+}
+
+checkScroll() {
+  const container = this.reviewsContent.nativeElement;
+  const cards = this.reviewCards.toArray();
+  
+  if (cards.length === 0) return;
+
+  const lastCard = cards[cards.length - 1].nativeElement;
+  const lastCardRect = lastCard.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+
+  // Verificar si la última tarjeta está completamente visible
+  const isLastCardFullyVisible = lastCardRect.bottom <= containerRect.bottom;
+
+  // Añadir/remover clase según sea necesario
+  if (isLastCardFullyVisible) {
+    container.classList.add('mask-disabled');
+  } else {
+    container.classList.remove('mask-disabled');
+  }
+}
+
 }

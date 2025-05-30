@@ -44,14 +44,21 @@
       <div class="flex gap-3 overflow-x-auto py-2">
         <ng-container *ngIf="Detalles.imagenes">
           <img *ngFor="let img of Detalles.imagenes"
-            [src]="img"
-            (mouseenter)="onThumbnailHover(img)" 
-            (mouseleave)="resetMainImage()" 
-            (click)="changeMainImage(img)"
-            [class.selected-thumbnail]="img === mainImageUrl"
-            class="w-20 h-20 object-cover cursor-pointer border border-[#e8e3db] hover:border-[#2a2723] transition-all duration-300" />
+        [src]="img"
+        (mouseenter)="onThumbnailHover(img)" 
+        (mouseleave)="resetMainImage()" 
+        (click)="changeMainImage(img)"
+        [class.selected-thumbnail]="img === mainImageUrl"
+        class="w-20 h-20 object-cover cursor-pointer border border-[#e8e3db] hover:border-[#2a2723] transition-all duration-300"
+        style="border-width:2px"
+          />
         </ng-container>
       </div>
+      <style>
+        .selected-thumbnail {
+          border: 1px solid #2a2723 !important; /* Café oscuro */
+        }
+      </style>
     </div>
 
     <!-- Product Info - Luxury Typography -->
@@ -107,6 +114,7 @@
         </div>
       </div>
 
+<<<<<<< HEAD
         <div class="botones">
         <!-- Action Buttons - Luxury Style -->
         <div class="flex flex-col gap-4 mt-8">
@@ -115,6 +123,16 @@
             class="bg-[#2a2723] hover:bg-[#1a1713] text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full text-center tracking-wider font-light">
             {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'BOOK PRIVATE FITTING' : 'ADD TO WARDROBE' }}
           </button>
+=======
+      <!-- Action Buttons - Luxury Style -->
+      <div class="flex flex-col gap-4 mt-8">
+        <!-- class="bg-[#2a2723] hover:bg-[#1a1713] text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full text-center tracking-wider font-light"> -->
+        <button *ngIf="Detalles.disponible"
+          (click)="Detalles.opcionesTipoTransaccion == 'renta' ? redirigirContinuarRenta(Detalles._id) : redirigirContinuarCompra(Detalles._id)"
+         class="w-full bg-[#2a2723] text-white font-medium py-4 px-6 hover:bg-gray-800 transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
+          {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'BOOK PRIVATE FITTING' : 'ADD TO WARDROBE' }}
+        </button>
+>>>>>>> be8c31e93b10bb483f877dddc1db901e6a4d3bb3
 
         <button (click)="apartarRentar(Detalles)"
           class="border border-[#2a2723] text-[#2a2723] hover:bg-[#2a2723] hover:text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full flex items-center justify-center gap-3 tracking-wider font-light">

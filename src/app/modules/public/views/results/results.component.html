@@ -1,12 +1,12 @@
 <main class="min-h-screen flex flex-col mt-20 px-6 md:px-12 lg:px-24">
- <!-- Imagen y título centrados con imagen más grande -->
-<!-- <div class="relative mb-8 w-full aspect-[3/1] mx-auto overflow-hidden shadow-md">
+  <!-- Imagen y título centrados con imagen más grande -->
+  <div class="relative mb-8 w-full aspect-[3/1] mx-auto overflow-hidden shadow-md">
   <img
-    src="https://i.pinimg.com/736x/ec/9a/13/ec9a13208b0f32e88cf8cda0743142b6.jpg"
+    src="https://i.pinimg.com/736x/e8/d7/6d/e8d76db8cd43018bbb51911c59e1bff0.jpg"
     alt="Promotional Banner"
     class="w-full h-full object-cover object-center"
   />
-</div> -->
+</div>
 
   <!-- Contenedor principal: sidebar + productos -->
   <div class="flex flex-col lg:flex-row gap-6">
@@ -80,18 +80,23 @@
 
       <!-- Grid de productos - Versión premium -->
       <div *ngIf="!isLoading && hasResults" class="results-wrapper">
-        <div class="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+        <div class="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
           <div *ngFor="let product of filteredProducts"
-            class="product-card bg-white overflow-hidden hover:shadow-lg transition-all duration-500 border border-[#e8e3db] group">
+            class="product-card  overflow-hidden hover:shadow-lg w-50 transition-all duration-500 group">
 
             <!-- Imagen del producto con efecto hover -->
             <div class="relative overflow-hidden aspect-square">
               <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                [src]="product.imagenes[0]" [alt]="product.nombre" (click)="viewProductDetails(product._id)">
+                [src]="product.imagenes[0]" [alt]="product.nombre" (click)="viewProductDetails(product._id)"
+                 (mouseenter)="cambiarImagen(product, $event)" (mouseleave)="restaurarImagen(product, $event)">
 
               <!-- Badge de renta/nuevo  -->
-              <div *ngIf="product.opcionesTipoTransaccion === 'renta' || product.nuevo"
+              <div *ngIf="product.opcionesTipoTransaccion === 'renta' || product.opcionesTipoTransaccion === 'Venta'|| product.nuevo"
                 class="absolute top-4 right-4 flex flex-col gap-2">
+                <span *ngIf="product.opcionesTipoTransaccion === 'Venta'"
+                  class="text-[#2a2723] text-xs px-3 py-1 tracking-wider font-light">
+                  VENTA
+                </span>
                 <span *ngIf="product.opcionesTipoTransaccion === 'renta'"
                   class="bg-[#2a2723] text-[#d4c4a8] text-xs px-3 py-1 tracking-wider font-light">
                   RENTA
@@ -105,29 +110,27 @@
 
             <!-- Información del producto  -->
             <div class="card-info p-5">
-              <h3 class="product-name text-xl font-serif text-[#2a2723] mb-3 tracking-tight">{{ product.nombre }}</h3>
+              <h3 class="product-name text-sm font-serif text-[#2a2723] mb-3 tracking-tight">{{ product.nombre }}</h3>
 
               <div class="price-section mb-4">
                 <p class="product-price text-lg text-[#2a2723] font-medium">
-                  {{ product.precio | currency:'MXN':'symbol':'1.2-2' }}
+                  {{ product.precioActual | currency:'MXN':'symbol':'1.2-2' }}
+                </p>
+                <p class="product-price text-lg text-[#a9a9a9] line-through">
+                  <!-- Estilo tachado para el precio anterior -->
+                  {{ product.precioAnterior | currency:'MXN':'symbol':'1.2-2' }}
                 </p>
               </div>
+
 
               <!-- Acciones - Botones discretos  -->
               <div class="product-actions flex gap-3">
                 <button
                   class="quick-view-btn flex-1 bg-white text-[#2a2723] border border-[#2a2723] hover:bg-[#2a2723] hover:text-[#d4c4a8] py-2 px-4 text-sm font-light tracking-wider transition-colors duration-300"
-                  (click)="viewProductDetails(product._id)">
-                  VER DETALLES
+                 (click)="apartarRentar(product)">
+                  ADD CART
                 </button>
-                <button (click)="apartarRentar(product)"
-                  class="add-to-cart-btn bg-[#2a2723] text-[#d4c4a8] hover:bg-[#d4c4a8] hover:text-[#2a2723] p-2 transition-colors duration-300 border border-[#2a2723]">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </button>
+                
               </div>
             </div>
           </div>

@@ -1,18 +1,16 @@
-
-
-<footer class="relative border-t  border-[#f3f0e3] bg-[#faf9f7] text-[#2a2723] pt-20 pb-12  overflow-hidden">
+<footer class="relative border-t border-[#f3f0e3] bg-[#faf9f7] text-[#2a2723] pt-20 pb-12 overflow-hidden">
   <div class="relative z-10 max-w-7xl mx-auto px-6">
+    <!-- Imagen decorativa en la parte izquierda del footer -->
+    <div class="absolute left-0 bottom-0 z-0 w-[400px] h-full opacity-10 pointer-events-none">
+      <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1746397789/shlcavwsffgxemctxdml.png"
+           alt="Imagen decorativa"
+           class="object-contain h-full w-full" />
+    </div>
+    
     <!-- Grid de columnas -->
-     <!-- Imagen decorativa en la parte izquierda del footer -->
-<div class="absolute left-0 bottom-0 z-0 w-[400px] h-full opacity-10 pointer-events-none">
-  <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1746397789/shlcavwsffgxemctxdml.png"
-       alt="Imagen decorativa"
-       class="object-contain h-full w-full" />
-</div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-
-      <!-- Contacto con tono café verdoso -->
-      <div class=" space-y-5">
+      <!-- Contacto -->
+      <div class="space-y-5">
         <h3 class="font-serif text-lg uppercase tracking-widest text-[#2a2723] mb-6">Private Appointments</h3>
         <div class="space-y-3">
           <p class="flex items-start">
@@ -40,8 +38,7 @@
         </div>
       </div>
 
-
-      <!-- Collections Column - Luxury -->
+      <!-- Collections -->
       <div>
         <h3 class="font-serif text-lg uppercase tracking-widest text-[#2a2723] mb-6">Collections</h3>
         <ul class="space-y-4">
@@ -66,32 +63,53 @@
         </ul>
       </div>
 
-      <!-- Services Column - Premium -->
+      <!-- Más (Menú desplegable) -->
       <div>
-        <h3 class="font-serif text-lg uppercase tracking-widest text-[#2a2723] mb-6">Services</h3>
-        <ul class="space-y-4">
+        <h3 class="font-serif text-lg uppercase tracking-widest text-[#2a2723] mb-6">Information</h3>
+        <div class="relative group">
+          <button class="group flex items-center text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300 w-full">
+            <span class="block w-3 h-px bg-[#d4c4a8] mr-3 opacity-0 group-hover:opacity-100 group-hover:w-4 transition-all duration-500"></span>
+            <span class="flex items-center">
+              Más
+              <i class="pi pi-chevron-down text-xs ml-1 transition-transform duration-300 group-hover:rotate-180"></i>
+            </span>
+          </button>
+          <div class="mt-2 pl-6 hidden group-hover:block">
+            <ul class="space-y-3">
+              <li>
+                <a href="#" class="block text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300 text-sm">FAQ</a>
+              </li>
+              <li>
+                <a href="#" class="block text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300 text-sm">Misión</a>
+              </li>
+              <li>
+                <a href="#" class="block text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300 text-sm">Términos</a>
+              </li>
+              <li>
+                <a href="#" class="block text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300 text-sm">Políticas</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Otros enlaces estáticos -->
+        <ul class="space-y-4 mt-6">
           <li>
             <a href="#" class="group flex items-center text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300">
               <span class="block w-3 h-px bg-[#d4c4a8] mr-3 opacity-0 group-hover:opacity-100 group-hover:w-4 transition-all duration-500"></span>
-              Bespoke Alterations
+              Sobre Nosotros
             </a>
           </li>
           <li>
             <a href="#" class="group flex items-center text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300">
               <span class="block w-3 h-px bg-[#d4c4a8] mr-3 opacity-0 group-hover:opacity-100 group-hover:w-4 transition-all duration-500"></span>
-              Private Fittings
-            </a>
-          </li>
-          <li>
-            <a href="#" class="group flex items-center text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300">
-              <span class="block w-3 h-px bg-[#d4c4a8] mr-3 opacity-0 group-hover:opacity-100 group-hover:w-4 transition-all duration-500"></span>
-              Worldwide Delivery
+              Contacto
             </a>
           </li>
         </ul>
       </div>
 
-      <!-- Newsletter - Luxury -->
+      <!-- Newsletter -->
       <div>
         <h3 class="font-serif text-lg uppercase tracking-widest text-[#2a2723] mb-6">Atelier Journal</h3>
         <form class="space-y-4">
@@ -99,7 +117,7 @@
                  class="w-full px-0 py-2 bg-transparent border-b border-[#d4c4a8] text-[#6e6a63] placeholder-[#9c8e7a] focus:outline-none focus:border-[#2a2723] transition-colors duration-500">
           <button type="submit" 
                   class="group flex items-center text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300 mt-6">
-            <span class="mr-2">Subscribe</span>
+            <span class="font-romantic text-4xl mr-2">Subscribe</span>
             <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
             </svg>
@@ -108,7 +126,7 @@
       </div>
     </div>
 
-    <!-- Luxury Bottom Section -->
+    <!-- Sección inferior -->
     <div class="mt-16 pt-8 border-t border-[#e8e3db] flex flex-col md:flex-row justify-between items-center">
       <p class="text-[#9c8e7a] text-xs font-light tracking-wider">© 2025 ATELIER. All rights reserved.</p>
       
@@ -118,10 +136,118 @@
              class="h-6 opacity-80 hover:opacity-100 transition-opacity duration-300">
       </div>
     </div>
-  </div><aside class="hidden lg:block absolute right-0 top-0 h-full w-[400px] opacity-10 pointer-events-none">
-  <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1746397789/shlcavwsffgxemctxdml.png"
-       alt="Imagen decorativa"
-       class="object-contain h-full w-full" /> 
-</aside>
-
+  </div>
+  
+  <aside class="hidden lg:block absolute right-0 top-0 h-full w-[400px] opacity-10 pointer-events-none">
+    <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1746397789/shlcavwsffgxemctxdml.png"
+         alt="Imagen decorativa"
+         class="object-contain h-full w-full" /> 
+  </aside>
 </footer>
+<footer class="bg-white text-[#2a2723] text-center py-4 border-t border-[#f3f0e3]">
+  <p class="text-4xl font-romantic font-medium">Descubre la elegancia atemporal y la artesanía en Atelier – Donde cada detalle importa.</p>
+</footer>
+
+
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Poppins:wght@300;400;500;600&family=Marcellus&display=swap');
+
+  @import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+
+  @import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+  /* Reemplaza con tu kit de Adobe Fonts */
+
+
+  @import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+
+  /* Fuente para "Venta y Renta de Vestidos" */
+  @font-face {
+    font-family: 'Have You Eaten';
+    src: url('/fonts/MatildaDestinee-Regular.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+  }
+  
+  .font-romantic {
+    font-family: 'Have You Eaten', cursive;
+  }
+  
+  /* Fuente para "ATELIER" (similar a CREME SHOPISTICATED DOUGH) */
+  .font-lujo {
+    font-family: 'Cormorant Garamond', serif;
+    /* font-weight: 700; */
+    /* font-style: italic; */
+    letter-spacing: 0.5px;
+    /* Para dar ese aire sofisticado */
+  }
+
+  .font-sans {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .font-serif {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .font-display {
+    font-family: 'Marcellus', serif;
+  }
+
+  .cta-button-luxury {
+    font-family: 'Poppins', sans-serif;
+    padding: 0.75rem 2rem;
+    background-color: #222;
+    color: white;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button-luxury:hover {
+    background-color: #d4af37;
+  }
+
+  .cta-button-outline {
+    font-family: 'Poppins', sans-serif;
+    padding: 0.75rem 2rem;
+    border: 1px solid #222;
+    color: #222;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button-outline:hover {
+    background-color: #222;
+    color: white;
+  }
+
+  .brand-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  .brand-tag:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 1.5rem;
+    height: 1px;
+    background-color: #d4af37;
+  }
+</style>

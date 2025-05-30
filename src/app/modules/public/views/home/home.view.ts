@@ -21,7 +21,7 @@ import AOS from 'aos';
   styleUrls: [
     // "./home.view.css",
     // "../../../../shared/styles/styles.scss",
-    "../../../../shared/styles/animations.scss",
+    // "../../../../shared/styles/animations.scss",
   ],
 })
 export class HomeView implements OnInit {
@@ -87,7 +87,7 @@ export class HomeView implements OnInit {
     // Al iniciar la carga, vaciamos el array de productos
     AOS.init({
       duration: 650, // Duración de la animación en milisegundos
-      once: true, // Si `true`, la animación solo se ejecuta una vez
+      once: false, // Si `true`, la animación solo se ejecuta una vez
     });
     this.detectDevice();
     this.checkBrowserEnvironment();

@@ -1,4 +1,4 @@
-<p-dialog (onHide)="close()" [modal]="true" [(visible)]="isModalVisible" [style]="{ width: '40rem' }" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
+<p-dialog (onHide)="close()" [modal]="true" [(visible)]="isModalVisible" [style]="{'border-radius':'0', 'width': '35rem' }" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
   <div class="p-6" data-aos="fade-up">
     <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Iniciar sesión</h2>
 
@@ -19,7 +19,7 @@
         <div *ngIf="!usePhoneLogin; else phoneLogin">
           <input type="text" placeholder="Introduce tu correo electrónico" formControlName="email"
             id="email"
-            class="w-full px-5 py-3 text-lg rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
+            class="w-full px-5 py-3 text-lg rounded-none border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
             required [pattern]="'^[a-zA-Z0-9][\\w.-]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'" [disabled]="isLocked" />
         </div>
 
@@ -27,7 +27,7 @@
           <div>
             <input type="tel" placeholder="Introduce tu número de teléfono" formControlName="telefono"
               id="phone"
-              class="w-full px-5 py-3 text-lg rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
+              class="w-full px-5 py-3 text-lg rounded-none border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
               required [pattern]="'^[0-9]{9,15}$'" [disabled]="isLocked" />
           </div>
         </ng-template>
@@ -55,11 +55,11 @@
         <div class="relative">
           <input [type]="showPassword ? 'text' : 'password'" formControlName="password" (input)="verificarPassword()"
             id="password"
-            class="w-full px-5 py-3 text-lg rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
+            class="w-full px-5 py-3 text-lg rounded-none border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
             placeholder="Ingresa tu contraseña" [disabled]="!loginForm.get('email')" />
           <button type="button" (click)="showPassword = !showPassword"
             class="absolute right-3 top-3 text-gray-500 hover:text-gray-900">
-            <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+            <i [class]="showPassword ?  'pi pi-eye':'pi pi-eye-slash' "></i>
           </button>
         </div>
         
@@ -76,10 +76,16 @@
       </div>
 
       <!-- Captcha -->
-      <div class="mt-6" id="captcha-container" data-sitekey="6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI"
-        data-theme="light"></div>
+      <div class="mt-6 w-full flex justify-center">
+        <div id="captcha-container"
+          class="mx-auto"
+          style="display: flex; justify-content: center;"
+          data-sitekey="6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI"
+          data-theme="light">
+        </div>
+      </div>
 
-      <div *ngIf="loginError" class="text-gray-900 text-base py-2 px-3 bg-gray-100 rounded-lg border border-gray-300">{{ loginError }}</div>
+      <div *ngIf="loginError" class="text-gray-900 text-base py-2 px-3 bg-gray-100 rounded-none border border-gray-300">{{ loginError }}</div>
 
       <div *ngIf="loginForm.get('captcha')?.invalid && loginForm.get('captcha')?.touched" class="text-gray-900 text-sm">
         <div *ngIf="isLocked">
@@ -89,7 +95,7 @@
 
       <!-- Botón -->
       <button type="submit"
-        class="w-full py-3 text-lg rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-800 transition duration-300 disabled:opacity-50 flex justify-center items-center"
+        class="w-full py-3 text-lg rounded-none bg-gray-900 text-white font-medium hover:bg-gray-800 transition duration-300 disabled:opacity-50 flex justify-center items-center"
         [class.loading]="isLoading" [disabled]="isLoading">
         <span *ngIf="!isLoading">Iniciar sesión</span>
         <i *ngIf="isLoading" class="pi pi-spinner pi-spin ml-2"></i>
@@ -98,12 +104,12 @@
       <!-- Botones sociales -->
       <div class="space-y-4 pt-6">
         <button type="button" (click)="loginWithGoogle(); $event.preventDefault()"
-          class="flex items-center justify-center w-full py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-50 transition border border-gray-300">
+          class="flex items-center justify-center w-full py-3 bg-white text-gray-900 rounded-none hover:bg-gray-50 transition border border-gray-300">
           <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-6 h-6 mr-3" alt="Google" />
           <span class="text-lg">Continuar con Google</span>
         </button>
         <button type="button" (click)="loginWithFacebook(); $event.preventDefault()"
-          class="flex items-center justify-center w-full py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-50 transition border border-gray-300">
+          class="flex items-center justify-center w-full py-3 bg-white text-gray-900 rounded-none hover:bg-gray-50 transition border border-gray-300">
           <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" class="w-6 h-6 mr-3" alt="Facebook" />
           <span class="text-lg">Continuar con Facebook</span>
         </button>

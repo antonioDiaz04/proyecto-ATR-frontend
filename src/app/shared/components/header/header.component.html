@@ -5,82 +5,88 @@
 
 <!-- Exclusive Dress Boutique Header -->
 <header
-  class="w-full fixed top-0 z-50 bg-[#faf9f7] text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
+  class="w-full fixed top-0 z-50 text-[#3d2e35] transition-all duration-500 border-b border-[#f0e6eb]"
   [ngClass]="{ 'bg-opacity-95 backdrop-blur-sm': isScrolled }">
-  <div class="container-marquee hidden md:flex">
-    <div class="phrase">Descuentos hasta el <span class="highlight">-50%</span> en prendas seleccionadas por tiempo
-      limitado</div>
-    <div class="phrase">Ventas exclusivas <span class="highlight">solo aquí</span>, accede antes que nadie a las nuevas
-      colecciones</div>
-    <div class="phrase">Renta de lujo en <span class="highlight">Atelier</span>, ideal para eventos, galas y momentos
-      únicos</div>
-    <div class="phrase">Estilo y elegancia en <span class="highlight">cada prenda</span>, diseñadas para destacar tu
-      personalidad</div>
-
+  
+  <!-- Marquee (hidden on mobile) -->
+  <div  *ngIf="!isMobile" class="container-marquee md:flex transition-opacity duration-500 ease-in-out hidden sm:flex"
+       [ngClass]="{ 'hidden-marquee': isScrolled }">
+    <div class="phrase text-xs sm:text-sm md:text-base"> Descuentos hasta el <span class="highlight">-50% 🔥</span> en prendas seleccionadas por tiempo limitado</div>
+    <div class="phrase text-xs sm:text-sm md:text-base">Ventas exclusivas <span class="highlight">solo aquí</span>, accede antes que nadie a las nuevas colecciones</div>
+    <div class="phrase text-xs sm:text-sm md:text-base">Renta de lujo en <span class="highlight">Atelier</span>, ideal para eventos, galas y momentos únicos</div>
+    <div class="phrase text-xs sm:text-sm md:text-base">Estilo y elegancia en <span class="highlight">cada prenda</span>, diseñadas para destacar tu personalidad</div>
   </div>
+
   <!-- Main Container -->
-  <div class="container mx-auto px-2 lg:px-20 lg:py-2"> <!-- Increased lateral padding -->
+  <div class="container mx-auto px-2 sm:px-4 md:px-6 lg:px-20 lg:py-2">
 
     <!-- First Row: Logo + Search + Icons -->
-    <div class="flex items-center justify-between py-2 lg:px-2"> <!-- Increased lateral padding -->
+    <div class="flex items-center justify-between py-2 lg:px-2">
 
-      <!-- Logo and Mobile Menu -->
+       <!-- Logo and Mobile Menu - Modified for mobile -->
       <div class="flex items-center w-1/4">
         <button *ngIf="isMobile" (click)="showDialog()" class="text-xl focus:outline-none">
           <i class="pi pi-bars"></i>
         </button>
 
         <a [routerLink]="'/inicio'" class="flex items-center h-8 ml-4">
-          <img class="h-8 transition-all duration-500 ease-in-out" [class.opacity-100]="isSticky"
+          <!-- Mostrar solo el logo pequeño en móvil -->
+          <img *ngIf="isMobile" class="h-8"
+            src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
+            alt="Atelier Dresses">
+
+          <!-- Logos para desktop (comportamiento original) -->
+          <img *ngIf="!isMobile" class="h-8 transition-all duration-500 ease-in-out" [class.opacity-100]="isSticky"
             [class.opacity-0]="!isSticky" [class.-translate-y-2]="!isSticky"
             src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
             alt="Atelier Dresses">
 
-          <img class="absolute h-8 transition-all duration-500 ease-in-out" [class.opacity-100]="!isSticky"
+          <img *ngIf="!isMobile" class="absolute h-8 transition-all duration-500 ease-in-out" [class.opacity-100]="!isSticky"
             [class.opacity-0]="isSticky" [class.translate-y-2]="isSticky"
             src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730313785/images-AR/ic5srzm6tzqyrosaexan.png"
             alt="Atelier Logo">
         </a>
       </div>
 
-      <!-- Product Search -->
-      <div class="relative w-full max-w-3xl mx-auto"> <!-- Cambiar a max-w-3xl para mayor ancho -->
+      <!-- Product Search - Now Responsive -->
+      <div class="relative w-full mx-auto transition-all duration-300 
+                  lg:max-w-3xl md:max-w-xl sm:max-w-md max-w-xs px-2">
         <input type="text" [(ngModel)]="busquedaProducto" [ngModelOptions]="{standalone: true}"
           (input)="filtrarProductos()" (focus)="mostrarDropdown = true" (blur)="ocultarDropdownConRetraso()"
-          placeholder="Buscar vestidos de novia, fiesta..."
-          class="w-full pl-12 pr-10 py-2 text-sm bg-white text-[#2e2e2e] placeholder-gray-400 border-b border-[#c0bab3] focus:ring-0 focus:border-[#c0bab3] focus:outline-none transition-all duration-150 ease-in-out">
+          placeholder="Buscar vestidos..."
+          class="w-full pl-10 pr-8 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base
+                bg-white text-[#161616] placeholder-gray-400 
+                border-b border-[#64625e] focus:ring-0 
+                focus:border-[#9a958f] focus:outline-none">
 
-        <i class="pi pi-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+        <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm sm:text-base"></i>
 
         <button *ngIf="busquedaProducto" type="button" (click)="limpiarBusqueda()"
-          class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
-          <i class="pi pi-times"></i>
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
+          <i class="pi pi-times text-sm sm:text-base"></i>
         </button>
 
         <!-- Dropdown de sugerencias -->
         <div *ngIf="mostrarDropdown"
-          class="absolute mt-2 w-full bg-white border border-[#c0bab3] rounded-md shadow-lg z-10 max-h-60 overflow-hidden">
+          class="absolute mt-1 w-full bg-white border border-[#96928d] rounded-md shadow-lg z-10 max-h-60 overflow-hidden">
           <div class="flex border-b border-gray-200">
-            <div class="w-1/4 bg-[#fdfcfc] p-4"> <!-- Categorías a la izquierda (más estrecho y fijo) -->
-              <h4 class="font-medium text-gray-700">Opciones</h4>
-              <ul class="space-y-1">
-                <li class="text-sm text-gray-600">Nuevos Arrivos</li>
-                <li class="text-sm text-gray-600">Ofertas Especiales</li>
-                <li class="text-sm text-gray-600">Más Vendidos</li>
+            <div class="w-1/4 bg-[#fdfcfc] p-2 sm:p-3 md:p-4">
+              <h4 class="font-medium text-gray-700 text-xs sm:text-sm">Opciones</h4>
+              <ul class="space-y-1 mt-1">
+                <li class="text-xs sm:text-sm text-gray-600">Nuevos Arrivos</li>
+                <li class="text-xs sm:text-sm text-gray-600">Ofertas Especiales 🔥</li>
+                <li class="text-xs sm:text-sm text-gray-600">Más Vendidos</li>
               </ul>
             </div>
-            <div class="w-3/4 max-h-60 overflow-auto"> <!-- Productos a la derecha (más ancho y desplazable) -->
+            <div class="w-3/4 max-h-60 overflow-auto">
               <ul>
                 <li *ngFor="let producto of productosFiltrados" (mousedown)="seleccionarProducto(producto)"
-                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-[#ebe3db] last:border-b-0 flex items-center gap-3">
+                  class="px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-100 cursor-pointer border-b border-[#ebe3db] last:border-b-0 flex items-center gap-2 sm:gap-3">
 
-                  <!-- Imagen del producto -->
-                  <img [src]="producto.imagenes[0]" alt="img" class="w-10 h-10 object-cover rounded-md border">
+                  <img [src]="producto.imagenes[0]" alt="img" class="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-md border">
 
-                  <!-- Texto con resaltado -->
                   <div class="flex flex-col">
-                    <div class="font-medium text-sm text-gray-800" [innerHTML]="resaltarCoincidencia(producto.nombre)">
-                    </div>
+                    <div class="font-medium text-xs sm:text-sm text-gray-800" [innerHTML]="resaltarCoincidencia(producto.nombre)"></div>
                     <div class="text-xs text-gray-500">{{producto.talla}} • {{producto.precio | currency}}</div>
                   </div>
                 </li>
@@ -91,19 +97,16 @@
 
         <!-- No hay resultados -->
         <div *ngIf="mostrarDropdown && busquedaProducto.length >= 2 && productosFiltrados.length === 0"
-          class="absolute mt-2 w-full bg-white border border-gray-200 rounded-md shadow-sm z-10 text-sm text-gray-500 p-3">
+          class="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-sm z-10 text-xs sm:text-sm text-gray-500 p-2 sm:p-3">
           No se encontraron productos para "{{ busquedaProducto }}"
         </div>
       </div>
 
-
-
-
       <!-- Action Icons -->
-      <div class="flex items-center justify-end space-x-5 w-1/4">
+      <div class="flex items-center justify-end space-x-3 sm:space-x-5 w-1/4">
         <!-- Shopping Bag -->
         <button (click)="redirectTo('CitasProbador')" class="relative group">
-          <i class="pi pi-shopping-bag text-xl group-hover:text-[#d4a8b4] transition"></i>
+          <i class="pi pi-shopping-bag text-lg sm:text-xl group-hover:text-[#d4a8b4] transition"></i>
           <span
             class="absolute -top-2 -right-2 bg-[#3d2e35] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {{ dressItemCount() }}
@@ -113,16 +116,18 @@
         <!-- Usuario/Login -->
         <div *ngIf="!isMobile" class="relative">
           <ng-container *ngIf="!isLoggedIn; else userMenu">
-            <div class="flex space-x-2">
+            <div class="flex space-x-1 sm:space-x-2">
               <!-- Botón Iniciar Sesión -->
-              <button (click)="openModal()" class="px-4 uppercase py-2 bg-transparent text-[#807c77] border border-[#aba69f] rounded-none 
-                       hover:bg-gray-100 transition-colors text-sm font-medium">
+              <button (click)="openModal()" 
+                class="px-2 sm:px-4 py-1 sm:py-2 bg-transparent text-[#807c77] border border-[#aba69f] rounded-none 
+                       hover:bg-gray-100 transition-colors text-xs sm:text-sm font-medium uppercase">
                 Iniciar sesión
               </button>
 
               <!-- Botón Registro -->
-              <button routerLink="/auth/Sign-up" class="px-4 uppercase py-2 bg-[#403e3c] text-white rounded-none 
-                       hover:bg-gray-800 transition-colors text-sm font-medium">
+              <button routerLink="/auth/Sign-up" 
+                class="px-2 sm:px-4 py-1 sm:py-2 bg-[#403e3c] text-white rounded-none 
+                       hover:bg-gray-800 transition-colors text-xs sm:text-sm font-medium uppercase">
                 Registrarse
               </button>
             </div>
@@ -131,19 +136,17 @@
           <ng-template #userMenu>
             <div class="relative group">
               <button class="flex items-center space-x-1">
-                <i class="pi pi-user text-xl text-gray-700"></i>
-                <span class="text-sm hidden lg:inline-block">Mi cuenta</span>
+                <i class="pi pi-user text-lg sm:text-xl text-gray-700"></i>
+                <span class="text-xs sm:text-sm hidden lg:inline-block">Mi cuenta</span>
               </button>
               <div
-                class="absolute right-0 hidden group-hover:block bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-sm text-gray-700 z-50">
-                <div class="px-4 py-2 border-b border-gray-100 text-xs text-gray-500">Bienvenido/a</div>
-                <a (click)="redirectToCliente('perfil')" class="block px-4 py-2 hover:bg-gray-50 transition">Perfil</a>
-                <a (click)="redirectToCliente('compras')" class="block px-4 py-2 hover:bg-gray-50 transition">Mis
-                  compras</a>
-                <a (click)="redirectToCliente('favoritos')"
-                  class="block px-4 py-2 hover:bg-gray-50 transition">Favoritos</a>
+                class="absolute right-0 hidden group-hover:block bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-xs sm:text-sm text-gray-700 z-50">
+                <div class="px-3 py-1 sm:px-4 sm:py-2 border-b border-gray-100 text-xs text-gray-500">Bienvenido/a</div>
+                <a (click)="redirectToCliente('perfil')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Perfil</a>
+                <a (click)="redirectToCliente('compras')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Mis compras</a>
+                <a (click)="redirectToCliente('favoritos')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Favoritos</a>
                 <div class="border-t border-gray-100 mt-1"></div>
-                <a (click)="logout()" class="block px-4 py-2 text-red-500 hover:bg-gray-50 transition">Cerrar sesión</a>
+                <a (click)="logout()" class="block px-3 py-1 sm:px-4 sm:py-2 text-red-500 hover:bg-gray-50 transition">Cerrar sesión</a>
               </div>
             </div>
           </ng-template>
@@ -154,46 +157,34 @@
     <!-- Dress Categories Navigation -->
     <nav class="hidden md:flex justify-center space-x-1 py-2 border-t border-[#f0e6eb]">
       <a (click)="redirectTo('search')"
-        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group">
+        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
         Nuestra colección
       </a>
 
-      <a (click)="redirectTo('nuevos')"
-        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group overflow-hidden">
+      <a (click)="redirectTo('Nuevos')"
+        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group overflow-hidden">
         Nuevos Arrivos
-        <span class="absolute top-1 right-1 bg-[#d4a8b4] text-[#3d2e35] text-[8px] px-1 rounded-full">NEW</span>
+        <span class="absolute top-0 sm:top-1 right-0 sm:right-1 bg-[#d4a8b4] text-[#3d2e35] text-[8px] px-1 rounded-full">NEW</span>
 
         <!-- Efecto de brillo deslizante -->
         <span
-          class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 -translate-x-full group-hover:translate-x-full"></span>
+          class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 -translate-x-full group-hover:translate-x-full"></span>
       </a>
 
       <a (click)="redirectTo('ofertas')"
-        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group">
-        Ofertas Especiales
+        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
+        Ofertas Especiales 🔥
+      </a>
+      <a (click)="redirectTo('look')"
+        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
+        Acompleta tu look
       </a>
       <a (click)="redirectTo('AcercaDe')"
-        class="uppercase cursor-pointer px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition relative group">
+        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
         Sobre Nosotros
       </a>
 
-      <div class="relative group">
-        <button class="px-4 py-2 text-sm font-light hover:text-[#d4a8b4] transition flex items-center">
-          Más
-          <i class="pi pi-chevron-down text-xs ml-1"></i>
-        </button>
-        <div
-          class="absolute left-0 hidden group-hover:block bg-white border border-[#f0e6eb] shadow-sm mt-1 py-1 min-w-[180px] z-50">
-          <a (click)="redirectTo('Preguntas')"
-            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">FAQ</a>
-          <a (click)="redirectTo('MisionVision')"
-            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">Misión</a>
-          <a (click)="redirectTo('terminos')"
-            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">Términos</a>
-          <a (click)="redirectTo('politicas')"
-            class="uppercase cursor-pointer block px-4 py-2 text-sm hover:bg-[#faf7f9] font-light">Políticas</a>
-        </div>
-      </div>
+      
     </nav>
   </div>
 </header>
@@ -212,48 +203,92 @@
 <p-sidebar *ngIf="isMobile" [(visible)]="sidebarVisible" position="left" styleClass="w-80" [showCloseIcon]="false">
   <ng-template pTemplate="header">
     <div class="p-4 border-b border-[#f0e6eb]">
-      <img class="h-8"
-        src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730313785/images-AR/ic5srzm6tzqyrosaexan.png"
-        alt="Atelier Dresses">
+      <img class="h-8" src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730313785/images-AR/ic5srzm6tzqyrosaexan.png" alt="Atelier Dresses">
     </div>
   </ng-template>
 
   <ul class="space-y-2 p-4">
-    <li><a (click)="redirectTo('inicio')"
-        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-home"></i>
+    <li><a (click)="redirectTo('inicio')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-home"></i>
         <span>Inicio</span></a></li>
-    <li><a (click)="redirectTo('vestidos-novia')"
-        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-star"></i>
+    <li><a (click)="redirectTo('vestidos-novia')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-star"></i>
         <span>Vestidos de Novia</span></a></li>
-    <li><a (click)="redirectTo('vestidos-fiesta')"
-        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-heart"></i>
+    <li><a (click)="redirectTo('vestidos-fiesta')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-heart"></i>
         <span>Vestidos de Fiesta</span></a></li>
-    <li><a (click)="redirectTo('nuevos')"
-        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-bolt"></i>
+    <li><a (click)="redirectTo('nuevos')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-bolt"></i>
         <span>Nuevos Diseños</span></a></li>
-    <li><a (click)="redirectTo('ofertas')"
-        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-tag"></i>
+    <li><a (click)="redirectTo('ofertas')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-tag"></i>
         <span>Ofertas</span></a></li>
-    <li><a (click)="redirectTo('renta-novia')"
-        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-calendar"></i>
+    <li><a (click)="redirectTo('renta-novia')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-calendar"></i>
         <span>Renta Novia</span></a></li>
-    <li><a (click)="redirectTo('renta-fiesta')"
-        class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i
-          class="pi pi-calendar-plus"></i> <span>Renta Fiesta</span></a></li>
+    <li><a (click)="redirectTo('renta-fiesta')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-calendar-plus"></i>
+        <span>Renta Fiesta</span></a></li>
+    <li><a (click)="redirectTo('nuevos-arrivos')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-refresh"></i>
+        <span>Nuevos Arrivos</span></a></li>
+    <li><a (click)="redirectTo('ofertas-especiales')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-star"></i>
+        <span>Ofertas Especiales</span></a></li>
+    <li><a (click)="redirectTo('mas-vendidos')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-chart-bar"></i>
+        <span>Más Vendidos</span></a></li>
+    <li><a (click)="redirectTo('sobre-nosotros')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-info-circle"></i>
+        <span>Sobre Nosotros</span></a></li>
+    <li><a (click)="redirectTo('preguntas-frecuentes')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-question-circle"></i>
+        <span>Preguntas Frecuentes</span></a></li>
+    <li><a (click)="redirectTo('terminos')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-file"></i>
+        <span>Términos y Condiciones</span></a></li>
+    <li><a (click)="redirectTo('politicas')" class="flex items-center space-x-3 px-3 py-2 text-[#3d2e35] hover:bg-[#faf7f9]"><i class="pi pi-lock"></i>
+        <span>Políticas de Privacidad</span></a></li>
   </ul>
 
-  <ng-template pTemplate="footer">
+  <!-- Mi Cuenta Section -->
+  <div class="relative p-4 border-t border-[#f0e6eb]">
+    <ng-container *ngIf="!isLoggedIn; else userMenu">
+      <div class="flex space-x-1 sm:space-x-2">
+        <!-- Botón Iniciar Sesión -->
+        <button (click)="openModal()" 
+          class="px-2 sm:px-4 py-1 sm:py-2 bg-transparent text-[#807c77] border border-[#aba69f] rounded-none 
+                 hover:bg-gray-100 transition-colors text-xs sm:text-sm font-medium uppercase">
+          Iniciar sesión
+        </button>
+
+        <!-- Botón Registro -->
+        <button routerLink="/auth/Sign-up" 
+          class="px-2 sm:px-4 py-1 sm:py-2 bg-[#403e3c] text-white rounded-none 
+                 hover:bg-gray-800 transition-colors text-xs sm:text-sm font-medium uppercase">
+          Registrarse
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- Menú tipo "detalles" para Mi Cuenta en móvil -->
+    <ng-template #userMenu>
+      <details class="group w-full">
+        <summary class="flex items-center space-x-1 cursor-pointer py-2 px-2 rounded hover:bg-gray-100 transition">
+          <i class="pi pi-user text-lg sm:text-xl text-gray-700"></i>
+          <span class="text-xs sm:text-sm">Mi cuenta</span>
+          <i class="pi pi-chevron-down ml-auto text-xs"></i>
+        </summary>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-xs sm:text-sm text-gray-700 z-50">
+          <div class="px-3 py-1 sm:px-4 sm:py-2 border-b border-gray-100 text-xs text-gray-500">Bienvenido/a</div>
+          <a (click)="redirectToCliente('perfil')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Perfil</a>
+          <a (click)="redirectToCliente('compras')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Mis compras</a>
+          <a (click)="redirectToCliente('favoritos')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Favoritos</a>
+          <div class="border-t border-gray-100 mt-1"></div>
+          <a (click)="logout()" class="block px-3 py-1 sm:px-4 sm:py-2 text-red-500 hover:bg-gray-50 transition">Cerrar sesión</a>
+        </div>
+      </details>
+    </ng-template>
+  </div>
+
+  <!-- <ng-template pTemplate="footer">
     <div class="p-4 border-t border-[#f0e6eb]">
       <button class="w-full bg-[#3d2e35] text-white py-3 text-sm tracking-wide">Mi cuenta</button>
     </div>
-  </ng-template>
+  </ng-template> -->
 </p-sidebar>
 
 
 <!-- Modal login -->
 <app-login-modal *ngIf="isModalVisible" [isModalVisible]="isModalVisible"
   (mostrarFormulario)="cerrarModal($event)"></app-login-modal>
-
 <style>
   .container-marquee {
     justify-content: center;
@@ -261,17 +296,20 @@
     display: flex;
     font-size: 1em;
     font-weight: bold;
-    height: 1.5em;
+    height: 1.5em; /* Ajusta la altura según lo necesites */
     overflow: hidden;
     position: relative;
     background: #000000;
     color: #fff;
+    transition: opacity 0.5s ease-in-out, height 0s 0.5s; /* Añadir transición para la altura */
   }
 
   .phrase {
     position: absolute;
+    font-family: 'Times New Roman', Times, serif;
     opacity: 0;
     animation: rotate 16s linear infinite;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
   }
 
   .phrase:nth-child(2) {
@@ -287,8 +325,7 @@
   }
 
   .highlight {
-    color: #d4af37;
-    /* Amarillo plateado / dorado claro */
+    color: #d4af37; /* Amarillo plateado / dorado claro */
   }
 
   @keyframes rotate {
@@ -296,24 +333,30 @@
       opacity: 0;
       transform: translateY(100%);
     }
-
     10% {
       opacity: 1;
       transform: translateY(0);
     }
-
     30% {
       opacity: 1;
       transform: translateY(0);
     }
-
     40% {
       opacity: 0;
       transform: translateY(-100%);
     }
-
     100% {
       opacity: 0;
     }
+  }
+
+  /* Nueva clase para ocultar el marquee sin dejar espacio */
+  .hidden-marquee {
+    height: 0; /* Elimina la altura para no dejar espacio */
+    opacity: 0; /* Asegura que la opacidad sea 0 */
+    padding: 0; /* Asegúrate de que no haya relleno */
+    margin: 0; /* Asegúrate de que no haya margen */
+    overflow: hidden; /* Oculta cualquier contenido adicional */
+    transition: opacity 0.5s ease-in-out, height 0s 0.5s; /* Transición para suavizar el cambio */
   }
 </style>

@@ -14,11 +14,11 @@ import { HttpClient } from '@angular/common/http';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmationService, MessageService } from 'primeng/api';
 declare const paypal: any;
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-process-compra',
   templateUrl: './process-compra.component.html',
-  styleUrl: './process-compra.component.scss',
 })
 export class ProcessCompraComponent implements OnInit {
   isLoading: boolean = false;
@@ -41,6 +41,7 @@ export class ProcessCompraComponent implements OnInit {
   private paypalLoaded: boolean = false;
 
   constructor(
+    private location: Location,
     private swPush: SwPush,
     private activatedRoute: ActivatedRoute,
     private productoS_: ProductoService,
@@ -214,6 +215,7 @@ export class ProcessCompraComponent implements OnInit {
       }
     });
   }
-
-  aplicarCupon() {}
+  volver() {
+    this.location.back();
+  }
 }

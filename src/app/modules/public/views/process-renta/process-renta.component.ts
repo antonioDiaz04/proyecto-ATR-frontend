@@ -12,6 +12,7 @@ import { SwPush } from '@angular/service-worker';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { Location } from '@angular/common';
 declare const paypal: any;
 
 @Component({
@@ -41,6 +42,7 @@ export class ProcessRentaComponent implements OnInit {
 
 
   constructor(
+    private location: Location,
     private swPush: SwPush,
     private activatedRoute: ActivatedRoute,
     private productoS_: ProductoService,
@@ -92,6 +94,9 @@ export class ProcessRentaComponent implements OnInit {
         this.initializePayPal();
         this.isLoading = false;
         this.cdRef.detectChanges();
+        this.checkPayPalLoaded().then(() => {
+          this.loadProductDetails();
+        });
       },
       error: (err) => {
         console.error('Error al obtener detalles:', err);
@@ -228,5 +233,8 @@ export class ProcessRentaComponent implements OnInit {
         console.error('Error rendering PayPal button:', error);
       }
     });
+  }
+   volver() {
+    this.location.back();
   }
 }
