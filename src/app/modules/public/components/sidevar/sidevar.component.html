@@ -1,4 +1,4 @@
-<aside *ngIf="!isMobile" class="w-64 p-6 bg-white border-r border-gray-100 shadow-xs">
+<aside *ngIf="!isMobile" class="w-64">
   <!-- Categorías - Estilo mejorado -->
   <div class="mb-8">
     <h3 class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4">Categorías</h3>
@@ -42,7 +42,7 @@
         [class.outline]="selectedFilters.color === color"
         [class.outline-1]="selectedFilters.color === color"
         [class.outline-gray-800]="selectedFilters.color === color"
-        class="w-6 h-6 rounded-full cursor-pointer transition-all duration-200 mx-auto"
+        class="w-6 h-6 rounded-none cursor-pointer transition-all duration-200 mx-auto"
         [ngClass]="{
           'bg-gray-900': color === 'negro',
           'bg-gray-400': color === 'gris',

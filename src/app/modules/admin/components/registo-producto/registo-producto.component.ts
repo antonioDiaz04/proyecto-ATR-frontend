@@ -17,7 +17,7 @@ import { CategoriaService } from '../../../../shared/services/categoria.service'
 @Component({
   selector: "app-registo-producto",
   templateUrl: "./registo-producto.component.html",
-  styleUrls: ["./registo-producto.component.scss"],
+  // styleUrls: ["./registo-producto.component.scss"],
 })
 export class RegistoProductoComponent implements OnInit {
   @Input() mostrarModalAddVestido!: boolean;
@@ -120,8 +120,8 @@ export class RegistoProductoComponent implements OnInit {
       nuevo: producto.nuevo !== undefined ? producto.nuevo : true, // Valor por defecto si no está definido
       tipoCuello: producto.tipoCuello || "",
       tipoCola: producto.tipoCola || "",
-      precioAnterior: producto.precioAnterior|| 0,
-      precioActual: producto.precioActual|| 0,
+      precioAnterior: producto.precioAnterior || 0,
+      precioActual: producto.precioActual || 0,
       mostrarPrecioAnterior: producto.mostrarPrecioAnterior, // Checkbox desactivado por defecto
       tipoCapas: producto.tipoCapas || "",
       tipoHombro: producto.tipoHombro || "",
@@ -353,5 +353,9 @@ export class RegistoProductoComponent implements OnInit {
         reader.readAsDataURL(file);
       });
     }
+  }
+  onTipoTransaccionChange(event: any) {
+    // Lógica para manejar el cambio si es necesario
+    // El campo ya se muestra/oculta automáticamente basado en el valor del formulario
   }
 }

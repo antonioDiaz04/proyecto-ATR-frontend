@@ -10,7 +10,9 @@ Aún sin calificación (0 opiniones)﻿
 
 
 
-
+ <button class="w-full border border-black py-3 text-sm tracking-wider hover:bg-black hover:text-white transition-colors">
+              SOLICITAR CITA
+            </button>
 iconos de la empresa ,el de como rentar mi vestido
 
 

@@ -17,16 +17,16 @@
     <!-- Main Feature Card -->
     <div class="relative col-span-2 row-span-2 overflow-hidden group">
       <img [src]="cards[0].image" alt="Luxury collection"
-        class="w-full h-full object-cover object-center transition-all duration-700 ease-in-out transform group-hover:scale-105" />
+      class="w-full h-full object-cover object-center transition-all duration-700 ease-in-out transform group-hover:scale-105 group-hover:filter-sepia" />
       <div class="absolute inset-0 flex items-end p-12 bg-gradient-to-t from-black/50 via-black/5 to-transparent">
+      <div
+        class="text-white transition-all duration-700 ease-in-out transform group-hover:translate-y-0 translate-y-4">
+        <h3 class="font-serif text-4xl md:text-5xl mb-4 tracking-tight leading-tight">{{ cards[0].title }}</h3>
+        <p class="text-[#f0f0f0] font-light max-w-md text-lg">{{ cards[0].text }}</p>
         <div
-          class="text-white transition-all duration-700 ease-in-out transform group-hover:translate-y-0 translate-y-4">
-          <h3 class="font-serif text-4xl md:text-5xl mb-4 tracking-tight leading-tight">{{ cards[0].title }}</h3>
-          <p class="text-[#f0f0f0] font-light max-w-md text-lg">{{ cards[0].text }}</p>
-          <div
-            class="w-24 h-px bg-[#e8e3db] mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
-          </div>
+        class="w-24 h-px bg-[#e8e3db] mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
         </div>
+      </div>
       </div>
     </div>
 
@@ -87,7 +87,7 @@
     </div>
   </ng-template>
 </p-carousel>
- <div class="pt-2 pb-2  px-6 items-center text-center justify-center">
+ <div class="pt-2 pb-2 items-center text-center justify-center">
     <span class="block italic font-light text-[#9c8e7a] text-xl">Servicio Personalizado</span>
     <div class="relative flex items-center justify-center">
       <div class="flex-grow border-t border-[#9c8e7a]"></div>
@@ -98,7 +98,7 @@
     </div>
   </div>
 <!-- Luxury Services Section -->
-<section class="bg-white py-20 px-6 sm:px-12 max-w-6xl mx-auto">
+<section class="bg-[#ffffff] px-6 sm:px-12 pt-2 pb-2">
  
   <ul class="space-y-8 max-w-3xl mx-auto">
     <li class="flex items-start border-b border-[#f0ece6] pb-8">
@@ -128,7 +128,7 @@
 </section>
 
 <!-- Luxury Process Section -->
-<section class="bg-[#f9f7f4] py-20 px-6 sm:px-12">
+<section class="bg-[#f9f7f4] px-6 sm:px-12">
   <div class="max-w-6xl mx-auto">
     <header class="text-center mb-20">
       <h2 class="font-serif text-3xl md:text-4xl text-[#2a2723] tracking-tight">

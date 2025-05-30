@@ -1,10 +1,144 @@
-<section #seccionVista>
-    <!-- <div>
-        <h1>Control de rentas</h1>
+<section class="rentas-container">
+
+    <!-- Encabezado con estilo minimalista -->
+    <div class="border-b border-gray-200 pb-4 mb-6 flex items-center">
+      <i class="pi pi-calendar text-red-500 text-3xl mr-3"></i>
+      <div>
+        <h1 class="text-2xl font-light text-gray-800 inline-block border-b-2 border-red-500 pb-1">Control de Rentas</h1>
+        <p class="text-sm text-gray-500 mt-1">Sistema de gestión de alquileres en tiempo real</p>
+      </div>
+    </div>
+   <!-- Menú de navegación con tabs y acción -->
+<div class="flex justify-between items-center mb-8 border-b border-gray-200">
+    <!-- Tabs -->
+    <nav class="flex">
+      <ul class="flex space-x-1">
+        <li>
+          <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+            <i class="pi pi-chart-line mr-2 text-gray-400 group-hover:text-red-400"></i>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+            <i class="pi pi-calendar mr-2 text-gray-400 group-hover:text-red-400"></i>
+            Rentas Activas
+          </a>
+        </li>
+        <li>
+          <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+            <i class="pi pi-history mr-2 text-gray-400 group-hover:text-red-400"></i>
+            Historial
+          </a>
+        </li>
+        <li>
+          <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+            <i class="pi pi-users mr-2 text-gray-400 group-hover:text-red-400"></i>
+            Clientes
+          </a>
+        </li>
+      </ul>
+    </nav>
+  
+    <!-- Botón de acción flotante -->
+    <button class="flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors shadow-sm">
+      <i class="pi pi-plus mr-2"></i>
+      Nueva Renta
+    </button>
+  </div>
+    <!-- Sección de métricas sin tarjetas
+    <div class="metricas-grid grid grid-cols-3 gap-6 mb-8">
+      <div class="p-4 border-l-4 border-red-500">
+        <h3 class="text-sm font-medium text-gray-500 mb-1">Rentas Activas</h3>
+        <div class="flex items-baseline">
+          <span class="text-3xl font-light text-gray-800 mr-2">24</span>
+          <span class="text-xs font-medium text-green-500">+3 esta semana</span>
+        </div>
+      </div>
+      <div class="p-4 border-l-4 border-blue-500">
+        <h3 class="text-sm font-medium text-gray-500 mb-1">Vencen Hoy</h3>
+        <div class="flex items-baseline">
+          <span class="text-3xl font-light text-gray-800 mr-2">5</span>
+          <span class="text-xs font-medium text-red-500">Urgente</span>
+        </div>
+      </div>
+      <div class="p-4 border-l-4 border-amber-500">
+        <h3 class="text-sm font-medium text-gray-500 mb-1">Disponibilidad</h3>
+        <div class="flex items-center">
+          <span class="text-3xl font-light text-gray-800 mr-2">82%</span>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-amber-500 h-2 rounded-full" style="width: 82%"></div>
+          </div>
+        </div>
+      </div>
     </div> -->
-
-    <section>
-        <router-outlet></router-outlet>
+  
+    <!-- Tabla de rentas recientes con diseño mejorado -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-medium text-gray-800 flex items-center">
+          <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+          Rentas Recientes
+        </h2>
+        <button class="text-xs text-red-600 hover:text-red-800 font-medium flex items-center">
+          Ver todas <i class="pi pi-chevron-right ml-1 text-xs"></i>
+        </button>
+      </div>
+  
+      <div class="overflow-hidden border border-gray-200 rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Renta</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Periodo</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#R-24578</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Ana López</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15 Jun - 20 Jun 2023</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Activa</span>
+              </td>
+            </tr>
+            <!-- Más filas... -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- Sección de alertas integrada -->
+    <div>
+      <h2 class="text-lg font-medium text-gray-800 flex items-center mb-4">
+        <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+        Alertas Recientes
+      </h2>
+      
+      <div class="space-y-3">
+        <div class="p-4 border border-amber-100 bg-amber-50 rounded-lg flex items-start">
+          <i class="pi pi-exclamation-circle text-amber-500 mr-3 mt-0.5"></i>
+          <div>
+            <p class="text-sm font-medium text-gray-800">2 rentas vencen hoy</p>
+            <p class="text-xs text-gray-500 mt-1">Contactar a los clientes para coordinar devolución</p>
+          </div>
+        </div>
+        
+        <div class="p-4 border border-blue-100 bg-blue-50 rounded-lg flex items-start">
+          <i class="pi pi-info-circle text-blue-500 mr-3 mt-0.5"></i>
+          <div>
+            <p class="text-sm font-medium text-gray-800">3 productos en mantenimiento</p>
+            <p class="text-xs text-gray-500 mt-1">No disponibles para nuevas rentas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Contenedor del router outlet -->
+    <section class="mt-10">
+      <router-outlet></router-outlet>
     </section>
-
-</section>
+  
+  </section>

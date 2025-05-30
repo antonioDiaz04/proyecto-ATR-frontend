@@ -1,4 +1,4 @@
-<div class="relative w-full mt-20 h-[55vh] bg-[#faf9f7] overflow-hidden">
+<div class="relative w-full mt-20 h-[65vh] bg-[#faf9f7] overflow-hidden">
   <!-- Fondo dividido en dos colores -->
   <div class="absolute mr-20 inset-0 z-0 flex">
     <!-- Mitad izquierda con color actual -->
@@ -48,14 +48,15 @@
 
         <!-- Título principal con efecto de superposición -->
         <div class="relative">
-          <h1 class="text-8xl md:text-8xl lg:text-7xl leading-[0.9] mb-6">
-            <span class="block font-romantic tracking-tighter text-[#5c4a3a]">Venta y Renta</span>
-            <span class="block font-romantic tracking-tight text-[#5c4a3a]">de Vestidos</span>
-          </h1>
+            <p class="text-9xl md:text-9xl lg:text-9xl leading-[0.9] mb-6">
+            <span class="block hover:text-[#d4af37] transition-all duration-700 font-romantic tracking-tighter text-[#5c4a3a]"> Renta y Venta</span>
+            <span class="block hover:text-[#d4af37]  transition-all duration-700 font-romantic tracking-tight text-[#5c4a3a]">de Vestidos</span>
+            </p>
+          
 
           <!-- Texto ATELIER con la fuente exacta -->
           <!-- ATELIER con tipografía de lujo -->
-          <div class="absolute -bottom-4 ml-96 text-8xl z-0 drop-shadow-lg overflow-hidden">
+          <div class="absolute -bottom-4 ml-96 text-9xl z-0 drop-shadow-lg overflow-hidden">
             <span
               class="font-lujo bg-clip-text text-transparent bg-gradient-to-r from-[#d4af37]/40 via-[#d4af37]/90 to-[#d4af37]/40 bg-[length:200%_100%] hover:bg-[position:100%_center] transition-all duration-700">
               Atelier
@@ -158,7 +159,7 @@
         </a>
       </div>
 
-      <a href="#" class="text-sm font-sans text-[#555] hover:text-[#d4af37] transition-colors flex items-center">
+      <a routerLink="/search" class="text-sm font-sans text-[#555] hover:text-[#d4af37] transition-colors flex items-center">
         <span>Ver todos los vestidos</span>
         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -224,13 +225,21 @@
   @import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
   /* Reemplaza con tu kit de Adobe Fonts */
 
-  
+
   @import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+
+  /* Fuente para "Venta y Renta de Vestidos" */
+  @font-face {
+    font-family: 'Have You Eaten';
+    src: url('/fonts/MatildaDestinee-Regular.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+  }
   
-  /* Fuente cursiva para "Venta y Renta de Vestidos" */
   .font-romantic {
-    font-family: 'Parisienne', cursive;
-    /* font-weight: 400; */
+    font-family: 'Have You Eaten', cursive;
   }
   
   /* Fuente para "ATELIER" (similar a CREME SHOPISTICATED DOUGH) */
@@ -238,7 +247,8 @@
     font-family: 'Cormorant Garamond', serif;
     /* font-weight: 700; */
     /* font-style: italic; */
-    letter-spacing: 0.5px; /* Para dar ese aire sofisticado */
+    letter-spacing: 0.5px;
+    /* Para dar ese aire sofisticado */
   }
 
   .font-sans {

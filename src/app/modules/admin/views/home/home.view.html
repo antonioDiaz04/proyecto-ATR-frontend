@@ -1,189 +1,359 @@
-<div class="min-h-screen bg-gray-50 p-6">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-      <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Hola Admin</h1>
-        <p class="text-gray-500 mt-1">Bienvenido al panel de administración - {{ fechaTexto }}</p>
-      </div>
-      <div class="mt-4 md:mt-0 flex items-center space-x-4">
-        <div class="relative">
-          <button class="p-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors">
-            <i class="pi pi-bell text-gray-600"></i>
-            <span *ngIf="commentCount > 0" class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-              {{ commentCount }}
-            </span>
-          </button>
-        </div>
-        <div class="flex items-center space-x-2">
-          <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-            <img src="https://dummyimage.com/40x40/ccc/aaa&text=2x2" alt="Profile" class="w-full h-full object-cover">
-          </div>
-          <span class="hidden md:block text-sm font-medium text-gray-700">Admin</span>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Quick Access Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-      <div class="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-80 group-hover:opacity-90 transition-opacity"></div>
-        <div class="absolute inset-0 bg-cover bg-center" 
-             style="background-image: url('https://i.pinimg.com/474x/34/85/14/348514ab4c60b100efa35680b02f7d75.jpg');"></div>
-        <div class="relative h-full flex flex-col justify-end p-6">
-          <h3 class="text-xl font-semibold text-white">Usuarios</h3>
-          <p class="text-blue-100 mt-1">Administrar clientes y permisos</p>
-          <button class="mt-3 self-start px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-md text-white text-sm font-medium hover:bg-opacity-30 transition-all">
-            Gestionar
-          </button>
-        </div>
-      </div>
-  
-      <div class="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-        <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-purple-600 opacity-80 group-hover:opacity-90 transition-opacity"></div>
-        <div class="absolute inset-0 bg-cover bg-center" 
-             style="background-image: url('https://i.pinimg.com/474x/ba/4a/6f/ba4a6fdd8fb86ea36cfa834b17405bd4.jpg');"></div>
-        <div class="relative h-full flex flex-col justify-end p-6">
-          <h3 class="text-xl font-semibold text-white">Vestidos</h3>
-          <p class="text-purple-100 mt-1">Catálogo y disponibilidad</p>
-          <button class="mt-3 self-start px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-md text-white text-sm font-medium hover:bg-opacity-30 transition-all">
-            Explorar
-          </button>
-        </div>
-      </div>
-  
-      <div class="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-        <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-emerald-600 opacity-80 group-hover:opacity-90 transition-opacity"></div>
-        <div class="absolute inset-0 bg-cover bg-center" 
-             style="background-image: url('https://i.pinimg.com/474x/62/34/f2/6234f2a95a986a0c670c2554e2ca7add.jpg');"></div>
-        <div class="relative h-full flex flex-col justify-end p-6">
-          <h3 class="text-xl font-semibold text-white">Rentas y Ventas</h3>
-          <p class="text-emerald-100 mt-1">Transacciones y reportes</p>
-          <button class="mt-3 self-start px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-md text-white text-sm font-medium hover:bg-opacity-30 transition-all">
-            Ver más
-          </button>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-700">Prenda más rentada</h3>
-          <i class="pi pi-tag text-blue-500"></i>
-        </div>
-        <p class="text-2xl font-bold mt-2 text-gray-800">
-          {{ stats.productoMasRentado?.productoNombre || 'N/A' }}
+<p-toast />
+<div class="min-h-screen p-6 border-r-2 border-gray-200">
+  <!-- Header Mejorado -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+    <div>
+      <p class="text-8xl font-romantic md:text-6xl font-extrabold text-red-600 flex items-center">
+        <i class="pi pi-shield mr-4 text-red-600"></i>
+        Panel de Administración
+      </p>
+      <div class="flex items-center mt-2 space-x-4">
+        <p class="text-gray-500 text-sm bg-gray-100 px-3 py-1 rounded-full flex items-center">
+          <i class="pi pi-calendar mr-1"></i> {{ fechaTexto }}
         </p>
-        <p *ngIf="stats.productoMasRentado" class="text-sm text-gray-500 mt-1">
-          {{ stats.productoMasRentado.count }} alquileres
-        </p>
-      </div>
-  
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-700">Usuario con más rentas</h3>
-          <i class="pi pi-user text-purple-500"></i>
-        </div>
-        <p class="text-2xl font-bold mt-2 text-gray-800">
-          {{ stats.usuarioMasActivo?.usuarioNombre || 'N/A' }}
-        </p>
-        <p *ngIf="stats.usuarioMasActivo" class="text-sm text-gray-500 mt-1">
-          {{ stats.usuarioMasActivo.count }} rentas
-        </p>
-      </div>
-  
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-700">Fecha con más rentas</h3>
-          <i class="pi pi-calendar text-emerald-500"></i>
-        </div>
-        <p class="text-2xl font-bold mt-2 text-gray-800">
-          {{ stats.fechaMayorRenta || 'N/A' }}
-        </p>
-        <p *ngIf="stats.fechaMayorRenta" class="text-sm text-gray-500 mt-1">
-          Día más activo
+        <p class="text-gray-500 text-sm bg-gray-100 px-3 py-1 rounded-full flex items-center">
+          <i class="pi pi-users mr-1"></i> {{ usuariosActivos }} usuarios activos
         </p>
       </div>
     </div>
-  
-    <!-- Charts Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-800">Estadísticas por Fecha de Rentas</h3>
-          <button class="text-sm text-blue-500 hover:text-blue-700">Ver detalles</button>
-        </div>
-        <div class="h-80">
-          <p-chart type="bar" [data]="chartDataFecha"></p-chart>
-        </div>
-      </div>
-  
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-800">Distribución de Rentas</h3>
-          <button class="text-sm text-blue-500 hover:text-blue-700">Ver detalles</button>
-        </div>
-        <div class="h-80">
-          <p-chart type="pie" [data]="chartData"></p-chart>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Second Row of Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-800">Rentas y Ventas por Año</h3>
-          <button class="text-sm text-blue-500 hover:text-blue-700">Ver histórico</button>
-        </div>
-        <div class="h-80">
-          <p-chart type="line" [data]="chartDataAnual"></p-chart>
-        </div>
-      </div>
-  
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-800">Rentas y Ventas por Mes</h3>
-          <button class="text-sm text-blue-500 hover:text-blue-700">Ver análisis</button>
-        </div>
-        <div class="h-80">
-          <p-chart type="line" [data]="chartDataMensual"></p-chart>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Recent Activity (Opcional) -->
-    <div class="mt-8 bg-white rounded-xl shadow-sm overflow-hidden">
-      <div class="p-6 border-b border-gray-100">
-        <h3 class="text-lg font-semibold text-gray-800">Actividad Reciente</h3>
-      </div>
-      <div class="divide-y divide-gray-100">
-        <div *ngFor="let activity of recentActivities" class="p-4 hover:bg-gray-50 transition-colors">
-          <div class="flex items-start">
-            <div class="flex-shrink-0 mt-1">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center" 
-                   [ngClass]="{
-                     'bg-blue-100 text-blue-600': activity.type === 'renta',
-                     'bg-purple-100 text-purple-600': activity.type === 'venta',
-                     'bg-emerald-100 text-emerald-600': activity.type === 'registro'
-                   }">
-                <i [class]="activity.icon"></i>
-              </div>
-            </div>
-            <div class="ml-3 flex-1">
-              <p class="text-sm font-medium text-gray-800">{{ activity.title }}</p>
-              <p class="text-sm text-gray-500 mt-1">{{ activity.description }}</p>
-              <p class="text-xs text-gray-400 mt-2">{{ activity.time }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="p-4 border-t border-gray-100 text-center">
-        <button class="text-sm text-blue-500 hover:text-blue-700 font-medium">
-          Ver toda la actividad
+    <div class="mt-4 md:mt-0 flex items-center space-x-4">
+      <div class="relative">
+        <button class="p-2 rounded-full bg-white shadow-sm hover:bg-gray-100 transition-colors relative">
+          <i class="pi pi-bell text-gray-600"></i>
+          <span *ngIf="commentCount > 0" class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+            {{ commentCount }}
+          </span>
         </button>
+      </div>
+      <div class="flex items-center space-x-3 bg-white px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 overflow-hidden flex items-center justify-center">
+          <span class="text-white font-medium text-sm">AD</span>
+        </div>
+        <div class="hidden md:block">
+          <p class="text-sm font-medium text-gray-700">Administrador</p>
+          <p class="text-xs text-gray-500">Super Admin</p>
+        </div>
+        <i class="pi pi-chevron-down text-gray-500 ml-2"></i>
       </div>
     </div>
   </div>
+
+  <!-- Quick Stats Dashboard -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-blue-500 hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm text-gray-500">Total Rentas</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ stats.totalRentas | number }}</h3>
+        </div>
+        <div class="bg-blue-100 p-3 rounded-lg">
+          <i class="pi pi-shopping-cart text-blue-600"></i>
+        </div>
+      </div>
+      <p class="text-xs mt-3 flex items-center" [ngClass]="stats.rentasVariacion >= 0 ? 'text-green-500' : 'text-red-500'">
+        <i [class]="stats.rentasVariacion >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+        {{ stats.rentasVariacion  }}% vs mes anterior
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-purple-500 hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm text-gray-500">Total Ventas</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ stats.totalVentas | number }}</h3>
+        </div>
+        <div class="bg-purple-100 p-3 rounded-lg">
+          <i class="pi pi-credit-card text-purple-600"></i>
+        </div>
+      </div>
+      <p class="text-xs mt-3 flex items-center" [ngClass]="stats.ventasVariacion >= 0 ? 'text-green-500' : 'text-red-500'">
+        <i [class]="stats.ventasVariacion >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+        {{ stats.ventasVariacion  }}% vs mes anterior
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-green-500 hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm text-gray-500">Usuarios Registrados</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ stats.totalUsuarios | number }}</h3>
+        </div>
+        <div class="bg-green-100 p-3 rounded-lg">
+          <i class="pi pi-users text-green-600"></i>
+        </div>
+      </div>
+      <p class="text-xs mt-3 flex items-center" [ngClass]="stats.usuariosVariacion >= 0 ? 'text-green-500' : 'text-red-500'">
+        <i [class]="stats.usuariosVariacion >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+        {{ stats.usuariosVariacion }}% vs mes anterior
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-amber-500 hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="text-sm text-gray-500">Ingresos Totales</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ stats.ingresosTotales | currency }}</h3>
+        </div>
+        <div class="bg-amber-100 p-3 rounded-lg">
+          <i class="pi pi-wallet text-amber-600"></i>
+        </div>
+      </div>
+      <p class="text-xs mt-3 flex items-center" [ngClass]="stats.ingresosVariacion >= 0 ? 'text-green-500' : 'text-red-500'">
+        <i [class]="stats.ingresosVariacion >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+        {{ stats.ingresosVariacion }}% vs mes anterior
+      </p>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+    <button class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all hover:bg-blue-50 border border-blue-100">
+      <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+        <i class="pi pi-user-plus text-blue-600"></i>
+      </div>
+      <span class="text-sm font-medium text-gray-700 text-center">Nuevo Usuario</span>
+    </button>
+    
+    <button class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all hover:bg-purple-50 border border-purple-100">
+      <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mb-2">
+        <i class="pi pi-plus-circle text-purple-600"></i>
+      </div>
+      <span class="text-sm font-medium text-gray-700 text-center">Agregar Vestido</span>
+    </button>
+    
+    <button class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all hover:bg-green-50 border border-green-100">
+      <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-2">
+        <i class="pi pi-calendar-plus text-green-600"></i>
+      </div>
+      <span class="text-sm font-medium text-gray-700 text-center">Nueva Renta</span>
+    </button>
+    
+    <button class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all hover:bg-red-50 border border-red-100">
+      <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mb-2">
+        <i class="pi pi-tag text-red-600"></i>
+      </div>
+      <span class="text-sm font-medium text-gray-700 text-center">Nueva Venta</span>
+    </button>
+    
+    <button class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all hover:bg-amber-50 border border-amber-100">
+      <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mb-2">
+        <i class="pi pi-file-export text-amber-600"></i>
+      </div>
+      <span class="text-sm font-medium text-gray-700 text-center">Generar Reporte</span>
+    </button>
+  </div>
+
+  <!-- Charts Section Compacta -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Gráfico de Rentas Mensuales -->
+    <div class="bg-white p-5 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">Rentas Mensuales</h3>
+          <p class="text-xs text-gray-500">Últimos 6 meses</p>
+        </div>
+        <div class="flex space-x-2">
+          <button class="text-xs px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200">Mensual</button>
+          <button class="text-xs px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200">Anual</button>
+        </div>
+      </div>
+      <div class="h-64">
+        <p-chart type="bar" [data]="chartDataMensual" [options]="{
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true, grid: { display: false } },
+            x: { grid: { display: false } }
+          }
+        }"></p-chart>
+      </div>
+    </div>
+
+    <!-- Gráfico de Distribución -->
+    <div class="bg-white p-5 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">Distribución de Rentas</h3>
+          <p class="text-xs text-gray-500">Por categoría de vestidos</p>
+        </div>
+        <button class="text-xs text-blue-500 hover:text-blue-700 flex items-center">
+          Ver detalles <i class="pi pi-chevron-right ml-1 text-xs"></i>
+        </button>
+      </div>
+      <div class="h-64">
+        <p-chart type="doughnut" [data]="chartDataDistribucion" [options]="{
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right' }
+          },
+          cutout: '70%'
+        }"></p-chart>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Row - Compact Charts -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Top Vestidos -->
+    <div class="bg-white p-5 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Vestidos Más Rentados</h3>
+        <button class="text-xs text-blue-500 hover:text-blue-700">Ver todos</button>
+      </div>
+      <div class="space-y-4">
+        <div *ngFor="let vestido of topVestidos" class="flex items-center">
+          <div class="w-10 h-10 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+            <img [src]="vestido.imagen" alt="Vestido" class="w-full h-full object-cover">
+          </div>
+          <div class="ml-3 flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-800 truncate">{{ vestido.nombre }}</p>
+            <p class="text-xs text-gray-500">{{ vestido.categoria }}</p>
+          </div>
+          <div class="ml-auto text-right">
+            <p class="text-sm font-semibold text-blue-600">{{ vestido.rentas }} rentas</p>
+            <p class="text-xs text-gray-500">{{ vestido.ingresos | currency }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rentas Recientes -->
+    <div class="bg-white p-5 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Rentas Recientes</h3>
+        <button class="text-xs text-blue-500 hover:text-blue-700">Ver todas</button>
+      </div>
+      <div class="space-y-3">
+        <div *ngFor="let renta of rentasRecientes" class="flex items-start">
+          <div class="mt-1 flex-shrink-0">
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+              <i class="pi pi-shopping-cart text-blue-600 text-sm"></i>
+            </div>
+          </div>
+          <div class="ml-3 flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-800 truncate">{{ renta.cliente }}</p>
+            <p class="text-xs text-gray-500 truncate">{{ renta.vestido }}</p>
+          </div>
+          <div class="ml-auto text-right flex-shrink-0">
+            <p class="text-xs font-medium" [ngClass]="{
+              'text-green-500': renta.estado === 'Activa',
+              'text-amber-500': renta.estado === 'Pendiente',
+              'text-red-500': renta.estado === 'Vencida'
+            }">{{ renta.estado }}</p>
+            <p class="text-xs text-gray-500">{{ renta.fecha }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mini Gráfico de Tendencias -->
+    <div class="bg-white p-5 rounded-xl shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Tendencia Semanal</h3>
+        <button class="text-xs text-blue-500 hover:text-blue-700">Detalles</button>
+      </div>
+      <div class="h-48">
+        <p-chart type="line" [data]="chartDataSemanal" [options]="{
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { 
+            y: { display: false },
+            x: { grid: { display: false } }
+          },
+          elements: { 
+            line: { tension: 0.4, fill: true },
+            point: { radius: 0 } 
+          }
+        }"></p-chart>
+      </div>
+      <div class="flex justify-between mt-2">
+        <div class="text-center">
+          <p class="text-xs text-gray-500">Lun</p>
+          <p class="text-sm font-medium">{{ tendenciaSemanal[0] }}</p>
+        </div>
+        <div class="text-center">
+          <p class="text-xs text-gray-500">Hoy</p>
+          <p class="text-sm font-medium text-blue-600">{{ tendenciaSemanal[tendenciaSemanal.length-1] }}</p>
+        </div>
+        <div class="text-center">
+          <p class="text-xs text-gray-500">Variación</p>
+          <p class="text-sm font-medium flex items-center justify-center" 
+             [ngClass]="variacionSemanal >= 0 ? 'text-green-500' : 'text-red-500'">
+            <i [class]="variacionSemanal >= 0 ? 'pi pi-arrow-up text-xs mr-1' : 'pi pi-arrow-down text-xs mr-1'"></i>
+            {{ variacionSemanal  }}%
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Compact -->
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+      <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+        <i class="pi pi-history text-gray-500 mr-2"></i>
+        Actividad Reciente
+      </h3>
+      <div class="flex space-x-2">
+        <button class="text-xs px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200">Todo</button>
+        <button class="text-xs px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200">Rentas</button>
+        <button class="text-xs px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200">Ventas</button>
+      </div>
+    </div>
+    <div class="divide-y divide-gray-100">
+      <div *ngFor="let activity of recentActivities" class="p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-start">
+          <div class="flex-shrink-0 mt-1">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center" 
+                 [ngClass]="{
+                   'bg-blue-100 text-blue-600': activity.type === 'renta',
+                   'bg-purple-100 text-purple-600': activity.type === 'venta',
+                   'bg-green-100 text-green-600': activity.type === 'registro',
+                   'bg-amber-100 text-amber-600': activity.type === 'notificacion'
+                 }">
+              <i [class]="activity.icon"></i>
+            </div>
+          </div>
+          <div class="ml-3 flex-1 min-w-0">
+            <div class="flex justify-between">
+              <p class="text-sm font-medium text-gray-800 truncate">{{ activity.title }}</p>
+              <p class="text-xs text-gray-400 ml-2 whitespace-nowrap">{{ activity.time }}</p>
+            </div>
+            <p class="text-sm text-gray-500 mt-1 truncate">{{ activity.description }}</p>
+            <div *ngIf="activity.details" class="mt-2 flex flex-wrap gap-2">
+              <span *ngFor="let tag of activity.details" class="text-xs px-2 py-1 rounded-full" 
+                    [ngClass]="{
+                      'bg-blue-100 text-blue-800': tag.type === 'info',
+                      'bg-green-100 text-green-800': tag.type === 'success',
+                      'bg-amber-100 text-amber-800': tag.type === 'warning'
+                    }">
+                {{ tag.text }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 border-t border-gray-100 text-center">
+      <button class="text-sm text-blue-500 hover:text-blue-700 font-medium flex items-center justify-center w-full">
+        Ver todo el historial <i class="pi pi-chevron-down ml-2 text-xs"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<style>
   
+  /* Fuente para "Venta y Renta de Vestidos" */
+  @font-face {
+    font-family: 'Have You Eaten';
+    src: url('/fonts/MatildaDestinee-Regular.ttf') format('truetype');
+    font-style: normal;
+  }
+  
+  .font-romantic {
+    font-family: 'Have You Eaten', cursive;
+  }
+  
+</style>

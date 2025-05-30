@@ -36,23 +36,27 @@ export class RegistroRentaComponent implements OnInit, OnChanges {
       estado: ['Pendiente', Validators.required],
       precioBase: [0],
       precioTotal: [0],
+      descuento: [0],
       notas: [''],
       terminos: [false, Validators.requiredTrue],
       dias: ['', [Validators.required, Validators.min(1)]],
       subtotal: ['', Validators.required],
       precioRenta: ['', Validators.required],
       liquido: ['', Validators.required],
+      pagoParcialHabilitado: [false],
+      pagoParcial: [0],
+      saldoPendiente: [{ value: 0, disabled: true }],
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['rentaId'] && this.rentaId !== undefined && this.rentaId !== null) {
       console.log('rentaId recibido:', this.rentaId); // ✅ Imprime el ID recibido
-  
+
       this.vistaActual = 'editar'; // Cambiar a la vista de edición si se proporciona un ID de renta
       this.ventaYrentaS_.detalleRentaById(this.rentaId).subscribe(
         (res) => {
           if (!res || res.length === 0) return;
-  
+
           this.rentaForm.patchValue({
             nombre: res[0].usuario.nombre,
             email: res[0].usuario.email,
@@ -62,7 +66,7 @@ export class RegistroRentaComponent implements OnInit, OnChanges {
             fechaOcupacion: res[0].detallesRenta.fechaOcupacion?.split('T')[0],
             fechaRecoge: res[0].detallesRenta.fechaRecoge?.split('T')[0],
             fechaRegreso: res[0].detallesRenta.fechaRegreso?.split('T')[0],
-            dias: res[0].detallesRenta.duracionDias,
+            // dias: res[0].detallesRenta.duracionDias,
             metodoPago: res[0].detallesPago.metodoPago,
             precioRenta: res[0].detallesPago.precioRenta,
             estado: res[0].estado,
@@ -81,8 +85,8 @@ export class RegistroRentaComponent implements OnInit, OnChanges {
       this.vistaActual = 'agregar';
     }
   }
-  
-  
+
+
 
   ngOnInit(): void {
     if (this.rentaId !== undefined && this.rentaId !== null) {
@@ -90,33 +94,35 @@ export class RegistroRentaComponent implements OnInit, OnChanges {
     } else {
       this.vistaActual = 'agregar';
     }
-  
+
     this.cargarTodosUsuarios();
     this.getProductos(); // Obtener los productos al iniciar el componente
   }
-  
+
   getProductos() {
     this.productoS.obtenerProductos().subscribe(
-      (response) => {
-        this.productos = response;
-      },
-      (err) => {
-        /* The line `productoSeleccionado: any | null = null;` in the TypeScript code is declaring a property
-        `productoSeleccionado` in the `RegistroRentaComponent` class. */
-        console.log(err);
+      (res) => {
+        // console.log(res)
+        this.productos = res.filter((producto: any) =>
+          producto.opcionesTipoTransaccion == "renta" && producto.disponible
+        );
       }
     );
   }
+
+
   cancelar(): void {
     this.rentaForm.reset(); // Limpiar el formulario
     this.vistaActual = 'listar'; // Volver a la vista de listado
   }
+
   calcularDias(): number {
     const fechaRecoge = new Date(this.rentaForm.value.fechaRecoge);
     const fechaRegreso = new Date(this.rentaForm.value.fechaRegreso);
     const diffTime = fechaRegreso.getTime() - fechaRecoge.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convertir a días
   }
+
   calcularDiasAdicionales(renta: any): number {
     if (renta.estado === 'Completado') return 0;
 
@@ -125,15 +131,34 @@ export class RegistroRentaComponent implements OnInit, OnChanges {
     const diffTime = hoy.getTime() - fechaRegreso.getTime();
     return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   }
+  calcularTotal(): number {
+    const precioBase = this.rentaForm.get('precioBase')?.value || 0;
+    const descuento = this.rentaForm.get('descuento')?.value || 0;
+    const subtotal = precioBase - descuento;
+
+    let total = subtotal;
+
+    const pagoParcialHabilitado = this.rentaForm.get('pagoParcialHabilitado')?.value;
+    const pagoParcial = pagoParcialHabilitado ? (this.rentaForm.get('pagoParcial')?.value || 0) : 0;
+
+    let saldoPendiente = total - pagoParcial;
+    if (saldoPendiente < 0) saldoPendiente = 0; // no permitir negativo
+
+    this.rentaForm.patchValue({ subtotal });
+    this.rentaForm.patchValue({ precioTotal: total });
+    this.rentaForm.patchValue({ saldoPendiente });
+
+    return total;
+  }
 
 
   guardarRenta(): void {
     console.log("pasando");
-    
+
     if (this.rentaForm.valid) {
       console.log("paso");
       const rentaData = this.rentaForm.value;
-  
+
       // Construir el objeto de usuario dependiendo del tipo
       let usuarioData: any;
       if (this.usuarioSeleccionado) {
@@ -151,15 +176,15 @@ export class RegistroRentaComponent implements OnInit, OnChanges {
           isNuevo: true
         };
       }
-  
+
       // Armar el objeto final de renta
       const nuevaRenta = {
         ...rentaData,
         usuario: usuarioData
       };
-  
+
       console.log('Renta a guardar:', nuevaRenta);
-  
+
       if (this.rentaId !== undefined && this.rentaId !== null && this.rentaId !== '') {
         // Editar renta existente
         this.ventaYrentaS_.editarRenta(this.rentaId, nuevaRenta).subscribe({
@@ -200,26 +225,12 @@ export class RegistroRentaComponent implements OnInit, OnChanges {
       });
     }
   }
-  
+
 
   get saldoPendiente(): number {
     const total = this.rentaForm.get('precioTotal')?.value || 0;
     const pagado = this.pagos.reduce((sum, pago) => sum + pago.monto, 0);
     return total - pagado;
-  }
-  agregarPago(): void {
-    if (this.nuevoPago.monto <= 0) return;
-
-    const pago: any = {
-      fecha: new Date().toISOString(),
-      metodo: this.nuevoPago.metodo,
-      monto: this.nuevoPago.monto,
-      saldo: this.saldoPendiente - this.nuevoPago.monto,
-      estado: 'Aplicado'
-    };
-
-    this.pagos.push(pago);
-    this.nuevoPago = { monto: 0, metodo: 'Efectivo' };
   }
 
   calcularSaldos(): void {

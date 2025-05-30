@@ -1,180 +1,188 @@
-import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../../../shared/services/producto.service';
-import { Producto } from '../../../../shared/models/Producto.model';
+import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-declare const $: any;
+
+interface Producto {
+  _id: string;
+  nombre: string;
+  categoria: string;
+  color: string;
+  opcionesTipoTransaccion: 'renta' | 'Venta';
+  precioActual: number;
+  precioAnterior?: number;
+  disponible: boolean;
+  nuevo: boolean;
+  imagenes: string[];
+  talla?: string;
+  altura?: number;
+  cintura?: number;
+}
 
 @Component({
   selector: 'app-listado-productos',
   templateUrl: './listado-productos.component.html',
-  styleUrls: [
-    '../../../../shared/styles/tablePrime.scss',
-    '../../../../shared/styles/form.scss',
-  ],
-
+  // styleUrls: ['./listado-productos.component.scss']
 })
-export class ListadoProductosComponent implements OnInit, OnChanges {
+export class ListadoProductosComponent implements OnInit {
   allProducts: Producto[] = [];
-  visible: boolean = false;
-  esRenta: boolean = false;
+  filteredProducts: Producto[] | null = null;
   mostrarModalAddVestido: boolean = false;
   totalRecords: number = 0;
-  rows: number = 5; // Número de registros por página
-  first: number = 0; // Índice del primer registro de la página actual
-  paginatedUser: Producto[] = [];
+  rows: number = 5;
+  first: number = 0;
   filterText: string = '';
   productForm!: FormGroup;
-  idProducto!: string;
-  productoEditar: any | null = null; // Guardamos el producto que se va a editar
+  productoEditar: string | null = null;
+  activeFilter: 'all' | 'renta' | 'Venta' | 'nuevo' | 'oferta' = 'all';
 
-
+  filters = [
+    { label: 'Todos', value: 'all' },
+    { label: 'Renta', value: 'renta' },
+    { label: 'Venta', value: 'Venta' },
+    { label: 'Nuevos', value: 'nuevo' },
+    { label: 'Ofertas', value: 'oferta' }
+  ];
 
   constructor(private productoS: ProductoService, private router: Router) { }
-  abrirModal() {
-    console.log("abierto")
-    this.mostrarModalAddVestido = true;
-  }
-  cerrarModal() {
-    this.mostrarModalAddVestido = false;
-    this.productoEditar = null; // Opcional: resetear el producto en edición
-  }
-  cerrarModalHandler(mostrar: boolean) {
-    this.mostrarModalAddVestido = mostrar;
-    
-    // Opcional: resetear productoEditar si es necesario
-    if (!mostrar) {
-      this.productoEditar = null;
-    }
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["mostrarFormulario"]) {
-      const newVluesmostrarFormulario = changes["mostrarFormulario"].currentValue;
-      this.mostrarModalAddVestido = newVluesmostrarFormulario; // Actualizamos el valor para cerrar el modal
-
-      console.log("mostrarFormulario  en listado producto cambió a:", newVluesmostrarFormulario);
-    }
-
-    // Aquí puedes agregar lógica adicional si es necesario
-  }
-
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.getProductos();
+    this.loadProducts();
   }
 
-
-  getProductos() {
+  loadProducts(): void {
     this.productoS.obtenerProductos().subscribe(
-      (response) => {
-        this.allProducts = response;
+      (productos:any) => {
+        this.allProducts = productos;
+        this.filteredProducts = null; // Reiniciar los productos filtrados
+        this.totalRecords = productos.length; // Total de registros
+        this.applyFilters(); // Aplicar filtros iniciales
       },
-      (err) => {
-        console.log(err);
+      (error) => {
+        console.error('Error al cargar productos:', error);
       }
     );
   }
 
-  highlightText(text: string): string {
-    if (!this.filterText) {
-      return text; // Si no hay texto a filtrar, regresa el texto original.
+
+ 
+  // Filtros y búsqueda
+  filterByType(type: 'all' | 'renta' | 'Venta' | 'nuevo' | 'oferta'| any): void {
+    this.activeFilter = type;
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    let filtered = [...this.allProducts];
+
+    // Aplicar filtro activo
+    if (this.activeFilter === 'renta' || this.activeFilter === 'Venta') {
+      filtered = filtered.filter(p => p.opcionesTipoTransaccion === this.activeFilter);
+    } else if (this.activeFilter === 'nuevo') {
+      filtered = filtered.filter(p => p.nuevo);
+    } else if (this.activeFilter === 'oferta') {
+      filtered = filtered.filter(p => p.precioAnterior && p.precioAnterior > p.precioActual);
     }
 
-    const regex = new RegExp(`(${this.filterText})`, 'gi'); // Crea una expresión regular para encontrar el texto de búsqueda.
-    return text.replace(regex, '<strong>$1</strong>'); // Reemplaza las coincidencias con el texto en negritas.
+    // Aplicar filtro de texto si existe
+    if (this.filterText) {
+      const searchText = this.filterText.toLowerCase();
+      filtered = filtered.filter(p => 
+        p.nombre.toLowerCase().includes(searchText) ||
+        p.categoria.toLowerCase().includes(searchText) ||
+        p.color.toLowerCase().includes(searchText)
+      );
+    }
+
+    this.filteredProducts = filtered.length === this.allProducts.length ? null : filtered;
+    this.totalRecords = filtered.length;
   }
 
-  onGlobalFilter(event: Event) {
-    // const value = event.target as HTMLInputElement;
-    const value = (event.target as HTMLInputElement).value.toLowerCase();
+  onGlobalFilter(event: Event): void {
+    this.filterText = (event.target as HTMLInputElement).value.toLowerCase();
+    this.applyFilters();
+  }
 
-    if (value) {
-      const filteredData = this.allProducts.filter(
-        (c) =>
-          c.nombre.toLowerCase().includes(value) ||
-          c.categoria.toLowerCase().includes(value) ||
-          c.color.toLowerCase().includes(value)
-        // c.precio.toLowerCase().includes(value) ||
-        // c.colonia.toLowerCase().includes(value)
-      );
+  // Gestión de productos
+  abrirModal(): void {
+    this.mostrarModalAddVestido = true;
+    this.productoEditar = null;
+  }
+  cerrarModal(): void {
+    this.mostrarModalAddVestido = false;
+    this.productoEditar = null;
+  }
 
-      this.totalRecords = filteredData.length;
-      this.paginatedUser = filteredData.slice(
-        this.first,
-        this.first + this.rows
-      );
-    } else {
-      this.totalRecords = this.allProducts.length;
-      this.paginatedUser = this.allProducts.slice(
-        this.first,
-        this.first + this.rows
-      );
+  editProduct(id: string): void {
+    this.productoEditar = id;
+    this.mostrarModalAddVestido = true;
+    this.router.navigate([`admin/control-productos/edit-producto/${id}`]);
+  }
 
-      // this.dt2.filterGlobal(input.value, "contains");
+  cerrarModalHandler(mostrar: boolean): void {
+    this.mostrarModalAddVestido = mostrar;
+    if (!mostrar) {
+      this.productoEditar = null;
+      this.loadProducts(); // Recargar productos al cerrar el modal
     }
   }
 
-  deleteProduct(id: any) {
-    this.idProducto = id;
-
-    $('.basic.test.modal')
-      .modal({
-        closable: false, // Evita cerrar haciendo clic fuera del modal
-        onApprove: () => {
-          this.confirmarEliminar(); // Ejecuta la confirmación cuando se aprueba
-        },
-      })
-      .modal('show');
-  }
-
-  confirmarEliminar() {
-    this.productoS.eliminarProducto(this.idProducto).subscribe((response) => {
-      this.getProductos();
-      Swal.fire(
-        'Eliminado',
-        'El producto se ha eliminado correctamente.',
-        'success'
-      );
-      $('.basic.test.modal').modal('hide'); // Cierra el modal después de la eliminación
+  deleteProduct(id: string): void {
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.confirmarEliminar(id);
+      }
     });
   }
 
-
-  editProduct(id: any) {
-    this.productoEditar = id; // Guardamos el producto que se va a editar
-    this.mostrarModalAddVestido = true; // Mostrar el modal
-    this.router.navigate([`admin/control-productos/edit-producto/${id}`]);
+  confirmarEliminar(id: string): void {
+    this.productoS.eliminarProducto(id).subscribe({
+      next: () => {
+        this.loadProducts();
+        Swal.fire('Eliminado', 'El producto se ha eliminado correctamente.', 'success');
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        Swal.fire('Error', 'No se pudo eliminar el producto', 'error');
+      }
+    });
   }
-  onPageChange(event: any) {
+
+  // Paginación
+  onPageChange(event: any): void {
     this.first = event.first;
     this.rows = event.rows;
-    this.updatePaginatedUser();
   }
 
-  updatePaginatedUser() {
-    console.log();
-    this.paginatedUser = this.allProducts.slice(
-      this.first,
-      this.first + this.rows
-    );
+  // Métodos de ayuda
+  countByTransactionType(type: 'renta' | 'Venta'): number {
+    return this.allProducts.filter(p => p.opcionesTipoTransaccion === type).length;
   }
-  toggleAvailability(product: any) {
-    product.disponibilidad = !product.disponibilidad; // Cambia el estado de disponibilidad
-    // Aquí puedes agregar lógica adicional para actualizar el producto en tu backend si es necesario
+
+  countNewProducts(): number {
+    return this.allProducts.filter(p => p.nuevo).length;
   }
-  justifyOptions = [
-    { label: 'Disponible', icon: 'pi pi-check', value: true },
-    { label: 'No Disponible', icon: 'pi pi-times', value: false }
-  ];
-  // Función para truncar el texto
+
+  countDiscountProducts(): number {
+    return this.allProducts.filter(p => p.precioAnterior && p.precioAnterior > p.precioActual).length;
+  }
+
+  toggleAvailability(product: Producto): void {
+    product.disponible = !product.disponible;
+    // Aquí deberías llamar al servicio para actualizar en el backend
+  }
+
   truncateText(text: string, maxLength: number): string {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...'; // Recorta el texto y agrega puntos suspensivos
-    }
-    return text; // Devuelve el texto original si no es necesario truncarlo
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   }
-
 }
