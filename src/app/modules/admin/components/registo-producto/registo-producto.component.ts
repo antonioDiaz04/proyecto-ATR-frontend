@@ -29,113 +29,6 @@ export class RegistoProductoComponent implements OnInit {
   // imagenPrincipal: File | null = null; // Inicializa con null
   imagenesAdicionales: File[] = []; // Inicializa como un array vacío
   // imagenes: { file: File; url: string }[] = []; // Array para almacenar archivos y sus URLs base64
-  constructor(
-    private categoriaService: CategoriaService,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private productoService: ProductoService,
-    private messageService: MessageService,
-    private location: Location
-  ) {
-    this.productoForm = this.fb.group({
-      imagenes: this.fb.array([]),
-      nombre: ["", [Validators.required]],
-      // altura: ["", [Validators.required, Validators.min(30)]],
-      // cintura: ["", [Validators.required, Validators.min(20)]],
-      color: ["", [Validators.required]],
-      precioAnterior: [0, [Validators.required, Validators.min(0)]],
-      precioActual: [0, [Validators.required, Validators.min(0)]],
-      mostrarPrecioAnterior: [false], // Checkbox desactivado por defecto
-      opcionesTipoTransaccion: ["Venta", [Validators.required]],
-      nuevo: [true],
-
-      tipoCuello: ["", [Validators.required]],
-      tipoCola: ["", [Validators.required]],
-      tipoCapas: ["", [Validators.required]],
-      tipoHombro: ["", [Validators.required]],
-      descripcion: [""],
-      idCategoria: ['', Validators.required], // Agregar este control
-
-    });
-  }
-
-
-  mostrarPrecioAnterior: boolean = false
-  togglePrecioAnterior() {
-    const mostrar = this.productoForm.get('mostrarPrecioAnterior')?.value;
-    const precioAnteriorCtrl = this.productoForm.get('precioAnterior');
-
-    if (mostrar) {
-      this.mostrarPrecioAnterior = mostrar
-      precioAnteriorCtrl?.setValidators([Validators.required]); // Hacerlo obligatorio si se activa
-    } else {
-      this.mostrarPrecioAnterior = false
-      precioAnteriorCtrl?.clearValidators();
-    }
-    precioAnteriorCtrl?.updateValueAndValidity();
-  }
-
-  ngOnInit(): void {
-    this.productoId = this.route.snapshot.paramMap.get('id');
-    console.log('ID del producto:', this.productoId);
-
-    // Obtener categorías
-    this.obtenerCategorias();
-
-    if (this.productoId) {
-      this.productoService.obtenerDetalleProductoById(this.productoId).subscribe(
-        (producto) => {
-          alert("llego id");
-          this.cargarProductoEnFormulario(producto);
-        },
-        (error) => {
-          console.error('Error al cargar el producto:', error);
-        }
-      );
-    }
-  }
-
-  obtenerCategorias(): void {
-    this.categoriaService.obtenerCategorias().subscribe(
-      (categorias) => {
-        this.categorias = categorias;
-      },
-      (error) => {
-        console.error('Error al obtener categorías:', error);
-      }
-    );
-  }
-
-  cargarProductoEnFormulario(producto: any) {
-    // Solo cargamos los campos que están definidos en el FormGroup
-    this.productoForm.patchValue({
-      nombre: producto.nombre || "",
-      talla: producto.talla || "",
-      // altura: producto.altura || "",
-      // cintura: producto.cintura || "",
-      color: producto.color || "",
-      precio: producto.precio || 0,
-      opcionesTipoTransaccion: producto.tipoVenta || "Venta", // Asegúrate de que coincida con el campo en el FormGroup
-      nuevo: producto.nuevo !== undefined ? producto.nuevo : true, // Valor por defecto si no está definido
-      tipoCuello: producto.tipoCuello || "",
-      tipoCola: producto.tipoCola || "",
-      precioAnterior: producto.precioAnterior || 0,
-      precioActual: producto.precioActual || 0,
-      mostrarPrecioAnterior: producto.mostrarPrecioAnterior, // Checkbox desactivado por defecto
-      tipoCapas: producto.tipoCapas || "",
-      tipoHombro: producto.tipoHombro || "",
-      descripcion: producto.descripcion || "",
-      idCategoria: producto.idCategoria || "",
-    });
-
-    // Limpiamos el array de imágenes y cargamos las nuevas si existen
-    this.imagenes.clear();
-    if (producto.imagenes && producto.imagenes.length > 0) {
-      producto.imagenes.forEach((img: string) => {
-        this.imagenes.push(this.fb.control(img));
-      });
-    }
-  }
 
 
   tallas = [
@@ -251,6 +144,115 @@ export class RegistoProductoComponent implements OnInit {
     { label: 'Sí', value: true },
     { label: 'No', value: false }
   ];
+
+  mostrarPrecioAnterior: boolean = false
+
+  constructor(
+    private categoriaService: CategoriaService,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private productoService: ProductoService,
+    private messageService: MessageService,
+    private location: Location
+  ) {
+    this.productoForm = this.fb.group({
+      imagenes: this.fb.array([]),
+      nombre: ["", [Validators.required]],
+      // altura: ["", [Validators.required, Validators.min(30)]],
+      // cintura: ["", [Validators.required, Validators.min(20)]],
+      color: ["", [Validators.required]],
+      precioAnterior: [0, [Validators.required, Validators.min(0)]],
+      precioActual: [0, [Validators.required, Validators.min(0)]],
+      mostrarPrecioAnterior: [false], // Checkbox desactivado por defecto
+      opcionesTipoTransaccion: ["Venta", [Validators.required]],
+      nuevo: [true],
+
+      tipoCuello: ["", [Validators.required]],
+      tipoCola: ["", [Validators.required]],
+      tipoCapas: ["", [Validators.required]],
+      tipoHombro: ["", [Validators.required]],
+      descripcion: [""],
+      idCategoria: ['', Validators.required], // Agregar este control
+
+    });
+  }
+
+
+  togglePrecioAnterior() {
+    const mostrar = this.productoForm.get('mostrarPrecioAnterior')?.value;
+    const precioAnteriorCtrl = this.productoForm.get('precioAnterior');
+
+    if (mostrar) {
+      this.mostrarPrecioAnterior = mostrar
+      precioAnteriorCtrl?.setValidators([Validators.required]); // Hacerlo obligatorio si se activa
+    } else {
+      this.mostrarPrecioAnterior = false
+      precioAnteriorCtrl?.clearValidators();
+    }
+    precioAnteriorCtrl?.updateValueAndValidity();
+  }
+
+  ngOnInit(): void {
+    this.productoId = this.route.snapshot.paramMap.get('id');
+    console.log('ID del producto:', this.productoId);
+
+    // Obtener categorías
+    this.obtenerCategorias();
+
+    if (this.productoId) {
+      this.productoService.obtenerDetalleProductoById(this.productoId).subscribe(
+        (producto) => {
+          alert("llego id");
+          this.cargarProductoEnFormulario(producto);
+        },
+        (error) => {
+          console.error('Error al cargar el producto:', error);
+        }
+      );
+    }
+  }
+
+  obtenerCategorias(): void {
+    this.categoriaService.obtenerCategorias().subscribe(
+      (categorias) => {
+        this.categorias = categorias;
+      },
+      (error) => {
+        console.error('Error al obtener categorías:', error);
+      }
+    );
+  }
+
+  cargarProductoEnFormulario(producto: any) {
+    // Solo cargamos los campos que están definidos en el FormGroup
+    this.productoForm.patchValue({
+      nombre: producto.nombre || "",
+      talla: producto.talla || "",
+      // altura: producto.altura || "",
+      // cintura: producto.cintura || "",
+      color: producto.color || "",
+      precio: producto.precio || 0,
+      opcionesTipoTransaccion: producto.tipoVenta || "Venta", // Asegúrate de que coincida con el campo en el FormGroup
+      nuevo: producto.nuevo !== undefined ? producto.nuevo : true, // Valor por defecto si no está definido
+      tipoCuello: producto.tipoCuello || "",
+      tipoCola: producto.tipoCola || "",
+      precioAnterior: producto.precioAnterior || 0,
+      precioActual: producto.precioActual || 0,
+      mostrarPrecioAnterior: producto.mostrarPrecioAnterior, // Checkbox desactivado por defecto
+      tipoCapas: producto.tipoCapas || "",
+      tipoHombro: producto.tipoHombro || "",
+      descripcion: producto.descripcion || "",
+      idCategoria: producto.idCategoria || "",
+    });
+
+    // Limpiamos el array de imágenes y cargamos las nuevas si existen
+    this.imagenes.clear();
+    if (producto.imagenes && producto.imagenes.length > 0) {
+      producto.imagenes.forEach((img: string) => {
+        this.imagenes.push(this.fb.control(img));
+      });
+    }
+  }
 
   volver() {
     this.location.back();  // Navega a la página anterior

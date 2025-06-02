@@ -12,12 +12,13 @@ interface Producto {
   opcionesTipoTransaccion: 'renta' | 'Venta';
   precioActual: number;
   precioAnterior?: number;
-  disponible: boolean;
+  disponible?: boolean;
   nuevo: boolean;
   imagenes: string[];
   talla?: string;
   altura?: number;
   cintura?: number;
+  textura?: string;
 }
 
 @Component({
@@ -54,6 +55,7 @@ export class ListadoProductosComponent implements OnInit {
   loadProducts(): void {
     this.productoS.obtenerProductos().subscribe(
       (productos:any) => {
+        console.log('Productos cargados:', productos);
         this.allProducts = productos;
         this.filteredProducts = null; // Reiniciar los productos filtrados
         this.totalRecords = productos.length; // Total de registros
