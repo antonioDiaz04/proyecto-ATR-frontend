@@ -18,7 +18,7 @@ Listado simple y sin detalles de un proyecto desarrollado con el stack MEAN (Mon
    ```bash
    git clone https://github.com/antonioDiaz04/proyecto-ATR-frontend.git
    cd proyecto-ATR-frontend
-2. Instalar dependencias del frontend (Angula
+2. Instalar dependencias del frontend (Angular)
    ```bash
    npm install
 
@@ -26,5 +26,4 @@ Listado simple y sin detalles de un proyecto desarrollado con el stack MEAN (Mon
    ```bash
    ng serve
    Abre tu navegador y entra a
-  ```bash
    http://localhost:4200
