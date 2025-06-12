@@ -79,7 +79,6 @@ export class ListadoRentaComponent implements OnInit {
 
   calcularDiasAdicionales(renta: any): number {
     if (renta.estado === 'Completado') return 0;
-
     const fechaRegreso = new Date(renta.detallesRenta.fechaRegreso);
     const hoy = new Date();
     const diffTime = hoy.getTime() - fechaRegreso.getTime();

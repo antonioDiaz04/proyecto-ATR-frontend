@@ -1,8 +1,8 @@
 <aside *ngIf="!isMobile" class="w-64">
   <!-- Categorías - Estilo mejorado -->
-  <div class="mb-8">
-    <h3 class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4">Categorías</h3>
-    <ul class="space-y-2">
+  <details open class="mb-8">
+    <summary class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4 cursor-pointer select-none">Categorías</summary>
+    <ul class="space-y-2 mt-4">
       <li 
         (click)="applyFilter('categoria', 'ofertas')" 
         [class.text-gray-900]="selectedFilters.categoria === 'ofertas'"
@@ -30,12 +30,12 @@
               [class.text-gray-500]="selectedFilters.categoria !== 'nuevas-llegadas'">150</span>
       </li>
     </ul>
-  </div>
+  </details>
 
   <!-- Colores - Estilo refinado -->
-  <div class="mb-8">
-    <h3 class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4">Color</h3>
-    <div class="grid grid-cols-5 gap-3">
+  <details open class="mb-8">
+    <summary class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4 cursor-pointer select-none">Color</summary>
+    <div class="grid grid-cols-5 gap-3 mt-4">
       <span 
         *ngFor="let color of ['negro', 'gris', 'rosa', 'rojo', 'verde', 'azul', 'amarillo', 'morado']"
         (click)="applyFilter('color', color)"
@@ -55,12 +55,12 @@
         }"
       ></span>
     </div>
-  </div>
+  </details>
 
   <!-- Tallas - Estilo más fino -->
-  <div class="mb-8">
-    <h3 class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4">Tamaño</h3>
-    <div class="grid grid-cols-3 gap-2">
+  <details open class="mb-8">
+    <summary class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4 cursor-pointer select-none">Tamaño</summary>
+    <div class="grid grid-cols-3 gap-2 mt-4">
       <label 
         *ngFor="let talla of ['XS', 'S', 'M', 'L', 'XL']"
         [class.bg-gray-900]="selectedFilters.talla.includes(talla)"
@@ -91,7 +91,7 @@
         Todas las tallas
       </label>
     </div>
-  </div>
+  </details>
 
   <!-- Botón Reset - Estilo más elegante -->
   <button 

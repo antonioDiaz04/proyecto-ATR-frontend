@@ -20,7 +20,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
 
       <!-- Formulario de solicitud -->
-      <div class="bg-white backdrop-blur-sm rounded-none shadow-2xl p-8 border border-gray-200 transform transition-all hover:shadow-xl">
+      <div
+        class="bg-white backdrop-blur-sm rounded-none shadow-2xl p-8 border border-gray-200 transform transition-all hover:shadow-xl">
         <h2 class="text-3xl font-bold mb-6 text-gray-800 font-serif">SOLICITUD DE SERVICIO</h2>
         <form #solicitudForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-6">
           <div class="space-y-2">
@@ -75,7 +76,8 @@
       </div>
 
       <!-- Detalles del servicio -->
-      <div class="bg-white text-black rounded-none shadow-2xl p-8 border border-gray-700 transform transition-all hover:shadow-xl"
+      <div
+        class="bg-white text-black rounded-none shadow-2xl p-8 border border-gray-700 transform transition-all hover:shadow-xl"
         *ngIf="!isLoading && Detalles">
         <h2 class="text-3xl font-bold mb-6 font-serif">DETALLES DEL SERVICIO</h2>
 
@@ -111,6 +113,7 @@
             </div>
           </div>
         </div>
+        <div #paypal class="min-h-[45px] w-full mt-2"></div>
 
         <div class="space-y-4">
           <h3 class="text-xl font-medium font-serif">INFORMACIÓN RELEVANTE</h3>

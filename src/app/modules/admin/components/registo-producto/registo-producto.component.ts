@@ -45,10 +45,10 @@ export class RegistoProductoComponent implements OnInit {
       color: ["", [Validators.required]],
       precioAnterior: [0, [Validators.required, Validators.min(0)]],
       precioActual: [0, [Validators.required, Validators.min(0)]],
+      costoRenta: [0, [Validators.required, Validators.min(0)]],
       mostrarPrecioAnterior: [false], // Checkbox desactivado por defecto
       opcionesTipoTransaccion: ["Venta", [Validators.required]],
       nuevo: [true],
-
       tipoCuello: ["", [Validators.required]],
       tipoCola: ["", [Validators.required]],
       tipoCapas: ["", [Validators.required]],
@@ -121,6 +121,7 @@ export class RegistoProductoComponent implements OnInit {
       tipoCola: producto.tipoCola || "",
       precioAnterior: producto.precioAnterior || 0,
       precioActual: producto.precioActual || 0,
+      costoRenta: producto.costoRenta || 0,
       mostrarPrecioAnterior: producto.mostrarPrecioAnterior, // Checkbox desactivado por defecto
       tipoCapas: producto.tipoCapas || "",
       tipoHombro: producto.tipoHombro || "",

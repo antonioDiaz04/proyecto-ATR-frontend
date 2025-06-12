@@ -74,7 +74,7 @@
               <h4 class="font-medium text-gray-700 text-xs sm:text-sm">Opciones</h4>
               <ul class="space-y-1 mt-1">
                 <li class="text-xs sm:text-sm text-gray-600">Nuevos Arrivos</li>
-                <li class="text-xs sm:text-sm text-gray-600">Ofertas Especiales 🔥</li>
+                <li class="text-xs sm:text-sm text-gray-600">Ofertas Especiales <i class="pi pi-fire text-red-500 text-xs sm:text-sm"></i></li>
                 <li class="text-xs sm:text-sm text-gray-600">Más Vendidos</li>
               </ul>
             </div>
@@ -170,21 +170,15 @@
         <span
           class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 -translate-x-full group-hover:translate-x-full"></span>
       </a>
-
       <a (click)="redirectTo('ofertas')"
-        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
-        Ofertas Especiales 🔥
+        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group flex items-center gap-1">
+        Ofertas Especiales
+        <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1748615366/images-AR/lwoji7uym727byffaa7i.ico" alt="Stylized fire icon next to the Ofertas Especiales menu text in the navigation bar, conveying excitement and urgency for special offers in a festive online shopping environment" class="inline-block w-3 h-4 align-text-bottom" />
       </a>
       <a (click)="redirectTo('look')"
         class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
         Acompleta tu look
       </a>
-      <a (click)="redirectTo('AcercaDe')"
-        class="uppercase cursor-pointer px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-light hover:text-[#d4a8b4] transition relative group">
-        Sobre Nosotros
-      </a>
-
-      
     </nav>
   </div>
 </header>

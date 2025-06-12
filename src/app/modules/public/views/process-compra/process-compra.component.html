@@ -29,7 +29,7 @@
               <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm">Color: {{ Detalles.color }}</span>
               <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm">Talla: {{ Detalles.tallaDisponible }}</span>
             </div>
-            <p class="text-2xl font-bold text-gray-900">${{ Detalles.precio | number }}</p>
+            <p class="text-2xl font-bold text-gray-900">${{ Detalles.precio }}</p>
           </div>
           <div class="flex items-center gap-2">
             <span class="text-gray-600">Cantidad:</span>
@@ -72,7 +72,7 @@
         <div class="space-y-4 mb-6">
           <div class="flex justify-between">
             <p class="text-gray-600">Subtotal:</p>
-            <span class="font-medium">${{ Detalles.precio | number }}</span>
+            <span class="font-medium">${{ Detalles.precio }}</span>
           </div>
           <div class="flex justify-between">
             <p class="text-gray-600">Envío:</p>
@@ -84,7 +84,7 @@
           </div>
           <div class="flex justify-between border-t border-gray-300 pt-3 text-lg font-bold">
             <p>Total:</p>
-            <span>${{ (Detalles.precio + 5900) | number }}</span>
+            <span>${{ (Detalles.precio + 5900) }}</span>
           </div>
         </div>
 
@@ -94,10 +94,10 @@
           <div class="flex gap-2">
             <input type="text" id="cupon" placeholder="Ingresa tu código" 
                    class="flex-1 px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-black focus:border-gray-500 transition">
-            <button (click)="aplicarCupon()"
+            <!-- <button (click)="aplicarCupon()"
               class="bg-black text-white font-medium py-3 px-6 hover:bg-gray-800 transition">
               APLICAR
-            </button>
+            </button> -->
           </div>
         </div>
 
@@ -114,6 +114,10 @@
           </div>
         </div>
 
+        <!-- Métodos de pago -->
+        <div class="mb-6">
+             <div #paypal style="min-height: 45px; width: 100%;margin-top: 6px ;"></div>
+        </div>
         <!-- Botón de compra -->
         <button class="w-full bg-black text-white font-medium py-4 px-6 hover:bg-gray-800 transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
           COMPRAR AHORA

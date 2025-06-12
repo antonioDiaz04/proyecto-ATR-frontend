@@ -35,14 +35,16 @@ export class ListadoProductosComponent implements OnInit {
   filterText: string = '';
   productForm!: FormGroup;
   productoEditar: string | null = null;
-  activeFilter: 'all' | 'renta' | 'Venta' | 'nuevo' | 'oferta' = 'all';
+  activeFilter: 'all' | 'renta' | 'Venta' | 'nuevo' | 'oferta' | 'disponible' | 'no_disponible' = 'all';
 
   filters = [
     { label: 'Todos', value: 'all' },
-    { label: 'Renta', value: 'renta' },
-    { label: 'Venta', value: 'Venta' },
+    { label: 'Para renta', value: 'renta' },
+    { label: 'Para venta', value: 'Venta' },
     { label: 'Nuevos', value: 'nuevo' },
-    { label: 'Ofertas', value: 'oferta' }
+    { label: 'Ofertas', value: 'oferta' },
+    { label: 'Disponibles', value: 'disponible' },
+    { label: 'No disponibles', value: 'no_disponible' }
   ];
 
   constructor(private productoS: ProductoService, private router: Router) { }
@@ -68,7 +70,7 @@ export class ListadoProductosComponent implements OnInit {
 
  
   // Filtros y búsqueda
-  filterByType(type: 'all' | 'renta' | 'Venta' | 'nuevo' | 'oferta'| any): void {
+  filterByType(type: 'all' | 'renta' | 'Venta' | 'nuevo' | 'oferta' | 'disponible' | 'no_disponible' | any): void {
     this.activeFilter = type;
     this.applyFilters();
   }
@@ -83,6 +85,10 @@ export class ListadoProductosComponent implements OnInit {
       filtered = filtered.filter(p => p.nuevo);
     } else if (this.activeFilter === 'oferta') {
       filtered = filtered.filter(p => p.precioAnterior && p.precioAnterior > p.precioActual);
+    } else if (this.activeFilter === 'disponible') {
+      filtered = filtered.filter(p => p.disponible);
+    } else if (this.activeFilter === 'no_disponible') {
+      filtered = filtered.filter(p => !p.disponible);
     }
 
     // Aplicar filtro de texto si existe

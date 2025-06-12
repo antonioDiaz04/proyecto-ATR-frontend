@@ -189,14 +189,15 @@
 
             <!-- Columna Valores -->
             <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm text-gray-900">
-                {{ renta.detallesPago.precioRenta | currency }}
-              </div>
-              <div class="text-xs text-gray-500 line-through">
+              <div class="text-sm text-gray-900 font-semibold">
+                Total: {{ ((renta.detallesPago?.precioRenta || 0) + (calcularMulta(renta) || 0)) | currency }}
+                <div class="text-xs text-gray-500 line-through" *ngIf="renta.producto?.precio">
                 {{ renta.producto?.precio | currency }}
+                </div>
+                <div *ngIf="calcularMulta(renta) > 0" class="text-xs text-red-600 mt-1">
+                Multa: {{ calcularMulta(renta) | currency }}
+                </div>
               </div>
-              <div *ngIf="calcularMulta(renta) > 0" class="text-xs text-red-600 mt-1"></div>
-              Multa: {{ calcularMulta(renta) | currency }}
             </td>
 
             <!-- Columna Estado -->

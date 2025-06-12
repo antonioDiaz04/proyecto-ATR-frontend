@@ -7,32 +7,41 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class NotificacionService {
-  private apiUrl = `${environment.api}/enviar-notificacion`; // Ajusta esta URL
+  private apiUrl = `${environment.api}/notificacion`; // Ajusta esta URL si es necesario
 
   constructor(private http: HttpClient) { }
 
-  // Métodos básicos
+  // 🔐 Guarda la suscripción push (endpoint + claves) en el backend
+  guardarSuscripcionPush(suscripcion: PushSubscription): Observable<any> {
+    return this.http.post(`${this.apiUrl}/guardar-suscripcion`, suscripcion);
+  }
+
+  // 🧪 Notificación simple de ejemplo
   enviarNotificacionEjemplo(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/ejemplo`, datos);
   }
 
+  // 📨 Notificación genérica con cuerpo
   enviarNotificacionYCuerpo(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/`, datos);
   }
 
+  // ✅ Verifica correo válido o activo
   revisarCorreo(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/revisar-correo`, datos);
   }
 
+  // 🔔 Notificación general
   enviarNotificacion(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/enviar-notificacion`, datos);
   }
 
-  // Métodos específicos de productos
+  // 🎁 Nuevos productos
   enviarNotificacionNuevosProductos(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/enviar-notificacion-nuevos-productos`, datos);
   }
 
+  // 💬 Comentarios y respuestas
   enviarNotificacionComentarios(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/enviar-notificacion-comentarios`, datos);
   }
@@ -41,11 +50,12 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/enviar-notificacion-comentarios-respuesta`, datos);
   }
 
+  // 💸 Ofertas
   enviarNotificacionProductosOfertas(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/productos-ofertas`, datos);
   }
 
-  // Métodos de bienvenida
+  // 🙌 Bienvenidas
   enviarNotificacionBienvenidaAteleierVentaRenta(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/bienvenida-ateleier-ventayrenta`, datos);
   }
@@ -54,7 +64,7 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/bienvenida-ateleier-comprar`, datos);
   }
 
-  // Métodos de suscripción
+  // 🔄 Suscripciones
   enviarNotificacionSuscripcion(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/notificacion-subscripcion`, datos);
   }
@@ -67,7 +77,7 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/nuevos-productos-subscriptores`, datos);
   }
 
-  // Métodos de compra y carrito
+  // 🛒 Compras y carrito
   enviarNotificacionAgradecimientoCompra(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/agradecimiento-compra`, datos);
   }
@@ -80,17 +90,30 @@ export class NotificacionService {
     return this.http.post(`${this.apiUrl}/lleva-producto`, { body });
   }
 
-  // Métodos de renta
+  // 🧾 Renta
   enviarNotificacionRentaExtendida(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/renta-extendida`, datos);
   }
 
   enviarNotificacionRecordatorioDevolucionRenta(datos: PushSubscription): Observable<any> {
-    console.log(datos)
     return this.http.post(`${this.apiUrl}/recordatorio-devolucion-renta`, { datos });
   }
 
   enviarNotificacionMotivacionRenta(datos: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/motivacion-renta`, { datos });
+  }
+
+
+  obtenerNotificaciones(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/obtener-notificaciones`);
+  }
+  obtenerNotificacionesPorUsuario(usuarioId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/obtener-notificaciones-MyId/${usuarioId}`);
+  }
+  marcarComoLeido(id: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/marcar-como-leido/${id}`, {});
+  }
+  marcarVariasComoLeidas(ids: string[]): Observable<any> {
+    return this.http.put(`${this.apiUrl}/marcar-varias-como-leidas`, { ids });
   }
 }

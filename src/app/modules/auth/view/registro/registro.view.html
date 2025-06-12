@@ -1,200 +1,149 @@
-<div class="ui active dimmer fullscreen" *ngIf="isLoading">
-  <div class="ui massive text loader">Loading</div>
-</div>
+<div class="flex items-center justify-center mt-20">
+  <div class="w-full max-w-2xl p-8 bg-white border border-[#f0e6eb]">
 
-<p-dialog [(visible)]="displayModal" [modal]="true" [closable]="true"
-  [style]="{ 'background-color': 'var(--blur-bg)', 'border-radius': '10px', 'width': '50vw', 'padding': '20px' }"
-  header="Opciones de verificación">
-  <div class="dialog-content">
-    <i class="pi pi-lock"></i>
-    <h1><strong>Opciones de verificación</strong></h1>
-    <h3>¿Cómo deseas obtener el código?</h3>
-
-    <div class="group">
-      <button pButton type="button" label="Enviar por WhatsApp" class="p-button-success"
-        (click)="generateCode('whatsapp')"></button>
-
-      <button pButton type="button" label="Enviar por Gmail" class="p-button-secondary"
-        (click)="generateCode('gmail')"></button>
+    <!-- Encabezado -->
+    <div class="mb-10 text-center">
+      <h1 class="text-3xl font-semibold text-gray-900 uppercase mb-2">Ingrese su información</h1>
+      <p class="text-gray-600 text-sm">Complete todos los campos obligatorios (*)</p>
     </div>
-  </div>
-</p-dialog>
 
-<!-- Modal Gmail -->
-<p-dialog [(visible)]="displayGmailModal" [modal]="true" [closable]="true"
-  [style]="{'background-color': 'var(--blur-bg)'}" header="Verificación por email">
-  <div class="dialog-content">
-    <i class="pi pi-envelope verification-icon"></i>
-    <h2>Verificación por email</h2>
-    <p>
-      Hemos enviado un número de verificación a tu correo
-      <strong> {{personalDataForm.get('email')?.value}}</strong>. Introduce el
-      código en el recuadro inferior.
-    </p>
+    <!-- Paso 1 -->
+    <form *ngIf="currentStep === 1" [formGroup]="personalDataForm" (ngSubmit)="goToNextStep()" class="space-y-6">
+      <!-- Usuario -->
+      <div>
+        <label class="block text-sm font-bold text-gray-800 uppercase mb-1">Usuario *</label>
+        <input formControlName="username"
+          class="w-full px-4 py-3 border border-black text-base bg-white focus:outline-none focus:border-gray-900 placeholder-gray-400"
+          placeholder="ejemplo123" (input)="updateRemainingChars()" />
+        <small *ngIf="personalDataForm.get('username')?.touched && personalDataForm.get('username')?.invalid"
+          class="block mt-1 text-red-600">
+          {{ personalDataForm.get('username')?.hasError('required') ? 'Requerido' : 'Solo letras/números' }}
+        </small>
+        <small class="block mt-1 text-gray-400">{{ remainingChars }} caracteres disponibles</small>
+      </div>
 
-    <form [formGroup]="otpForm">
-      <div class="group">
-        <p-inputOtp formControlName="otpCode" name="otpCode" styleClass="w-full"></p-inputOtp>
-        <button pButton type="submit" label="Enviar Código" class="p-button-primary" [disabled]="otpForm.invalid"
-          (click)="submitOtp()"></button>
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-bold text-gray-800 uppercase mb-1">Email *</label>
+        <input type="email" formControlName="email"
+          class="w-full px-4 py-3 border border-black text-base bg-white focus:outline-none focus:border-gray-900 placeholder-gray-400"
+          placeholder="correo@ejemplo.com" />
+        <small *ngIf="personalDataForm.get('email')?.touched && personalDataForm.get('email')?.invalid"
+          class="block mt-1 text-red-600">
+          {{ personalDataForm.get('email')?.hasError('required') ? 'Requerido' : 'Email inválido' }}
+        </small>
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label class="block text-sm font-bold text-gray-800 uppercase mb-1">Teléfono *</label>
+        <input formControlName="telefono"
+          class="w-full px-4 py-3 border border-black text-base bg-white focus:outline-none focus:border-gray-900 placeholder-gray-400"
+          placeholder="+52 55 1234 5678" />
+        <small *ngIf="personalDataForm.get('telefono')?.touched && personalDataForm.get('telefono')?.invalid"
+          class="block mt-1 text-red-600">
+          {{ personalDataForm.get('telefono')?.hasError('required') ? 'Requerido' : 'Formato incorrecto' }}
+        </small>
+      </div>
+
+      <!-- Mensajes de error -->
+      <div *ngIf="errorMessage" class="text-red-600 mt-2">
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Botón paso 1 -->
+      <div class="pt-4">
+        <button type="submit"
+          class="w-full py-3 text-lg font-medium text-white bg-gray-900 hover:bg-gray-800 transition rounded-none disabled:bg-gray-300"
+          [disabled]="!isFormValid || isLoading">
+          {{ isLoading ? 'VALIDANDO...' : 'CONTINUAR →' }}
+        </button>
       </div>
     </form>
 
-    <p class="resend-text">
-      ¿No has recibido el código?
-      <a class="resend-link" (click)="resendCodeGmail()"> Reenviar</a>
-    </p>
-    <a class="resend-link" (click)="resendCodeByOtherMethod()">Probar de otra manera</a>
-  </div>
-</p-dialog>
+    <!-- Paso 1.5 - OTP -->
+    <form *ngIf="currentStep === 1.5" [formGroup]="otpForm" (ngSubmit)="verificacionOTP()"
+      class="space-y-6 mt-10 text-center">
+      <h2 class="text-xl font-semibold mb-4">Verificación</h2>
+      <p class="text-gray-600 text-sm mb-4">Ingresa el código de verificación enviado a tu correo o teléfono.</p>
 
-<!-- Modal WhatsApp -->
-<p-dialog [(visible)]="displayWhatsappModal" [modal]="true" [closable]="true"
-  [style]="{'background-color': 'var(--blur-bg)'}" header="Verificación por WhatsApp">
-  <div class="dialog-content">
-    <i class="pi pi-whatsapp verification-icon"></i>
-    <h2>Verificación por WhatsApp</h2>
-    <p>
-      Hemos enviado un número de verificación a tu WhatsApp
-      {{personalDataForm.get('telefono')?.value}}. Introduce el código en el
-      recuadro inferior.
-    </p>
+      <div class="flex justify-center space-x-4">
+        <input maxlength="1" pattern="[0-9]*" inputmode="numeric" class="w-16 h-16 text-2xl text-center border border-gray-400 focus:outline-none focus:border-gray-900 transition-colors"
+          *ngFor="let i of [0,1,2,3]; let idx = index" [formControlName]="'otp' + idx"
+          (input)="handleOtpInput(idx, $event)" />
+      </div>
+      <small *ngIf="otpInvalido" class="block text-red-600 mt-2">Código inválido</small>
+      <span *ngIf="otpErrorMessage" class="block text-red-600 mt-2">{{ otpErrorMessage }}</span>
 
-    <form [formGroup]="otpWhatsappForm">
-      <div class="group">
-        <p-inputOtp formControlName="otpCode" name="otpCode" styleClass="w-full"></p-inputOtp>
-        <button pButton type="submit" label="Enviar Código" class="p-button-primary"
-          [disabled]="otpWhatsappForm.invalid" (click)="submitOtpWhatsapp()"></button>
+      <div class="flex justify-between mt-6">
+        <button type="button" (click)="currentStep = 1"
+          class="px-4 py-2 border border-black font-semibold hover:bg-gray-100">
+          ← Corregir Datos
+        </button>
+
+        <button type="submit" class="px-4 py-2 bg-gray-900 text-white font-semibold hover:bg-gray-800">
+          Validar OTP →
+        </button>
       </div>
     </form>
 
-    <p class="resend-text">
-      ¿No has recibido el código?
-      <a class="resend-link" (click)="resendCodeWhatsapp()"> Reenviar</a>
-    </p>
-    <a class="resend-link" (click)="resendCodeByOtherMethod()">Probar de otra manera</a>
-  </div>
-</p-dialog>
-
-<div class="w-full items-center justify-center p-0">
-  <div class="w-full max-w-none flex flex-col md:flex-row">
-    <!-- Imagen lateral -->
-    <div class="hidden md:block w-[40%] h-full border-r border-gray-100">
-      <img src="https://i.pinimg.com/736x/a2/4f/e2/a24fe23f051e3062584bdd19f8fca418.jpg" alt="Seguridad"
-        class="w-full h-full object-cover" />
-    </div>
-
-    <!-- Formulario -->
-    <div class="w-full  md:w-[60%] mx-auto px-4 md:px-10">
-      <div class="mb-10 text-center">
-        <h1 class="text-4xl font-extrabold text-black uppercase mb-2 tracking-tight">Ingrese su información</h1>
-        <p class="text-gray-500">Complete todos los campos obligatorios (*)</p>
+    <!-- Paso 2 -->
+    <form *ngIf="currentStep === 2" [formGroup]="credentialsForm" (ngSubmit)="registroCliente()"
+      class="space-y-6 mt-10">
+      <!-- Contraseña -->
+      <div>
+        <label class="block text-sm font-bold text-gray-800 uppercase mb-1">Contraseña *</label>
+        <input type="password" formControlName="password" 7
+          class="w-full px-4 py-3 border border-black text-base bg-white focus:outline-none focus:border-gray-900 placeholder-gray-400"
+          placeholder="••••••••" (input)="verificarPassword()" />
+        <div *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched"
+          class="mt-4 space-y-2">
+          <h4 class="text-sm font-bold text-black">Requisitos de seguridad:</h4>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+            <li *ngFor="let item of faltantes" class="flex items-center text-red-600">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              {{ item }}
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <!-- Paso 1 -->
-      <form *ngIf="currentStep === 1"  [formGroup]="personalDataForm" (ngSubmit)="goToNextStep()" class="space-y-8">
-
-        <!-- Usuario -->
-        <div>
-          <label class="block text-sm font-bold text-black uppercase tracking-wider mb-1">Usuario *</label>
-          <input formControlName="username"
-            class="w-full max-w-xs mx-auto px-0 py-3 border-b-2 border-gray-300 bg-transparent focus:border-black focus:outline-none placeholder-gray-400 text-black"
-            placeholder="ejemplo123" (input)="updateRemainingChars()" />
-          <small *ngIf="personalDataForm.get('username')?.touched && personalDataForm.get('username')?.invalid"
-            class="block mt-1 text-red-600">
-            {{ personalDataForm.get('username')?.hasError('required') ? 'Requerido' : 'Solo letras/números' }}
-          </small>
-          <small class="block mt-1 text-gray-400">{{ remainingChars }} caracteres disponibles</small>
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label class="block text-sm font-bold text-black uppercase tracking-wider mb-1">Email *</label>
-          <input type="email" formControlName="email"
-            class="w-full max-w-xs mx-auto px-0 py-3 border-b-2 border-gray-300 bg-transparent focus:border-black focus:outline-none placeholder-gray-400 text-black"
-            placeholder="correo@ejemplo.com" />
-          <small *ngIf="personalDataForm.get('email')?.touched && personalDataForm.get('email')?.invalid"
-            class="block mt-1 text-red-600">
-            {{ personalDataForm.get('email')?.hasError('required') ? 'Requerido' : 'Email inválido' }}
-          </small>
-        </div>
-
-        <!-- Teléfono -->
-        <div>
-          <label class="block text-sm font-bold text-black uppercase tracking-wider mb-1">Teléfono *</label>
-          <input formControlName="telefono"
-            class="w-full max-w-xs mx-auto px-0 py-3 border-b-2 border-gray-300 bg-transparent focus:border-black focus:outline-none placeholder-gray-400 text-black"
-            placeholder="+52 55 1234 5678" />
-          <small *ngIf="personalDataForm.get('telefono')?.touched && personalDataForm.get('telefono')?.invalid"
-            class="block mt-1 text-red-600">
-            {{ personalDataForm.get('telefono')?.hasError('required') ? 'Requerido' : 'Formato incorrecto' }}
-          </small>
-        </div>
-
-        <!-- Botón paso 1 -->
-        <div class="pt-4">
-          <button type="submit"
-            class="w-full max-w-xs mx-auto px-12 py-4 bg-black text-white font-bold hover:bg-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-50"
-            [disabled]="!isFormValid || isLoading">
-            {{ isLoading ? 'VALIDANDO...' : 'CONTINUAR →' }}
-          </button>
-        </div>
-      </form>
-
-      <!-- Paso 2 -->
-      <form *ngIf="currentStep === 2" [formGroup]="credentialsForm" (ngSubmit)="registroCliente()" class="space-y-8">
-        <!-- Contraseña -->
-        <div>
-          <label class="block text-sm font-bold text-black uppercase tracking-wider mb-1">Contraseña *</label>
-          <input type="password" formControlName="password"
-            class="w-full max-w-xs mx-auto px-0 py-3 border-b-2 border-gray-300 bg-transparent focus:border-black focus:outline-none placeholder-gray-400 text-black"
-            placeholder="••••••••" (input)="verificarPassword()" />
-          <div *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched"
-            class="mt-4 space-y-2">
-            <h4 class="text-sm font-bold text-black">Requisitos de seguridad:</h4>
-            <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-              <li *ngFor="let item of faltantes" class="flex items-center text-red-600">
-                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                {{ item }}
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Confirmar Contraseña -->
-        <div>
-          <label class="block text-sm font-bold text-black uppercase tracking-wider mb-1">Confirmar Contraseña *</label>
-          <input type="password" formControlName="confirmPassword"
-            class="w-full max-w-xs mx-auto px-0 py-3 border-b-2 border-gray-300 bg-transparent focus:border-black focus:outline-none placeholder-gray-400 text-black"
-            placeholder="••••••••" (input)="verificarCoincidencia()" />
-          <small *ngIf="credentialsForm.get('confirmPassword')?.touched && !coincidenPasswords"
-            class="block mt-1 text-red-600">
-            Las contraseñas no coinciden
-          </small>
-        </div>
-
-        <!-- Botones paso 2 -->
-        <div class="flex space-x-4 pt-4">
-          <button type="button" (click)="goToPreviousStep()"
-            class="flex-1 px-6 py-4 border-2 border-black text-black font-bold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
-            ← VOLVER
-          </button>
-          <button type="submit"
-            class="flex-1 px-6 py-4 bg-black text-white font-bold hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-50"
-            [disabled]="faltantes.length !== 0 || !credentialsForm.valid || !coincidenPasswords">
-            COMPLETAR REGISTRO
-          </button>
-        </div>
-      </form>
-
-      <!-- Enlace login -->
-      <div class="mt-12 pt-8 border-t border-gray-200">
-        <p class="text-sm text-gray-600">
-          ¿Ya tiene cuenta? <a routerLink="/auth/Sign-in" class="font-bold text-black underline">Iniciar sesión aquí</a>
-        </p>
+      <!-- Confirmar Contraseña -->
+      <div>
+        <label class="block text-sm font-bold text-gray-800 uppercase mb-1">Confirmar Contraseña *</label>
+        <input type="password" formControlName="confirmPassword"
+          class="w-full px-4 py-3 border border-black text-base bg-white focus:outline-none focus:border-gray-900 placeholder-gray-400"
+          placeholder="••••••••" (input)="verificarCoincidencia()" />
+        <small *ngIf="credentialsForm.get('confirmPassword')?.touched && !coincidenPasswords"
+          class="block mt-1 text-red-600">
+          Las contraseñas no coinciden
+        </small>
       </div>
+
+      <!-- Botones paso 2 -->
+      <div class="flex space-x-4 pt-4">
+        <button type="button" (click)="goToPreviousStep()"
+          class="flex-1 px-6 py-3 border-2 border-black text-black font-bold hover:bg-gray-100 transition">
+          ← VOLVER
+        </button>
+        <button type="submit"
+          class="flex-1 px-6 py-3 bg-gray-900 text-white font-bold hover:bg-gray-800 transition disabled:bg-gray-300"
+          [disabled]="faltantes.length !== 0 || !credentialsForm.valid || !coincidenPasswords">
+          COMPLETAR REGISTRO
+        </button>
+      </div>
+    </form>
+
+    <!-- Enlace login y olvido contraseña -->
+    <div class="mt-12 pt-8 border-t border-gray-200 text-center">
+      <p class="text-sm text-gray-600">
+        ¿Ya tiene cuenta? <a routerLink="/auth/Sign-in" class="font-bold text-black underline">Iniciar sesión aquí</a>
+      </p>
+      <p class="text-sm text-gray-600 mt-2">
+        <a routerLink="/auth/forgot-password" class="font-bold text-black underline">¿Olvidó su contraseña?</a>
+      </p>
     </div>
   </div>
 </div>

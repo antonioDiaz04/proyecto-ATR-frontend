@@ -38,7 +38,7 @@ export class RegistroView {
   personalDataForm: FormGroup;
   credentialsForm: FormGroup;
   otpForm: FormGroup;
-  // otpWhatsappForm: FormGroup;
+  otpWhatsappForm: FormGroup;
   displayModal: boolean = false;
   isLoadingBasic: boolean = false;
   displayCode: boolean = false;
@@ -99,19 +99,18 @@ export class RegistroView {
     });
 
     this.otpForm = this.fb.group({
-  otp0: ['', [Validators.required, Validators.pattern('[0-9]')]],
-  otp1: ['', [Validators.required, Validators.pattern('[0-9]')]],
-  otp2: ['', [Validators.required, Validators.pattern('[0-9]')]],
-  otp3: ['', [Validators.required, Validators.pattern('[0-9]')]]
-});
+      otpCode: [
+        '',
+        [Validators.required, Validators.minLength(4), Validators.maxLength(4)],
+      ],
+    });
 
-
-    // this.otpWhatsappForm = this.fb.group({
-    //   otpCode: [
-    //     '',
-    //     [Validators.required, Validators.minLength(4), Validators.maxLength(4)],
-    //   ],
-    // });
+    this.otpWhatsappForm = this.fb.group({
+      otpCode: [
+        '',
+        [Validators.required, Validators.minLength(4), Validators.maxLength(4)],
+      ],
+    });
   }
 
   passwordValidator(): ValidatorFn {
@@ -213,24 +212,23 @@ export class RegistroView {
   otpDigits: string[] = ['', '', '', ''];
   otpInvalido = false;
 
- handleOtpInput(index: number, event: any): void {
-  const input = event.target;
-  if (input.value.length === 1) {
-    const nextInput = input.nextElementSibling;
-    if (nextInput) {
-      nextInput.focus();
+  handleOtpInput(index: number): void {
+    if (this.otpDigits[index].length > 1) {
+      this.otpDigits[index] = this.otpDigits[index][0];
     }
   }
-}
+  otpErrorMessage: string = ''; // Para almacenar el mensaje de error del OTP
 
-  verificacionOTP(): void {
-    // this.showSpinner();
+  verificarOTP(): void {
+    console.log('Iniciando verificación de OTP...');
+    this.showSpinner();
     this.otpErrorMessage = ''; // Limpiar mensaje de error al iniciar la verificación
 
     if (this.otpForm.valid) {
-        const otpCode = `${this.otpForm.value.otp0}${this.otpForm.value.otp1}${this.otpForm.value.otp2}${this.otpForm.value.otp3}`;
+      const otpCode = this.otpDigits.join(''); // Obtener el código OTP ingresado
       const tokenRespuesta = this.tokenRespuesta; // Este token debería haberse obtenido al enviar el código
 
+      console.log('otpCode ingresado:', otpCode);
       console.log('tokenRespuesta:', tokenRespuesta);
       if (tokenRespuesta) {
         // Decodificar y validar el token
@@ -238,28 +236,30 @@ export class RegistroView {
           tokenRespuesta,
           otpCode
         );
+        console.log('Resultado de decodificación:', decodedData);
 
         if (decodedData) {
-          // this.hideSpinner();
+          this.hideSpinner();
           console.log('Código OTP verificado correctamente.');
           this.currentStep = 2; // Avanzar al siguiente paso
           this.displayGmailModal = false;
         } else {
-          // this.hideSpinner();
+          this.hideSpinner();
           this.otpErrorMessage = 'El código de verificación es incorrecto.'; // Establecer mensaje de error
+          console.log('El código de verificación es incorrecto.');
         }
       } else {
-        // this.hideSpinner();
+        this.hideSpinner();
         this.otpErrorMessage = 'No se pudo validar el código de verificación.'; // Establecer mensaje de error
+        console.log('No se pudo validar el código de verificación.');
       }
     } else {
-      // this.hideSpinner();
+      this.hideSpinner();
       this.otpErrorMessage = 'Por favor ingrese un código válido.'; // Establecer mensaje de error
+      console.log('Formulario OTP inválido.');
     }
   }
-
-
-  otpErrorMessage: string = ''; // Para almacenar el mensaje de error del OTP
+  }
   getInvalidControls() {
     const invalidControls: {
       controlName: string;
