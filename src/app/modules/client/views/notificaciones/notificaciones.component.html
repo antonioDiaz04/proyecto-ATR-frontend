@@ -18,6 +18,16 @@
       </select>
     </div>
 
+    <!-- Botón recargar -->
+    <button (click)="loadNotifications()"
+            class="flex items-center gap-1 text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded transition-all duration-150">
+      <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 4v5h.582M20 20v-5h-.581m.581 0A8.962 8.962 0 0112 21a8.962 8.962 0 01-7.419-3.999M20 15a8.962 8.962 0 00-7.419-3.999M4 9a8.962 8.962 0 017.419-3.999" />
+      </svg>
+      Recargar
+    </button>
     <div class="flex-1"></div>
 
     <div class="flex items-center gap-2">

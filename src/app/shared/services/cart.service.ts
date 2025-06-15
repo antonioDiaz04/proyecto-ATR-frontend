@@ -1,93 +1,88 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Subject } from 'rxjs'; // Importar Subject desde RxJS
+import { Subject } from 'rxjs';
 import { IndexedDbService } from '../../modules/public/commons/services/indexed-db.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  // Señal para manejar los productos en el carrito
   private dressItemsSignal = signal<any[]>([]);
-
-  // Señal computada para el contador de productos
   dressItemCount = computed(() => this.dressItemsSignal().length);
 
-  // Subject para notificar cambios en el carrito
   private cartUpdated = new Subject<void>();
-  cartUpdated$ = this.cartUpdated.asObservable(); // Observable público para suscribirse
+  cartUpdated$ = this.cartUpdated.asObservable();
+
+  // Bandera para saber si ya se cargó el carrito
+  private isInitialized = signal(false);
 
   constructor(private indexedDbService: IndexedDbService) {
-    this.loadCartItems(); // Cargar los productos del carrito al iniciar
+    this.initialize(); // Inicializa correctamente
   }
 
-  // Cargar los productos del carrito desde IndexedDB
-  async loadCartItems() {
+  // Inicializa el carrito correctamente esperando la carga
+  private async initialize() {
     try {
-      const productos = await this.indexedDbService.obtenerProductosApartados();
-      this.dressItemsSignal.set(productos);
-      return productos;
+      const items = await this.indexedDbService.obtenerProductosApartados();
+      this.dressItemsSignal.set(items);
+      this.isInitialized.set(true);
+      console.log("✅ Carrito inicializado con productos:", items);
     } catch (error) {
-      console.error("Error al cargar los ítems del carrito:", error);
-      return [];
+      console.error("❌ Error al inicializar el carrito:", error);
     }
   }
 
   // Método para agregar un producto al carrito
   async addToCart(producto: any) {
-    console.log("Intentando agregar producto al carrito:", producto);
+    if (!this.isInitialized()) {
+      console.warn("⏳ El carrito aún no ha sido inicializado");
+      return;
+    }
+
+    console.log("🛒 Intentando agregar producto al carrito:", producto);
+
     const currentItems = this.dressItemsSignal();
-    // Verificar si el producto ya está en el carrito
-    const isProductInCart = currentItems.some((item) => item.id === producto.id);
-    this.loadCartItems()
+    const isProductInCart = currentItems.some(item => item.id === producto.id);
+
     if (isProductInCart) {
-      console.warn("El producto ya está en el carrito");
-    } else {
-      // Agregar el producto al carrito
-      this.dressItemsSignal.set([...currentItems, producto]);
-      console.log("Producto agregado al carrito:", producto);
+      console.warn("⚠️ El producto ya está en el carrito");
+      return;
+    }
 
-      // Guardar el producto en IndexedDB
+    this.dressItemsSignal.set([...currentItems, producto]);
+    console.log("✅ Producto agregado al carrito (señal):", producto);
+
+    try {
       await this.indexedDbService.guardarProducto(producto);
-      console.log("Producto guardado en IndexedDB:", producto);
+      console.log("💾 Producto guardado en IndexedDB:", producto);
 
-      // Notificar que el carrito ha cambiado
       this.cartUpdated.next();
-      console.log("Notificación de cambio en el carrito enviada");
+      console.log("📣 Notificación de cambio en el carrito enviada");
+    } catch (error) {
+      console.error("❌ Error al guardar el producto en IndexedDB:", error);
     }
   }
 
   // Método para eliminar un producto del carrito
   async removeFromCart(id: string) {
-    console.log("Intentando eliminar producto del carrito con ID:", id);
     const currentItems = this.dressItemsSignal();
-    const updatedItems = currentItems.filter((item) => item.id !== id);
+    const updatedItems = currentItems.filter(item => item.id !== id);
 
-    // Actualizar la señal con los productos restantes
     this.dressItemsSignal.set(updatedItems);
-    console.log("Producto eliminado del carrito. Carrito actualizado:", updatedItems);
+    console.log("🗑️ Producto eliminado del carrito:", updatedItems);
 
-    // Eliminar el producto de IndexedDB
     await this.indexedDbService.eliminarProducto(id);
-    console.log("Producto eliminado de IndexedDB con ID:", id);
+    console.log("💾 Producto eliminado de IndexedDB con ID:", id);
 
-    // Notificar que el carrito ha cambiado
     this.cartUpdated.next();
-    console.log("Notificación de cambio en el carrito enviada");
   }
 
-  // Método para cargar los ítems del carrito desde IndexedDB
-
-
-  // Método para obtener los productos del carrito
+  // Método para obtener los productos actuales
   getCartItems() {
-    const items = this.dressItemsSignal();
-    console.log("Obteniendo productos del carrito:", items);
-    return items;
+    return this.dressItemsSignal();
   }
 
-  // Método para inicializar el carrito con datos existentes
+  // Inicializar manualmente (si necesitas usarlo en tests)
   initializeCart(items: any[]) {
-    console.log("Inicializando carrito con productos:", items);
     this.dressItemsSignal.set(items);
   }
 }

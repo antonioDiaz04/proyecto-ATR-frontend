@@ -174,7 +174,7 @@ this.updateMenuItems()
   filtrarProductos(): void {
     const texto = this.busquedaProducto.trim().toLowerCase();
     if (!texto) {
-      this.productosFiltrados = [];
+      this.productosFiltrados = this.todosLosProductos;
       return;
     }
   

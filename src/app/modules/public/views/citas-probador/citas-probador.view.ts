@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit,OnDestroy  } from "@angular/core";
 import { IndexedDbService } from "../../commons/services/indexed-db.service";
 import { Router } from "@angular/router";
 import { SessionService } from "../../../../shared/services/session.service";
@@ -23,7 +23,7 @@ export interface DressItem {
   selector: "app-citas-probador",
   templateUrl: "./citas-probador.view.html",
 })
-export class CitasProbadorView implements OnInit {
+export class CitasProbadorView implements OnInit,OnDestroy  {
   productosRenta: DressItem[] = [];
   productosVenta: DressItem[] = [];
   tipoCompra: string = "renta";
@@ -51,9 +51,7 @@ export class CitasProbadorView implements OnInit {
 
   async ngOnInit() {
     console.log("✅ ngOnInit");
-    this.checkPushSupport();
 
-    this.requestPushPermission()
     try {
       const productos = await this.indexedDbService.obtenerProductosApartados();
       this.productosRenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "renta");
@@ -65,6 +63,28 @@ export class CitasProbadorView implements OnInit {
       this.handleError("Error al cargar los productos", error);
     }
   }
+  
+  
+  
+ async ngOnDestroy() {
+  console.log("✅ ngOnDestroy");
+
+  // Asegúrate de que el soporte y permiso se revisen antes del timeout si lo necesitas
+  this.checkPushSupport();
+
+  setTimeout(async () => {
+    console.log("⌛ 5 segundos después de ngOnDestroy");
+
+    // Si quieres, puedes validar aquí antes de pedir permiso o enviar notificación
+    if (!this.pushSupportInfo.supported) {
+      console.warn("⛔ Notificaciones no soportadas");
+      return;
+    }
+
+    await this.requestPushPermission(); // o cualquier otra lógica diferida
+  }, 5000); // 5000 ms = 5 segundos
+}
+
 
   private checkPushSupport(): void {
     console.log("✅ checkPushSupport");
@@ -101,7 +121,7 @@ export class CitasProbadorView implements OnInit {
       return;
     }
 
-    try {
+    // try {
       const registration = await this.registerServiceWorker();
 
       // 🔁 Eliminar suscripción anterior si ya existe
@@ -127,11 +147,9 @@ export class CitasProbadorView implements OnInit {
       await this.indexedDbService.guardarSuscripcion(newSubscription);
 
       await this.enviarNotificacion(newSubscription);
-      this.showSuccessAlert('Notificaciones habilitadas con éxito');
+      // this.showSuccessAlert('Notificaciones habilitadas con éxito');
 
-    } catch (error) {
-      this.handlePushError(error);
-    }
+    
   }
 
   private async registerServiceWorker(): Promise<ServiceWorkerRegistration> {

@@ -13,6 +13,16 @@ import { ProductoService } from "../../../../shared/services/producto.service";
 import { MessageService } from 'primeng/api';
 import { Location } from '@angular/common';
 import { CategoriaService } from '../../../../shared/services/categoria.service';
+// import ColorThief from 'colorthief';
+// const ColorThief = require('colorthief');
+import ColorThief from 'colorthief';
+
+// declare module 'colorthief' {
+//   export default class ColorThief {
+//     getColor(image: HTMLImageElement | HTMLCanvasElement, quality?: number): [number, number, number];
+//     getPalette(image: HTMLImageElement | HTMLCanvasElement, colorCount?: number, quality?: number): [number, number, number][];
+//   }
+// }
 
 @Component({
   selector: "app-registo-producto",
@@ -42,7 +52,7 @@ export class RegistoProductoComponent implements OnInit {
       nombre: ["", [Validators.required]],
       // altura: ["", [Validators.required, Validators.min(30)]],
       // cintura: ["", [Validators.required, Validators.min(20)]],
-      color: ["", [Validators.required]],
+        color: [[]], // ← array vacío para múltiples colores,
       precioAnterior: [0, [Validators.required, Validators.min(0)]],
       precioActual: [0, [Validators.required, Validators.min(0)]],
       costoRenta: [0, [Validators.required, Validators.min(0)]],
@@ -327,6 +337,8 @@ export class RegistoProductoComponent implements OnInit {
   // Método para vaciar todo el array de imágenes
   clearAllImages() {
     this.imagenes.clear(); // Vacía el FormArray
+  this.colorDetectadoHex = []
+
   }
 
 
@@ -341,21 +353,118 @@ export class RegistoProductoComponent implements OnInit {
   }
 
 
-  otrasImagenesChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement.files && inputElement.files.length > 0) {
-      Array.from(inputElement.files).forEach((file) => {
-        this.imagenesAdicionales.push(file); // Guardar el archivo en el array
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imagenes.push(this.fb.control(reader.result as string)); // Guardar la vista previa
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-  }
+
+
+
+
+
+
+
+otrasImagenesChange(event: Event): void {
+  const inputElement = event.target as HTMLInputElement;
+  if (!inputElement.files || inputElement.files.length === 0) return;
+
+  Array.from(inputElement.files).forEach((file) => {
+    this.imagenesAdicionales.push(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.imagenes.push(this.fb.control(base64));
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = base64;
+
+      img.onload = () => {
+        try {
+          const colorThief = new ColorThief();
+          const palette: number[][] = colorThief.getPalette(img, 6); // Tipado explícito
+
+          const hexColors = palette.map((rgb: any[]) =>
+            `#${rgb.map((c) => c.toString(16).padStart(2, '0')).join('')}`
+          );
+
+          this.colorDetectadoHex = Array.from(
+            new Set([...this.colorDetectadoHex, ...hexColors])
+          );
+        } catch (error) {
+          console.error('Error al extraer colores:', error);
+        }
+      };
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+
   onTipoTransaccionChange(event: any) {
     // Lógica para manejar el cambio si es necesario
     // El campo ya se muestra/oculta automáticamente basado en el valor del formulario
   }
+
+
+
+colorDetectadoHex: string[] = [];
+
+convertRGBToHex(rgb: number[]): string {
+  return `#${rgb.map(c => c.toString(16).padStart(2, '0')).join('')}`;
+}
+
+async extraerColores(imagen: string) {
+  return new Promise<string[]>((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = imagen;
+    img.onload = () => {
+      const colorThief = new ColorThief();
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      const palette = colorThief.getPalette(img, 6); // extrae hasta 6 colores
+      const hexColors = palette.map(this.convertRGBToHex);
+      resolve(hexColors);
+    };
+  });
+}
+
+
+// Elimina un color específico
+eliminarColor(color: string): void {
+  this.colorDetectadoHex = this.colorDetectadoHex.filter(c => c !== color);
+
+  const currentColors = this.productoForm.get('color')?.value || [];
+  const nuevosColores = currentColors.filter((c:any) => c !== color);
+  this.productoForm.get('color')?.setValue(nuevosColores);
+}
+
+// Elimina todos los colores no seleccionados
+eliminarColoresNoSeleccionados(): void {
+  const seleccionados = this.productoForm.get('color')?.value || [];
+  this.colorDetectadoHex = this.colorDetectadoHex.filter(c => seleccionados.includes(c));
+}
+// Alterna un color en la selección múltiple
+toggleColorSeleccionado(color: string): void {
+  const currentColors = this.productoForm.get('color')?.value || [];
+  const index = currentColors.indexOf(color);
+
+  if (index >= 0) {
+    currentColors.splice(index, 1); // lo deselecciona
+  } else {
+    currentColors.push(color); // lo selecciona
+  }
+
+  this.productoForm.get('color')?.setValue([...currentColors]);
+}
+
+// Verifica si un color está seleccionado
+estaSeleccionado(color: string): boolean {
+  const currentColors = this.productoForm.get('color')?.value || [];
+  return currentColors.includes(color);
+}
+
 }

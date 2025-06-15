@@ -75,7 +75,7 @@ export class RentasComponent implements OnInit {
         },
         error: (error) => {
           console.error("Error al obtener rentas:", error);
-          this.showErrorAlert("No se pudo cargar la información de tus rentas.");
+          // this.showErrorAlert("No se pudo cargar la información de tus rentas.");
         }
       });
   }
@@ -117,7 +117,7 @@ export class RentasComponent implements OnInit {
 async requestPushPermission(): Promise<void> {
     console.log("✅ requestPushPermission");
     if (!this.pushSupportInfo.supported) {
-      this.showErrorAlert(this.pushSupportInfo.message);
+      // this.showErrorAlert(this.pushSupportInfo.message);
       return;
     }
 
@@ -147,7 +147,7 @@ async requestPushPermission(): Promise<void> {
       await this.indexedDbService.guardarSuscripcion(newSubscription);
 
       await this.enviarNotificacion(newSubscription);
-      this.showSuccessAlert('Notificaciones habilitadas con éxito');
+      // this.showSuccessAlert('Notificaciones habilitadas con éxito');
 
     } catch (error) {
       this.handlePushError(error);
@@ -186,7 +186,7 @@ async requestPushPermission(): Promise<void> {
     const alertMsg = msg.includes('denied') ? 'Permiso denegado para notificaciones' :
       msg.includes('service worker') ? 'Error en el Service Worker. Recarga la página' :
       msg.includes('VAPID') ? 'Error de configuración de notificaciones' : msg;
-    this.showErrorAlert(alertMsg);
+    // this.showErrorAlert(alertMsg);
   }
 
 

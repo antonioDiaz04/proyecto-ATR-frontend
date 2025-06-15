@@ -62,6 +62,26 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   publicKey: string = environment .publicKey; // Este es el valor que debes obtener en la consola de Firebase.
   
   Detalles: any = null; // Inicializado en null
+
+
+
+  // Variables para paginación de thumbnails
+currentPage: number = 0;
+imagesPerPage: number = 5;
+
+get paginatedImages(): string[] {
+  const start = this.currentPage * this.imagesPerPage;
+  return this.Detalles?.imagenes?.slice(start, start + this.imagesPerPage) || [];
+}
+
+get totalPages(): number {
+  return Math.ceil((this.Detalles?.imagenes?.length || 0) / this.imagesPerPage);
+}
+
+setPage(index: number): void {
+  this.currentPage = index;
+}
+
   responsiveOptions: any[] = [
     {
       breakpoint: '1024px',
