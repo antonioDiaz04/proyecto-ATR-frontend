@@ -26,7 +26,6 @@ export class AuthService {
     return this.http.get(url);
   }
 
-
   // requestPasswordRecovery(data: any): Observable<any> {
   //   const url = `${environment.api}/auth/request-password-recovery`;
   //   return this.http.post(url, data);

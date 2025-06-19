@@ -56,7 +56,7 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   mainImageUrl: string = ''; // URL de la imagen principal
   showImages: boolean = false; // Variable para mostrar/ocultar las imágenes secundarias
   imagenes: any; // Sigue siendo un array de cadenas para imágenes adicionales en base64
-  selectedMainImage!: string
+  selectedMainImage!: string;
   // accesorios: any;
   productId!: any;
   publicKey: string = environment .publicKey; // Este es el valor que debes obtener en la consola de Firebase.
@@ -108,21 +108,34 @@ setPage(index: number): void {
     //   },
     // });
 
-    this.renderer.listen(this.mainImage.nativeElement, 'mousemove', (event: MouseEvent) => {
-      this.applyZoomEffect(event);
-    });
+    this.renderer.listen(
+      this.mainImage.nativeElement,
+      'mousemove',
+      (event: MouseEvent) => {
+        this.applyZoomEffect(event);
+      }
+    );
 
     this.renderer.listen(this.mainImage.nativeElement, 'mouseleave', () => {
       this.resetZoomEffect();
     });
-    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mousemove', (event: MouseEvent) => {
-      this.applyZoomEffectPreviewmainImage(event);
-    });
+    this.renderer.listen(
+      this.PreviewmainImage.nativeElement,
+      'mousemove',
+      (event: MouseEvent) => {
+        this.applyZoomEffectPreviewmainImage(event);
+      }
+    );
 
-    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mouseleave', () => {
-      this.resetZoomEffectPreviewmainImage();
-    });
+    this.renderer.listen(
+      this.PreviewmainImage.nativeElement,
+      'mouseleave',
+      () => {
+        this.resetZoomEffectPreviewmainImage();
+      }
+    );
   }
+
   calcularDescuento(precioAnterior: number, precioActual: number): number {
     return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
   }
@@ -147,7 +160,10 @@ setPage(index: number): void {
     this.mainImageUrl = this.selectedMainImage;
   }
   @ViewChild('mainImage', { static: false }) mainImage!: ElementRef;
-  @ViewChild('PreviewmainImage', { static: false }) PreviewmainImage!: ElementRef;
+  @ViewChild('PreviewmainImage', { static: false })
+  PreviewmainImage!: ElementRef;
+
+
   constructor(
     private location: Location,
     private indexedDbService: IndexedDbService,
@@ -173,6 +189,7 @@ setPage(index: number): void {
   ngOnInit() {
     // this.ngxService.start(); // Inicia el loader
     this.isLoading = true;
+
     this.scrollToTop();
     // AOS.init({
     //   duration: 650, // Duración de la animación en milisegundos
@@ -215,12 +232,17 @@ setPage(index: number): void {
         // Preparar imágenes para el carrusel
         this.images = this.Detalles.imagenes.map((img: string) => ({
           itemImageSrc: img,
-          thumbnailImageSrc: img
+          thumbnailImageSrc: img,
         }));
 
         this.cdRef.detectChanges(); // Forzar la actualización del DOM
+
+     
       });
   }
+
+
+
   scrollToTop() {
     window.scrollTo(0, 0); // Esto lleva la página a la parte superior
   }
@@ -235,8 +257,8 @@ setPage(index: number): void {
   applyZoomEffect(event: MouseEvent): void {
     const image = this.mainImage.nativeElement;
     const rect = image.getBoundingClientRect(); // Obtiene la posición de la imagen en la pantalla
-    const x = (event.clientX - rect.left) / rect.width * 100;
-    const y = (event.clientY - rect.top) / rect.height * 100;
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
 
     this.renderer.setStyle(image, 'transform-origin', `${x}% ${y}%`);
     this.renderer.setStyle(image, 'transform', 'scale(2)');
@@ -314,7 +336,6 @@ setPage(index: number): void {
       console.error('Error al guardar el producto:', error);
     }
   }
-  
 
 
   goToCart() {
@@ -326,7 +347,6 @@ setPage(index: number): void {
     // Lógica para iniciar sesión
     console.log('Iniciar sesión');
   }
-
 
   openModal(): void {
     Fancybox.show(
@@ -348,9 +368,8 @@ setPage(index: number): void {
     }
   }
   verDetalles(id: number) {
-    this.router.navigate(["/Detail/" + id]);
+    this.router.navigate(['/Detail/' + id]);
   }
-
 
   changeMainImage(image: string): void {
     this.selectedMainImage = image;

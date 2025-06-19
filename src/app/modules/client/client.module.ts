@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ClientRoutingModule } from './client-routing.module';
 import { PerfilComponent } from './views/perfil/perfil.component';
 import { RentasComponent } from './views/rentas/rentas.component';
@@ -11,7 +12,11 @@ import { FormsModule } from '@angular/forms';
 import { StorageService } from '../../shared/services/storage.service';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { provideClientHydration } from '@angular/platform-browser';
-import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  HttpClientModule,
+  provideHttpClient,
+  withFetch,
+} from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AvatarModule } from 'primeng/avatar';
@@ -42,19 +47,20 @@ import { SidebarModule } from 'primeng/sidebar';
     AvatarModule,
     AvatarGroupModule,
     ClientRoutingModule,
-    FormsModule
+    FormsModule,
+    ZXingScannerModule,
+    HttpClientModule,
   ],
   providers: [
     DatosEmpresaService,
     NotificacionService,
-    ProductoService,
-    ReseniaService,
     SessionService,
     UsuarioService,
     StorageService,
     VentayrentaService,
     provideClientHydration(),
-    [provideHttpClient(withFetch())]
+    [provideHttpClient(withFetch())],
   ],
+  exports: [NotificacionesComponent],
 })
-export class ClientModule { }
+export class ClientModule {}

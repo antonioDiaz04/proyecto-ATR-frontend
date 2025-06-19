@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 import { environment } from '../../../environments/environment';
+import { data } from 'jquery';
 
 // src/app/services/:
 
@@ -47,11 +48,14 @@ export class UsuarioService {
       }
     );
   }
-    // Método para verificar la respuesta secreta
-    verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
-      const body = { email, respuesta };
-      return this.http.post(`${environment.api}/verificacion/verificar-respuesta`, body);
-    }
+  // Método para verificar la respuesta secreta
+  verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
+    const body = { email, respuesta };
+    return this.http.post(
+      `${environment.api}/verificacion/verificar-respuesta`,
+      body
+    );
+  }
   checkTelefonoExists(telefono: string): Observable<any> {
     return this.http.post<any>(
       environment.api + '/usuarios/check-telefono',
@@ -96,6 +100,12 @@ export class UsuarioService {
     );
   }
 
+    vincularDispositivo(data: any): Observable<any> {
+    const url = `${environment.api}/autentificacion/vincular-Dispositivo-Wear`;
+    return this.http.post(url, data);
+  }
+
+
   // enviarDatos(pregunta: string, respuesta: string): Observable<any> {
   //   return this.http.post<boolean>(this.url + 'respuesta', {
   //     pregunta,
@@ -103,10 +113,7 @@ export class UsuarioService {
   //   });
   // }
 
-  actualizaPasswordxCorreo(
-    email: any,
-    nueva: string
-  ): Observable<any> {
+  actualizaPasswordxCorreo(email: any, nueva: string): Observable<any> {
     return this.http.put<boolean>(
       environment.api + '/usuarios/actualizaxCorreo',
       {
@@ -116,10 +123,7 @@ export class UsuarioService {
     );
   }
 
-  actualizarUsuario(
-    email: string,
-    nueva: string
-  ): Observable<any> {
+  actualizarUsuario(email: string, nueva: string): Observable<any> {
     return this.http.put<boolean>(
       environment.api + '/usuarios/actualizaxCorreo',
       {
@@ -145,7 +149,7 @@ export class UsuarioService {
   // }
 
   eliminarUsuario(id: string): Observable<any> {
-    return this.http.delete(environment.api+'/usuarios/' + id);
+    return this.http.delete(environment.api + '/usuarios/' + id);
   }
   // eliminarProducto(id: string): Observable<any> {
   //     return this.http.delete(this.url + id);
@@ -169,6 +173,9 @@ export class UsuarioService {
   detalleUsuarioById(id: string): Observable<any> {
     //return this.http.get(`${this.apiUrl}/${id}`);
     return this.http.get(`${environment.api}/usuarios/` + id);
+  }
+  actualizarDatosUsuario(id: any, user: object): Observable<any> {
+    return this.http.put(`${environment.api}/usuarios/editarUsuario/` + id, user);
   }
 
   // buscaUsuarioByCorreo(correo: string): Observable<any> {

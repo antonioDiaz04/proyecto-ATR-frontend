@@ -1,21 +1,31 @@
-import { SessionService } from '../../../../shared/services/session.service';
-import { Component, OnInit } from '@angular/core';
-import { NotificacionService } from '../../../../shared/services/notification.service';
-import { UsuarioService } from '../../../../shared/services/usuario.service';
+import { data } from 'jquery';
+import { SessionService } from './../../../../shared/services/session.service';
+import { UsuarioService } from './../../../../shared/services/usuario.service';
+import { NotificacionService } from './../../../../shared/services/notification.service';
+import { Component } from '@angular/core';
+import { response } from 'express';
 
-interface Notificacion {
-  _id: string;
-  titulo: string;
-  contenido: string;
-  fecha: string;
-  tipo: string;
-  estado: 'leido' | 'no_leido';
-  seleccionada?: boolean;
-  datosAdicionales?: {
-    icon?: string;
-    image?: string;
-    actions?: { action: string; title: string; icon?: string }[];
-  };
+// Define un tipo para las pestañas
+type TabType = 'all' | 'reviews' | 'purchases' | 'rentals' | 'offers';
+interface Notification {
+  id: number;
+  type: 'review' | 'purchase' | 'rental' | 'offer' | 'new_product';
+  title: string;
+  message: string;
+  date: Date;
+  status?:
+    | 'pending'
+    | 'approved'
+    | 'rejected'
+    | 'completed'
+    | 'active'
+    | 'expired';
+  read: boolean;
+  customer?: string;
+  product?: string;
+  rating?: number;
+  price?: number;
+  dueDate?: Date;
 }
 
 @Component({
