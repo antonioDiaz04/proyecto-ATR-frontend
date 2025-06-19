@@ -23,6 +23,7 @@ import { ProductoService } from '../../shared/services/producto.service';
 import { ReseniaService } from '../../shared/services/resenia.service';
 import { NotificacionService } from '../../shared/services/notification.service';
 import { SidebarModule } from 'primeng/sidebar';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { SidebarModule } from 'primeng/sidebar';
     AvatarModule,
     AvatarGroupModule,
     ClientRoutingModule,
-    FormsModule
+    FormsModule,
+    ZXingScannerModule,
   ],
   providers: [
     DatosEmpresaService,

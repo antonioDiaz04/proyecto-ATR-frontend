@@ -34,10 +34,12 @@ export class NotificacionesComponent implements OnInit {
   tiposDisponibles = ['info', 'advertencia', 'alerta', 'error', 'exito'];
 
   constructor(
-    private uss: UsuarioService,
+    private usuarioService: UsuarioService,
     private sessionService: SessionService,
     private notificacionesService: NotificacionService
-  ) {}
+  ) {
+        // this.notificaciones.sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+  }
 
   ngOnInit() { 
     this.getData();
@@ -49,7 +51,7 @@ export class NotificacionesComponent implements OnInit {
     if (userData) {
       this.id = userData;
       if (this.id) {
-        this.uss.detalleUsuarioById(this.id).subscribe((data) => {
+        this.usuarioService.detalleUsuarioById(this.id).subscribe((data) => {
           this.data = data;
         });
       }
@@ -151,5 +153,62 @@ export class NotificacionesComponent implements OnInit {
     
     // Marcar como leído al interactuar
     this.marcarComoLeido(id);
+  }
+
+
+  scannerActivo = false;
+  vincularMensaje = '';
+  vincularExito = false;
+  wearToken: string = '';
+  wearDeviceId: string = '';
+  usuarioActualId: string = '';
+  
+  activarScanner() {
+    this.vincularMensaje = '';
+    this.vincularExito = false;
+    this.scannerActivo = true;
+  }
+
+  vincularDispositivo() {
+    const payload = {
+      usuarioId: this.usuarioActualId,
+      token: this.wearToken,
+      deviceId: this.wearDeviceId,
+    };
+
+    console.log(payload);
+    this.usuarioService.vincularDispositivo(payload).subscribe({
+      next: () => {
+        this.vincularExito = true;
+        this.vincularMensaje = '¡Dispositivo vinculado exitosamente!';
+      },
+      error: (err) => {
+        console.error(err);
+        this.vincularExito = false;
+        this.vincularMensaje = 'Error al vincular el dispositivo.';
+      },
+    });
+  }
+
+  onCodeResult(result: string) {
+    this.scannerActivo = false;
+    const partes = result.split('|');
+
+    if (partes.length === 2) {
+      this.wearToken = partes[0];
+      this.wearDeviceId = partes[1];
+
+      const usuarioId = this.sessionService.getId(); // O donde guardes tu sesión
+      if (usuarioId) {
+        this.usuarioActualId = usuarioId;
+        this.vincularDispositivo();
+      } else {
+        this.vincularMensaje = 'No se pudo obtener el ID del usuario';
+        this.vincularExito = false;
+      }
+    } else {
+      this.vincularMensaje = 'QR inválido';
+      this.vincularExito = false;
+    }
   }
 }

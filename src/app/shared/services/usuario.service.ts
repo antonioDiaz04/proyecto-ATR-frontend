@@ -170,6 +170,10 @@ export class UsuarioService {
     //return this.http.get(`${this.apiUrl}/${id}`);
     return this.http.get(`${environment.api}/usuarios/` + id);
   }
+  vincularDispositivo(data: any): Observable<any> {
+    const url = `${environment.api}/autentificacion/vincular-Dispositivo-Wear`;
+    return this.http.post(url, data);
+  }
 
   // buscaUsuarioByCorreo(correo: string): Observable<any> {
   //   return this.http.get(`${this.url}buscaUsuarioByCorreo/${correo}`);
