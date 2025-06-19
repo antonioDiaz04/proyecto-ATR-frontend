@@ -93,26 +93,59 @@ export class CitasProbadorView implements OnInit {
     }
   }
   generarToken(): void {
-    if ('serviceWorker' in navigator && this.swPush) {
-      this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
-        .then((sub) => {
-          const token = JSON.stringify(sub);
-          this.enviarNotificacion(token); // Enviar al backend
-        })
-        .catch((err) => {
-          console.error('Error al suscribirse a notificaciones:', err);
-          alert('Hubo un problema al suscribirse a las notificaciones.');
-        });
-    } else {
-      console.error('Service Workers no están habilitados en este navegador.');
-      alert('El navegador no soporta notificaciones push.');
+    const esLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    const esSeguro = location.protocol === 'https:' || esLocal;
+  
+    if (!esSeguro) {
+      console.error('Las notificaciones push solo funcionan en sitios HTTPS o localhost.');
+      alert('Debes acceder mediante HTTPS o localhost para usar notificaciones.');
+      return;
     }
+  
+    if (!('serviceWorker' in navigator)) {
+      console.error('Este navegador no soporta Service Workers.');
+      alert('Tu navegador no soporta notificaciones push.');
+      return;
+    }
+  
+    if (!this.swPush || !this.swPush.isEnabled) {
+      console.warn('Push notifications no están habilitadas en este navegador.');
+      return;
+    }
+  
+    Notification.requestPermission().then((permiso) => {
+      if (permiso !== 'granted') {
+        console.warn('Permiso de notificaciones no concedido:', permiso);
+        alert('Debes permitir notificaciones para recibir alertas.');
+        return;
+      }
+  
+      navigator.serviceWorker.register('ngsw-worker.js') // Asegúrate que esta ruta sea correcta
+        .then(() => {
+          this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+            .then((sub) => {
+              // const token = JSON.parse(sub));
+              this.enviarNotificacion(sub);
+              console.log('Suscripción push exitosa:', sub);
+            })
+            .catch((err) => {
+              console.error('Error al suscribirse a notificaciones:', err);
+              if (err instanceof Error) {
+                console.error('Detalles del error:', err.message, err.stack);
+              }
+              alert('Hubo un problema al suscribirse a las notificaciones.');
+            });
+        })
+        .catch((error) => {
+          console.error('Error al registrar el Service Worker:', error);
+          alert('Fallo el registro del Service Worker. Revisa la consola para más detalles.');
+        });
+    });
   }
   
 
-
   // Método para enviar el token de notificación al backend
-  enviarNotificacion(token: string): void {
+  enviarNotificacion(token: PushSubscription): void {
     this.notificacionService_.enviarNotificacionLlevateCarrito(token).subscribe(
       (response) => {
         console.log("Notificación enviada:", response);
@@ -120,10 +153,21 @@ export class CitasProbadorView implements OnInit {
       },
       (error) => {
         console.error("Error al enviar la notificación:", error);
+        if (error instanceof Error) {
+          console.error('Detalles del error al enviar notificación:', error.message, error.stack);
+        }
         // Manejo de errores
+        if (error.status) {
+          console.error(`Status de error: ${error.status}`);
+        }
+        if (error.error) {
+          console.error('Respuesta del error:', error.error);
+        }
       }
     );
   }
+
+
 
 
 

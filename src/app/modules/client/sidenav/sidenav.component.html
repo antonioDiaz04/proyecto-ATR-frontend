@@ -1,17 +1,16 @@
-<div class="sidenav w-64 bg-white h-[calc(100vh-4rem)] fixed left-0 top-28 overflow-y-auto border-r border-gray-200 p-4"> <!-- Aumentado el valor de top -->
+<div
+  class="sidenav w-64 bg-white h-[calc(100vh-4rem)] fixed left-0 top-28 overflow-y-auto border-r border-gray-200 p-4">
+  <!-- Aumentado el valor de top -->
   <ul class="py-2">
     <li class="mb-4"> <!-- Aumentado el margen inferior -->
       <div class="px-4 py-2">
         <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Cuenta</span>
       </div>
       <ul>
-        <li (click)="redirectToCliente('perfil')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+        <li (click)="redirectToCliente('perfil')"
+          class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
           <i class="pi pi-user text-gray-600"></i>
           <span>Perfil</span>
-        </li>
-        <li (click)="logout()" class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-          <i class="pi pi-sign-out text-gray-600"></i>
-          <span>Cerrar sesión</span>
         </li>
       </ul>
     </li>
@@ -20,11 +19,13 @@
         <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Servicios</span>
       </div>
       <ul>
-        <li (click)="redirectToCliente('compras')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+        <li (click)="redirectToCliente('compras')"
+          class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
           <i class="pi pi-shopping-cart text-gray-600"></i>
           <span>Compras</span>
         </li>
-        <li (click)="redirectToCliente('rentas')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+        <li (click)="redirectToCliente('rentas')"
+          class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
           <i class="pi pi-box text-gray-600"></i>
           <span>Rentas</span>
         </li>
@@ -35,7 +36,8 @@
         <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Notificaciones</span>
       </div>
       <ul>
-        <li (click)="redirectToCliente('notificaciones')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+        <li (click)="redirectToCliente('notificaciones')"
+          class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
           <i class="pi pi-bell text-gray-600"></i>
           <span>Notificaciones</span>
         </li>
@@ -46,9 +48,14 @@
         <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Configuración</span>
       </div>
       <ul>
-        <li (click)="redirectToCliente('configuracion')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+        <li (click)="redirectToCliente('configuracion')"
+          class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
           <i class="pi pi-cog text-gray-600"></i>
           <span>Configuración</span>
+        </li>
+        <li (click)="logout()" class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+          <i class="pi pi-sign-out text-gray-600"></i>
+          <span>Cerrar sesión</span>
         </li>
       </ul>
     </li>

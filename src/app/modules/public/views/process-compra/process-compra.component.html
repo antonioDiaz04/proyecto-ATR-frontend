@@ -21,8 +21,7 @@
         <p>Order Summary: <span>${{ Detalles.precio }}</span></p>
         <button (click)="aplicarCupon()">Apply Coupon</button>
       </div>
-      <div #paypal *ngIf="Detalles?.disponible && Detalles?.opcionesTipoTransaccion === 'Venta'"
-            style="min-height: 45px; width: 100%;margin-top: 6px ;"></div>
+      <div #paypal style="min-height: 45px; width: 100%;margin-top: 6px ;"></div>
     </section>
   </main>
 </div>

@@ -57,7 +57,6 @@ export class ComprasComponent implements OnInit {
       .obtenerProductosCompradoByIdUser(usuarioId)
       .subscribe((response) => {
         this.bolsaDeCompras = response.map(item=>({
-          
             id: item._id,
             isRecogido: item.isRecogido,
             estado: item.isRecogido,

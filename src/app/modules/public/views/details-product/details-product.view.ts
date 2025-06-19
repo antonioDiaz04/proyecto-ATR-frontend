@@ -11,6 +11,9 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import AOS from 'aos';
 import $ from 'jquery';
 import { filter } from 'rxjs';
+import { SwPush } from '@angular/service-worker';
+import { NotificacionService } from '../../../../shared/services/notification.service';
+import { environment } from '../../../../../environments/environment';
 
 declare const Fancybox: any;
 
@@ -56,6 +59,8 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   selectedMainImage!: string;
   // accesorios: any;
   productId!: any;
+  publicKey: string = environment .publicKey; // Este es el valor que debes obtener en la consola de Firebase.
+  
   Detalles: any = null; // Inicializado en null
   responsiveOptions: any[] = [
     {
@@ -146,6 +151,9 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private renderer: Renderer2,
     private cdRef: ChangeDetectorRef,
+    private swPush: SwPush,
+    private notificacionService_: NotificacionService,
+
     private ngxService: NgxUiLoaderService,
     private router: Router,
     private cartService: CartService,
@@ -177,9 +185,6 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
           this.obtenerProducto(productId); // Tu función para recargar el producto
         }
       });
-
-
-
     // setTimeout(() => {
     //   Fancybox.bind('[data-fancybox="gallery"]', {
     //     // Aquí puedes agregar configuraciones adicionales si es necesario
@@ -295,43 +300,23 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
       imagenes: producto.imagenes[0],
       opcionesTipoTransaccion: producto.opcionesTipoTransaccion,
     };
-
+  
     try {
-      // Guardar el producto en IndexedDB
-      // this.indexedDbService.guardarProducto(body2);
-
-      // Agregar el producto al carrito usando el servicio
       this.cartService.addToCart(body2);
-      console.error(body2);
-
-      // // Mostrar diálogo de confirmación
-      // this.confirmationService.confirm({
-      //   message: `
-      //     <div class="product-notification">
-      //       <img src="${producto.imagenPrincipal}" alt="${producto.nombre}" class="product-image" />
-      //       <div class="product-details">
-      //         <h4>${producto.nombre}</h4>
-      //         <p>${producto.precio}</p>
-      //       </div>
-      //       <p>¿Deseas ir al carrito o iniciar sesión?</p>
-      //     </div>
-      //   `,
-      //   header: 'Producto agregado',
-      //   acceptLabel: 'Ir al carrito',
-      //   rejectLabel: 'Iniciar sesión',
-      //   accept: () => {
-      //     // Lógica para ir al carrito
-      //     this.goToCart();
-      //   },
-      //   reject: () => {
-      //     // Lógica para iniciar sesión
-      //     this.login();
-      //   },
-      // });
+      console.log('Producto agregado al carrito:', body2);
+  
+      // Enviar notificación push al usuario
+      const nombreProducto = producto.nombre;
+      const imagenProducto = producto.imagenes[0]; // Asegúrate de que sea una URL válida
+  
+      // Llama a generarToken y pasa los datos del producto
+      this.generarToken(nombreProducto, imagenProducto);
+  
     } catch (error) {
       console.error('Error al guardar el producto:', error);
     }
   }
+
 
   goToCart() {
     // Lógica para ir al carrito
@@ -366,8 +351,6 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['/Detail/' + id]);
   }
 
-  // }}}
-  // Cambiar la imagen principal al hacer clic en una miniatura
   changeMainImage(image: string): void {
     this.selectedMainImage = image;
     this.mainImageUrl = this.selectedMainImage;
@@ -395,4 +378,73 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
       this.selectedImageIndex = 0; // Volver a la primera imagen
     }
   }
-}
+
+
+  generarToken(nombreProducto: string, imagenProducto: string): void {
+    const esLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    const esSeguro = location.protocol === 'https:' || esLocal;
+  
+    if (!esSeguro) {
+      console.error('Las notificaciones push solo funcionan en sitios HTTPS o localhost.');
+      alert('Debes acceder mediante HTTPS o localhost para usar notificaciones.');
+      return;
+    }
+  
+    if (!('serviceWorker' in navigator)) {
+      console.error('Este navegador no soporta Service Workers.');
+      alert('Tu navegador no soporta notificaciones push.');
+      return;
+    }
+  
+    if (!this.swPush || !this.swPush.isEnabled) {
+      console.warn('Push notifications no están habilitadas en este navegador.');
+      return;
+    }
+  
+    Notification.requestPermission().then((permiso) => {
+      if (permiso !== 'granted') {
+        console.warn('Permiso de notificaciones no concedido:', permiso);
+        alert('Debes permitir notificaciones para recibir alertas.');
+        return;
+      }
+  
+      navigator.serviceWorker.register('ngsw-worker.js')
+        .then(() => {
+          this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+            .then((sub) => {
+              const productoInfo = {
+                nombreProducto,
+                imagenProducto,
+              };
+              this.enviarNotificacion(sub, productoInfo);
+              console.log('Suscripción push exitosa:', sub);
+            })
+            .catch((err) => {
+              console.error('Error al suscribirse a notificaciones:', err);
+              alert('Hubo un problema al suscribirse a las notificaciones.');
+            });
+        })
+        .catch((error) => {
+          console.error('Error al registrar el Service Worker:', error);
+          alert('Fallo el registro del Service Worker.');
+        });
+    });
+  }
+  
+  enviarNotificacion(token: PushSubscription, productoInfo: { nombreProducto: string, imagenProducto: string }): void {
+    const body = {
+      token,
+      nombreProducto: productoInfo.nombreProducto,
+      imagenProducto: productoInfo.imagenProducto,
+    };
+  
+    this.notificacionService_.enviarNotificacionLlevaTuVestido(body).subscribe(
+      (response) => {
+        console.log("Notificación enviada:", response);
+      },
+      (error) => {
+        console.error("Error al enviar la notificación:", error);
+      }
+    );
+  }
+}  

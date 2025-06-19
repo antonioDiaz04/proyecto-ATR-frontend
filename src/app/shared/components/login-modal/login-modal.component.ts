@@ -113,21 +113,14 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
   faltantes: string[] = []; // Lista de requisitos faltantes
   showPassword: boolean = false;
   constructor(
-    private indexedDbService: IndexedDbService,
-    private msgs: mensageservice,
     private signInService: SignInService,
     private storageService: StorageService,
     private sessionService: SessionService,
     private fb: FormBuilder,
-    private messageService: MessageService,
     private datosEmpresaService: DatosEmpresaService,
     private ngxService: NgxUiLoaderService,
-    private renderer: Renderer2,
-    // private sessionService: SessionService,
-    private elementRef: ElementRef,
     public themeService: ThemeServiceService,
     private cdr: ChangeDetectorRef,
-    //para lo del capchat
     private ngZone: NgZone,
     private router: Router,
 
@@ -335,11 +328,7 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
       }
     );
   }
-
-  // validateCaptcha() {
-  //   const token = grecaptcha.getResponse();
-  //   return token ? token : null;
-  // }
+  
   validateCaptcha() {
     const token = grecaptcha.getResponse();
     if (token) {

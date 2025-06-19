@@ -100,6 +100,12 @@ export class UsuarioService {
     );
   }
 
+    vincularDispositivo(data: any): Observable<any> {
+    const url = `${environment.api}/autentificacion/vincular-Dispositivo-Wear`;
+    return this.http.post(url, data);
+  }
+
+
   // enviarDatos(pregunta: string, respuesta: string): Observable<any> {
   //   return this.http.post<boolean>(this.url + 'respuesta', {
   //     pregunta,

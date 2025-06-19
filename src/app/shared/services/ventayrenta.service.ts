@@ -15,7 +15,7 @@ export class VentayrentaService {
 
   // Métodos de Venta
   crearVenta(venta: FormData): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/proceso/crearVenta`, venta);
+    return this.http.post<any>(`${this.apiUrl}/rentas/registrar`, venta);
   }
 
   obtenerVentas(): Observable<any[]> {

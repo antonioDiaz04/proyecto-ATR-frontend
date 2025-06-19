@@ -21,7 +21,19 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+          "/**/*.svg",
+          "/**/*.cur",
+          "/**/*.jpg",
+          "/**/*.jpeg",
+          "/**/*.png",
+          "/**/*.apng",
+          "/**/*.webp",
+          "/**/*.avif",
+          "/**/*.gif",
+          "/**/*.otf",
+          "/**/*.ttf",
+          "/**/*.woff",
+          "/**/*.woff2"
         ]
       }
     }
@@ -29,7 +41,9 @@
   "dataGroups": [
     {
       "name": "dynamic-routes",
-      "urls": ["/"],
+      "urls": [
+        "/"
+      ],
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 20,

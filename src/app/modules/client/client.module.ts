@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ClientRoutingModule } from './client-routing.module';
 import { PerfilComponent } from './views/perfil/perfil.component';
 import { RentasComponent } from './views/rentas/rentas.component';
@@ -11,7 +12,11 @@ import { FormsModule } from '@angular/forms';
 import { StorageService } from '../../shared/services/storage.service';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { provideClientHydration } from '@angular/platform-browser';
-import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  HttpClientModule,
+  provideHttpClient,
+  withFetch,
+} from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AvatarModule } from 'primeng/avatar';
@@ -21,7 +26,7 @@ import { DatosEmpresaService } from '../../shared/services/datos-empresa.service
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { ProductoService } from '../../shared/services/producto.service';
 import { ReseniaService } from '../../shared/services/resenia.service';
-
+import { NotificacionService } from '../../shared/services/notification.service';
 
 @NgModule({
   declarations: [
@@ -33,16 +38,26 @@ import { ReseniaService } from '../../shared/services/resenia.service';
     SidenavComponent,
   ],
   imports: [
-    
     HeaderModule,
-    CommonModule,  ButtonModule,AvatarModule,AvatarGroupModule,
-    ClientRoutingModule,FormsModule
-  ]
-  ,providers: [DatosEmpresaService,
-
-    SessionService,UsuarioService,StorageService,
-    VentayrentaService,provideClientHydration(), [provideHttpClient(withFetch())]
-    
+    CommonModule,
+    ButtonModule,
+    AvatarModule,
+    AvatarGroupModule,
+    ClientRoutingModule,
+    FormsModule,
+    ZXingScannerModule,
+    HttpClientModule,
   ],
+  providers: [
+    DatosEmpresaService,
+    NotificacionService,
+    SessionService,
+    UsuarioService,
+    StorageService,
+    VentayrentaService,
+    provideClientHydration(),
+    [provideHttpClient(withFetch())],
+  ],
+  exports: [NotificacionesComponent],
 })
-export class ClientModule { }
+export class ClientModule {}
