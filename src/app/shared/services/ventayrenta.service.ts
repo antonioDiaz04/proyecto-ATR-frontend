@@ -15,11 +15,11 @@ export class VentayrentaService {
 
   // Métodos de Venta
   crearVenta(venta: FormData): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/rentas/registrar`, venta);
+    return this.http.post<any>(`${this.apiUrl}/proceso/crearVenta`, venta);
   }
 
   obtenerVentas(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/proceso/obtenerVentas`);
+    return this.http.get<any[]>(`${this.apiUrl}/obtenerVentas`);
   }
 
   obtenerProductosCompradoByIdUser(usuarioId: string): Observable<any[]> {
@@ -41,6 +41,10 @@ export class VentayrentaService {
   cancelarRenta(data: { rentaId: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/cancelarRenta`, data);
   }
+  // Cancelar una renta
+  cancelarVenta(data: { ventaId: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/cancelarVenta`, data);
+  }
   // Eliminar una renta
   eliminarRenta(rentaId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/rentaId/${rentaId}`);
@@ -48,6 +52,10 @@ export class VentayrentaService {
   // Eliminar rentas
   eliminarRentasSeleccionadas(rentaIds: string[]): Observable<any> {
     return this.http.delete(`${this.apiUrl}/rentasSeleccionadas/`, {  // Cambié el método a DELETE
+      body: { rentaIds }});
+  }
+  eliminarVentasSeleccionadas(rentaIds: string[]): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/ventasSeleccionadas/`, {  // Cambié el método a DELETE
       body: { rentaIds }});
   }
 

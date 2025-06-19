@@ -112,6 +112,7 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
 
   faltantes: string[] = []; // Lista de requisitos faltantes
   showPassword: boolean = false;
+border: any;
   constructor(
     private signInService: SignInService,
     private storageService: StorageService,

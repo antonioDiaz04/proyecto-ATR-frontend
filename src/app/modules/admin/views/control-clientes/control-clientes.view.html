@@ -1,10 +1,57 @@
-<section >
-    <!-- <div>
-        <h1>Control de clientes</h1>
-    </div> -->
+<section class="usuarios-container">
 
-    <section>
-        <router-outlet></router-outlet>
+    <!-- Encabezado con estilo minimalista -->
+    <div class="border-b border-gray-200 pb-4 mb-6 flex items-center">
+      <i class="pi pi-user text-red-500 text-3xl mr-3"></i>
+      <div>
+        <h1 class="text-2xl font-light text-gray-800 inline-block border-b-2 border-red-500 pb-1">Gestión de Clientes</h1>
+        <p class="text-sm text-gray-500 mt-1">Sistema de administración de usuarios y clientes</p>
+      </div>
+    </div>
+  
+    <!-- Menú de navegación con tabs y acción -->
+    <div class="flex justify-between items-center mb-8 border-b border-gray-200">
+      <!-- Tabs -->
+      <nav class="flex">
+        <ul class="flex space-x-1">
+          <li>
+            <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+              <i class="pi pi-chart-line mr-2 text-gray-400 group-hover:text-red-400"></i>
+              Resumen
+            </a>
+          </li>
+          <li>
+            <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+              <i class="pi pi-users mr-2 text-gray-400 group-hover:text-red-400"></i>
+              Todos los Clientes
+            </a>
+          </li>
+          <li>
+            <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+              <i class="pi pi-star mr-2 text-gray-400 group-hover:text-red-400"></i>
+              VIP
+            </a>
+          </li>
+          <li>
+            <a class="px-4 cursor-pointer py-3 text-sm font-medium text-gray-600 hover:text-red-600 border-b-2 border-transparent hover:border-red-300 transition-colors flex items-center">
+              <i class="pi pi-file mr-2 text-gray-400 group-hover:text-red-400"></i>
+              Documentos
+            </a>
+          </li>
+        </ul>
+      </nav>
+    
+      <!-- Botón de acción flotante -->
+      <button class="flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors shadow-sm">
+        <i class="pi pi-user-plus mr-2"></i>
+        Nuevo Cliente
+      </button>
+    </div>
+  
+   
+  
+    <!-- Contenedor del router outlet -->
+    <section class="mt-10">
+      <router-outlet></router-outlet>
     </section>
-
-</section>
+  </section>

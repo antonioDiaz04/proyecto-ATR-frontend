@@ -1,24 +1,75 @@
-<div class="categoria-container">
-    <h2 class="categoria-title">Lista de Categorías</h2>
-    <ul class="categoria-list">
-      <li *ngFor="let categoria of categorias" class="categoria-item">
-        <span class="categoria-nombre">{{ categoria.nombre }}</span>
-        <div class="categoria-actions">
-          <button class="btn btn-danger" (click)="eliminarCategoria(categoria.id)">Eliminar</button>
-          <button class="btn btn-primary" (click)="categoriaSeleccionada = categoria">Editar</button>
+<div class="categorias-container bg-gray-50 p-6 min-h-screen">
+  <!-- Encabezado -->
+  <div class="border-b border-gray-200 pb-4 mb-6">
+    <h1 class="text-2xl font-light text-gray-800 inline-block border-b-2 border-red-500 pb-1">
+      Gestión de Categorías
+    </h1>
+    <p class="text-sm text-gray-500 mt-1">Administración centralizada de categorías del sistema</p>
+  </div>
+
+  <!-- Panel de Categorías -->
+  <div class="bg-white rounded-lg shadow-md border border-gray-200 mb-8">
+    <div class="p-5 border-b border-gray-200 bg-gradient-to-r from-red-50 to-white">
+      <div class="flex items-center">
+        <i class="pi pi-tags text-red-500 text-2xl mr-3"></i>
+        <h2 class="text-lg font-medium text-gray-800">Lista de Categorías</h2>
+      </div>
+    </div>
+    
+    <ul class="divide-y divide-gray-200">
+      <li *ngFor="let categoria of categorias" class="p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center justify-between">
+          <span class="text-gray-800 font-medium">{{ categoria.nombre }}</span>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors flex items-center"
+                    (click)="eliminarCategoria(categoria.id)">
+              <i class="pi pi-trash mr-1"></i> Eliminar
+            </button>
+            <button class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors flex items-center"
+                    (click)="categoriaSeleccionada = categoria">
+              <i class="pi pi-pencil mr-1"></i> Editar
+            </button>
+          </div>
         </div>
       </li>
     </ul>
-  
-    <div *ngIf="categoriaSeleccionada" class="categoria-editar">
-      <h3>Editar Categoría</h3>
-      <input [(ngModel)]="categoriaSeleccionada.nombre" placeholder="Nombre de la categoría" class="form-control" />
-      <button class="btn btn-success" (click)="actualizarCategoria(categoriaSeleccionada.id, categoriaSeleccionada)">Guardar</button>
+  </div>
+
+  <!-- Edición de Categoría -->
+  <div *ngIf="categoriaSeleccionada" class="bg-white rounded-lg shadow-md border border-gray-200 mb-8">
+    <div class="p-5 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
+      <div class="flex items-center">
+        <i class="pi pi-pencil text-blue-500 text-2xl mr-3"></i>
+        <h3 class="text-lg font-medium text-gray-800">Editar Categoría</h3>
+      </div>
     </div>
-  
-    <div class="categoria-crear">
-      <h3>Crear Nueva Categoría</h3>
-      <input #nuevaCategoria placeholder="Nombre de la categoría" class="form-control" />
-      <button class="btn btn-success" (click)="crearCategoria({ nombre: nuevaCategoria.value })">Crear</button>
+    <div class="p-5">
+      <input [(ngModel)]="categoriaSeleccionada.nombre" 
+             placeholder="Nombre de la categoría" 
+             class="w-full p-2 border border-gray-300 rounded mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" />
+      <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center"
+              (click)="actualizarCategoria(categoriaSeleccionada.id, categoriaSeleccionada)">
+        <i class="pi pi-save mr-2"></i> Guardar Cambios
+      </button>
     </div>
   </div>
+
+  <!-- Creación de Nueva Categoría -->
+  <div class="bg-white rounded-lg shadow-md border border-gray-200">
+    <div class="p-5 border-b border-gray-200 bg-gradient-to-r from-green-50 to-white">
+      <div class="flex items-center">
+        <i class="pi pi-plus-circle text-green-500 text-2xl mr-3"></i>
+        <h3 class="text-lg font-medium text-gray-800">Crear Nueva Categoría</h3>
+      </div>
+    </div>
+    <div class="p-5">
+      <input #nuevaCategoria 
+             placeholder="Nombre de la categoría" 
+             class="w-full p-2 border border-gray-300 rounded mb-4 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all" />
+      <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center"
+              (click)="crearCategoria({ nombre: nuevaCategoria.value })">
+        <i class="pi pi-plus mr-2"></i> Crear Categoría
+      </button>
+    </div>
+  </div>
+</div>

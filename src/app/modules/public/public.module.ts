@@ -11,7 +11,6 @@ import { DialogModule } from 'primeng/dialog';
 import { SidebarModule } from 'primeng/sidebar';
 import { AcercaDeView } from './views/acerca-de/acerca-de.view';
 import { FooterComponent } from './components/footer/footer.component';
-// import { HeaderComponent } from './components/header/header.component';
 import { PerfilView } from './views/perfil/perfil.view';
 import { MenuModule } from 'primeng/menu';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -56,8 +55,6 @@ import { Error500Component } from './views/error500/error500.component';
 import { SidevarComponent } from './components/sidevar/sidevar.component';
 import { CargaComponent } from './components/carga/carga.component';
 import { CarouselModule } from 'primeng/carousel';
-// import { } from './views/login-modal/login-modal.component';
-// import { VideosComponent } from './components/videos/videos.component';
 import { ProductosComponent } from './views/productos/productos.component';
 const MATERIALS = [
   PasswordModule,
@@ -99,13 +96,11 @@ import { TableModule } from 'primeng/table';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
 import { FloatLabelModule } from 'primeng/floatlabel';
-// import { ComprasComponent } from './views/compras/compras.component';
 import { ProcessCompraComponent } from './views/process-compra/process-compra.component';
 import { VentayrentaService } from '../../shared/services/ventayrenta.service';
 import { RentasComponent } from './views/rentas/rentas.component';
 import { AccesoriosComponent } from './components/accesorios/accesorios.component';
 import { CartService } from '../../shared/services/cart.service';
-
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
 import { ComentariosComponent } from './components/comentarios/comentarios.component';
@@ -115,8 +110,12 @@ import { MisionVisionComponent } from './views/mision-vision/mision-vision.compo
 import { PreguntasComponent } from './views/preguntas/preguntas.component';
 import { NotificacionService } from '../../shared/services/notification.service';
 import { ReseniaService } from '../../shared/services/resenia.service';
+import { NuevosLlegadasView } from './views/nuevos-llegadas/nuevos-llegadas.view';
+import { IncluyeAccesorioView } from './views/incluye-accesorio/incluye-accesorio.view';
+import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.component';
+// import { IncluyeAccesorioView } from './view/incluye-accesorio/incluye-accesorio.view';
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent],
+  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent],
   exports:[COMPONENTS],
   imports: [HeaderModule,InputTextModule,FloatLabelModule,
     InputNumberModule,ConfirmDialogModule,MessageModule,

@@ -1,13 +1,13 @@
-<aside *ngIf="!isMobile" class="w-64 p-6 bg-white border-r border-gray-100 shadow-xs">
+<aside *ngIf="!isMobile" class="w-64">
   <!-- Categorías - Estilo mejorado -->
-  <div class="mb-8">
-    <h3 class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4">Categorías</h3>
-    <ul class="space-y-2">
+  <details open class="mb-8">
+    <summary class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4 cursor-pointer select-none">Categorías</summary>
+    <ul class="space-y-2 mt-4">
       <li 
         (click)="applyFilter('categoria', 'ofertas')" 
         [class.text-gray-900]="selectedFilters.categoria === 'ofertas'"
         [class.text-gray-500]="selectedFilters.categoria !== 'ofertas'"
-        class="flex justify-between items-center cursor-pointer group transition-colors duration-200"
+        class="flex justify-between items-center cursor-pointer group transition-colors duration-200 border border-black rounded-none p-2"
       >
         <span class="text-sm font-normal group-hover:text-gray-900">Ofertas</span>
         <span class="text-xs px-1.5 py-0.5 rounded-full"
@@ -20,7 +20,7 @@
         (click)="applyFilter('categoria', 'nuevas-llegadas')" 
         [class.text-gray-900]="selectedFilters.categoria === 'nuevas-llegadas'"
         [class.text-gray-500]="selectedFilters.categoria !== 'nuevas-llegadas'"
-        class="flex justify-between items-center cursor-pointer group transition-colors duration-200"
+        class="flex justify-between items-center cursor-pointer group transition-colors duration-200 border border-black rounded-none p-2"
       >
         <span class="text-sm font-normal group-hover:text-gray-900">Nuevas llegadas</span>
         <span class="text-xs px-1.5 py-0.5 rounded-full"
@@ -30,19 +30,19 @@
               [class.text-gray-500]="selectedFilters.categoria !== 'nuevas-llegadas'">150</span>
       </li>
     </ul>
-  </div>
+  </details>
 
   <!-- Colores - Estilo refinado -->
-  <div class="mb-8">
-    <h3 class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4">Color</h3>
-    <div class="grid grid-cols-5 gap-3">
+  <details open class="mb-8">
+    <summary class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4 cursor-pointer select-none">Color</summary>
+    <div class="grid grid-cols-5 gap-3 mt-4">
       <span 
         *ngFor="let color of ['negro', 'gris', 'rosa', 'rojo', 'verde', 'azul', 'amarillo', 'morado']"
         (click)="applyFilter('color', color)"
         [class.outline]="selectedFilters.color === color"
         [class.outline-1]="selectedFilters.color === color"
         [class.outline-gray-800]="selectedFilters.color === color"
-        class="w-6 h-6 rounded-full cursor-pointer transition-all duration-200 mx-auto"
+        class="w-6 h-6 border border-black rounded-none cursor-pointer transition-all duration-200 mx-auto"
         [ngClass]="{
           'bg-gray-900': color === 'negro',
           'bg-gray-400': color === 'gris',
@@ -55,48 +55,48 @@
         }"
       ></span>
     </div>
-  </div>
+  </details>
 
   <!-- Tallas - Estilo más fino -->
-  <div class="mb-8">
-    <h3 class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4">Tamaño</h3>
-    <div class="grid grid-cols-3 gap-2">
+  <details open class="mb-8">
+    <summary class="text-xs font-medium uppercase tracking-widest text-gray-500 mb-4 cursor-pointer select-none">Tamaño</summary>
+    <div class="grid grid-cols-3 gap-2 mt-4">
       <label 
         *ngFor="let talla of ['XS', 'S', 'M', 'L', 'XL']"
-        [class.bg-gray-900]="selectedFilters.tallas.includes(talla)"
-        [class.text-white]="selectedFilters.tallas.includes(talla)"
-        [class.border-transparent]="selectedFilters.tallas.includes(talla)"
-        class="border border-gray-200 rounded-sm py-1 text-center text-xs cursor-pointer hover:border-gray-400 transition-colors duration-200"
+        [class.bg-gray-900]="selectedFilters.talla.includes(talla)"
+        [class.text-white]="selectedFilters.talla.includes(talla)"
+        [class.border-transparent]="selectedFilters.talla.includes(talla)"
+        class="border border-black rounded-none py-1 text-center text-xs cursor-pointer hover:border-gray-400 transition-colors duration-200"
       >
         <input 
           type="checkbox" 
           class="hidden"
-          [checked]="selectedFilters.tallas.includes(talla)" 
+          [checked]="selectedFilters.talla.includes(talla)" 
           (change)="toggleSize(talla)"
         >
         {{ talla }}
       </label>
       <label 
-        [class.bg-gray-900]="selectedFilters.tallas.includes('todas')"
-        [class.text-white]="selectedFilters.tallas.includes('todas')"
-        [class.border-transparent]="selectedFilters.tallas.includes('todas')"
-        class="col-span-3 border border-gray-200 rounded-sm py-1 text-center text-xs cursor-pointer hover:border-gray-400 transition-colors duration-200"
+        [class.bg-gray-900]="selectedFilters.talla.includes('todas')"
+        [class.text-white]="selectedFilters.talla.includes('todas')"
+        [class.border-transparent]="selectedFilters.talla.includes('todas')"
+        class="col-span-3 text-gray-700 border border-black rounded-none py-1 text-center text-xs cursor-pointer hover:border-gray-400 transition-colors duration-200"
       >
         <input 
           type="checkbox" 
           class="hidden"
-          [checked]="selectedFilters.tallas.includes('todas')" 
+          [checked]="selectedFilters.talla.includes('todas')" 
           (change)="toggleSize('todas')"
         >
         Todas las tallas
       </label>
     </div>
-  </div>
+  </details>
 
   <!-- Botón Reset - Estilo más elegante -->
   <button 
     (click)="resetFilters()" 
-    class="w-full py-2 text-xs tracking-wider text-gray-700 border border-gray-300 rounded-sm hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200"
+    class="w-full py-2 text-xs tracking-wider text-gray-700 border border-black rounded-none hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200"
   >
     Restablecer filtros
   </button>

@@ -1,50 +1,24 @@
 <!-- ✅ Loader de Bienvenida (solo primera vez) -->
-<ngx-ui-loader
-  *ngIf="firstTime"
-  [bgsOpacity]="0.5"
-  [bgsColor]="'#ebe3db'"
-  [bgsPosition]="'bottom-right'"
-  [bgsSize]="20"
-  [bgsType]="'ball-spin-clockwise'"
-  blur="10"
-  [fgsColor]="'#FF69B4'"  
-  [fgsPosition]="'center-center'"
-  [fgsSize]="60"
-  [fgsType]="'ball-spin-clockwise'"
-  [gap]="24"
-  [logoPosition]="'center-center'"
-  [logoSize]="120"
+<ngx-ui-loader *ngIf="firstTime" [bgsOpacity]="0.5" [bgsColor]="'#000000'" [bgsPosition]="'bottom-right'" [bgsSize]="20"
+  [bgsType]="'ball-spin-clockwise'" blur="10" [fgsColor]="'#FFFFFF'" [fgsPosition]="'center-center'" [fgsSize]="60"
+  [fgsType]="'ball-spin-clockwise'" [gap]="24" [logoPosition]="'center-center'" [logoSize]="120"
   logoUrl="https://res.cloudinary.com/dvvhnrvav/image/upload/v1730395938/images-AR/wyicw2mh3xxocscx0diz.png"
-  masterLoaderId="'master'"
-  [overlayBorderRadius]="'0'"
-  [overlayColor]="'rgba(0, 0, 0, 0)'" 
-  [pbColor]="'#FFA500'" 
-  [pbDirection]="'ltr'"
-  [pbThickness]="3"
-  [hasProgressBar]="true"
-  [text]="'Atelier'"
-  [textColor]="'#333b43'"
+  masterLoaderId="'master'" [overlayBorderRadius]="'0'" [overlayColor]="'rgba(0, 0, 0, 0)'" [pbColor]="'#FFFFFF'"
+  [pbDirection]="'ltr'" [pbThickness]="3" [hasProgressBar]="true" [text]="'Atelier'" [textColor]="'#000000'"
   [textPosition]="'center-center'">
 </ngx-ui-loader>
 
 <!-- ✅ Loader de Carga (procesos como búsqueda) -->
-<ngx-ui-loader
-  *ngIf="isLoading"
-  [fgsColor]="'#FF69B4'"
-  [fgsSize]="40"
-  [overlayColor]="'rgba(0, 0, 0, 0)'" 
-  blur="10"
-  [pbColor]="'#FFA500'"
-  [hasProgressBar]="true"
-  [textColor]="'#FF69B4'" 
-  [textPosition]="'center-center'">
+<!-- [fgsType]="'none'" -->
+<ngx-ui-loader *ngIf="isLoading" [overlayColor]="'rgba(0, 0, 0, 0)'" blur="0" [pbColor]="'#FFFFFF'"
+  [hasProgressBar]="true" [textColor]="'#000000'" [textPosition]="'center-center'">
 </ngx-ui-loader>
 
 
-<router-outlet/>
+<router-outlet />
 <!-- Modal de bienvenida -->
-<div class="modal-overlay" *ngIf="showWelcomeMessage">
-  <!-- <div class="modal">
+<!-- <div class="modal-overlay" *ngIf="showWelcomeMessage"> -->
+<!-- <div class="modal">
     <h2>Bienvenido</h2>
     <p>¡Bienvenido! Parece que es tu primera vez aquí.</p>
     <p>¿Quieres sincronizar una cuenta para recuperar tu información?</p>
@@ -60,5 +34,3 @@
   (onMessageInput)="onMessageInput($event)"
   [serverResponse]="responses[responseIndex]">
 </ng-chatbot-angular> -->
-
-

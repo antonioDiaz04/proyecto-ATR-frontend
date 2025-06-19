@@ -1,4 +1,4 @@
-<div class="relative w-full mt-20 h-[55vh] bg-[#faf9f7] overflow-hidden">
+<div class="relative w-full mt-32 h-[65vh] bg-[#faf9f7] overflow-hidden">
   <!-- Fondo dividido en dos colores -->
   <div class="absolute mr-20 inset-0 z-0 flex">
     <!-- Mitad izquierda con color actual -->
@@ -7,14 +7,15 @@
     <!-- <div class="w-1/2 h-full bg-white"></div> -->
   </div>
   <!-- Fondo de imagen ajustado con nuevo elemento decorativo -->
-  <div class="absolute inset-0 z-0 flex justify-end">
-    <div class="h-full w-[40%] relative">
+  <div class="absolute inset-0 z-0 flex justify-end items-center">
+    <!-- <div class="h-full w-[40%] relative"> -->
+    <div class="relative h-full w-[40%] flex items-center justify-center max-h-[50vh]">
       <img
         src="https://doce38boutique.com/wp-content/uploads/2023/02/VL038-2-Vestido-largo-circular-bordado-off-shoulder-768x1152.jpg"
-        class="h-full w-full object-contain object-left" style="object-position: right center; max-height: 80vh;"
+        class="h-full w-full object-contain object-left" style="object-position: right center; max-height: 50vh;"
         alt="Vestido de lujo">
       <div class="absolute inset-0 bg-gradient-to-r from-[#faf9f7] via-[#fbfaf8]/100 to-transparent"></div>
-
+<!-- https://i.pinimg.com/736x/a5/ed/d0/a5edd09104736caf5f0902a0104ce6fa.jpg -->
       <!-- Nuevo elemento decorativo dorado -->
       <div
         class="absolute left-0 top-1/2 -translate-y-1/2 w-32 h-32 rounded-full border-2 border-[#d4af37]/30 transform -translate-x-1/2 z-0">
@@ -48,14 +49,15 @@
 
         <!-- Título principal con efecto de superposición -->
         <div class="relative">
-          <h1 class="text-8xl md:text-8xl lg:text-7xl leading-[0.9] mb-6">
-            <span class="block font-romantic tracking-tighter text-[#5c4a3a]">Venta y Renta</span>
-            <span class="block font-romantic tracking-tight text-[#5c4a3a]">de Vestidos</span>
-          </h1>
+            <p class="text-9xl md:text-9xl lg:text-9xl leading-[0.9] mb-6">
+            <span class="block hover:text-[#d4af37] transition-all duration-700 font-romantic tracking-tighter text-[#5c4a3a]"> Renta y Venta</span>
+            <span class="block hover:text-[#d4af37]  transition-all duration-700 font-romantic tracking-tight text-[#5c4a3a]">de Vestidos</span>
+            </p>
+          
 
           <!-- Texto ATELIER con la fuente exacta -->
           <!-- ATELIER con tipografía de lujo -->
-          <div class="absolute -bottom-4 ml-96 text-8xl z-0 drop-shadow-lg overflow-hidden">
+          <div class="absolute -bottom-4 ml-96 text-9xl z-0 drop-shadow-lg overflow-hidden">
             <span
               class="font-lujo bg-clip-text text-transparent bg-gradient-to-r from-[#d4af37]/40 via-[#d4af37]/90 to-[#d4af37]/40 bg-[length:200%_100%] hover:bg-[position:100%_center] transition-all duration-700">
               Atelier
@@ -99,46 +101,7 @@
       </div>
     </div>
 
-    <!-- Tarjeta de producto mejorada con rating -->
-    <div
-      class="absolute right-6 lg:right-20 top-1/2 -translate-y-1/2 bg-white p-5 w-56 shadow-md z-20 border border-white/10">
-      <div class="flex justify-between items-start mb-1">
-        <div>
-          <h3 class="font-serif text-lg">"Valentina"</h3>
-          <p class="font-sans text-[0.65rem] text-[#777] uppercase tracking-wider">Colección Primavera</p>
-        </div>
-        <span class="font-sans text-[0.65rem] bg-[#d4af37] text-white px-1.5 py-0.5">NUEVO</span>
-      </div>
 
-      <!-- Nuevo rating con estrellas -->
-      <div class="flex mb-2">
-        <svg class="w-3 h-3 text-[#d4af37] fill-current" viewBox="0 0 24 24">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-        <svg class="w-3 h-3 text-[#d4af37] fill-current" viewBox="0 0 24 24">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-        <svg class="w-3 h-3 text-[#d4af37] fill-current" viewBox="0 0 24 24">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-        <svg class="w-3 h-3 text-[#d4af37] fill-current" viewBox="0 0 24 24">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-        <svg class="w-3 h-3 text-[#d4af37] fill-current" viewBox="0 0 24 24">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-        <span class="font-sans text-[0.65rem] text-[#777] ml-1">(12)</span>
-      </div>
-
-      <p class="font-serif text-xl text-[#222] mb-3">$4,850</p>
-      <a href="#"
-        class="font-sans text-[0.65rem] uppercase tracking-wider text-[#555] hover:text-[#d4af37] transition-colors flex items-center">
-        Ver detalles
-        <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-      </a>
-    </div>
 
 
     <!-- Navegación inferior -->
@@ -158,7 +121,7 @@
         </a>
       </div>
 
-      <a href="#" class="text-sm font-sans text-[#555] hover:text-[#d4af37] transition-colors flex items-center">
+      <a routerLink="/search" class="text-sm font-sans text-[#555] hover:text-[#d4af37] transition-colors flex items-center">
         <span>Ver todos los vestidos</span>
         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -224,13 +187,21 @@
   @import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
   /* Reemplaza con tu kit de Adobe Fonts */
 
-  
+
   @import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+
+  /* Fuente para "Venta y Renta de Vestidos" */
+  @font-face {
+    font-family: 'Have You Eaten';
+    src: url('/fonts/MatildaDestinee-Regular.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+  }
   
-  /* Fuente cursiva para "Venta y Renta de Vestidos" */
   .font-romantic {
-    font-family: 'Parisienne', cursive;
-    /* font-weight: 400; */
+    font-family: 'Have You Eaten', cursive;
   }
   
   /* Fuente para "ATELIER" (similar a CREME SHOPISTICATED DOUGH) */
@@ -238,7 +209,8 @@
     font-family: 'Cormorant Garamond', serif;
     /* font-weight: 700; */
     /* font-style: italic; */
-    letter-spacing: 0.5px; /* Para dar ese aire sofisticado */
+    letter-spacing: 0.5px;
+    /* Para dar ese aire sofisticado */
   }
 
   .font-sans {

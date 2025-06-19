@@ -1,42 +1,140 @@
 <p-toast></p-toast>
 
-<section>
-  <h2>Lista de Productos</h2>
+<!-- Modal de confirmación -->
+<div class="ui basic test modal">
+  <div class="ui icon header">
+    <i class="trash icon"></i>
+    Confirmar Eliminación
+  </div>
+  <div class="content">
+    <p>¿Estás seguro de que deseas eliminar este accesorio?</p>
+  </div>
+  <div class="actions">
+    <div class="ui red cancel inverted button">
+      <i class="remove icon"></i>
+      Cancelar
+    </div>
+    <div class="ui green ok inverted button" (click)="confirmarEliminar()">
+      <i class="checkmark icon"></i>
+      Confirmar
+    </div>
+  </div>
+</div>
 
-  <button type="button" (click)="open()">Agregar Accesorio</button>
+<section class="p-4 min-h-screen bg-white rounded-lg shadow">
+  <!-- Header con título y botón de acción -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-light text-gray-800 border-b-2 border-red-500 pb-1 inline-block">
+      Lista de Accesorios
+    </h1>
+    <button 
+      class="flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors shadow-sm"
+      (click)="open()"
+    >
+      <i class="pi pi-plus mr-2"></i>
+      Agregar Accesorio
+    </button>
+  </div>
+
+  <!-- Componente de formulario -->
   <app-add-accesorio [displayModal]="displayModal"></app-add-accesorio>
 
-  <p-table #dt [value]="allProducts" selectionMode="single" dataKey="_id" [rows]="rows" [totalRecords]="totalRecords"
-    [first]="first" (onPageChange)="onPageChange($event)">
-    <ng-template pTemplate="caption">
-      <span class="p-input-icon-left">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input pInputText style="width: 150%; padding-left: 20%;" type="text" (input)="onGlobalFilter($event)" placeholder="Buscar producto..."
-          [(ngModel)]="filterText" />
-      </span>
-    </ng-template>
+  <!-- Etiquetas de resumen -->
+  <div class="flex flex-wrap gap-3 mb-6">
+    <span class="flex items-center px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700">
+      <i class="pi pi-tag mr-2"></i>
+      Total: {{totalRecords}}
+    </span>
+    <span class="flex items-center px-3 py-1.5 bg-green-50 rounded-full text-sm text-green-700">
+      <i class="pi pi-check-circle mr-2"></i>
+      Disponibles: {{countAvailableProducts()}}
+    </span>
+    <span class="flex items-center px-3 py-1.5 bg-red-50 rounded-full text-sm text-red-700">
+      <i class="pi pi-times-circle mr-2"></i>
+      No disponibles: {{totalRecords - countAvailableProducts()}}
+    </span>
+  </div>
 
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Imagen</th>
-        <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
-        <th>Disponible</th>
-        <th>Acciones</th>
-      </tr>
-    </ng-template>
+  <!-- Búsqueda -->
+  <div class="mb-6">
+    <div class="relative">
+      <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      <input
+        type="text"
+        class="pl-10 pr-4 py-2 w-full sm:w-auto border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-300"
+        placeholder="Buscar accesorio..."
+        [(ngModel)]="filterText"
+        (input)="onGlobalFilter($event)"
+      />
+    </div>
+  </div>
 
-    <ng-template pTemplate="body" let-product>
-      <tr>
-        <td>
-          <img [src]="product.imagenPrincipal" alt="Imagen del producto" class="product-image" />
-        </td>
-        <td>{{ product.nombre }}</td>
-        <td>{{ product.estado.disponible ? 'Sí' : 'No' }}</td>
-        <td>
-          <button (click)="editProduct(product)" class="custom-btn custom-btn-primary">Editar</button>
-          <button (click)="deleteProduct(product._id)" class="custom-btn custom-btn-danger">Eliminar</button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <!-- Tabla de productos -->
+  <div class="bg-white rounded-lg overflow-hidden">
+    <p-table 
+      #dt
+      [value]="allProducts"
+      selectionMode="single"
+      dataKey="_id"
+      [paginator]="true"
+      [rows]="rows"
+      [totalRecords]="totalRecords"
+      [first]="first"
+      (onPageChange)="onPageChange($event)"
+      styleClass="p-datatable-striped p-datatable-gridlines"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-left">Imagen</th>
+          <th class="text-left" pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+          <th class="text-left">Disponible</th>
+          <th class="text-left">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-product>
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td>
+            <img 
+              [src]="product.imagenPrincipal || 'assets/default-accessory.jpg'" 
+              alt="Imagen del producto" 
+              class="w-12 h-12 object-cover rounded"
+            />
+          </td>
+          <td class="font-medium text-gray-900">{{ product.nombre }}</td>
+          <td>
+            <span 
+              [class]="'px-2 py-1 rounded text-xs font-medium ' + 
+              (product.estado.disponible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')"
+            >
+              {{ product.estado.disponible ? 'Disponible' : 'No disponible' }}
+            </span>
+          </td>
+          <td class="flex space-x-2">
+            <button 
+              (click)="editProduct(product)" 
+              class="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+            >
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button 
+              (click)="deleteProduct(product._id)" 
+              class="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
+            >
+              <i class="pi pi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <button 
+          pButton type="button" 
+          icon="pi pi-refresh" 
+          (click)="getProducts()" 
+          class="p-button-text text-gray-600 hover:text-red-600"
+        ></button>
+      </ng-template>
+    </p-table>
+  </div>
 </section>

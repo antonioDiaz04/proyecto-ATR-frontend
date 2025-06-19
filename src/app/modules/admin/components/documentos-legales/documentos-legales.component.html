@@ -1,51 +1,122 @@
-<div class="container mt-4">
-  <h2>Gestión de Documentos Legales</h2>
-  <div class="row">
-    <!-- Tarjeta para Política de Privacidad -->
-    <div class="col-md-4 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Política de Privacidad</h5>
-          <p class="card-text">Maneja la política de privacidad de la empresa.</p>
-          <div class="btns">
-            
-            <a [routerLink]="['/admin/configuracion/registo-politica']" class="btn-r">registrar </a>
-          <a [routerLink]="['/admin/configuracion/listado-politica']" class="btn">Gestionar</a>
-          </div>
+<div class="documentos-legales-container bg-gray-50 p-6 min-h-screen">
+  <!-- Encabezado -->
+  <div class="border-b border-gray-200 pb-4 mb-6">
+    <h1 class="text-2xl font-light text-gray-800 inline-block border-b-2 border-red-500 pb-1">
+      Gestión de Documentos Legales
+    </h1>
+    <p class="text-sm text-gray-500 mt-1">Administración centralizada de documentos regulatorios</p>
+  </div>
+
+  <!-- Panel de Documentos -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Política de Privacidad -->
+    <div class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+      <div class="p-5 border-b border-gray-200 bg-gradient-to-r from-red-50 to-white">
+        <div class="flex items-center">
+          <i class="pi pi-shield text-red-500 text-2xl mr-3"></i>
+          <h3 class="text-lg font-medium text-gray-800">Política de Privacidad</h3>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">Configura los términos de protección de datos personales</p>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-xs font-medium text-gray-500">Versión actual: v2.1.3</span>
+          <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Activo</span>
+        </div>
+        <div class="flex space-x-2">
+          <a [routerLink]="['/admin/configuracion/registo-politica']" 
+             class="flex-1 text-center px-3 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+            <i class="pi pi-plus mr-1"></i> Registrar
+          </a>
+          <a [routerLink]="['/admin/configuracion/listado-politica']" 
+             class="flex-1 text-center px-3 py-2 border border-gray-300 bg-white text-gray-700 text-sm rounded hover:bg-gray-50 transition-colors">
+            <i class="pi pi-cog mr-1"></i> Gestionar
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- Tarjeta para Términos y Condiciones -->
-    <div class="col-md-4 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Términos y Condiciones</h5>
-          <p class="card-text">Administra los términos y condiciones de uso.</p>
-          <div class="btns">
-            
-            <a [routerLink]="['/admin/configuracion/terminos-condiciones']" class="btn-r">registrar</a>
-            <a [routerLink]="['/admin/configuracion/listado-terminos-condiciones']" class="btn">Gestionar</a>
-          </div>
+    <!-- Términos y Condiciones -->
+    <div class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+      <div class="p-5 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
+        <div class="flex items-center">
+          <i class="pi pi-file-text text-blue-500 text-2xl mr-3"></i>
+          <h3 class="text-lg font-medium text-gray-800">Términos y Condiciones</h3>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">Administra los acuerdos de uso del servicio</p>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-xs font-medium text-gray-500">Versión actual: v1.4.2</span>
+          <span class="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded-full">Actualización pendiente</span>
+        </div>
+        <div class="flex space-x-2">
+          <a [routerLink]="['/admin/configuracion/terminos-condiciones']" 
+             class="flex-1 text-center px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+            <i class="pi pi-plus mr-1"></i> Registrar
+          </a>
+          <a [routerLink]="['/admin/configuracion/listado-terminos-condiciones']" 
+             class="flex-1 text-center px-3 py-2 border border-gray-300 bg-white text-gray-700 text-sm rounded hover:bg-gray-50 transition-colors">
+            <i class="pi pi-cog mr-1"></i> Gestionar
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- Tarjeta para Deslinde Legal -->
-    <div class="col-md-4 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Deslinde Legal</h5>
-          <p class="card-text">Revisa y actualiza el deslinde legal.</p>
-          <div class="btns">
-            
-            <a [routerLink]="['/admin/configuracion/deslinde-legal']" class="btn-r">registrar</a>
-          <a [routerLink]="['/admin/configuracion/listado-legal']" class="btn">Gestionar</a>
-          </div>
+    <!-- Deslinde Legal -->
+    <div class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+      <div class="p-5 border-b border-gray-200 bg-gradient-to-r from-green-50 to-white">
+        <div class="flex items-center">
+          <i class="pi pi-briefcase text-green-500 text-2xl mr-3"></i>
+          <h3 class="text-lg font-medium text-gray-800">Deslinde Legal</h3>
+        </div>
+        <p class="text-sm text-gray-600 mt-2">Gestiona las responsabilidades y limitaciones legales</p>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-xs font-medium text-gray-500">Versión actual: v3.0.1</span>
+          <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Vigente</span>
+        </div>
+        <div class="flex space-x-2">
+          <a [routerLink]="['/admin/configuracion/deslinde-legal']" 
+             class="flex-1 text-center px-3 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+            <i class="pi pi-plus mr-1"></i> Registrar
+          </a>
+          <a [routerLink]="['/admin/configuracion/listado-legal']" 
+             class="flex-1 text-center px-3 py-2 border border-gray-300 bg-white text-gray-700 text-sm rounded hover:bg-gray-50 transition-colors">
+            <i class="pi pi-cog mr-1"></i> Gestionar
+          </a>
         </div>
       </div>
     </div>
   </div>
-  
+
+  <!-- Sección de Historial -->
+  <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+    <div class="p-5 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-800 flex items-center">
+        <i class="pi pi-history text-red-500 mr-2"></i>
+        Historial Reciente de Cambios
+      </h2>
+    </div>
+    <div class="divide-y divide-gray-200">
+      <div class="p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center">
+          <div class="bg-red-100 p-2 rounded-full mr-3">
+            <i class="pi pi-file-edit text-red-600"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-sm font-medium">Actualización de Política de Privacidad</h3>
+            <p class="text-xs text-gray-500">15/06/2023 - Versión 2.1.3</p>
+          </div>
+          <a [routerLink]="['/admin/configuracion/historial-listado-politica/1']" class="text-xs text-blue-600 hover:text-blue-800">
+            Ver detalles <i class="pi pi-arrow-right ml-1"></i>
+          </a>
+        </div>
+      </div>
+      <!-- Más elementos de historial... -->
+    </div>
+  </div>
+
   <router-outlet></router-outlet>
 </div>

@@ -1,9 +1,22 @@
-<div class="app-container">
-  <!-- Header fijo en la parte superior -->
-  <app-header class="fixed top-0 left-0 right-0 z-50 shadow-sm"></app-header>
-
-  <!-- Contenido principal con espacio para el header -->
-  <main class="main-content mt-2 min-h-screen bg-white">
+<header class="flex fixed top-0 left-0 right-0 justify-center items-center p-2 bg-white border-b border-[#f0e6eb] z-10">
+  <button type="button"  (click)="atras()" class="flex items-center space-x-1 bg-transparent text-black">
+    <i class="pi pi-chevron-left"></i>
+    <span class="text-lg">Volver</span>
+  </button>
+</header>
+<main
+  class="min-h-screen bg-[#faf9f7]"
+>
+  <div
+    class="absolute inset-0 z-0"
+    style="
+      background-image: url('https://i.pinimg.com/736x/60/e2/c4/60e2c413caf11cc88edf6f823c1822e7.jpg');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.6) blur(2px) sepia(0.3);
+    "
+  ></div>
+  <div class="relative z-1">
     <router-outlet class="block px-4 md:px-8 py-6 max-w-7xl mx-auto"></router-outlet>
-  </main>
-</div>
+  </div>
+</main>

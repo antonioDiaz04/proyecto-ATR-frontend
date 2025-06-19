@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="flex flex-col lg:flex-row gap-8">
     <!-- Formulario de Renta -->
@@ -55,8 +56,30 @@
           Generar Contrato
         </button>
       </form>
-    </div>
+=======
+<div class="relative mt-28 min-h-screen overflow-hidden">
+  <!-- Fondo dividido (arriba transparente, abajo negro) -->
+  <!-- <div class="absolute inset-0 z-0">
+    <div class="absolute top-0 left-0 w-full h-1/2 bg-transparent"></div>
+    <div class="absolute bottom-0 left-0 w-full h-1/2 bg-black"></div>
+  </div> -->
+  <!-- Fondo dividido con efecto degradado -->
+  <div class="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-gray-100"></div>
 
+  <!-- Contenedor principal -->
+  <div class="container mx-auto px-4 pt-20 relative z-10">
+    <div class="ml-20">
+      <button (click)="volver()"
+        class="group flex items-center gap-2 text-[#9c8e7a] hover:text-[#2a2723] transition-colors duration-300">
+        <i class="pi pi-arrow-left text-lg"></i>
+        <span class="font-serif tracking-wider">REGRESAR</span>
+        <div class="w-0 h-px bg-[#d4c4a8] group-hover:w-4 transition-all duration-500"></div>
+      </button>
+>>>>>>> origin/main
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
+
+<<<<<<< HEAD
     <!-- Detalles del Producto -->
     <div class="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-6">
       <div *ngIf="!isLoading && Detalles" class="space-y-6">
@@ -94,6 +117,115 @@
             <div class="flex justify-between items-center pt-2">
               <p class="text-sm font-medium text-gray-500">Total estimado:</p>
               <p class="text-lg font-bold text-indigo-600">$ {{ calcularTotalRenta() | number }}</p>
+=======
+      <!-- Formulario de solicitud -->
+      <div
+        class="bg-white backdrop-blur-sm rounded-none shadow-2xl p-8 border border-gray-200 transform transition-all hover:shadow-xl">
+        <h2 class="text-3xl font-bold mb-6 text-gray-800 font-serif">SOLICITUD DE SERVICIO</h2>
+        <form #solicitudForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <div class="space-y-2">
+            <label for="arrendador" class="block font-medium text-gray-700 font-serif">SOLICITANTE</label>
+            <input type="text" [(ngModel)]="usuarioId" id="arrendador" name="arrendador" placeholder="Nombre completo"
+              class="w-full px-4 py-3 border border-gray-300 rounded-none focus:ring-2 focus:ring-slate-600 focus:border-gray-500 transition">
+          </div>
+
+          <div class="space-y-2">
+            <label for="arrendatario" class="block font-medium text-gray-700 font-serif">BENEFICIARIO</label>
+            <input type="text" [(ngModel)]="arrendatario" id="arrendatario" name="arrendatario"
+              placeholder="Nombre del beneficiario"
+              class="w-full px-4 py-3 border border-gray-300 rounded-none focus:ring-2 focus:ring-slate-600 focus:border-gray-500 transition">
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label for="fechaInicio" class="block font-medium text-gray-700 font-serif">FECHA INICIO</label>
+              <input type="date" [(ngModel)]="fechaInicio" id="fechaInicio" name="fechaInicio"
+                class="w-full px-4 py-3 border border-gray-300 rounded-none focus:ring-2 focus:ring-slate-600 focus:border-gray-500 transition">
+            </div>
+
+            <div class="space-y-2">
+              <label for="fechaFin" class="block font-medium text-gray-700 font-serif">FECHA FINAL</label>
+              <input type="date" [(ngModel)]="fechaFin" id="fechaFin" name="fechaFin"
+                class="w-full px-4 py-3 border border-gray-300 rounded-none focus:ring-2 focus:ring-slate-600 focus:border-gray-500 transition">
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="direccionInmueble" class="block font-medium text-gray-700 font-serif">UBICACIÓN</label>
+            <input type="text" [(ngModel)]="direccionInmueble" id="direccionInmueble" name="direccionInmueble"
+              placeholder="Dirección del servicio"
+              class="w-full px-4 py-3 border border-gray-300 rounded-none focus:ring-2 focus:ring-slate-600 focus:border-gray-500 transition">
+          </div>
+
+          <div class="space-y-2">
+            <label for="montoRenta" class="block font-medium text-gray-700 font-serif">VALOR ESTIMADO</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+              <input type="number" [(ngModel)]="montoRenta" id="montoRenta" name="montoRenta"
+                placeholder="Valor estimado"
+                class="w-full pl-8 px-4 py-3 border border-gray-300 rounded-none focus:ring-2 focus:ring-slate-600 focus:border-gray-500 transition">
+            </div>
+          </div>
+
+          <button [disabled]="!solicitudForm.valid" type="submit"
+            class="w-full bg-black text-white font-medium py-3 px-6 rounded-none hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 font-serif tracking-wider">
+            ENVIAR SOLICITUD
+          </button>
+        </form>
+      </div>
+
+      <!-- Detalles del servicio -->
+      <div
+        class="bg-white text-black rounded-none shadow-2xl p-8 border border-gray-700 transform transition-all hover:shadow-xl"
+        *ngIf="!isLoading && Detalles">
+        <h2 class="text-3xl font-bold mb-6 font-serif">DETALLES DEL SERVICIO</h2>
+
+        <div class="flex flex-col md:flex-row gap-6 mb-6">
+          <div class="md:w-1/2">
+            <img [src]="Detalles.imagenes[0]" alt="{{ Detalles.nombre }}"
+              class="w-full h-64 object-cover rounded-none border border-gray-600">
+          </div>
+
+          <div class="md:w-1/2 space-y-4">
+            <h3 class="text-xl font-medium font-serif">{{ Detalles.nombre }}</h3>
+
+            <div class="space-y-3">
+              <div class="flex justify-between border-b border-gray-700 pb-2">
+                <span class="text-gray-600">Tarifa base:</span>
+                <span class="font-medium">${{ Detalles.precio }}</span>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-700 pb-2">
+                <span class="text-gray-600">Duración:</span>
+                <span class="font-medium">10 días</span>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-700 pb-2">
+                <span class="text-gray-600">Disponibilidad:</span>
+                <span class="font-medium">Confirmada</span>
+              </div>
+
+              <div class="flex justify-between pt-2">
+                <span class="text-lg font-medium">Total provisional:</span>
+                <span class="text-lg font-bold">${{ Detalles.precio * 10 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div #paypal class="min-h-[45px] w-full mt-2"></div>
+
+        <div class="space-y-4">
+          <h3 class="text-xl font-medium font-serif">INFORMACIÓN RELEVANTE</h3>
+          <div class="space-y-2">
+            <div class="p-4 border border-gray-700 rounded-none hover:bg-gray-100 cursor-pointer transition">
+              <p class="font-medium">¿Cómo modificar los datos de la reserva?</p>
+            </div>
+            <div class="p-4 border border-gray-700 rounded-none hover:bg-gray-100 cursor-pointer transition">
+              <p class="font-medium">¿Es posible extender el servicio?</p>
+            </div>
+            <div class="p-4 border border-gray-700 rounded-none hover:bg-gray-100 cursor-pointer transition">
+              <p class="font-medium">Términos y condiciones del servicio</p>
+>>>>>>> origin/main
             </div>
           </div>
         </div>

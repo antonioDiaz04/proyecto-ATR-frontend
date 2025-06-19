@@ -1,109 +1,106 @@
-<div class="min-h-screen  mt-32">
-  <!-- Modern Header -->
+<div class="min-h-screen mt-40 md:mt-40 px-4 sm:px-6 lg:px-8">
+  
+  <!-- Header -->
   <div class="max-w-7xl mx-auto">
-    <div class="flex items-center justify-between mb-10">
-      <h1 class="text-3xl font-light tracking-tight text-[#3d2e35]">Tu Selección</h1>
-      <button (click)="volver()" class="text-[#6c4d5a] hover:text-[#3d2e35] transition-colors flex items-center gap-2 group">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 md:mb-10">
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-[#3d2e35]">Tu Selección</h1>
+      <button (click)="volver()" class="text-[#6c4d5a] hover:text-[#3d2e35] transition-colors flex items-center gap-2 group text-sm sm:text-base">
         <i class="pi pi-arrow-left transition-transform group-hover:-translate-x-1"></i>
         <span class="hidden sm:inline font-light">Volver a la colección</span>
       </button>
     </div>
 
-    <!-- Luxury Navigation Tabs -->
-    <div class="border-b border-[#e8e0e5] mb-10">
-      <nav class="flex space-x-8">
+    <!-- Tabs -->
+    <div class="border-b border-[#e8e0e5] mb-4 md:mb-6">
+      <nav class="flex flex-wrap gap-2 sm:gap-4 md:gap-8">
         <button 
           [class.text-[#3d2e35]]="tipoCompra === 'renta'"
           [class.border-[#3d2e35]]="tipoCompra === 'renta'"
           [class.text-[#a38f9b]]="tipoCompra !== 'renta'"
           [class.border-transparent]="tipoCompra !== 'renta'"
-          class="py-4 px-1 border-b-2 font-light text-sm tracking-wide hover:text-[#6c4d5a] transition-all"
+          class="py-2 px-1 border-b-2 font-light text-xs sm:text-sm tracking-wide hover:text-[#6c4d5a] transition-all"
           (click)="setTipoCompra('renta')">
-          <i class="pi pi-calendar mr-2"></i> Para Rentar
+          <i class="pi pi-calendar mr-1 sm:mr-2"></i> Para Rentar
         </button>
         <button 
           [class.text-[#3d2e35]]="tipoCompra === 'venta'"
           [class.border-[#3d2e35]]="tipoCompra === 'venta'"
           [class.text-[#a38f9b]]="tipoCompra !== 'venta'"
           [class.border-transparent]="tipoCompra !== 'venta'"
-          class="py-4 px-1 border-b-2 font-light text-sm tracking-wide hover:text-[#6c4d5a] transition-all"
+          class="py-2 px-1 border-b-2 font-light text-xs sm:text-sm tracking-wide hover:text-[#6c4d5a] transition-all"
           (click)="setTipoCompra('venta')">
-          <i class="pi pi-shopping-bag mr-2"></i> Para Comprar
+          <i class="pi pi-shopping-bag mr-1 sm:mr-2"></i> Para Comprar
         </button>
       </nav>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
       <!-- Product List -->
-      <div class="lg:col-span-2 space-y-6">
+      <div class="lg:col-span-2 space-y-4 sm:space-y-6">
         <!-- Empty State -->
         <div *ngIf="(tipoCompra === 'renta' && productosRenta.length === 0) || (tipoCompra === 'venta' && productosVenta.length === 0)" 
-             class="bg-white rounded-xl shadow-xs p-12 text-center border border-[#f0e6eb]">
-          <svg class="mx-auto h-16 w-16 text-[#d4a8b4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+             class="bg-white shadow-xs p-6 md:p-8 text-center border border-[#f0e6eb]">
+          <svg class="mx-auto h-12 sm:h-14 md:h-16 w-12 sm:w-14 md:w-16 text-[#d4a8b4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
-          <h3 class="mt-6 text-xl font-light text-[#3d2e35]">Carrito Vacío</h3>
-          <p class="mt-2 text-[#a38f9b]">No has agregado vestidos para {{tipoCompra === 'renta' ? 'rentar' : 'comprar'}}.</p>
-          <div class="mt-8">
-            <a routerLink="/search" class="inline-flex items-center px-6 py-3 border border-transparent rounded-full text-sm font-light tracking-wide text-white bg-[#3d2e35] hover:bg-[#6c4d5a] transition-all">
+          <h3 class="mt-3 text-base sm:text-lg md:text-xl font-light text-[#3d2e35]">Carrito Vacío</h3>
+          <p class="mt-1 md:mt-2 text-[#a38f9b] text-xs sm:text-sm">No has agregado vestidos para {{tipoCompra === 'renta' ? 'rentar' : 'comprar'}}.</p>
+          <div class="mt-4 sm:mt-6">
+            <a routerLink="/search" class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-xs sm:text-sm font-light tracking-wide text-white bg-[#3d2e35] hover:bg-[#6c4d5a] transition-all">
               Explorar Colección
-              <i class="pi pi-arrow-right ml-2"></i>
+              <i class="pi pi-arrow-right ml-1 sm:ml-2"></i>
             </a>
           </div>
         </div>
 
-        <!-- Cart Items -->
+        <!-- Items -->
         <div *ngFor="let item of (tipoCompra === 'renta' ? productosRenta : productosVenta)" 
-             class="bg-white rounded-xl shadow-xs overflow-hidden hover:shadow-sm transition-all border border-[#f0e6eb]">
+             class="bg-white shadow-xs border border-[#f0e6eb] hover:shadow-sm transition-all overflow-hidden">
           <div class="flex flex-col sm:flex-row">
-            <!-- Product Image -->
-            <div class="sm:w-1/3 relative">
-              <img [src]="item.imagenes" [alt]="item.nombre" class="w-full h-60 object-cover">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+            <!-- Image -->
+            <div class="sm:w-1/3">
+              <img [src]="item.imagenes" [alt]="item.nombre" class="w-full h-48 sm:h-52 md:h-60 object-cover">
             </div>
-            
-            <!-- Product Details -->
-            <div class="p-6 sm:w-2/3 flex flex-col justify-between">
+            <!-- Details -->
+            <div class="p-4 sm:p-6 sm:w-2/3 flex flex-col justify-between">
               <div>
-                <h3 class="text-xl font-light text-[#3d2e35] mb-2">{{ item.nombre }}</h3>
-                <p class="text-[#a38f9b] text-xs tracking-wider mb-3 uppercase">Disponible para {{tipoCompra === 'renta' ? 'renta' : 'venta'}}</p>
-                <p class="text-[#3d2e35] text-lg font-light">${{ item.precio | number }}</p>
+                <h3 class="text-base sm:text-lg md:text-xl font-light text-[#3d2e35] mb-1 sm:mb-2">{{ item.nombre }}</h3>
+                <p class="text-[#a38f9b] text-xs tracking-wider mb-2 sm:mb-3 uppercase">Disponible para {{tipoCompra === 'renta' ? 'renta' : 'venta'}}</p>
+                <p class="text-[#3d2e35] text-sm sm:text-base md:text-lg font-light">${{ item.precio | number }}</p>
               </div>
-              
-              <!-- Action Buttons -->
-              <div class="mt-6 flex space-x-3">
+              <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
                 <button 
                   (click)="deleteDressItem(item.id)"
-                  class="flex-1 flex items-center justify-center px-4 py-2 border border-[#e8e0e5] rounded-full text-sm font-light tracking-wide text-[#6c4d5a] hover:bg-[#faf7f9] transition-all">
-                  <i class="pi pi-trash mr-2"></i> Eliminar
+                  class="flex-1 flex items-center justify-center px-3 sm:px-4 py-1 sm:py-2 border border-[#e8e0e5] text-xs sm:text-sm font-light text-[#6c4d5a] hover:bg-[#faf7f9] transition-all">
+                  <i class="pi pi-trash mr-1 sm:mr-2"></i> Eliminar del carrito
                 </button>
-                <button 
+                <!-- <button 
                   (click)="tipoCompra === 'renta' ? continuarCompra(item, 'renta') : mostrarResumen(item)"
-                  class="flex-1 flex items-center justify-center px-4 py-2 border border-transparent rounded-full text-sm font-light tracking-wide text-white bg-[#3d2e35] hover:bg-[#6c4d5a] transition-all">
-                  Continuar <i class="pi pi-arrow-right ml-2"></i>
-                </button>
+                  class="flex-1 flex items-center justify-center px-3 sm:px-4 py-1 sm:py-2 border border-transparent text-xs sm:text-sm font-light text-white bg-[#3d2e35] hover:bg-[#6c4d5a] transition-all">
+                  Continuar <i class="pi pi-arrow-right ml-1 sm:ml-2"></i>
+                </button> -->
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Order Summary -->
+      <!-- Resumen -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-xl shadow-xs p-6 sticky top-6 border border-[#f0e6eb]">
-          <h3 class="text-xl font-light text-[#3d2e35] mb-6">Resumen</h3>
-          <div class="space-y-4">
+        <div class="bg-white shadow-xs p-4 sm:p-6 border border-[#f0e6eb] sticky top-4 sm:top-6">
+          <h3 class="text-lg sm:text-xl font-light text-[#3d2e35] mb-4 sm:mb-6">Resumen</h3>
+          <div class="space-y-3 sm:space-y-4">
             <div class="flex justify-between">
-              <span class="text-[#a38f9b]">Subtotal</span>
-              <span class="font-light">${{ totalCompra | number }}</span>
+              <span class="text-[#a38f9b] text-sm sm:text-base">Subtotal</span>
+              <span class="font-light text-sm sm:text-base">${{ totalCompra | number }}</span>
             </div>
-            <div class="border-t border-[#f0e6eb] pt-4 flex justify-between">
+            <div class="border-t border-[#f0e6eb] pt-3 sm:pt-4 flex justify-between">
               <span class="text-base font-light text-[#3d2e35]">Total {{tipoCompra === 'renta' ? 'renta' : 'venta'}}</span>
               <span class="text-base font-light">${{ totalCompra | number }}</span>
             </div>
           </div>
-          <div class="mt-8">
+          <div class="mt-6 sm:mt-8">
             <app-data-compra></app-data-compra>
           </div>
         </div>
@@ -111,7 +108,7 @@
     </div>
   </div>
 
-  <!-- Elegant Modal -->
+  <!-- Modal -->
   <p-dialog 
     header="Confirmación de {{tipoCompra === 'renta' ? 'renta' : 'compra'}}" 
     [(visible)]="mostrarModal" 
@@ -120,61 +117,68 @@
     [breakpoints]="{'960px': '75vw', '640px': '90vw'}"
     [draggable]="false"
     styleClass="modern-dialog">
-    <div class="space-y-6">
-      <div class="flex items-start">
-        <div class="w-24 h-24 rounded-lg overflow-hidden border border-[#f0e6eb] mr-4">
+    <div class="space-y-4 sm:space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-start">
+        <div class="w-full sm:w-24 h-24 rounded-lg overflow-hidden border border-[#f0e6eb] mb-3 sm:mb-0 sm:mr-4">
           <img [src]="productoSeleccionado?.imagenes" [alt]="productoSeleccionado?.nombre" class="w-full h-full object-cover">
         </div>
         <div>
-          <h4 class="font-light text-[#3d2e35] text-lg">{{ productoSeleccionado?.nombre }}</h4>
+          <h4 class="font-light text-[#3d2e35] text-base sm:text-lg">{{ productoSeleccionado?.nombre }}</h4>
           <p class="text-[#a38f9b] text-xs mt-1 tracking-wider uppercase">{{tipoCompra === 'renta' ? 'Para rentar' : 'Para comprar'}}</p>
         </div>
       </div>
-      <div class="border-t border-[#f0e6eb] pt-4 space-y-3">
+      <div class="border-t border-[#f0e6eb] pt-3 sm:pt-4 space-y-2 sm:space-y-3">
         <div class="flex justify-between">
-          <span class="text-[#a38f9b]">Precio</span>
-          <span class="font-light">${{ productoSeleccionado?.precio | number }}</span>
+          <span class="text-[#a38f9b] text-sm sm:text-base">Precio</span>
+          <span class="font-light text-sm sm:text-base">${{ productoSeleccionado?.precio | number }}</span>
         </div>
-        <div class="flex justify-between pt-3">
-          <span class="text-[#3d2e35] font-light">Total</span>
-          <span class="text-[#3d2e35] font-light">${{ totalCompra | number }}</span>
+        <div class="flex justify-between pt-2 sm:pt-3">
+          <span class="text-[#3d2e35] font-light text-sm sm:text-base">Total</span>
+          <span class="text-[#3d2e35] font-light text-sm sm:text-base">${{ totalCompra | number }}</span>
         </div>
       </div>
     </div>
     <ng-template pTemplate="footer">
-      <div class="flex justify-end space-x-3">
+      <div class="flex justify-end space-x-2 sm:space-x-3">
         <button pButton pRipple 
                 label="Cancelar" 
                 icon="pi pi-times" 
-                class="p-button-text !text-[#a38f9b] !font-light !tracking-wide"
+                class="p-button-text !text-[#a38f9b] !font-light !tracking-wide text-xs sm:text-sm"
                 (click)="mostrarModal = false"></button>
         <button pButton pRipple 
                 label="Confirmar" 
                 icon="pi pi-check" 
-                class="!bg-[#3d2e35] !border-[#3d2e35] !font-light !tracking-wide"
+                class="!bg-[#3d2e35] !border-[#3d2e35] !font-light !tracking-wide text-xs sm:text-sm"
                 (click)="confirmarCompra()"></button>
       </div>
     </ng-template>
   </p-dialog>
 </div>
 
-<!-- Add this to your global styles -->
 <style>
-.modern-dialog .p-dialog-header {
-  border-bottom: 1px solid #f0e6eb;
-  padding: 1.5rem;
-}
+  .modern-dialog .p-dialog-header {
+    border-bottom: 1px solid #f0e6eb;
+    padding: 1rem 1.5rem;
+  }
 
-.modern-dialog .p-dialog-content {
-  padding: 0 1.5rem 1.5rem;
-}
+  .modern-dialog .p-dialog-content {
+    padding: 0 1rem 1.5rem;
+  }
 
-.modern-dialog .p-dialog-footer {
-  border-top: 1px solid #f0e6eb;
-  padding: 1rem 1.5rem;
-}
+  .modern-dialog .p-dialog-footer {
+    border-top: 1px solid #f0e6eb;
+    padding: 1rem;
+  }
 
-.shadow-xs {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-}
+  .shadow-xs {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  }
+
+  @media (max-width: 640px) {
+    .modern-dialog .p-dialog-header,
+    .modern-dialog .p-dialog-content,
+    .modern-dialog .p-dialog-footer {
+      padding: 0.75rem;
+    }
+  }
 </style>

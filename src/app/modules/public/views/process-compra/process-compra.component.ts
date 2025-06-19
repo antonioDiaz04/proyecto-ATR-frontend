@@ -14,11 +14,18 @@ import { HttpClient } from '@angular/common/http';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmationService, MessageService } from 'primeng/api';
 declare const paypal: any;
+<<<<<<< HEAD
+=======
+import { Location } from '@angular/common';
+>>>>>>> origin/main
 
 @Component({
   selector: 'app-process-compra',
   templateUrl: './process-compra.component.html',
+<<<<<<< HEAD
   styleUrl: './process-compra.component.scss',
+=======
+>>>>>>> origin/main
 })
 export class ProcessCompraComponent implements OnInit {
   isLoading: boolean = false;
@@ -41,6 +48,7 @@ export class ProcessCompraComponent implements OnInit {
   private paypalLoaded: boolean = false;
 
   constructor(
+    private location: Location,
     private swPush: SwPush,
     private activatedRoute: ActivatedRoute,
     private productoS_: ProductoService,
@@ -213,6 +221,12 @@ export class ProcessCompraComponent implements OnInit {
         console.error('Error rendering PayPal button:', error);
       }
     });
+<<<<<<< HEAD
+=======
+  }
+  volver() {
+    this.location.back();
+>>>>>>> origin/main
   }
 
   aplicarCupon() {}

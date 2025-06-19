@@ -1,124 +1,143 @@
-<main class="min-h-screen flex flex-col mt-20 lg:flex-row bg-white">
-  <!-- Sidebar - Versión refinada -->
-  <div class="sidebar-wrapper w-full lg:w-72 shrink-0 lg:sticky lg:top-20 lg:h-[calc(100vh-5rem)] border-r border-[#e8e3db]">
-    <app-sidevar></app-sidevar>
-  </div>
+<main class="min-h-screen flex flex-col mt-20 px-6 md:px-12 lg:px-24">
+  <!-- Imagen y título centrados con imagen más grande -->
+  <!-- <div class="relative mb-8 w-full aspect-[3/1] mx-auto overflow-hidden shadow-md">
+  <img
+    src="https://i.pinimg.com/736x/e8/d7/6d/e8d76db8cd43018bbb51911c59e1bff0.jpg"
+    alt="Promotional Banner"
+    class="w-full h-full object-cover object-center"
+  />
+</div> -->
 
-  <!-- Contenido principal - Estilo de lujo -->
-  <div class="products-container flex-1 p-6 md:p-8 lg:p-10">
-    <!-- Barra de búsqueda premium -->
-    <div class="search-container relative mb-8 max-w-2xl mx-auto">
-      <div class="relative">
-        <input #searchInput type="text" [(ngModel)]="searchQuery" (input)="applyFilters()"
-          placeholder="Buscar en la colección..."
-          class="w-full bg-transparent border-0 border-b border-[#9c8e7a] focus:border-[#2a2723] outline-none py-3 px-1 text-lg font-light tracking-wide placeholder-[#9c8e7a] transition-colors duration-500"
-          aria-label="Buscar productos">
+  <!-- Contenedor principal: sidebar + productos -->
+  <div class="flex flex-col lg:flex-row gap-6">
+    <!-- Sidebar -->
+    <div class="w-full lg:w-72 shrink-0 lg:sticky lg:top-40 lg:h-[calc(100vh-5rem)] border-r border-[#e8e3db]">
+      <app-sidevar></app-sidevar>
+    </div>
 
-        <!-- Icono de lupa - Estilo discreto -->
-        <svg class="absolute right-2 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#9c8e7a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+    <!-- Contenido principal -->
+    <div class="flex-1 p-6 md:p-8 lg:p-10">
 
-        <!-- Botón para limpiar búsqueda -->
-        <button *ngIf="searchQuery" (click)="searchQuery = ''; applyFilters()"
-          class="absolute right-8 top-1/2 transform -translate-y-1/2 text-[#9c8e7a] hover:text-[#2a2723] transition-colors"
-          aria-label="Limpiar búsqueda">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      <!-- Barra de búsqueda premium -->
+      <div class="search-container relative mb-8 max-w-7xl mx-auto">
+        <div class="relative">
+          <input #searchInput type="text" [(ngModel)]="searchQuery" (input)="applyFilters()"
+            placeholder="Buscar en la colección..."
+            class="w-full bg-transparent border-0 border-b border-[#9c8e7a] focus:border-[#2a2723] outline-none py-3 px-1 text-lg font-light tracking-wide placeholder-[#9c8e7a] transition-colors duration-500"
+            aria-label="Buscar productos">
+
+          <!-- Icono de lupa - Estilo discreto -->
+          <svg class="absolute right-2 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#9c8e7a]" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-        </button>
+
+          <!-- Botón para limpiar búsqueda -->
+          <button *ngIf="searchQuery" (click)="searchQuery = ''; applyFilters()"
+            class="absolute right-8 top-1/2 transform -translate-y-1/2 text-[#9c8e7a] hover:text-[#2a2723] transition-colors"
+            aria-label="Limpiar búsqueda">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Sugerencias de búsqueda - Estilo refinado -->
-    <div *ngIf="!isLoading && getSearchSuggestions().length > 0" 
-      class="search-suggestions bg-[#f9f7f4] rounded-none p-6 mb-8 border border-[#e8e3db] max-w-2xl mx-auto">
-      <p class="suggestions-title text-sm font-light text-[#6e6a63] mb-3 tracking-wider">SUGERENCIAS:</p>
-      <ul class="suggestions-list flex flex-wrap gap-2">
-        <li *ngFor="let suggestion of getSearchSuggestions()" class="suggestion-item">
-          <a class="suggestion-link bg-white hover:bg-[#2a2723] text-sm text-[#2a2723] hover:text-[#d4c4a8] px-4 py-2 rounded-none border border-[#e8e3db] cursor-pointer transition-all duration-300 font-light"
-             (click)="searchQuery = suggestion.split(': ')[1]; applyFilters()">
-            {{ suggestion }}
-          </a>
-        </li>
-      </ul>
-    </div>
+      <!-- Sugerencias de búsqueda - Estilo refinado -->
+      <div *ngIf="!isLoading && getSearchSuggestions().length > 0"
+        class="search-suggestions bg-[#f9f7f4] rounded-none p-6 mb-8 border border-[#e8e3db] max-w-2xl mx-auto">
+        <p class="suggestions-title text-sm font-light text-[#6e6a63] mb-3 tracking-wider">SUGERENCIAS:</p>
+        <ul class="suggestions-list flex flex-wrap gap-2">
+          <li *ngFor="let suggestion of getSearchSuggestions()" class="suggestion-item">
+            <a class="suggestion-link bg-white hover:bg-[#2a2723] text-sm text-[#2a2723] hover:text-[#d4c4a8] px-4 py-2 rounded-none border border-[#e8e3db] cursor-pointer transition-all duration-300 font-light"
+              (click)="searchQuery = suggestion.split(': ')[1]; applyFilters()">
+              {{ suggestion }}
+            </a>
+          </li>
+        </ul>
+      </div>
 
-    <!-- Filtros activos - Diseño elegante -->
-    <div *ngIf="hasActiveFilters()" class="active-filters-container flex flex-wrap gap-2 mb-8 max-w-2xl mx-auto">
-      <span *ngIf="currentQueryParams['color']"
-        class="filter-tag bg-white rounded-none px-4 py-2 text-sm flex items-center gap-2 border border-[#e8e3db] font-light">
-        <span class="filter-label text-[#9c8e7a]">Color:</span>
-        <span class="filter-value">{{ currentQueryParams['color'] }}</span>
-        <button class="filter-remove-btn text-[#9c8e7a] hover:text-[#2a2723] transition-colors ml-2"
-          (click)="clearFilter('color')">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-        </button>
-      </span>
+      <!-- Filtros activos - Diseño elegante -->
+      <div *ngIf="hasActiveFilters()" class="active-filters-container flex flex-wrap gap-2 mb-8 max-w-2xl mx-auto">
+        <span *ngIf="currentQueryParams['color']"
+          class="filter-tag bg-white rounded-none px-4 py-2 text-sm flex items-center gap-2 border border-[#e8e3db] font-light">
+          <span class="filter-label text-[#9c8e7a]">Color:</span>
+          <span class="filter-value">{{ currentQueryParams['color'] }}</span>
+          <button class="filter-remove-btn text-[#9c8e7a] hover:text-[#2a2723] transition-colors ml-2"
+            (click)="clearFilter('color')">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+        </span>
 
-      <!-- Repetir para otros filtros (talla, tipoCuello) con el mismo estilo -->
-    </div>
-    
-    <!-- Grid de productos - Versión premium -->
-    <div *ngIf="!isLoading && hasResults" class="results-wrapper">
-      <div class="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-        <div *ngFor="let product of filteredProducts"
-          class="product-card bg-white overflow-hidden hover:shadow-lg transition-all duration-500 border border-[#e8e3db] group">
-          
-          <!-- Imagen del producto con efecto hover -->
-          <div class="relative overflow-hidden aspect-square">
-            <img
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              [src]="product.imagenes[0]" 
-              [alt]="product.nombre" 
-              (click)="viewProductDetails(product._id)">
+        <!-- Repetir para otros filtros (talla, tipoCuello) con el mismo estilo -->
+      </div>
 
-            <!-- Badge de renta/nuevo  -->
-            <div *ngIf="product.opcionesTipoTransaccion === 'renta' || product.nuevo" 
-              class="absolute top-4 right-4 flex flex-col gap-2">
-              <span *ngIf="product.opcionesTipoTransaccion === 'renta'"
-                class="bg-[#2a2723] text-[#d4c4a8] text-xs px-3 py-1 tracking-wider font-light">
-                RENTA
-              </span>
-              <span *ngIf="product.nuevo"
-                class="bg-[#d4c4a8] text-[#2a2723] text-xs px-3 py-1 tracking-wider font-light">
-                NUEVO
-              </span>
-            </div>
-          </div>
+      <!-- Grid de productos - Versión premium -->
+      <div *ngIf="!isLoading && hasResults" class="results-wrapper">
+        <div class="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
+          <div *ngFor="let product of filteredProducts"
+            class="product-card  overflow-hidden hover:shadow-lg w-50 transition-all duration-500 group">
 
-          <!-- Información del producto  -->
-          <div class="card-info p-5">
-            <h3 class="product-name text-xl font-serif text-[#2a2723] mb-3 tracking-tight">{{ product.nombre }}</h3>
+            <!-- Imagen del producto con efecto hover -->
+            <div class="relative overflow-hidden aspect-square">
+              <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                [src]="product.imagenes[0]" [alt]="product.nombre" (click)="viewProductDetails(product._id)"
+                 (mouseenter)="cambiarImagen(product, $event)" (mouseleave)="restaurarImagen(product, $event)">
 
-            <div class="price-section mb-4">
-              <p class="product-price text-lg text-[#2a2723] font-medium">
-                {{ product.precio | currency:'MXN':'symbol':'1.2-2' }}
-              </p>
+              <!-- Badge de renta/nuevo  -->
+              <div *ngIf="product.opcionesTipoTransaccion === 'renta' || product.opcionesTipoTransaccion === 'Venta'|| product.nuevo"
+                class="absolute top-4 right-4 flex flex-col gap-2">
+                <span *ngIf="product.opcionesTipoTransaccion === 'Venta'"
+                  class="text-[#2a2723] text-xs px-3 py-1 tracking-wider font-light">
+                  VENTA
+                </span>
+                <span *ngIf="product.opcionesTipoTransaccion === 'renta'"
+                  class="bg-[#2a2723] text-[#d4c4a8] text-xs px-3 py-1 tracking-wider font-light">
+                  RENTA
+                </span>
+                <span *ngIf="product.nuevo"
+                  class="bg-[#d4c4a8] text-[#2a2723] text-xs px-3 py-1 tracking-wider font-light">
+                  NUEVO
+                </span>
+              </div>
             </div>
 
-            <!-- Acciones - Botones discretos  -->
-            <div class="product-actions flex gap-3">
-              <button
-                class="quick-view-btn flex-1 bg-white text-[#2a2723] border border-[#2a2723] hover:bg-[#2a2723] hover:text-[#d4c4a8] py-2 px-4 text-sm font-light tracking-wider transition-colors duration-300"
-                (click)="viewProductDetails(product._id)">
-                VER DETALLES
-              </button>
-              <button (click)="apartarRentar(product)"
-                class="add-to-cart-btn bg-[#2a2723] text-[#d4c4a8] hover:bg-[#d4c4a8] hover:text-[#2a2723] p-2 transition-colors duration-300 border border-[#2a2723]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </button>
+            <!-- Información del producto  -->
+            <div class="card-info p-5">
+              <h3 class="product-name text-sm font-serif text-[#2a2723] mb-3 tracking-tight">{{ product.nombre }}</h3>
+
+              <div class="price-section mb-4">
+                <p class="product-price text-lg text-[#2a2723] font-medium">
+                  {{ product.precioActual | currency:'MXN':'symbol':'1.2-2' }}
+                </p>
+                <p class="product-price text-lg text-[#a9a9a9] line-through">
+                  <!-- Estilo tachado para el precio anterior -->
+                  {{ product.precioAnterior | currency:'MXN':'symbol':'1.2-2' }}
+                </p>
+              </div>
+
+
+              <!-- Acciones - Botones discretos  -->
+              <div class="product-actions flex gap-3">
+                <button
+                  class="quick-view-btn flex-1 bg-white text-[#2a2723] border border-[#2a2723] hover:bg-[#2a2723] hover:text-[#d4c4a8] py-2 px-4 text-sm font-light tracking-wider transition-colors duration-300"
+                 (click)="apartarRentar(product)">
+                  ADD CART
+                </button>
+                
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Mensaje cuando no hay resultados 
+      <!-- Mensaje cuando no hay resultados 
     <div *ngIf="!isLoading && !hasResults" class="no-results text-center py-20 max-w-2xl mx-auto">
       <h3 class="text-2xl font-serif text-[#2a2723] mb-4">No encontramos coincidencias</h3>
       <p class="text-[#6e6a63] font-light mb-6">Intenta con otros términos de búsqueda o ajusta los filtros.</p>
@@ -126,6 +145,7 @@
         class="bg-[#2a2723] text-[#d4c4a8] hover:bg-[#d4c4a8] hover:text-[#2a2723] px-6 py-3 text-sm tracking-wider border border-[#2a2723] transition-colors duration-300">
         LIMPIAR FILTROS
       </button>
-    </div> -->
+      -->
+    </div>
   </div>
 </main>

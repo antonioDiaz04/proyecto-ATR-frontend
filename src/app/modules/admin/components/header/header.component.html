@@ -1,21 +1,31 @@
-<!-- Profile Menu (comentado en el original) -->
-<!-- <div class="profile-menu absolute top-4 right-4 z-50" *ngIf="isLoggedIn">
-  <div class="flex items-center space-x-2">
-    <span class="text-sm text-gray-500">{{fechaTexto}}</span>
-    <div class="relative">
-      <div class="w-10 h-10 rounded-full bg-gray-200 cursor-pointer overflow-hidden" 
-           (click)="toggleMenu()">
-        <img src="https://dummyimage.com/40x40/ccc/aaa&text=2x2" alt="Profile" class="w-full h-full object-cover">
-      </div>
-      <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100"
-           *ngIf="menuOpen">
-        <a href="/mi-perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi Perfil</a>
-        <a href="#" (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cerrar Sesión</a>
-      </div>
+<!-- Sidenav Colapsable solo con Botón -->
+<div
+  class="sidenav h-screen bg-[#faf9f7] border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out fixed"
+  [class.collapsed]="isCollapsed" [style.width]="isCollapsed ? '80px' : '250px'">
+
+  <!-- Logo/Header Colapsable -->
+  <div class="logo px-4 py-5 flex flex-col items-center border-b border-gray-100 overflow-hidden">
+    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mb-2">
+      <span class="text-red-700 font-medium">A</span>
+    </div>
+    <span class="text-xl font-light text-gray-800 tracking-wider whitespace-nowrap" *ngIf="!isCollapsed">ATELIER
+      PRO</span>
+    <span class="text-xs text-gray-400 mt-1 whitespace-nowrap" *ngIf="!isCollapsed">v2.4.1</span>
+  </div>
+
+  <!-- User Profile - Versión Colapsada -->
+  <div
+    class="user-profile px-4 py-3 border-b border-gray-100 flex items-center justify-center bg-gray-50 overflow-hidden">
+    <div class="w-8 h-8 bg-red-50 rounded-full flex items-center justify-center border border-red-100">
+      <span class="text-xs text-red-600">AD</span>
+    </div>
+    <div *ngIf="!isCollapsed" class="ml-3">
+      <p class="text-sm font-light text-gray-800 whitespace-nowrap">Admin User</p>
+      <p class="text-xs text-gray-500 whitespace-nowrap">Administrator</p>
     </div>
   </div>
-</div> -->
 
+<<<<<<< HEAD
 <!-- Sidenav Minimalista -->
 <div
   class="sidenav h-screen mt-20 bg-white border-r border-gray-100 flex flex-col transition-all duration-300 ease-in-out"
@@ -35,8 +45,27 @@
         <i class="pi pi-home text-gray-500 group-hover:text-blue-500"></i>
         <span class="link-text ml-3 text-gray-700 group-hover:text-blue-600" *ngIf="!isCollapsed">Inicio</span>
       </a>
+=======
+  <!-- Menú Principal Colapsable -->
+  <ul class="nav flex-1 flex flex-col px-2 py-4 overflow-y-auto">
+    <!-- Sección Dashboard -->
+    <li class="mb-4" *ngIf="!isCollapsed">
+      <p class="text-xs uppercase text-gray-500 px-3 mb-2 tracking-wider whitespace-nowrap">Dashboard</p>
+>>>>>>> origin/main
     </li>
+    <ul class="space-y-1">
+      <li>
+        <a routerLink="/admin/home" [class.active]="selectedLink === 'home'" (click)="selectLink('home')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-home text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Overview</span>
+          <span class="ml-auto text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full" *ngIf="!isCollapsed">3</span>
+        </a>
+      </li>
+    </ul>
 
+<<<<<<< HEAD
     <!-- Clientes -->
     <li class="nav-item relative">
       <a class="nav-link group flex items-center justify-between px-3 py-3 rounded-lg cursor-pointer transition-colors"
@@ -58,8 +87,52 @@
           </a>
         </li>
       </ul>
+=======
+    <!-- Sección Management -->
+    <li class="mb-4" *ngIf="!isCollapsed">
+      <p class="text-xs uppercase text-gray-500 px-3 mb-2 tracking-wider whitespace-nowrap">Management</p>
+>>>>>>> origin/main
     </li>
+    <ul class="space-y-1">
+      <li>
+        <a routerLink="/admin/control-usuarios/lista-usuarios" [class.active]="selectedLink === 'lista-usuarios'"
+          (click)="selectLink('lista-usuarios')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-users text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Clients</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/control-productos/lista-productos" [class.active]="selectedLink === 'lista-productos'"
+          (click)="selectLink('lista-productos')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-box text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Inventory</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/control-Accesorios/lista-Accesorios" [class.active]="selectedLink === 'lista-Accesorios'"
+          (click)="selectLink('lista-Accesorios')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-box text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Accesorios</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/categorias" [class.active]="selectedLink == 'categorias'"
+          (click)="selectLink('categorias')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-tags text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Categories</span>
+        </a>
+      </li>
+    </ul>
 
+<<<<<<< HEAD
     <!-- Vestidos -->
     <li class="nav-item relative">
       <a class="nav-link group flex items-center justify-between px-3 py-3 rounded-lg cursor-pointer transition-colors"
@@ -81,8 +154,35 @@
           </a>
         </li>
       </ul>
+=======
+    <!-- Sección Operations -->
+    <li class="mb-4" *ngIf="!isCollapsed">
+      <p class="text-xs uppercase text-gray-500 px-3 mb-2 tracking-wider whitespace-nowrap">Operations</p>
+>>>>>>> origin/main
     </li>
+    <ul class="space-y-1">
+      <li>
+        <a routerLink="/admin/control-renta/lista-renta" [class.active]="selectedLink === 'lista-renta'"
+          (click)="selectLink('lista-renta')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-calendar-plus text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Rentals</span>
+          <span class="ml-auto text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded" *ngIf="!isCollapsed">12</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/control-venta/lista-venta" [class.active]="selectedLink === 'lista-venta'"
+          (click)="selectLink('lista-venta')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-credit-card text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Sales</span>
+        </a>
+      </li>
+    </ul>
 
+<<<<<<< HEAD
     <!-- Categorías -->
     <li class="nav-item relative">
       <a class="nav-link group flex items-center justify-between px-3 py-3 rounded-lg cursor-pointer transition-colors"
@@ -111,8 +211,32 @@
           </a>
         </li>
       </ul>
+=======
+    <!-- Sección Reportes -->
+    <li class="mb-4" *ngIf="!isCollapsed">
+      <p class="text-xs uppercase text-gray-500 px-3 mb-2 tracking-wider whitespace-nowrap">Reports</p>
+>>>>>>> origin/main
     </li>
+    <ul class="space-y-1">
+      <li>
+        <a routerLink="/admin/reportes" [class.active]="selectedLink === 'reportes'" (click)="selectLink('reportes')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-chart-bar text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Reports</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/historial" [class.active]="selectedLink === 'historial'" (click)="selectLink('historial')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-history text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">History</span>
+        </a>
+      </li>
+    </ul>
 
+<<<<<<< HEAD
     <!-- Accesorios -->
     <li class="nav-item relative">
       <a class="nav-link group flex items-center justify-between px-3 py-3 rounded-lg cursor-pointer transition-colors"
@@ -316,3 +440,72 @@
   </ul>
 
 </div>a
+=======
+    <!-- Sección Configuración -->
+    <li class="mb-4" *ngIf="!isCollapsed">
+      <p class="text-xs uppercase text-gray-500 px-3 mb-2 tracking-wider whitespace-nowrap">Settings</p>
+    </li>
+    <ul class="space-y-1">
+      <li>
+        <a routerLink="/admin/configuracion/perfil-administrador"
+          [class.active]="selectedLink === 'perfil-administrador'" (click)="selectLink('perfil-administrador')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-user text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Admin Profile</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/configuracion/ajustes-generales" [class.active]="selectedLink === 'ajustes-generales'"
+          (click)="selectLink('ajustes-generales')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-cog text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">General Settings</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/configuracion/documentos-legales" [class.active]="selectedLink === 'documentos-legales'"
+          (click)="selectLink('documentos-legales')"
+          class="nav-link group flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-red-50 justify-center md:justify-start">
+          <i class="pi pi-file-text text-gray-500" [class.mr-3]="!isCollapsed"></i>
+          <span class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            *ngIf="!isCollapsed">Legal Documents</span>
+        </a>
+      </li>
+    </ul>
+  </ul>
+  <!-- Footer Colapsable -->
+  <div class="px-4 py-3 border-t border-gray-100 bg-gray-50 overflow-hidden">
+    <div class="flex items-center justify-between" *ngIf="!isCollapsed">
+      <div class="text-xs text-gray-500 whitespace-nowrap">© 2023 Atelier Pro</div>
+      <div class="flex space-x-2 shadow-md bg-white p-2 rounded">
+        <button class="text-gray-500 hover:text-red-600 hover:bg-gray-100 p-2 rounded transition-colors">
+          <i class="pi pi-cog text-sm"></i>
+        </button>
+        <button class="text-gray-500 hover:text-red-600 hover:bg-gray-100 p-2 rounded transition-colors relative"
+          routerLink="/admin/configuracion/notificaciones">
+          <i class="pi pi-bell text-sm"></i>
+          <span class="absolute -mt-1 -mr-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <button class="text-gray-500 hover:text-red-600 hover:bg-gray-100 p-2 rounded transition-colors"
+          (click)="logout()">
+          <i class="pi pi-sign-out text-sm"></i>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="isCollapsed" class="flex justify-center shadow-md bg-white p-2 rounded">
+    <button class="text-gray-500 hover:text-red-600 hover:bg-gray-100 p-2 rounded transition-colors" (click)="logout()">
+      <i class="pi pi-sign-out text-sm"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Botón Toggle -->
+<button
+  class="toggle-btn absolute -right-3 top-1/2 w-6 h-12 bg-white border border-gray-200 rounded-r-lg shadow-sm flex items-center justify-center hover:bg-gray-50 transition-colors"
+  (click)="toggleCollapse()">
+  <i [ngClass]="isCollapsed ? 'pi pi-chevron-right text-gray-500' : 'pi pi-chevron-left text-gray-500'"></i>
+</button>
+</div>
+>>>>>>> origin/main

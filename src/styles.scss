@@ -24,7 +24,7 @@ body {
   // -moz-user-select: none; /* Firefox */
   font-family: Arial, Helvetica, sans-serif;
   // -ms-user-select: none; /* Internet Explorer/Edge */
-  background-color: rgb(255, 255, 255);
+  background-color:#faf9f7;
   // background-color: rgb(249, 249, 249);
   color: #333;
 }
@@ -185,10 +185,16 @@ body {
   background: rgba(0, 0, 0, 0.5); // Agrega un oscurecimiento opcional
 }
 
+.reviews-content:hover .review-card {
+  filter: blur(3px);
+  opacity: 0.7;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
 
-// p-inputgroupaddon {
-//   // background-color: #584c50; /* Ajusta al color de fondo preferido */
-//   color: #fff; /* Color del icono */
-//   padding: 0.5rem; /* Espaciado alrededor del icono */
-//   border-radius: 4px 0 0 4px; /* Bordes redondeados para el lado izquierdo */
-// }
+.reviews-content:hover .review-card:hover {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.02);
+  z-index: 10;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}

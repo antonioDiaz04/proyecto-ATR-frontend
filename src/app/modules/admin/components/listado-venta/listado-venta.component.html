@@ -1,1 +1,285 @@
-<pre>{{ventas|json}}</pre>
+<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+    <!-- Header with statistics and filters -->
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex flex-col lg:flex-row justify-between gap-6">
+        <!-- Statistical summary -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1">
+          <!-- Total Sales Card -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Total Ventas</h3>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ ventas.length }}</p>
+            <div class="mt-2 h-2 bg-gray-100 rounded-full">
+              <div class="h-2 bg-[#d4c4a8] rounded-full" [style.width.%]="(ventas.length/maxVentas)*100"></div>
+            </div>
+          </div>
+
+          <!-- Completed Sales Card -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Completadas</h3>
+            <p class="mt-1 text-2xl font-semibold text-green-600">{{ ventasCompletadas }}</p>
+            <span class="text-xs text-gray-500">{{ (ventasCompletadas/ventas.length)*100 | number:'1.0-0' }}% del total</span>
+          </div>
+
+          <!-- New Sales Card -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Nuevas (7d)</h3>
+            <p class="mt-1 text-2xl font-semibold text-blue-600">{{ nuevasVentas }}</p>
+            <span *ngIf="nuevasVentas > 0" class="inline-flex items-center text-xs text-green-600">
+              <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M12 7a1 1 0 01-1 1H9v1h2a1 1 0 110 2H9v1h2a1 1 0 110 2H9v1a1 1 0 11-2 0v-1H5a1 1 0 110-2h2v-1H5a1 1 0 110-2h2V8H5a1 1 0 010-2h2V5a1 1 0 112 0v1h2a1 1 0 011 1z"
+                  clip-rule="evenodd" />
+              </svg>
+              {{ variacionNuevas }}% vs semana anterior
+            </span>
+          </div>
+
+          <!-- Returns Card -->
+          <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-xs">
+            <h3 class="text-sm font-medium text-gray-500">Devoluciones</h3>
+            <p class="mt-1 text-2xl font-semibold text-red-600">{{ devolucionesPendientes }}</p>
+            <span class="text-xs text-gray-500">{{ devolucionesProcesadas }} procesadas</span>
+          </div>
+        </div>
+
+        <!-- Mini historical chart (placeholder) -->
+        <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-xs w-full lg:w-64">
+          <h3 class="text-sm font-medium text-gray-500 mb-2">Ventas últimos 30 días</h3>
+          <div class="h-20">
+            <!-- Chart would go here (using a library like Chart.js) -->
+            <div class="flex items-end h-full gap-px">
+              <div *ngFor="let day of historialVentas" class="bg-[#d4c4a8] flex-1" [style.height.%]="day.value*2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action bar and filters -->
+      <div class="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-xl font-semibold text-gray-900">Gestión de Ventas</h2>
+          <p class="text-sm text-gray-500 mt-1">Resumen completo de ventas y transacciones</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <div class="relative">
+            <input type="text" [(ngModel)]="filtroTexto" placeholder="Buscar..."
+              class="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm w-full sm:w-64 focus:ring-1 focus:ring-[#d4c4a8] focus:border-[#d4c4a8]">
+            <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <select [(ngModel)]="filtroEstado"
+            class="px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-[#d4c4a8]">
+            <option value="">Todos los estados</option>
+            <option value="Completado">Completado</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Cancelado">Cancelado</option>
+            <option value="Devolucion">En devolución</option>
+          </select>
+          <button
+            class="px-4 py-2 bg-[#2a2723] text-white text-sm rounded-md hover:bg-[#3a3630] transition-colors flex items-center gap-1"
+            (click)="abrirFormulario()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Nueva Venta
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extended table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-white">
+          <tr>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <input type="checkbox" (change)="toggleAllVentas($event)" [checked]="allVentasSelected">
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('productoNombre')">
+              Producto
+              <span *ngIf="campoOrden === 'productoNombre'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('clienteNombre')">
+              Cliente
+              <span *ngIf="campoOrden === 'clienteNombre'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('fechaVenta')">
+              Fecha
+              <span *ngIf="campoOrden === 'fechaVenta'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valores</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+              (click)="ordenarPor('estado')">
+              Estado
+              <span *ngIf="campoOrden === 'estado'" class="ml-1">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Método Pago</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let venta of ventas" class="hover:bg-gray-50 transition-colors"
+            [ngClass]="{'bg-amber-50': venta.estado === 'Pendiente', 'bg-red-50': venta.estado === 'Cancelado'}">
+            <!-- Checkbox column -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <input type="checkbox" [checked]="isVentaSelected(venta._id)" (change)="toggleVentaSelection(venta._id)">
+            </td>
+            <!-- Product Column -->
+            <td class="px-6 py-4">
+              <div class="flex items-center min-w-[200px]">
+                <div class="flex-shrink-0 h-10 w-10 rounded overflow-hidden border border-gray-200">
+                  <img [src]="venta.producto?.imagenes[0] || 'assets/default-product.jpg'" alt="Producto"
+                    class="h-full w-full object-cover" (click)="verImagenGrande(venta.producto?.imagenes)"
+                    title="Ver imágenes">
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900 truncate max-w-[180px]" [title]="venta.productoNombre">
+                    {{ venta.productoNombre }}
+                  </div>
+                  <div class="flex items-center space-x-2 text-xs text-[#9c8e7a]">
+                    <span class="line-through">{{ venta.precioAnterior }}</span>
+                    <span class="text-orange-700 text-lg font-bold">{{ venta.precioActual }}</span>
+                    <span *ngIf="venta.isOferta" class="text-green-600 font-semibold">Oferta</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Client Column -->
+            <td class="px-6 py-4 min-w-[150px]">
+              <div class="text-sm text-gray-900 font-medium">{{ venta.clienteNombre }}</div>
+              <div class="text-xs text-gray-500 truncate max-w-[150px]">{{ venta.clienteEmail }}</div>
+              <div class="text-xs text-gray-500 truncate max-w-[150px]">{{ venta.clienteTelefono }}</div>
+            </td>
+
+            <!-- Date Column -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">
+                {{ venta.fechaVenta | date:'dd/MM/yyyy' }}
+              </div>
+              <div *ngIf="venta.fechaEntrega" class="text-sm text-gray-900">
+                Entrega: {{ venta.fechaEntrega | date:'dd/MM/yyyy' }}
+              </div>
+            </td>
+
+            <!-- Values Column -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">
+                {{ venta.total | currency }}
+              </div>
+              <div class="text-xs text-gray-500">
+                {{ venta.cantidad }} unidades
+              </div>
+              <div *ngIf="venta.descuento > 0" class="text-xs text-green-600 mt-1">
+                Descuento: {{ venta.descuento | currency }}
+              </div>
+            </td>
+
+            <!-- Status Column -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900 font-medium">{{ venta.estado }}</div>
+              <div *ngIf="venta.estado === 'Cancelado'" class="text-xs text-red-600 mt-1">Reembolsado: {{ venta.reembolso | currency }}</div>
+            </td>
+            
+            <!-- Payment Method Column -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900 font-medium">{{ venta.metodoPago }}</div>
+              <div *ngIf="venta.metodoPago === 'Credito'" class="text-xs text-gray-500 mt-1">
+                {{ venta.cuotas }} cuotas
+              </div>
+            </td>
+
+            <!-- Actions Column -->
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+              <button (click)="editarVenta(venta._id)" class="text-blue-600 hover:text-blue-900">
+                Editar
+              </button>
+              <button (click)="eliminarVenta(venta._id)" class="text-red-600 hover:text-red-900">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <!-- Bulk actions footer -->
+        <tfoot *ngIf="selectedVentas.length > 0">
+          <tr>
+            <td colspan="8" class="px-6 py-3 bg-gray-100">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700">{{ selectedVentas.length }} venta(s) seleccionada(s)</span>
+                <button (click)="eliminarVentasSeleccionadas()"
+                  class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm">
+                  Eliminar seleccionadas
+                </button>
+                <button (click)="cancelar()"
+                  class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm">
+                  Cancelar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Pagination and summary -->
+    <div class="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="text-sm text-gray-500">
+        Mostrando {{ ventasFiltradas.length }} de {{ ventas.length }} registros
+      </div>
+      <div class="flex items-center space-x-2">
+        <button class="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
+          [disabled]="paginaActual === 1" (click)="paginaActual = paginaActual - 1">
+          Anterior
+        </button>
+        <span class="text-sm text-gray-700">
+          Página {{ paginaActual }} de {{ totalPaginas }}
+        </span>
+        <button class="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
+          [disabled]="paginaActual === totalPaginas" (click)="paginaActual = paginaActual + 1">
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image modal -->
+  <p-dialog header="Imágenes del producto" [(visible)]="mostrarModalImagenes" [style]="{width: '80vw'}">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div *ngFor="let imagen of imagenesProducto" class="border rounded overflow-hidden">
+        <img [src]="imagen" alt="Imagen producto" class="w-full h-48 object-cover">
+      </div>
+    </div>
+  </p-dialog>
+
+  <!-- Deletion confirmation -->
+  <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
+</div>
+
+<!-- Sidebar for form -->
+<p-sidebar [(visible)]="sidebarVisible" position="right" [modal]="true" [style]="{width: '750px'}" [baseZIndex]="10000"
+  [dismissable]="false">
+  <!-- <h3 class="text-2xl font-bold text-gray-800 mb-6">
+    {{ vistaActual === 'editar' ? 'Editar Venta' : 'Nueva Venta' }}
+  </h3> -->
+  <!-- (cerrarFormulario)="cerrarFormulario()" -->
+  <!-- (actualizarVentas)="actualizarVentas($event)" -->
+  <!-- (eliminarVenta)="eliminarVenta($event)"> -->
+  <app-registro-venta [ventaId]="ventaId">
+  </app-registro-venta>
+</p-sidebar>

@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
 import { AuthComponent } from './auth.component';
 // import { SignInView } from './view/sign-in/sign-in.view';
-import { SignUpView } from './view/sign-up/sign-up.view';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignInService } from './commons/services/sign-in.service';
 import {
@@ -18,7 +17,6 @@ import {
 } from '@angular/common/http';
 import { SignUpService } from './commons/services/sign-up.service';
 // import { NgxUiLoaderModule, NgxUiLoaderService } from 'ngx-ui-loader';
-import { RecuperarPasswordView } from './view/recuperar-password/recuperar-password.view';
 import { mensageservice } from '../../shared/services/mensage.service';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -48,22 +46,17 @@ import { RouterModule } from '@angular/router';
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../../../environments/environment';
-import { RecuparByPreguntaComponent } from './view/recuperar-password/recupar-by-pregunta/recupar-by-pregunta.component';
-import { RecuperarByEmailComponent } from './view/recuperar-password/recuperar-by-email/recuperar-by-email.component';
+// import { RecuparByPreguntaComponent } from './view/recuperar-password/recupar-by-pregunta/recupar-by-pregunta.component';
+import { RecuperarByEmailComponent } from './view/recuperar-by-email/recuperar-by-email.component';
 import { HeaderModule } from '../../shared/components/header/header.module';
 import { DatosEmpresaService } from '../../shared/services/datos-empresa.service';
 import { SignInView } from './view/sign-in/sign-in.view';
-import { ProductoService } from '../../shared/services/producto.service';
 
 @NgModule({
   declarations: [
     AuthComponent,
-    SignUpView,
-    RecuperarPasswordView,
-    // SignInView,
     VerificarCodigoView,
-    RegistroView,
-    RecuparByPreguntaComponent,RecuperarByEmailComponent, SignInView,
+    RegistroView,RecuperarByEmailComponent, SignInView,
     // LoginModalComponent,
   ],
   imports: [

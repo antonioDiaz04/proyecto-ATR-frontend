@@ -19,231 +19,185 @@ import { isPlatformBrowser } from '@angular/common';
 import { response } from 'express';
 import Swal from 'sweetalert2';
 import { SessionService } from '../../../../shared/services/session.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
 declare const $: any;
 
 @Component({
+  standalone: false,
   selector: 'app-listado-clientes',
   templateUrl: './listado-clientes.component.html',
-  styleUrls: [
-    '../../../../shared/styles/tablePrime.scss',
-    '../../../../shared/styles/form.scss',
-  ],
+  // providers: [ConfirmationService, MessageService]
 })
 export class ListadoClientesComponent implements OnInit {
-  data!: any;
-  visible: boolean = false;
-  totalRecords: number = 0;
-  rows: number = 5; // Número de registros por página
-  first: number = 0; // Índice del primer registro de la página actual
-
-  listUsuario?: Cliente;
-  idCliente!: string;
-  id!: string | null;
-  clienteForm!: FormGroup;
+  // Datos y paginación
   allClients: Cliente[] = [];
-  selectedClient!: Cliente;
   paginatedUser: Cliente[] = [];
-  usuarioId: any; // Para almacenar temporalmente el ID del usuario a eliminar
+  totalRecords: number = 0;
+  rows: number = 5;
+  first: number = 0;
+  filterText: string = '';
 
-  isVisible = false;
+  // Formulario y modales
+  clienteForm: FormGroup;
+  visible: boolean = false;
+  listUsuario?: Cliente;
 
-  ngOnInit() {
-    this.getUsuario();
+  constructor(
+    private clientesService: ClientesService,
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {
+    this.clienteForm = this.fb.group({
+      nombre: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      telefono: ['', Validators.required],
+      password: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.cargarClientes();
+  }
+
+  cargarClientes(): void {
+    this.clientesService.obtenerCLientes().subscribe({
+      next: (data: Cliente[]) => {
+        this.allClients = data;
+        this.totalRecords = data.length;
+        this.updatePaginatedUser();
+      },
+      error: (error) => {
+        console.error('Error al cargar clientes:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar los clientes'
+        });
+      }
+    });
+  }
+
+  // Filtrado y búsqueda
+  onGlobalFilter(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filterText = value;
+    this.first = 0; // Resetear a primera página al filtrar
     this.updatePaginatedUser();
   }
 
-  constructor(
-    private us: UsuarioService,
-    // private render2: Renderer2,
-    // private mapService: MapaClientDetailUbacionService,
-    private fb: FormBuilder,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    // private mapaService}: MapaService,
-    private UserS: ClientesService,
-    private elementRef: ElementRef,
-    private router: ActivatedRoute,
-    private rou: Router,
-    public sessionService: SessionService // private toast: Toast,
-  ) // private ngxUiLoaderService: NgxUiLoaderService,
-
-  {
-    this.clienteForm = this.fb.group({
-      nombre: ['', Validators.required],
-      email: ['', Validators.required],
-      // estatus: ['', Validators.required],
-      telefono: ['', Validators.required],
-      password: ['', Validators.required],
-    });
-    this.id = this.router.snapshot.paramMap.get('id');
-  }
-
-  getUsuario() {
-    // this.ngxUiLoaderService.start();
-    // const userData = this.sessionService.getId();
-    // const idPurificadora = userData;
-
-    this.us.getUsuarios().subscribe(
-      (data: Cliente[]) => {
-        console.log('Data received:', data);
-        if (Array.isArray(data)) {
-          this.allClients = data; // Ensure it's an array
-        } else {
-          this.allClients = []; // Fallback to empty array
-          console.error('Unexpected data format:', data);
-        }
-        this.totalRecords = this.allClients.length;
-        this.updatePaginatedUser();
-        // this.ngxUiLoaderService.stop(); // Stop the loader when done
-      },
-      (error) => {
-        console.log('ocurrió un error al obtener la información', error);
-        // this.ngxUiLoaderService.stop(); // Stop the loader in case of error
-      }
-    );
-  }
-
-  // getUsuario() {
-  //   this.us.getUsuarios().subscribe((res) => {
-  //     console.log(res);
-  //     this.data = res;
-  //   });
-  // }
-
-  filterText: string = '';
-  eliminarUsuario(id: any) {
-    this.usuarioId = id; // Almacena el ID del usuario que se quiere eliminar
-    $('.basic.test.modal')
-      .modal({
-        closable: false, // Evita cerrar haciendo clic fuera del modal
-        onApprove: () => {
-          // this.us.eliminarUsuario(id)
-          this.confirmarEliminar(); // Ejecuta la confirmación cuando se aprueba
-        },
-      })
-      .modal('show'); // Muestra el modal
-  }
-
-  confirmarEliminar() {
-    // this.usuarioId = id;
-    this.us.eliminarUsuario(this.usuarioId).subscribe((response) => {
-      this.getUsuario(); // Actualiza la lista de usuarios después de eliminar uno
-      Swal.fire(
-        'Eliminado',
-        'El usuario se ha eliminado correctamente.',
-        'success'
-      );
-      this.usuarioId = null; // Resetea el ID del usuario que se quiere eliminar para evitar problemas con el siguiente clic en el botón de eliminar
-    });
-    console.log(`Usuario con ID ${this.usuarioId} eliminado.`);
-    // Aquí puedes llamar a tu servicio para eliminar el usuario
-  }
-
-  onGlobalFilter(event: Event) {
-    // const value = event.target as HTMLInputElement;
-    const value = (event.target as HTMLInputElement).value.toLowerCase();
-
-    if (value) {
-      const filteredData = this.allClients.filter(
-        (c) =>
-          c.nombre.toLowerCase().includes(value) ||
-          c.email.toLowerCase().includes(value) ||
-          c.telefono.toLowerCase().includes(value) ||
-          c.municipio.toLowerCase().includes(value) ||
-          c.colonia.toLowerCase().includes(value)
-      );
-
-      this.totalRecords = filteredData.length;
-      this.paginatedUser = filteredData.slice(
-        this.first,
-        this.first + this.rows
-      );
-    } else {
-      this.totalRecords = this.allClients.length;
-      this.paginatedUser = this.allClients.slice(
-        this.first,
-        this.first + this.rows
-      );
-
-      // this.dt2.filterGlobal(input.value, "contains");
-    }
-  }
-
-  redirectToAdmin(route: string): void {
-    console.log(route);
-    if (route === 'login') {
-      this.rou.navigate(['/auth/login']); // Navegación hacia la página de inicio de sesión
-    } else {
-      this.rou.navigate(['/admin', route]); // Navegación hacia otras páginas públicas
-    }
-  }
-
-  
-add(){
-    this.visible = true;
-}
-
-  editar(id: any) {
-    this.visible = true;
-    this.idCliente = this.router.snapshot.params['id'];
-    if (id !== null) {
-      // Decodifica la contraseña
-
-      console.log('actualizar....');
-      this.UserS.detalleClienteById(id).subscribe((data) => {
-        this.listUsuario = data;
-        // const decodedPassword = this.sessionService.descifrarTexto(
-        //   data.password
-        // );
-        // console.log(decodedPassword);
-        this.clienteForm.setValue({
-          nombre: data.nombre,
-          email: data.email,
-          // // estatus: data.estatus,
-          telefono: data.telefono,
-          password: '',
-        });
-      });
-    }
-  }
-  // resaltado de texto letra o palabra entonctrada
-  highlightText(text: string): string {
-    if (!this.filterText) {
-      return text; // Si no hay texto a filtrar, regresa el texto original.
-    }
-
-    const regex = new RegExp(`(${this.filterText})`, 'gi'); // Crea una expresión regular para encontrar el texto de búsqueda.
-    return text.replace(regex, '<strong>$1</strong>'); // Reemplaza las coincidencias con el texto en negritas.
-  }
-
-  actualizarCliente(id: any) {
-    if (this.clienteForm.valid) {
-      this.UserS.updateUsuario(id, this.clienteForm.value).subscribe(
-        (response) => {
-          this.getUsuario();
-          this.visible = false;
-
-          // this.Toast.showToastPmNgInfo("Usuario actualizado");
-
-          console.log('Usuario actualizado:', response);
-        },
-        (error) => {
-          console.error('Error al actualizar el usuario:', error);
-        }
-      );
-    }
-  }
-
-  onPageChange(event: any) {
+  // Paginación
+  onPageChange(event: any): void {
     this.first = event.first;
     this.rows = event.rows;
     this.updatePaginatedUser();
   }
 
-  updatePaginatedUser() {
-    console.log();
-    this.paginatedUser = this.allClients.slice(
-      this.first,
-      this.first + this.rows
-    );
+  updatePaginatedUser(): void {
+    let filtered = this.allClients;
+    
+    if (this.filterText) {
+      filtered = filtered.filter(c =>
+        c.nombre.toLowerCase().includes(this.filterText) ||
+        c.email.toLowerCase().includes(this.filterText) ||
+        c.telefono.toLowerCase().includes(this.filterText)
+      );
+    }
+
+    this.totalRecords = filtered.length;
+    this.paginatedUser = filtered.slice(this.first, this.first + this.rows);
+  }
+
+  // Operaciones CRUD
+  add(): void {
+    this.listUsuario = undefined;
+    this.clienteForm.reset();
+    this.visible = true;
+  }
+
+  editar(id: string): void {
+    this.clientesService.detalleClienteById(id).subscribe({
+      next: (data) => {
+        this.listUsuario = data;
+        this.clienteForm.patchValue({
+          nombre: data.nombre,
+          email: data.email,
+          telefono: data.telefono,
+          password: '' // No mostramos la contraseña actual
+        });
+        this.visible = true;
+      },
+      error: (error) => {
+        console.error('Error al cargar cliente:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo cargar el cliente'
+        });
+      }
+    });
+  }
+
+  actualizarCliente(id?: string): void {
+    if (id && this.clienteForm.valid) {
+      this.clientesService.updateUsuario(id, this.clienteForm.value).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Cliente actualizado correctamente'
+          });
+          this.visible = false;
+          this.cargarClientes();
+        },
+        error: (error) => {
+          console.error('Error al actualizar:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo actualizar el cliente'
+          });
+        }
+      });
+    }
+  }
+
+  confirmarEliminar(id: string): void {
+    this.confirmationService.confirm({
+      message: '¿Estás seguro de eliminar este cliente?',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      accept: () => this.eliminarUsuario(id)
+    });
+  }
+
+  eliminarUsuario(id: string): void {
+    this.clientesService.eliminarCliente(id).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Cliente eliminado correctamente'
+        });
+        this.cargarClientes();
+      },
+      error: (error) => {
+        console.error('Error al eliminar:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo eliminar el cliente'
+        });
+      }
+    });
+  }
+
+  // Utilidades
+  highlightText(text: string): string {
+    if (!this.filterText) return text;
+    const regex = new RegExp(`(${this.filterText})`, 'gi');
+    return text.replace(regex, '<strong>$1</strong>');
   }
 }

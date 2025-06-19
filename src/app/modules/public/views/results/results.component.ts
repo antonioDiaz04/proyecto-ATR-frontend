@@ -316,4 +316,23 @@ export class ResultsComponent implements OnInit, OnDestroy {
       return Array.from(suggestions).slice(0, 5);
     }
   
+
+
+  // Función para cambiar la imagen al hacer hover
+   cambiarImagen(producto: any, event: MouseEvent) {
+    const imgElement = event.target as HTMLImageElement;
+    if (!producto._hoverIndex) {
+      producto._hoverIndex = 0;
+    }
+    if (producto.imagenes && producto.imagenes.length > 1) {
+      producto._hoverIndex = (producto._hoverIndex + 1) % producto.imagenes.length;
+      imgElement.src = producto.imagenes[producto._hoverIndex];
+    }
+  }
+
+  // Función para restaurar la imagen al salir del hover
+  restaurarImagen(producto: any, event: MouseEvent) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = producto.imagenPrincipal || producto.imagenes[0]; // Restaurar la primera imagen
+  }
 }

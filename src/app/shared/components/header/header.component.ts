@@ -93,7 +93,7 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
     private messageService: MessageService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-
+this.updateMenuItems()
     // Usar la señal computada del servicio para el contador
     this.dressItemCount = this.cartService.dressItemCount;
     effect(() => {
@@ -174,7 +174,7 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
   filtrarProductos(): void {
     const texto = this.busquedaProducto.trim().toLowerCase();
     if (!texto) {
-      this.productosFiltrados = [];
+      this.productosFiltrados = this.todosLosProductos;
       return;
     }
   

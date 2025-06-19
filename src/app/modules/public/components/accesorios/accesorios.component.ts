@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { ProductoService } from '../../../../shared/services/producto.service';
 
 @Component({
   selector: 'app-accesorios',
@@ -10,11 +11,47 @@ export class AccesoriosComponent {
   iconItems: any[] = [];
   responsiveOptions: any[] = [];
 
+  accesorios :any[] = [];
+numVisible: number = 4; // Número visible por defecto
   ngOnInit() {
     this.checkScreenSize();
     this.setupIconItems();
     this.setupResponsiveOptions();
+    
   }
+
+  constructor(private productoS_: ProductoService) {
+    this.productoS_.obtenerAccesorios().subscribe({
+      next: (response) => {
+        this.accesorios = response;
+        console.log('Accesorios:', response);
+      },
+      error: (err) => {
+        console.error('Error al obtener accesorios:', err);
+      }
+    });
+  
+
+    this.responsiveOptions = [
+      {
+        breakpoint: '640px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '641px',
+        numVisible: 3,
+        numScroll: 1
+      },
+      {
+        breakpoint: '1024px',
+        numVisible: 5,
+        numScroll: 1
+      }
+    ];
+  
+  }
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {

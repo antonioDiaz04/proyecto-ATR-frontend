@@ -7,7 +7,7 @@ import EventEmitter from "events";
 interface SelectedFilters {
   categoria: string | null;
   color: string | null;
-  tallas: string[];
+  talla: string[];
 }
 
 @Component({
@@ -40,7 +40,7 @@ export class SidevarComponent implements OnInit {
   selectedFilters: SelectedFilters = {
     categoria: null,
     color: null,
-    tallas: ['todas'],
+    talla: ['todas'],
   };
 
   constructor(
@@ -63,14 +63,14 @@ export class SidevarComponent implements OnInit {
   // Method to toggle size selection
   toggleSize(talla: string) {
     if (talla === "todas") {
-      this.selectedFilters.tallas = ["todas"];
+      this.selectedFilters.talla = ["todas"];
     } else {
       // Si "todas" estaba seleccionada, la reemplazamos con la nueva talla
-      if (this.selectedFilters.tallas.includes("todas")) {
-        this.selectedFilters.tallas = [talla];
+      if (this.selectedFilters.talla.includes("todas")) {
+        this.selectedFilters.talla = [talla];
       } else {
         // Reemplaza cualquier talla seleccionada previamente
-        this.selectedFilters.tallas = [talla];
+        this.selectedFilters.talla = [talla];
       }
       
     }
@@ -86,13 +86,13 @@ export class SidevarComponent implements OnInit {
 
   // Method to redirect with filters in query parameters
   private redirectWithFilters() {
-    const { categoria, color, tallas } = this.selectedFilters;
+    const { categoria, color, talla } = this.selectedFilters;
     // Redirige a la ruta deseada con los filtros como parámetros de consulta
     this.router.navigate(['/search'], {
       queryParams: {
         categoria,
         color,
-        tallas: tallas.join(',')  // Convierte las tallas en un string separado por comas
+        talla: talla.join(',')  // Convierte las tallas en un string separado por comas
       },
       queryParamsHandling: 'merge',  // Mantén los parámetros actuales si los hubiera
     });
@@ -147,7 +147,7 @@ resetFilters() {
   this.selectedFilters = {
     categoria: null,
     color: null,
-    tallas: ['todas'],
+    talla: ['todas'],
   };
   console.log('Filtros restablecidos:', this.selectedFilters);
   this.emitFilters();

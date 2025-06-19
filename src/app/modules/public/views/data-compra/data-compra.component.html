@@ -1,39 +1,20 @@
-<!-- Right Column: User Data -->
-<div class="user-data">
-  <!-- <h2>Informacion de la compra</h2> -->
-
-  <div class="business-info">
-    <p><i class="pi pi-map-marker"></i> Tahuizan, Huejutla de Reyes, México</p>
-    <p><i class="pi pi-phone"></i> 771 366 7646</p>
-    <p><i class="pi pi-envelope"></i> ateliervestidos.hgogmail.com</p>
-    <!-- <p>
-      <i class="pi pi-clock"></i> <span class="status open">Abierto ahora</span>
-    </p> -->
-    <p><i class="pi pi-shopping-cart"></i> Retiro en el negocio</p>
-    <!-- <p><i class="pi pi-dollar"></i> Rango de precios: $$</p> -->
-    <!-- <p><i class="pi pi-star"></i> Aún sin calificación (0 opiniones)</p> -->
+<!-- Información del negocio - estilo fino con Tailwind -->
+<div class="max-w-md text-gray-700 font-light space-y-6 text-sm">
+  <!-- Datos de contacto -->
+  <div class="space-y-2">
+    <p class="flex items-center"><i class="pi pi-map-marker mr-2 text-gray-500"></i> Tahuizan, Huejutla de Reyes, México</p>
+    <p class="flex items-center"><i class="pi pi-phone mr-2 text-gray-500"></i> 771 366 7646</p>
+    <p class="flex items-center"><i class="pi pi-envelope mr-2 text-gray-500"></i> ateliervestidos.hgogmail.com</p>
+    <p class="flex items-center"><i class="pi pi-shopping-cart mr-2 text-gray-500"></i> Retiro en tienda disponible</p>
   </div>
 
-  <p class="note">
-    <strong>Importante:</strong> Al realizar un apartado tienes 30 días
-    naturales para realizar la liquidación de tu pedido.
-    <br />
-    La liquidación la puedes hacer en tienda o en línea y te recomendamos
-    contactarnos por WhatsApp para confirmar la sucursal y/o datos de tu
-    domicilio.
-    <br />
-    Los productos de tu apartado estarán reservados solo para ti y en caso de
-    que tengamos un detalle con tu apartado te lo haremos saber.
-    <br />
-    En caso de que no hagas tu liquidación máximo en 30 días se te hará un
-    reembolso en monedero electrónico a tu cuenta en Carlo Giovanni, saldo que
-    podrá ser utilizado en el momento que tú quieras.
-    <br />
-    En cuanto al vestido que has apartado, este quedará disponible para venta
-    pasando los 30 días.
-    <br />
-    <strong>Recuerda:</strong> Si seleccionaste retiro en tienda, tu pedido
-    estará listo para recogerse a partir de las
-    <strong>{{ selectedTime || "hora asignada" }}</strong> en nuestra sucursal.
-  </p>
+  <!-- Nota importante -->
+  <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+    <p class="mb-2"><span class="font-semibold text-gray-800">Importante:</span> Tienes <span class="font-medium">30 días naturales</span> para liquidar tu pedido.</p>
+    <p class="mb-2">Puedes hacerlo en tienda o en línea. Te recomendamos contactarnos por <span class="italic">WhatsApp</span> para confirmar la sucursal o tu domicilio.</p>
+    <p class="mb-2">Tus productos estarán reservados exclusivamente para ti. Si hay algún inconveniente, te lo haremos saber.</p>
+    <p class="mb-2">Pasado ese plazo, recibirás un <span class="font-medium">reembolso en monedero electrónico</span> en tu cuenta de Carlo Giovanni, utilizable en cualquier momento.</p>
+    <p class="mb-2">El vestido apartado se pondrá a la venta nuevamente después de los 30 días.</p>
+    <p><span class="font-semibold">Recuerda:</span> Si elegiste retiro en tienda, tu pedido estará listo desde las <span class="font-medium">{{ selectedTime || "hora asignada" }}</span>.</p>
+  </div>
 </div>

@@ -19,6 +19,8 @@ import { ProcessRentaComponent } from "./views/process-renta/process-renta.compo
 import { ProcessCompraComponent } from "./views/process-compra/process-compra.component";
 import { MisionVisionComponent } from "./views/mision-vision/mision-vision.component";
 import { PreguntasComponent } from "./views/preguntas/preguntas.component";
+import { NuevosLlegadasView } from "./views/nuevos-llegadas/nuevos-llegadas.view";
+import { LookAccesorioComponent } from "./views/look-accesorio/look-accesorio.component";
 
 const routes: Routes = [
   {
@@ -47,6 +49,14 @@ const routes: Routes = [
         },
       },
       {
+        path: "Nuevos",
+        component: NuevosLlegadasView,
+        data: {
+          title: "Nuevos",
+          breadcrumb: "Nuevos",
+        },
+      },
+      {
         path: "terminos",
         component: TerminosComponent,
         data: {
@@ -68,6 +78,14 @@ const routes: Routes = [
         data: {
           title: "politicas",
           breadcrumb: "politicas",
+        },
+      },
+      {
+        path: "look",
+        component: LookAccesorioComponent,
+        data: {
+          title: "look",
+          breadcrumb: "look",
         },
       },
       {

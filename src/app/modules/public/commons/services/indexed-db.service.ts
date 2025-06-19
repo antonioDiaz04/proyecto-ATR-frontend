@@ -50,6 +50,9 @@ export class IndexedDbService {
         if (!db.objectStoreNames.contains('apartados')) {
           db.createObjectStore('apartados', { keyPath: 'id' });
         }
+        if (!db.objectStoreNames.contains('suscripciones')) {
+          db.createObjectStore('suscripciones', { keyPath: 'key' });
+        }
       };
 
       request.onsuccess = (event: Event) => {
@@ -58,7 +61,7 @@ export class IndexedDbService {
         this.actualizarProductos();
       };
 
-      request.onerror = (event: Event) => {
+      request.onerror = () => {
         console.error("Error al abrir la base de datos:");
       };
     } catch (error) {
@@ -161,4 +164,29 @@ export class IndexedDbService {
       }
     });
   }
+
+
+
+  // indexed-db.service.ts
+async guardarSuscripcion(subscription: PushSubscription): Promise<void> {
+  if (!this.indexedDBSupported) {
+    console.warn('IndexedDB no soportado');
+    return;
+  }
+  if (!await this.ensureDBReady()) {
+    console.error('No se pudo inicializar la base de datos');
+    return;
+  }
+  const subJSON = subscription.toJSON();
+  // Add a key property for the object store with keyPath 'key'
+  (subJSON as any).key = 'actual';
+  const transaction = this.db!.transaction('suscripciones', 'readwrite');
+  const store = transaction.objectStore('suscripciones');
+  await new Promise<void>((resolve, reject) => {
+    const request = store.put(subJSON);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
 }

@@ -1,107 +1,73 @@
-<div class="w-full mt-32 max-w-4xl mx-auto p-8 rounded-lg shadow-xs border border-gray-100">
-    <div class="grid grid-cols-2 gap-12">
-      <!-- Columna izquierda - Formulario -->
-      <div class="border-r border-gray-100 pr-8">
-        <h1 class="text-4xl font-extrabold text-black mb-2 tracking-tight">INICIO DE SESION</h1>    
-        <form class="space-y-5">
-          <!-- Usuario -->
-          <div>
-            <label cclass="block text-sm font-bold text-black uppercase tracking-wider">USUARIO *</label>
-            <input type="text" placeholder="ejemplo123" 
-                     class="w-full px-0 py-3 border-b-2 border-gray-300 bg-white focus:border-black focus:outline-none placeholder-gray-400 text-black"
-           >
-            <p class="text-xs text-gray-400 mt-1 tracking-tight">15 caracteres disponibles</p>
-          </div>
-  
-          <!-- Teléfono -->
-          <div>
-            <label cclass="block text-sm font-bold text-black uppercase tracking-wider">TELÉFONO *</label>
-            <input type="tel" placeholder="+52 55 1234 5678" 
-                     class="w-full px-0 py-3 border-b-2 border-gray-300 bg-white focus:border-black focus:outline-none placeholder-gray-400 text-black"
-           >
-          </div>
-  
-          <!-- Email -->
-          <div>
-            <label cclass="block text-sm font-bold text-black uppercase tracking-wider">EMAIL *</label>
-            <input type="email" placeholder="correo@ejemplo.com" 
-                     class="w-full px-0 py-3 border-b-2 border-gray-300 bg-white focus:border-black focus:outline-none placeholder-gray-400 text-black"
-           >
-          </div>
-  
-          <!-- Botón -->
-          <button type="submit" 
-                  class="w-full py-3 bg-gray-900 text-white text-sm rounded-sm hover:bg-gray-800 transition-colors tracking-wider font-light">
-            CONTINUAR →
-          </button>
-        </form>
-  
-        <!-- Enlaces rápidos -->
-        <div class="mt-6 space-y-3">
-          <a routerLink="/auth/forgot-password" class="block text-xs text-gray-600 hover:text-gray-900 tracking-tight">¿Olvidaste tu contraseña?</a>
-          <a routerLink="/auth/Sign-up"class="block text-xs text-gray-600 hover:text-gray-900 tracking-tight">¨¿No tienes cuenta? <span class="underline">Registrarme</span></a>
-        </div>
-  
-        <!-- Redes sociales -->
-        <div class="mt-8">
-          <p class="text-xs text-gray-500 mb-3 tracking-wider">O INICIA CON:</p>
-          <div class="flex space-x-3">
-            <a href="#" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
-              <span class="text-xs">G</span>
-            </a>
-            <a href="#" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
-              <span class="text-xs">f</span>
-            </a>
-            <a href="#" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
-              <span class="text-xs">X</span>
-            </a>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Columna derecha - Seguridad -->
-      <div class="pl-2">
-        <h2 class="text-xs font-medium text-gray-700 mb-6 tracking-widest">SEGURIDAD</h2>
-        
-        <ul class="space-y-6">
-          <li class="flex items-start">
-            <span class="block w-4 h-4 border border-gray-900 mr-3 mt-0.5"></span>
-            <div>
-              <h3 class="text-sm font-light text-gray-900 mb-1 tracking-tight">Encriptación AES-256</h3>
-              <p class="text-xs text-gray-500 tracking-tight">Todos los datos transmitidos están encriptados</p>
-            </div>
-          </li>
-          <li class="flex items-start">
-            <span class="block w-4 h-4 border border-gray-900 mr-3 mt-0.5"></span>
-            <div>
-              <h3 class="text-sm font-light text-gray-900 mb-1 tracking-tight">Verificación en 2 pasos</h3>
-              <p class="text-xs text-gray-500 tracking-tight">Opcional para mayor seguridad</p>
-            </div>
-          </li>
-          <li class="flex items-start">
-            <span class="block w-4 h-4 border border-gray-900 mr-3 mt-0.5"></span>
-            <div>
-              <h3 class="text-sm font-light text-gray-900 mb-1 tracking-tight">Cumplimiento normativo</h3>
-              <p class="text-xs text-gray-500 tracking-tight">GDPR y CCPA</p>
-            </div>
-          </li>
-        </ul>
-  
-        <!-- Divider -->
-        <div class="border-t border-gray-100 my-6"></div>
-  
-        <!-- Privacidad -->
+<div class="w-full max-w-4xl mx-auto mt-20 p-8 bg-white border border-gray-200">
+  <div class="grid grid-cols-2 gap-12">
+    
+    <!-- Columna izquierda - Formulario -->
+    <div class="border-r border-gray-200 pr-8">
+      <h1 class="text-3xl font-semibold text-gray-900 mb-6 tracking-tight">INICIO DE SESIÓN</h1>
+
+      <form class="space-y-6">
+        <!-- Usuario -->
         <div>
-          <h3 class="text-xs font-medium text-gray-700 mb-3 tracking-widest">POLÍTICA</h3>
-          <p class="text-xs text-gray-500 tracking-tight leading-5">
-            Al continuar, aceptas nuestros <a href="#" class="underline text-gray-700">Términos de servicio</a> y <a href="#" class="underline text-gray-700">Política de privacidad</a>.
-          </p>
+          <label class="block text-sm font-medium text-gray-900 mb-1 tracking-tight">USUARIO *</label>
+          <input type="text" placeholder="ejemplo123"
+                 class="w-full px-4 py-3 border border-black rounded-none focus:outline-none focus:border-gray-900 text-black" />
+          <p class="text-xs text-gray-500 mt-1 tracking-tight">15 caracteres disponibles</p>
         </div>
-  
-        <!-- Footer -->
-        <div class="absolute bottom-8 text-xs text-gray-400 tracking-tight">
-          © 2025 SALERNO SEGURA
+
+        <!-- Teléfono -->
+        <div>
+          <label class="block text-sm font-medium text-gray-900 mb-1 tracking-tight">TELÉFONO *</label>
+          <input type="tel" placeholder="+52 55 1234 5678"
+                 class="w-full px-4 py-3 border border-black rounded-none focus:outline-none focus:border-gray-900 text-black" />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-900 mb-1 tracking-tight">EMAIL *</label>
+          <input type="email" placeholder="correo@ejemplo.com"
+                 class="w-full px-4 py-3 border border-black rounded-none focus:outline-none focus:border-gray-900 text-black" />
+        </div>
+
+        <!-- Botón -->
+        <button type="submit"
+                class="w-full py-3 bg-gray-900 text-white text-sm rounded-none hover:bg-gray-800 transition tracking-wide">
+          CONTINUAR →
+        </button>
+      </form>
+
+      <!-- Enlaces rápidos -->
+      <div class="mt-6 space-y-2 text-sm text-gray-600">
+        <a routerLink="/auth/forgot-password" class="block hover:underline">¿Olvidaste tu contraseña?</a>
+        <a routerLink="/auth/Sign-up" class="block hover:underline">¿No tienes cuenta? <strong>Registrarme</strong></a>
+      </div>
+
+      <!-- Redes sociales -->
+      <div class="mt-8">
+        <p class="text-xs text-gray-500 mb-3 tracking-wide">O INICIA CON:</p>
+        <div class="flex space-x-3">
+          <a href="#" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs text-gray-700">G</a>
+          <a href="#" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs text-gray-700">f</a>
+          <a href="#" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs text-gray-700">X</a>
         </div>
       </div>
     </div>
+
+    <!-- Columna derecha - Imagen -->
+    <div class="pl-2 flex flex-col justify-between h-full">
+      <!-- Imagen elegante -->
+      <div class="h-full w-full bg-cover bg-center overflow-hidden rounded-sm"
+           style="background-image: url('https://i.pinimg.com/736x/0f/01/33/0f0133465e477a8f23a81183d07d00fc.jpg');">
+        <div class="h-full w-full bg-black bg-opacity-20 flex items-end p-6">
+          <div>
+            <h2 class="text-2xl font-serif text-white mb-2 tracking-tight">EXPERIENCIA DE LUJO</h2>
+            <p class="text-xs text-white font-light tracking-tight leading-5">
+              Descubre colecciones exclusivas y un servicio personalizado
+            </p>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
   </div>
+</div>

@@ -27,6 +27,8 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { ProductoService } from '../../shared/services/producto.service';
 import { ReseniaService } from '../../shared/services/resenia.service';
 import { NotificacionService } from '../../shared/services/notification.service';
+import { SidebarModule } from 'primeng/sidebar';
+
 
 @NgModule({
   declarations: [
@@ -39,6 +41,7 @@ import { NotificacionService } from '../../shared/services/notification.service'
   ],
   imports: [
     HeaderModule,
+    SidebarModule,
     CommonModule,
     ButtonModule,
     AvatarModule,

@@ -1,205 +1,327 @@
-<!-- <p-dialog
-  [style]="{ width: '80vw' }"
-  [modal]="true"
-  [draggable]="false"
-  [resizable]="false"
-  [(visible)]="mostrarModalAddVestido"
-  (onHide)="cerrar()"
->
-  <ng-template pTemplate="header">
-    <h2>Agregar Vestido</h2>
-  </ng-template> -->
-<h1 *ngIf="productoId">Editar producto</h1>
-<!-- Botón "Volver" para cerrar el modal -->
-<button *ngIf="productoId" type="button" class="submit-btn-volver" (click)="volver()"> <!-- Llama al método `volver()` -->
-  Volverè
-</button>
+<div class="max-w-full mx-auto p-8 ">
+  <!-- Título del formulario -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 *ngIf="productoId" class="text-3xl font-semibold text-gray-800">Editar producto</h1>
+    <button *ngIf="productoId" type="button"
+      class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 flex items-center gap-2"
+      (click)="volver()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+          clip-rule="evenodd" />
+      </svg>
+      Volver
+    </button>
+  </div>
 
-<form class="form-container" enctype="multipart/form-data" [formGroup]="productoForm">
-  <!-- Área de arrastrar y soltar -->
-  <label for=""> Agregar imagenes</label>
-  <div class="upload-area">
-    <p>Haz clic aquí para <a class="link" href="javascript:void(0)" (click)="fileInput.click()">Seleccionar imágenes</a>
-    </p>
+  <form class="space-y-8" enctype="multipart/form-data" [formGroup]="productoForm">
+    <!-- Sección de imágenes -->
+    <div class="space-y-4">
+      <label class="block text-lg font-medium text-gray-800">Agregar imágenes</label>
+      <div
+        class="border border-dashed border-gray-300 rounded-xl p-8 text-center bg-white hover:border-blue-300 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p class="mt-2 text-gray-600">
+          Haz clic aquí para
+          <a class="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
+            (click)="fileInput.click()">Seleccionar imágenes</a>
+        </p>
+        <p class="text-sm text-gray-500 mt-1">Formatos soportados: JPG, PNG</p>
 
-    <!-- Input oculto para seleccionar múltiples imágenes -->
-    <input type="file" (change)="otrasImagenesChange($event)" multiple accept="image/*" style="display: none;"
-      #fileInput />
+        <!-- Input oculto para imágenes -->
+        <input type="file" (change)="otrasImagenesChange($event)" multiple accept="image/*" class="hidden" #fileInput />
 
-    <!-- Previsualización de imágenes -->
-    <div formArrayName="imagenes" class="image-preview">
-      <div *ngFor="let imagen of imagenes.controls; let i = index" class="image-container">
-        <div class="image-wrapper">
-          <img [src]="imagen.value" alt="Imagen {{ i + 1 }}" />
+        <!-- Previsualización de imágenes -->
+        <div formArrayName="imagenes" class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div *ngFor="let imagen of imagenes.controls; let i = index" class="relative group">
+            <div class="aspect-square overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+              <img [src]="imagen.value" alt="Imagen {{ i + 1 }}" class="w-full h-full object-cover" />
+            </div>
+            <button
+              class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+              (click)="eliminarImagen(i)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-          <!-- Botón para eliminar la imagen -->
-          <button class="delete-button" (click)="eliminarImagen(i)">×</button>
+        <!-- Botones de acciones -->
+        <div class="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+          <button type="button"
+            class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center gap-2"
+            (click)="fileInput.click()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+            Seleccionar imágenes
+          </button>
+          <button type="button"
+            class="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center gap-2"
+            (click)="clearAllImages()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+            Vaciar todas las imágenes
+          </button>
+        </div>
+
+<div>
+<h1 class="text-2xl font-bold text-gray-700 mb-2">Colores</h1>
+
+  <!-- Paleta de colores -->
+  <div class="flex flex-wrap gap-3 mt-2">
+    <div *ngFor="let color of colorDetectadoHex" class="relative">
+      <div
+        [ngStyle]="{ backgroundColor: color }"
+        class="w-12 h-12 rounded-full border cursor-pointer transition-all duration-150"
+        [class.border-4]="estaSeleccionado(color)"
+        [class.border-blue-500]="estaSeleccionado(color)"
+        (click)="toggleColorSeleccionado(color)">
+      </div>
+
+      <button type="button" (click)="eliminarColor(color)"
+        class="absolute -top-1.5 -right-1.5 bg-white text-red-600 border rounded-full w-5 h-5 text-sm leading-none flex items-center justify-center shadow">
+        ×
+      </button>
+    </div>
+  </div>
+
+  <!-- Botón: eliminar no seleccionados -->
+  <div class="mt-4">
+    <button type="button"
+      class="px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm"
+      (click)="eliminarColoresNoSeleccionados()">
+      Eliminar colores no seleccionados
+    </button>
+  </div>
+</div>
+
+
+      </div>
+    </div>
+
+    <!-- Información básica -->
+    <div class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-800 pb-2 border-b border-gray-200">Información básica</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del vestido</label>
+          <input type="text" formControlName="nombre" placeholder="Nombre del vestido"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+          <select formControlName="idCategoria"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <option value="" disabled selected>Seleccionar categoría</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria._id">
+              {{ categoria.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Talla</label>
+          <select formControlName="talla"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <option value="" disabled selected>Seleccionar</option>
+            <option *ngFor="let talla of tallas" [value]="talla.value">
+              {{ talla.label }}
+            </option>
+          </select>
+        </div>
+        <!-- 
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Altura (cm)</label>
+          <input type="number" formControlName="altura" placeholder="Altura (cm)" 
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Cintura (cm)</label>
+          <input type="number" formControlName="cintura" placeholder="Cintura (cm)" 
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+        </div>
+         -->
+
+      </div>
+    </div>
+
+    <!-- Opciones de transacción -->
+    <div class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-800 pb-2 border-b border-gray-200">Opciones de transacción</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona aquí la opción si quieres que el
+            producto se muestre como nuevo o no</label>
+          <select formControlName="nuevo"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <option value="" disabled selected>Seleccionar</option>
+            <option *ngFor="let estado of estadoProducto" [value]="estado.value">
+              {{ estado.label }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Opciones para el tipo de transacción (Renta o
+            Venta)</label>
+          <select formControlName="opcionesTipoTransaccion"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            (change)="onTipoTransaccionChange($event)">
+            <option value="" disabled selected>Seleccionar</option>
+            <option *ngFor="let tipo of opcionesTipoTransaccion" [value]="tipo.value">
+              {{ tipo.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- Precios -->
+    <div class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-800 pb-2 border-b border-gray-200">Precios</h2>
+      <div *ngIf="productoForm.get('opcionesTipoTransaccion')?.value == 'venta'"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="flex items-start">
+          <div class="flex items-center h-10">
+            <input type="checkbox" formControlName="mostrarPrecioAnterior" (change)="togglePrecioAnterior()"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+          </div>
+          <div class="ml-3">
+            <label class="block text-sm font-medium text-gray-700">¿Desea mostrar precio anterior?</label>
+            <p class="text-xs text-gray-500 mt-1">Mostrar el precio tachado como referencia</p>
+          </div>
+        </div>
+
+        <div *ngIf="mostrarPrecioAnterior || productoForm.get('mostrarPrecioAnterior')?.value==true">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Precio anterior</label>
+          <div class="relative rounded-md">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 sm:text-sm">$</span>
+            </div>
+            <input type="number" formControlName="precioAnterior" placeholder="Ej: 100"
+              class="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Precio actual
+            ({{ productoForm.get('mostrarPrecioAnterior')?.value ? 'promoción' : 'normal' }})
+          </label>
+          <div class="relative rounded-md">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 sm:text-sm">$</span>
+            </div>
+            <input type="number" formControlName="precioActual" placeholder="Ej: 70"
+              class="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+          </div>
+        </div>
+
+      </div>
+      <!-- Campo de costo de renta (solo visible cuando se selecciona renta) -->
+      <div *ngIf="productoForm.get('opcionesTipoTransaccion')?.value == 'renta'"
+        class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Costo de renta</label>
+          <div class="relative rounded-md">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 sm:text-sm">$</span>
+            </div>
+            <input type="text" formControlName="costoRenta" placeholder="Costo por día"
+              class="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Este producto no tendrá precio de venta, solo costo de renta</p>
         </div>
       </div>
     </div>
 
-    <!-- Botones de acciones -->
-    <div class="btns">
-      <a class="submit-btn" href="javascript:void(0)" (click)="fileInput.click()">Seleccionar imágenes</a>
-      <a class="submit-btn" href="javascript:void(0)" (click)="clearAllImages()">Vaciar todas las imágenes</a>
-    </div>
-  </div>
 
-  <div class="form-grid">
-    <div class="group-input">
-      <label>Nombre del vestido</label>
-      <input type="text" formControlName="nombre" placeholder="Nombre del vestido" />
-    </div>
-    <div class="group-input">
-      <label>Categoría</label>
-      <select formControlName="idCategoria">
-        <option value="" disabled selected>Seleccionar categoría</option>
-        <option *ngFor="let categoria of categorias" [value]="categoria._id">
-          {{ categoria.nombre }}
-        </option>
-      </select>
-    </div>
-    <div class="group-input">
-      <label>Talla</label>
-      <select formControlName="talla">
-        <option value="" disabled selected>Seleccionar</option>
+    <!-- Características del vestido -->
+    <div class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-800 pb-2 border-b border-gray-200">Características del vestido</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Cuello</label>
+          <select formControlName="tipoCuello"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <option value="" disabled selected>Seleccionar</option>
+            <option *ngFor="let cuello of opcionesCaracteristicasVestido.tipoCuello" [value]="cuello.value">
+              {{ cuello.label }}
+            </option>
+          </select>
+        </div>
 
-        <option *ngFor="let talla of tallas" [value]="talla.value">
-          {{ talla.label }}
-        </option>
-      </select>
-    </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Cola</label>
+          <select formControlName="tipoCola"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <option value="" disabled selected>Seleccionar</option>
+            <option *ngFor="let cola of opcionesCaracteristicasVestido.tipoCola" [value]="cola.value">
+              {{ cola.label }}
+            </option>
+          </select>
+        </div>
 
-    <div class="group-input">
-      <label>Altura (cm)</label>
-      <input type="number" formControlName="altura" placeholder="Altura (cm)" />
-    </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Capas</label>
+          <select formControlName="tipoCapas"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <option value="" disabled selected>Seleccionar</option>
+            <option *ngFor="let capa of opcionesCaracteristicasVestido.tipoCapas" [value]="capa.value">
+              {{ capa.label }}
+            </option>
+          </select>
+        </div>
 
-    <div class="group-input">
-      <label>Cintura (cm)</label>
-      <input type="number" formControlName="cintura" placeholder="Cintura (cm)" />
-    </div>
-
-    <div class="group-input">
-      <label>Color</label>
-      <select formControlName="color">
-        <option *ngFor="let color of colores" [value]="color.value">
-          {{ color.label }}
-        </option>
-      </select>
-    </div>
-
-
-
-    <!-- <div class="group-input">
-          <label>Textura (opcional)</label>
-          <input type="text" formControlName="textura" placeholder="Textura (opcional)" />
-        </div> -->
-
-
-
-
-  </div>
-  <div class="form-grid">
-
-    <div class="group-input">
-      <label>¿Desea mostrar precio anterior?</label>
-      <input type="checkbox" formControlName="mostrarPrecioAnterior" (change)="togglePrecioAnterior()" />
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Hombro</label>
+          <select formControlName="tipoHombro"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+            <option value="" disabled selected>Seleccionar</option>
+            <option *ngFor="let hombro of opcionesCaracteristicasVestido.tipoHombro" [value]="hombro.value">
+              {{ hombro.label }}
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <!-- Precio anterior (condicional) -->
-    <div class="group-input" *ngIf="mostrarPrecioAnterior || productoForm.get('mostrarPrecioAnterior')?.value==true">
-      <label>Precio anterior:</label>
-      <input type="number" formControlName="precioAnterior" placeholder="Ej: 100" />
+    <!-- Descripción -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Descripción</label>
+      <p class="text-xs text-gray-500">Agrega una descripción detallada del producto</p>
+      <textarea formControlName="descripcion" rows="5"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"></textarea>
     </div>
 
-    <!-- Precio actual (siempre visible) -->
-    <div class="group-input">
-      <label>Precio actual (promoción):</label>
-      <input type="number" formControlName="precioActual" placeholder="Ej: 70" />
+    <!-- Botón de enviar -->
+    <div class="pt-6">
+      <button type="button" (click)="onAgregarProducto()"
+        class="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+            clip-rule="evenodd" />
+        </svg>
+        {{productoId?"Guardar cambios":"Agregar producto"}}
+      </button>
     </div>
-  </div>
-  <h2>Opciones de transacción</h2>
-  <div class="form-grid">
-    <div class="group-input">
-      <label>Selecciona aquí la opción si quieres que el producto se muestre como nuevo o no</label>
-      <select formControlName="nuevo">
-        <option value="" disabled selected>Seleccionar</option>
-        <option *ngFor="let estado of estadoProducto" [value]="estado.value">
-          {{ estado.label }}
-        </option>
-      </select>
-    </div>
-    <div class="group-input">
-      <label>Opciones para el tipo de transacción (Renta o Venta)</label>
-      <select formControlName="opcionesTipoTransaccion">
-        <option value="" disabled selected>Seleccionar</option>
-        <option *ngFor="let tipo of opcionesTipoTransaccion" [value]="tipo.value">
-          {{ tipo.label }}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <h2>Características del vestido</h2>
-  <div class="form-grid">
-    <!-- Campo de características del vestido (solo visible si la categoría es "Vestido") -->
-
-    <div class="form-group">
-      <label>Tipo de Cuello</label>
-      <select formControlName="tipoCuello">
-        <option value="" disabled selected>Seleccionar</option>
-
-        <option *ngFor="let cuello of opcionesCaracteristicasVestido.tipoCuello" [value]="cuello.value">
-          {{ cuello.label }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Selección de tipo de cola -->
-    <div class="form-group">
-      <label>Tipo de Cola</label>
-      <select formControlName="tipoCola">
-        <option value="" disabled selected>Seleccionar</option>
-
-        <option *ngFor="let cola of opcionesCaracteristicasVestido.tipoCola" [value]="cola.value">
-          {{ cola.label }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Selección de tipo de capas -->
-    <div class="form-group">
-      <label>Tipo de Capas</label>
-      <select formControlName="tipoCapas">
-        <option value="" disabled selected>Seleccionar</option>
-
-        <option *ngFor="let capa of opcionesCaracteristicasVestido.tipoCapas" [value]="capa.value">
-          {{ capa.label }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Selección de tipo de hombro -->
-    <div class="form-group">
-      <label>Tipo de Hombro</label>
-      <select formControlName="tipoHombro">
-        <option value="" disabled selected>Seleccionar</option>
-
-        <option *ngFor="let hombro of opcionesCaracteristicasVestido.tipoHombro" [value]="hombro.value">
-          {{ hombro.label }}
-        </option>
-      </select>
-    </div>
-
-  </div>
-  <div>
-    <label>Descripción</label>
-    <textarea formControlName="descripcion" placeholder="Agrega la descripción" rows="5" cols="30"></textarea>
-  </div>
-
-  <button class="submit-btn" (click)="onAgregarProducto()">
-    {{productoId?"Guardar cambios":"Agregar producto"}}
-  </button>
-</form>
-<!-- </p-dialog> -->
+  </form>
+</div>

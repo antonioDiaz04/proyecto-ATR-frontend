@@ -8,7 +8,7 @@ import { VentayrentaService } from '../../../../shared/services/ventayrenta.serv
 @Component({
   selector: 'app-registro-venta',
   templateUrl: './registro-venta.component.html',
-  styleUrl: './registro-venta.component.scss'
+  // styleUrl: './registro-venta.component.scss'
 })
 export class RegistroVentaComponent {
 @Input() rentaId: string | null = null;

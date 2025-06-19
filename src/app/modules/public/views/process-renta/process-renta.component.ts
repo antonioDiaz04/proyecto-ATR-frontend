@@ -12,12 +12,20 @@ import { SwPush } from '@angular/service-worker';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+<<<<<<< HEAD
+=======
+import { Location } from '@angular/common';
+>>>>>>> origin/main
 declare const paypal: any;
 
 @Component({
   selector: 'app-process-renta',
   templateUrl: './process-renta.component.html',
+<<<<<<< HEAD
   styleUrls: ['./process-renta.component.scss'],
+=======
+  // styleUrls: ['./process-renta.component.scss'],
+>>>>>>> origin/main
 })
 export class ProcessRentaComponent implements OnInit {
   isLoading: boolean = false;
@@ -41,6 +49,7 @@ export class ProcessRentaComponent implements OnInit {
 
 
   constructor(
+    private location: Location,
     private swPush: SwPush,
     private activatedRoute: ActivatedRoute,
     private productoS_: ProductoService,
@@ -92,6 +101,12 @@ export class ProcessRentaComponent implements OnInit {
         this.initializePayPal();
         this.isLoading = false;
         this.cdRef.detectChanges();
+<<<<<<< HEAD
+=======
+        this.checkPayPalLoaded().then(() => {
+          this.loadProductDetails();
+        });
+>>>>>>> origin/main
       },
       error: (err) => {
         console.error('Error al obtener detalles:', err);
@@ -229,4 +244,10 @@ export class ProcessRentaComponent implements OnInit {
       }
     });
   }
+<<<<<<< HEAD
+=======
+   volver() {
+    this.location.back();
+  }
+>>>>>>> origin/main
 }
