@@ -113,9 +113,11 @@ import { ReseniaService } from '../../shared/services/resenia.service';
 import { NuevosLlegadasView } from './views/nuevos-llegadas/nuevos-llegadas.view';
 import { IncluyeAccesorioView } from './views/incluye-accesorio/incluye-accesorio.view';
 import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.component';
+import { PrivacyModalComponent } from './components/privacy-modal/privacy-modal.component';
+import { AuthService } from '../auth/commons/services/auth.service';
 // import { IncluyeAccesorioView } from './view/incluye-accesorio/incluye-accesorio.view';
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent],
+  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent, PrivacyModalComponent],
   exports:[COMPONENTS],
   imports: [HeaderModule,InputTextModule,FloatLabelModule,
     InputNumberModule,ConfirmDialogModule,MessageModule,
@@ -133,7 +135,7 @@ import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.co
   UsuarioService,ProductoService,
   ToastrService,CartService,NotificacionService,
   MessageService,IndexedDbService,
-  ConfirmationService,SignInService,
+  ConfirmationService,SignInService,AuthService ,
   SignUpService,UsuarioService,DatosEmpresaService,ControlAdministrativaService,ThemeServiceService],
 })
 export class PublicModule {}

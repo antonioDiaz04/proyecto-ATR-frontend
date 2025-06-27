@@ -19,7 +19,7 @@ import { environment } from '../../../environments/environment';
 export class UsuarioService {
   // url = 'https://servidortropicalworld-1.onrender.com/usuarios/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   enviarCorreo(email: string): Observable<any> {
     return this.http.post<any>(`${environment.api}/enviar-correo`, { email });
@@ -38,6 +38,15 @@ export class UsuarioService {
     );
   }
 
+  guardarCarrito(productos: any[]): Observable<any> {
+    return this.http.post('/api/v1/carrito/guardar', { productos });
+  }
+  vaciarCarrito(): Observable<any> {
+  return this.http.delete('/api/v1/carrito/vaciar');
+}
+
+
+
   getPreguntaSecreta(email: any): Observable<any> {
     return this.http.post<any>(
       environment.api + '/verificacion/verificar-correo',
@@ -47,11 +56,11 @@ export class UsuarioService {
       }
     );
   }
-    // Método para verificar la respuesta secreta
-    verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
-      const body = { email, respuesta };
-      return this.http.post(`${environment.api}/verificacion/verificar-respuesta`, body);
-    }
+  // Método para verificar la respuesta secreta
+  verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
+    const body = { email, respuesta };
+    return this.http.post(`${environment.api}/verificacion/verificar-respuesta`, body);
+  }
   checkTelefonoExists(telefono: string): Observable<any> {
     return this.http.post<any>(
       environment.api + '/usuarios/check-telefono',
@@ -145,7 +154,7 @@ export class UsuarioService {
   // }
 
   eliminarUsuario(id: string): Observable<any> {
-    return this.http.delete(environment.api+'/usuarios/' + id);
+    return this.http.delete(environment.api + '/usuarios/' + id);
   }
   // eliminarProducto(id: string): Observable<any> {
   //     return this.http.delete(this.url + id);

@@ -36,7 +36,15 @@ interface Producto {
 @Component({
   selector: 'app-details-product',
   templateUrl: './details-product.view.html',
-  // styleUrls: ['./details-product.view.scss', './info.scss', './carrucel.scss'],
+  styles: `
+  @keyframes fade-in-fast {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-fast {
+  animation: fade-in-fast 0.4s ease-out;
+}
+`,
 })
 export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   isLoading: boolean = true;
@@ -290,30 +298,41 @@ setPage(index: number): void {
     }, 2000); // 2 segundos
   }
 
-  apartarRentar(producto: any) {
-    const body2 = {
-      id: producto._id,
-      nombre: producto.nombre,
-      precio: producto.precio,
-      imagenes: producto.imagenes[0],
-      opcionesTipoTransaccion: producto.opcionesTipoTransaccion,
-    };
-  
-    try {
-      this.cartService.addToCart(body2);
-      console.log('Producto agregado al carrito:', body2);
-  
-      // Enviar notificación push al usuario
-      const nombreProducto = producto.nombre;
-      const imagenProducto = producto.imagenes[0]; // Asegúrate de que sea una URL válida
-  
-      // Llama a generarToken y pasa los datos del producto
-      this.generarToken(nombreProducto, imagenProducto);
-  
-    } catch (error) {
-      console.error('Error al guardar el producto:', error);
-    }
+  mostrarToast: boolean = false;
+productoToast = {
+  nombre: '',
+  imagen: '',
+};
+apartarRentar(producto: any) {
+  const body2 = {
+    id: producto._id,
+    nombre: producto.nombre,
+    precio: producto.precio,
+    imagenes: producto.imagenes[0],
+    opcionesTipoTransaccion: producto.opcionesTipoTransaccion,
+  };
+
+  try {
+    this.cartService.addToCart(body2);
+    console.log('Producto agregado al carrito:', body2);
+
+    // Mostrar notificación personalizada
+    this.productoToast.nombre = producto.nombre;
+    this.productoToast.imagen = producto.imagenes[0]; // URL válida
+    this.mostrarToast = true;
+
+    setTimeout(() => {
+      this.mostrarToast = false;
+    }, 4000);
+
+    // Push opcional
+    this.generarToken(producto.nombre, producto.imagenes[0]);
+
+  } catch (error) {
+    console.error('Error al guardar el producto:', error);
   }
+}
+
   
 
 

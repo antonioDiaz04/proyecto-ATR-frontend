@@ -72,7 +72,17 @@ export class FooterComponent {
 
 
 
- 
+  title = 'Atelier protegue tus datos';
+  isPrivacyModalOpen: boolean = false; // Estado para controlar la visibilidad del modal
+
+
+  openPrivacyModal(): void {
+    this.isPrivacyModalOpen = true;
+  }
+
+  onPrivacyModalClose(): void {
+    this.isPrivacyModalOpen = false;
+  }
 
   // onTabClick(event: any) {
   //   this.activeItem = event.item;

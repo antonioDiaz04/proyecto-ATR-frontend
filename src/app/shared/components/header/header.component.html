@@ -9,13 +9,13 @@
   [ngClass]="{ 'bg-opacity-95 backdrop-blur-sm': isScrolled }">
   
   <!-- Marquee (hidden on mobile) -->
-  <div  *ngIf="!isMobile" class="container-marquee md:flex transition-opacity duration-500 ease-in-out hidden sm:flex"
+  <!-- <div  *ngIf="!isMobile" class="container-marquee md:flex transition-opacity duration-500 ease-in-out hidden sm:flex"
        [ngClass]="{ 'hidden-marquee': isScrolled }">
     <div class="phrase text-xs sm:text-sm md:text-base"> Descuentos hasta el <span class="highlight">-50% 🔥</span> en prendas seleccionadas por tiempo limitado</div>
     <div class="phrase text-xs sm:text-sm md:text-base">Ventas exclusivas <span class="highlight">solo aquí</span>, accede antes que nadie a las nuevas colecciones</div>
     <div class="phrase text-xs sm:text-sm md:text-base">Renta de lujo en <span class="highlight">Atelier</span>, ideal para eventos, galas y momentos únicos</div>
     <div class="phrase text-xs sm:text-sm md:text-base">Estilo y elegancia en <span class="highlight">cada prenda</span>, diseñadas para destacar tu personalidad</div>
-  </div>
+  </div> -->
 
   <!-- Main Container -->
   <div class="container mx-auto px-2 sm:px-4 md:px-6 lg:px-20 lg:py-2">
@@ -134,13 +134,21 @@
           </ng-container>
 
           <ng-template #userMenu>
-            <div class="relative group">
-              <button class="flex items-center space-x-1">
+            <div class="relative group"
+                 (mouseenter)="userMenuOpen = true"
+                 (mouseleave)="userMenuOpen = false"
+                 (focusin)="userMenuOpen = true"
+                 (focusout)="userMenuOpen = false"
+                 tabindex="0">
+              <button class="flex items-center space-x-1" type="button">
                 <i class="pi pi-user text-lg sm:text-xl text-gray-700"></i>
                 <span class="text-xs sm:text-sm hidden lg:inline-block">Mi cuenta</span>
               </button>
               <div
-                class="absolute right-0 hidden group-hover:block bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-xs sm:text-sm text-gray-700 z-50">
+                class="absolute right-0 bg-white border border-gray-200 rounded-lg shadow-xl mt-2 py-1 min-w-[180px] text-xs sm:text-sm text-gray-700 z-50"
+                [class.hidden]="!userMenuOpen"
+                (mouseenter)="userMenuOpen = true"
+                (mouseleave)="userMenuOpen = false">
                 <div class="px-3 py-1 sm:px-4 sm:py-2 border-b border-gray-100 text-xs text-gray-500">Bienvenido/a</div>
                 <a (click)="redirectToCliente('perfil')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Perfil</a>
                 <a (click)="redirectToCliente('compras')" class="block px-3 py-1 sm:px-4 sm:py-2 hover:bg-gray-50 transition">Mis compras</a>

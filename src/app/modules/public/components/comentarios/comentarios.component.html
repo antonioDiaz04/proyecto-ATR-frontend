@@ -34,17 +34,18 @@
   >
 
     <!-- Blur effect on siblings -->
-    <div class="flex items-center gap-4 mb-3 z-10 relative">
-      <img
-        [src]="review.usuario.avatar"
-        [alt]="review.usuario.nombre"
-        class="w-10 h-10 rounded-full object-cover border-2 border-[#e5e0db] group-hover:border-[#d4a017] transition-colors duration-200"
-      />
-      <div class="text-sm">
-        <p class="font-serif font-medium text-[#3a3a3a] text-base">{{ review.usuario.nombre }}</p>
-        <p class="text-[#6b5d4d] text-xs mt-1">{{ review.fecha }}</p>
-      </div>
-    </div>
+<div class="flex items-center gap-4 mb-3 z-10 relative">
+  <div
+    class="w-10 h-10 rounded-full bg-black text-yellow-400 flex items-center justify-center text-sm font-bold uppercase border-2 border-[#e5e0db] group-hover:border-[#d4a017] transition-colors duration-200"
+  >
+    {{ review.usuario.nombre.charAt(0) }}
+  </div>
+  <div class="text-sm">
+    <p class="font-serif font-medium text-[#3a3a3a] text-base">{{ review.usuario.nombre }}</p>
+    <p class="text-[#6b5d4d] text-xs mt-1">{{ review.fecha }}</p>
+  </div>
+</div>
+
 
     <div class="flex gap-1 mb-3 z-10 relative">
       <svg
