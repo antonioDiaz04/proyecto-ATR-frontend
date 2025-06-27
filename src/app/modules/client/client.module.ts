@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ClientRoutingModule } from './client-routing.module';
 import { PerfilComponent } from './views/perfil/perfil.component';
 import { RentasComponent } from './views/rentas/rentas.component';
+import { ReportarIncidenteComponent } from './views/reportar-incidente/reportar-incidente.component';
 import { ClientComponent } from './client.component';
 import { SessionService } from '../../shared/services/session.service';
 import { VentayrentaService } from '../../shared/services/ventayrenta.service';
@@ -24,7 +25,7 @@ import { ReseniaService } from '../../shared/services/resenia.service';
 import { NotificacionService } from '../../shared/services/notification.service';
 import { SidebarModule } from 'primeng/sidebar';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     ClientComponent,
     NotificacionesComponent,
     SidenavComponent,
+    ReportarIncidenteComponent,
   ],
   imports: [
     HeaderModule,
@@ -45,6 +47,7 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     ClientRoutingModule,
     FormsModule,
     ZXingScannerModule,
+    ReactiveFormsModule
   ],
   providers: [
     DatosEmpresaService,

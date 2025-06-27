@@ -47,11 +47,14 @@ export class UsuarioService {
       }
     );
   }
-    // Método para verificar la respuesta secreta
-    verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
-      const body = { email, respuesta };
-      return this.http.post(`${environment.api}/verificacion/verificar-respuesta`, body);
-    }
+  // Método para verificar la respuesta secreta
+  verificarRespuestaSecreta(email: string, respuesta: string): Observable<any> {
+    const body = { email, respuesta };
+    return this.http.post(
+      `${environment.api}/verificacion/verificar-respuesta`,
+      body
+    );
+  }
   checkTelefonoExists(telefono: string): Observable<any> {
     return this.http.post<any>(
       environment.api + '/usuarios/check-telefono',
@@ -88,6 +91,11 @@ export class UsuarioService {
       withCredentials: true,
     });
   }
+  enviarReporte(reporteData: any, id: any): Observable<any> {
+    return this.http.post(environment.api + `/usuarios/reportes/${id}`, reporteData, {
+      withCredentials: true,
+    });
+  }
 
   enviarToken(email: string, codigoVerificacion: string): Observable<any> {
     return this.http.post<boolean>(
@@ -103,10 +111,7 @@ export class UsuarioService {
   //   });
   // }
 
-  actualizaPasswordxCorreo(
-    email: any,
-    nueva: string
-  ): Observable<any> {
+  actualizaPasswordxCorreo(email: any, nueva: string): Observable<any> {
     return this.http.put<boolean>(
       environment.api + '/usuarios/actualizaxCorreo',
       {
@@ -116,10 +121,7 @@ export class UsuarioService {
     );
   }
 
-  actualizarUsuario(
-    email: string,
-    nueva: string
-  ): Observable<any> {
+  actualizarUsuario(email: string, nueva: string): Observable<any> {
     return this.http.put<boolean>(
       environment.api + '/usuarios/actualizaxCorreo',
       {
@@ -145,7 +147,7 @@ export class UsuarioService {
   // }
 
   eliminarUsuario(id: string): Observable<any> {
-    return this.http.delete(environment.api+'/usuarios/' + id);
+    return this.http.delete(environment.api + '/usuarios/' + id);
   }
   // eliminarProducto(id: string): Observable<any> {
   //     return this.http.delete(this.url + id);

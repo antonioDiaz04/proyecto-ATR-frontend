@@ -1,0 +1,81 @@
+<section class="text-gray-800 px-4">
+  <div class="max-w-3xl mx-auto bg-white shadow-md border border-gray-200 rounded-xl p-10 md:p-12 space-y-10">
+
+    <!-- ENCABEZADO -->
+    <div class="text-center">
+      <h2 class="text-4xl font-serif font-light tracking-wide text-neutral-900 mb-3">
+        Reportar Incidente
+      </h2>
+      <p class="text-base text-gray-600 max-w-xl mx-auto">
+        Si detectaste un uso indebido de tus datos, completa este formulario. Nuestro equipo revisará el caso con confidencialidad.
+      </p>
+    </div>
+
+    <!-- FORMULARIO -->
+    <form [formGroup]="reporteForm" (ngSubmit)="enviarReporte()" class="space-y-7">
+      <!-- CORREO -->
+      <div>
+        <label class="block text-sm font-medium uppercase tracking-wide text-gray-600 mb-2">Correo electrónico</label>
+        <input
+          type="email"
+          formControlName="email"
+          
+          class="w-full bg-transparent border-b border-black text-gray-800 text-base py-2 px-1 focus:outline-none focus:border-gray-800 transition"
+          placeholder="correo@dominio.com"
+        />
+        <p *ngIf="reporteForm.get('email')?.touched && reporteForm.get('email')?.invalid" class="text-xs text-red-500 mt-1">
+          Ingresa un correo válido.
+        </p>
+      </div>
+
+      <!-- TIPO -->
+      <div>
+        <label class="block text-sm font-medium uppercase tracking-wide text-gray-600 mb-2">Tipo de incidente</label>
+        <select
+          formControlName="tipo"
+          class="w-full bg-transparent border-b border-black text-gray-800 text-base py-2 px-1 focus:outline-none focus:border-gray-800 transition"
+        >
+          <option value="">Selecciona una opción</option>
+          <option>Filtración de datos</option>
+          <option>Uso indebido</option>
+          <option>Acceso no autorizado</option>
+          <option>Otro</option>
+        </select>
+        <p *ngIf="reporteForm.get('tipo')?.touched && reporteForm.get('tipo')?.invalid" class="text-xs text-red-500 mt-1">
+          Este campo es obligatorio.
+        </p>
+      </div>
+
+      <!-- DESCRIPCIÓN -->
+      <div>
+        <label class="block text-sm font-medium uppercase tracking-wide text-gray-600 mb-2">Descripción del incidente</label>
+        <textarea
+          formControlName="descripcion"
+          rows="4"
+          class="w-full bg-transparent border-b border-black text-gray-800 text-base py-2 px-1 focus:outline-none focus:border-gray-800 transition"
+          placeholder="Describe el incidente con el mayor detalle posible..."
+        ></textarea>
+        <p *ngIf="reporteForm.get('descripcion')?.touched && reporteForm.get('descripcion')?.invalid" class="text-xs text-red-500 mt-1">
+          Mínimo 10 caracteres.
+        </p>
+      </div>
+
+      <!-- MENSAJE DE PRIVACIDAD -->
+      <div class="text-sm text-gray-500 leading-relaxed">
+        Al enviar este formulario aceptas que procesemos tus datos personales conforme a nuestro
+        <a href="/aviso-de-privacidad" class="underline hover:text-black">Aviso de Privacidad</a>.
+      </div>
+
+      <!-- BOTÓN -->
+      <div class="text-center pt-2">
+        <button
+          type="submit"
+          [disabled]="reporteForm.invalid"
+          class="bg-black text-white text-sm tracking-widest uppercase px-10 py-3 border border-black hover:bg-white hover:text-black transition duration-300"
+        >
+          Enviar Reporte
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

@@ -5,11 +5,14 @@ import { SignInView } from './view/sign-in/sign-in.view';
 import { VerificarCodigoView } from './view/verificar-codigo/verificar-codigo.view';
 import { RegistroView } from './view/registro/registro.view';
 import { RecuperarByEmailComponent } from './view/recuperar-by-email/recuperar-by-email.component';
+import { AuthSelectorComponent } from './view/auth-selector/auth-selector.component';
+
 const routes: Routes = [
   {
     path: '',
     component: AuthComponent,
     children: [
+      { path: 'Auth-selector', component: AuthSelectorComponent },
       { path: 'Sign-in', component: SignInView },
       { path: 'Sign-up', component: RegistroView },
       { path: 'forgot-password', component: RecuperarByEmailComponent },
@@ -20,6 +23,5 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  
 })
 export class AuthRoutingModule {}

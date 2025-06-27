@@ -43,3 +43,5 @@ Thumbs.db
 
 # Ignorar el archivo de dependencias
 package-lock.json
+
+.env

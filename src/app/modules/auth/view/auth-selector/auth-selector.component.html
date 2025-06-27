@@ -1,0 +1,406 @@
+<div class="min-h-screen bg-[#f9f9f9] flex items-center justify-center px-4">
+  <div
+    class="max-w-5xl w-full grid md:grid-cols-2 gap-8 bg-white border border-gray-200 shadow-xl rounded-2xl p-10 md:p-12"
+  >
+    <!-- IZQUIERDA: BIENVENIDA -->
+    <div class="text-gray-800 flex flex-col justify-center">
+      <h1 class="text-4xl font-light mb-4">Bienvenido de nuevo</h1>
+      <p class="mb-6 text-gray-600 leading-relaxed">
+        Es un hecho establecido que el lector se distraerá con el contenido
+        legible de una página al mirar su diseño.
+      </p>
+      <div class="flex space-x-4 text-2xl text-gray-500">
+        <a href="#"><i class="fab fa-facebook hover:text-black"></i></a>
+        <a href="#"><i class="fab fa-twitter hover:text-black"></i></a>
+        <a href="#"><i class="fab fa-instagram hover:text-black"></i></a>
+        <a href="#"><i class="fab fa-youtube hover:text-black"></i></a>
+      </div>
+    </div>
+
+    <!-- DERECHA: FORMULARIOS -->
+    <div class="p-0">
+      <div class="grid grid-cols-3 gap-2 mb-6 text-center">
+        <button
+          class="bg-gray-100 py-2 rounded font-medium text-sm hover:bg-gray-200"
+          (click)="showForm('login')"
+        >
+          Login
+        </button>
+        <button
+          class="bg-gray-100 py-2 rounded font-medium text-sm hover:bg-gray-200"
+          (click)="showForm('register')"
+        >
+          Registro
+        </button>
+        <button
+          class="bg-gray-100 py-2 rounded font-medium text-sm hover:bg-gray-200"
+          (click)="showForm('qr')"
+        >
+          QR
+        </button>
+      </div>
+
+      <!-- (aquí continúan tus formularios sin cambio estructural) -->
+      <!-- FORMULARIO LOGIN -->
+      <form *ngIf="currentForm === 'login'" class="space-y-6 text-gray-800">
+        <div class="text-center">
+          <h2 class="text-2xl font-semibold text-neutral-900 mb-1">
+            Iniciar sesión
+          </h2>
+          <p class="text-sm text-gray-500">
+            Accede con tus credenciales registradas.
+          </p>
+        </div>
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          class="w-full bg-transparent border-b border-black text-base py-2 px-1 focus:outline-none focus:border-gray-800 transition"
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          class="w-full bg-transparent border-b border-black text-base py-2 px-1 focus:outline-none focus:border-gray-800 transition"
+        />
+        <label class="inline-flex items-center text-sm text-gray-600">
+          <input type="checkbox" class="mr-2" />Recordarme
+        </label>
+        <button
+          type="submit"
+          class="w-full bg-black text-white text-sm tracking-widest uppercase px-10 py-3 border border-black hover:bg-white hover:text-black transition duration-300"
+        >
+          Entrar
+        </button>
+        <p class="text-center text-sm text-gray-500 mt-2">
+          <a href="#" class="underline hover:text-black"
+            >¿Olvidaste tu contraseña?</a
+          >
+        </p>
+      </form>
+
+      <!-- FORMULARIO REGISTRO -->
+      <div
+        *ngIf="currentForm === 'register'"
+        class="max-h-[75vh] overflow-y-auto space-y-6"
+      >
+        <!-- Encabezado -->
+        <div class="mb-6 text-center">
+          <h1
+            class="text-2xl font-light tracking-wide text-gray-900 uppercase mb-1"
+          >
+            Ingrese su información
+          </h1>
+          <p class="text-gray-600 text-sm">
+            Complete todos los campos obligatorios (*)
+          </p>
+        </div>
+
+        <!-- Paso 1 -->
+        <form
+          *ngIf="currentStep === 1"
+          [formGroup]="personalDataForm"
+          (ngSubmit)="goToNextStep()"
+          class="space-y-6"
+        >
+          <!-- Usuario -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-800 uppercase mb-1"
+              >Usuario *</label
+            >
+            <input
+              formControlName="username"
+              class="w-full bg-transparent border-b border-black text-base py-2 px-1 focus:outline-none focus:border-gray-800 placeholder-gray-400"
+              placeholder="ejemplo123"
+              (input)="updateRemainingChars()"
+            />
+            <small
+              *ngIf="
+                personalDataForm.get('username')?.touched &&
+                personalDataForm.get('username')?.invalid
+              "
+              class="block mt-1 text-red-600"
+            >
+              {{
+                personalDataForm.get("username")?.hasError("required")
+                  ? "Requerido"
+                  : "Solo letras/números"
+              }}
+            </small>
+            <small class="block mt-1 text-gray-400"
+              >{{ remainingChars }} caracteres disponibles</small
+            >
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-800 uppercase mb-1"
+              >Email *</label
+            >
+            <input
+              type="email"
+              formControlName="email"
+              class="w-full bg-transparent border-b border-black text-base py-2 px-1 focus:outline-none focus:border-gray-800 placeholder-gray-400"
+              placeholder="correo@ejemplo.com"
+            />
+            <small
+              *ngIf="
+                personalDataForm.get('email')?.touched &&
+                personalDataForm.get('email')?.invalid
+              "
+              class="block mt-1 text-red-600"
+            >
+              {{
+                personalDataForm.get("email")?.hasError("required")
+                  ? "Requerido"
+                  : "Email inválido"
+              }}
+            </small>
+          </div>
+
+          <!-- Teléfono -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-800 uppercase mb-1"
+              >Teléfono *</label
+            >
+            <input
+              formControlName="telefono"
+              class="w-full bg-transparent border-b border-black text-base py-2 px-1 focus:outline-none focus:border-gray-800 placeholder-gray-400"
+              placeholder="+52 55 1234 5678"
+            />
+            <small
+              *ngIf="
+                personalDataForm.get('telefono')?.touched &&
+                personalDataForm.get('telefono')?.invalid
+              "
+              class="block mt-1 text-red-600"
+            >
+              {{
+                personalDataForm.get("telefono")?.hasError("required")
+                  ? "Requerido"
+                  : "Formato incorrecto"
+              }}
+            </small>
+          </div>
+
+          <!-- Mensajes de error -->
+          <div *ngIf="errorMessage" class="text-red-600 mt-2">
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Botón paso 1 -->
+          <div class="pt-4">
+            <button
+              type="submit"
+              class="w-full py-3 text-sm tracking-widest uppercase text-white bg-black hover:bg-white hover:text-black border border-black transition"
+              [disabled]="!isFormValid || isLoading"
+            >
+              {{ isLoading ? "VALIDANDO..." : "CONTINUAR →" }}
+            </button>
+          </div>
+        </form>
+
+        <!-- Paso 1.5 - OTP -->
+        <form
+          *ngIf="currentStep === 1.5"
+          [formGroup]="otpForm"
+          (ngSubmit)="verificacionOTP()"
+          class="space-y-6 text-center"
+        >
+          <h2 class="text-xl font-semibold mb-4">Verificación</h2>
+          <p class="text-gray-600 text-sm mb-4">
+            Ingresa el código de verificación enviado a tu correo o teléfono.
+          </p>
+          <div class="flex justify-center space-x-4">
+            <input
+              maxlength="1"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              class="w-16 h-16 text-2xl text-center border border-gray-400 focus:outline-none focus:border-gray-900 transition-colors"
+              *ngFor="let i of [0, 1, 2, 3]; let idx = index"
+              [formControlName]="'otp' + idx"
+              (input)="handleOtpInput(idx, $event)"
+            />
+          </div>
+          <small *ngIf="otpInvalido" class="block text-red-600 mt-2"
+            >Código inválido</small
+          >
+          <span *ngIf="otpErrorMessage" class="block text-red-600 mt-2">{{
+            otpErrorMessage
+          }}</span>
+
+          <div class="flex justify-between mt-6">
+            <button
+              type="button"
+              (click)="currentStep = 1"
+              class="px-4 py-2 border border-black font-semibold hover:bg-gray-100"
+            >
+              ← Corregir Datos
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-black text-white font-semibold hover:bg-gray-800"
+            >
+              Validar OTP →
+            </button>
+          </div>
+        </form>
+
+        <!-- Paso 2 -->
+        <form
+          *ngIf="currentStep === 2"
+          [formGroup]="credentialsForm"
+          (ngSubmit)="registroCliente()"
+          class="space-y-6"
+        >
+          <!-- Contraseña -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-800 uppercase mb-1"
+              >Contraseña *</label
+            >
+            <input
+              type="password"
+              formControlName="password"
+              class="w-full bg-transparent border-b border-black text-base py-2 px-1 focus:outline-none focus:border-gray-800 placeholder-gray-400"
+              placeholder="••••••••"
+              (input)="verificarPassword()"
+            />
+            <div
+              *ngIf="
+                credentialsForm.get('password')?.invalid &&
+                credentialsForm.get('password')?.touched
+              "
+              class="mt-4 space-y-2"
+            >
+              <h4 class="text-sm font-bold text-black">
+                Requisitos de seguridad:
+              </h4>
+              <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                <li
+                  *ngFor="let item of faltantes"
+                  class="flex items-center text-red-600"
+                >
+                  <svg
+                    class="w-3 h-3 mr-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Confirmar Contraseña -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-800 uppercase mb-1"
+              >Confirmar Contraseña *</label
+            >
+            <input
+              type="password"
+              formControlName="confirmPassword"
+              class="w-full bg-transparent border-b border-black text-base py-2 px-1 focus:outline-none focus:border-gray-800 placeholder-gray-400"
+              placeholder="••••••••"
+              (input)="verificarCoincidencia()"
+            />
+            <small
+              *ngIf="
+                credentialsForm.get('confirmPassword')?.touched &&
+                !coincidenPasswords
+              "
+              class="block mt-1 text-red-600"
+            >
+              Las contraseñas no coinciden
+            </small>
+          </div>
+
+          <!-- Botones paso 2 -->
+          <div class="flex space-x-4 pt-4">
+            <button
+              type="button"
+              (click)="goToPreviousStep()"
+              class="flex-1 px-6 py-3 border-2 border-black text-black font-bold hover:bg-gray-100 transition"
+            >
+              ← VOLVER
+            </button>
+            <button
+              type="submit"
+              class="flex-1 px-6 py-3 bg-black text-white font-bold hover:bg-gray-800 transition disabled:bg-gray-300"
+              [disabled]="
+                faltantes.length !== 0 ||
+                !credentialsForm.valid ||
+                !coincidenPasswords
+              "
+            >
+              COMPLETAR REGISTRO
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- FORMULARIO QR -->
+      <!-- FORMULARIO QR -->
+      <div
+        *ngIf="currentForm === 'qr'"
+        class="space-y-6 text-gray-800 max-h-[75vh] overflow-y-auto"
+      >
+        <!-- Encabezado -->
+        <div class="text-center">
+          <h2 class="text-2xl font-semibold text-neutral-900 mb-2">
+            Escanear QR
+          </h2>
+          <p class="text-sm text-gray-500">
+            Escanea el código para continuar con tu sesión.
+          </p>
+        </div>
+
+        <!-- Contenedor de QR -->
+        <div class="flex justify-center">
+          <div
+            class="w-56 h-56 border-4 border-gray-300 rounded-xl flex items-center justify-center bg-white shadow-md"
+          >
+            <!-- Aquí podrías insertar un componente o imagen real de QR -->
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?data=DemoQRLogin&size=200x200"
+              alt="Código QR"
+              class="w-40 h-40"
+            />
+          </div>
+        </div>
+
+        <!-- Instrucciones -->
+        <div class="text-sm text-gray-600 text-center px-4">
+          Abre tu app móvil y escanea el código para autenticarte rápidamente.
+        </div>
+
+        <!-- Botón alternativo -->
+        <div class="pt-4 text-center">
+          <button
+            type="button"
+            (click)="showForm('login')"
+            class="text-sm font-medium text-black underline hover:text-gray-700"
+          >
+            ¿No puedes escanear? Inicia sesión manualmente
+          </button>
+        </div>
+      </div>
+
+      <p class="text-xs text-center mt-6 text-gray-400">
+        Al hacer clic en continuar aceptas nuestros
+        <a href="#" class="underline">Términos de Servicio</a> y
+        <a href="#" class="underline">Política de Privacidad</a>.
+      </p>
+    </div>
+  </div>
+</div>
