@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <main class="flex-1 p-8 space-y-8 bg-[#f5f6f8] animate-fade-in">
   <!-- Encabezado -->
   <div
@@ -46,48 +47,60 @@
       class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
     >
       <h4 class="text-sm text-gray-500">Ingresos Totales</h4>
-      <p class="text-2xl font-bold text-[#2c3e50] mt-1">$23,902</p>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">
+        ${{ totalVentas + totalRentas | number:'1.0-2' }}
+      </p>
     </div>
     <div
       class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
     >
       <h4 class="text-sm text-gray-500">Vestidos Rentados</h4>
-      <p class="text-2xl font-bold text-[#2c3e50] mt-1">186</p>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">{{ totalRentas }}</p>
     </div>
     <div
       class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
     >
       <h4 class="text-sm text-gray-500">Vestidos Vendidos</h4>
-      <p class="text-2xl font-bold text-[#2c3e50] mt-1">72</p>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">{{ totalVentas }}</p>
     </div>
     <div
       class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
     >
       <h4 class="text-sm text-gray-500">Clientes Nuevos</h4>
-      <p class="text-2xl font-bold text-[#2c3e50] mt-1">35</p>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">{{ totalClientes }}</p>
     </div>
   </div>
 
-  <!-- Gráficas y Calendario -->
+  <!-- Gráficas -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Gráfica de barras -->
     <div
       class="md:col-span-2 bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg transform hover:scale-[1.01]"
     >
       <h3 class="text-lg font-medium text-gray-700 mb-3">
         Ingresos por Renta y Venta
       </h3>
-      <div class="h-48 bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-40">
+        <p-chart
+          type="bar"
+          [data]="barChartData"
+          [options]="chartOptionsMinimal"
+          styleClass="w-full h-full"
+        ></p-chart>
+      </div>
     </div>
+
+    <!-- Gráfica de dona -->
     <div
-      class="bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg transform hover:scale-[1.01]"
+      class="bg-white p-4 rounded-xl shadow transition hover:shadow-lg transform hover:scale-[1.01]"
     >
-      <h3 class="text-lg font-medium text-gray-700 mb-3">
-        Calendario - Junio 2024
-      </h3>
-      <div class="h-48 bg-gray-100 rounded-md animate-pulse"></div>
-      <div class="mt-4 flex items-center justify-between text-sm text-gray-600">
-        <span>Eventos programados</span>
-        <span class="font-semibold text-[#2c3e50]">12</span>
+      <h3 class="text-base font-semibold text-gray-700 mb-2">Calendario</h3>
+
+      <div style="height: 250px; overflow: hidden">
+        <full-calendar
+          [options]="calendarOptions"
+          style="transform: scale(0.85); transform-origin: top left"
+        ></full-calendar>
       </div>
     </div>
   </div>

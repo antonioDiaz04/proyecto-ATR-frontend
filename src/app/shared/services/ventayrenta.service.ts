@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';  // Asegúrate de tener la URL de tu API en el environment
+import { environment } from '../../../environments/environment'; // Asegúrate de tener la URL de tu API en el environment
 // import { Venta } from './models/venta';  // Asegúrate de tener el modelo de Venta
 // import { Renta } from './models/renta';  // Asegúrate de tener el modelo de Renta
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VentayrentaService {
-  private apiUrl = `${environment.api}/proceso` // Base URL del backend para rentas
+  private apiUrl = `${environment.api}/proceso`; // Base URL del backend para rentas
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Métodos de Venta
-  crearVenta(venta: FormData): Observable<any> {
+  crearVenta(venta: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/crearVenta`, venta);
   }
 
@@ -23,7 +23,9 @@ export class VentayrentaService {
   }
 
   obtenerProductosCompradoByIdUser(usuarioId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/proceso/comprasByidUser/${usuarioId}`);
+    return this.http.get<any[]>(
+      `${this.apiUrl}/proceso/comprasByidUser/${usuarioId}`
+    );
   }
 
   // Obtener todas las rentas
@@ -51,12 +53,16 @@ export class VentayrentaService {
   }
   // Eliminar rentas
   eliminarRentasSeleccionadas(rentaIds: string[]): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/rentasSeleccionadas/`, {  // Cambié el método a DELETE
-      body: { rentaIds }});
+    return this.http.delete(`${this.apiUrl}/rentasSeleccionadas/`, {
+      // Cambié el método a DELETE
+      body: { rentaIds },
+    });
   }
   eliminarVentasSeleccionadas(rentaIds: string[]): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/ventasSeleccionadas/`, {  // Cambié el método a DELETE
-      body: { rentaIds }});
+    return this.http.delete(`${this.apiUrl}/ventasSeleccionadas/`, {
+      // Cambié el método a DELETE
+      body: { rentaIds },
+    });
   }
 
   // Listar rentas de un usuario específico

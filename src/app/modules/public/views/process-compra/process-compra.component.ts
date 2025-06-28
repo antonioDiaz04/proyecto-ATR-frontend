@@ -1,3 +1,7 @@
+import { Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 import {
   ChangeDetectorRef,
   Component,
@@ -6,15 +10,14 @@ import {
   OnInit,
   NgZone,
 } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
-import { SwPush } from '@angular/service-worker';
 import { ActivatedRoute } from '@angular/router';
+import { SwPush } from '@angular/service-worker';
+import { SessionService } from './../../../../shared/services/session.service';
+import { VentayrentaService } from './../../../../shared/services/ventayrenta.service';
+import { environment } from '../../../../../environments/environment';
 import { ProductoService } from '../../../../shared/services/producto.service';
-import { HttpClient } from '@angular/common/http';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { ConfirmationService, MessageService } from 'primeng/api';
+
 declare const paypal: any;
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-process-compra',
@@ -22,6 +25,8 @@ import { Location } from '@angular/common';
 })
 export class ProcessCompraComponent implements OnInit {
   isLoading: boolean = false;
+
+  // Variables del producto
   productId: string = '';
   Detalles: any;
 
@@ -47,14 +52,17 @@ export class ProcessCompraComponent implements OnInit {
     private productoS_: ProductoService,
     private cdRef: ChangeDetectorRef,
     private http: HttpClient,
-    private ngxService: NgxUiLoaderService,
     private messageService: MessageService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private sessionService: SessionService,
+    private ventaRentaService: VentayrentaService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
     this.scrollToTop();
+
     this.generarToken(); // Generamos el token antes de enviar los datos
 
     this.productId = this.activatedRoute.snapshot.params['id'];
@@ -76,7 +84,7 @@ export class ProcessCompraComponent implements OnInit {
     });
   }
 
-   private checkPayPalLoaded(): Promise<void> {
+  private checkPayPalLoaded(): Promise<void> {
     return new Promise((resolve) => {
       const checkInterval = setInterval(() => {
         if (typeof paypal !== 'undefined') {
@@ -91,6 +99,7 @@ export class ProcessCompraComponent implements OnInit {
     this.productoS_.obtenerDetalleProductoById(this.productId).subscribe({
       next: (response) => {
         this.Detalles = response;
+        console.log('Detalles del producto:', this.Detalles);
         this.initializePayPal();
         this.isLoading = false;
         this.cdRef.detectChanges();
@@ -118,17 +127,6 @@ export class ProcessCompraComponent implements OnInit {
         .requestSubscription({ serverPublicKey: this.publicKey })
         .then((sub) => {
           const token = JSON.stringify(sub);
-          console.log('enviar=>', token);
-          const data = {
-            arrendador: this.arrendador,
-            arrendatario: this.arrendatario,
-            fechaInicio: this.fechaInicio,
-            fechaFin: this.fechaFin,
-            direccionInmueble: this.direccionInmueble,
-            montoRenta: this.montoRenta,
-            productId: this.productId,
-            token: token, // Token generado
-          };
 
           this.enviarTokenAlBackend(token); // Enviar el token al backend
         })
@@ -154,14 +152,12 @@ export class ProcessCompraComponent implements OnInit {
         (err) => console.error('Error al enviar el token al backend:', err)
       );
   }
-
   initializePayPal() {
     if (!this.paypalLoaded || !this.paypalElement?.nativeElement) {
       console.error('PayPal no está cargado o el elemento no existe');
       return;
     }
 
-    // Ejecutar fuera de Angular Zone para evitar problemas
     this.ngZone.runOutsideAngular(() => {
       try {
         paypal
@@ -174,6 +170,21 @@ export class ProcessCompraComponent implements OnInit {
             },
             createOrder: (data: any, actions: any) => {
               return this.ngZone.run(() => {
+                // Validar si usuario está logueado
+                const idUser = this.sessionService.getId() ?? '';
+                if (!idUser) {
+                  this.ngZone.run(() => {
+                    this.messageService.add({
+                      severity: 'warn',
+                      summary: 'No identificado',
+                      detail:
+                        'Por favor, inicia sesión para continuar con la compra.',
+                    });
+                  });
+                  // Cancelar creación de orden
+                  return Promise.reject('Usuario no identificado');
+                }
+
                 return actions.order.create({
                   purchase_units: [
                     {
@@ -191,12 +202,74 @@ export class ProcessCompraComponent implements OnInit {
               await this.ngZone.run(async () => {
                 try {
                   this.isLoading = true;
+
+                  const idUser = this.sessionService.getId() ?? '';
+                  if (!idUser) {
+                    this.messageService.add({
+                      severity: 'warn',
+                      summary: 'No identificado',
+                      detail:
+                        'Por favor, inicia sesión para continuar con la compra.',
+                    });
+                    this.isLoading = false;
+                    return;
+                  }
+
                   const order = await actions.order.capture();
                   console.log('Payment completed:', order);
-                  // Manejar pago exitoso
+
+                  const ventaPayload = {
+                    usuario: idUser,
+                    productos: [
+                      {
+                        producto: this.productId,
+                        cantidad: 1,
+                        precioUnitario: this.Detalles?.precio,
+                        descuento: 0,
+                      },
+                    ],
+                    detallesPago: {
+                      metodoPago: 'PayPal',
+                      paypalTransactionId: order.id,
+                      paypalPayerEmail: order.payer.email_address,
+                    },
+                    notas: this.Detalles?.nombre,
+                    esApartado: false,
+                    resumen: {
+                      anticipo: 0,
+                      subtotal: this.Detalles?.precio,
+                      total: this.Detalles?.precio,
+                    },
+                  };
+
+                  this.ventaRentaService.crearVenta(ventaPayload).subscribe({
+                    next: (response) => {
+                      console.log(response);
+                      this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: 'Pago realizado exitosamente.',
+                      });
+                      setTimeout(() => {
+                        this.router.navigate(['/search']);
+                      }, 2500);
+                    },
+                    error: (err) => {
+                      console.log(err);
+                      this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'No se pudo registrar la venta.',
+                      });
+                    },
+                  });
                 } catch (error) {
                   console.error('Payment error:', error);
-                  // Manejar error
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Error al procesar el pago.',
+                  });
                 } finally {
                   this.isLoading = false;
                 }
@@ -205,7 +278,11 @@ export class ProcessCompraComponent implements OnInit {
             onError: (err: any) => {
               this.ngZone.run(() => {
                 console.error('PayPal error:', err);
-                // Manejar error
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: 'Error con PayPal.',
+                });
               });
             },
           })
@@ -215,6 +292,7 @@ export class ProcessCompraComponent implements OnInit {
       }
     });
   }
+
   volver() {
     this.location.back();
   }

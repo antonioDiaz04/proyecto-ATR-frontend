@@ -1,161 +1,275 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CalendarOptions } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { MessageService } from 'primeng/api';
+import { PropietarioService } from '../../../../shared/services/propietario.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.view.html',
 })
-export class DashboardView {
-  barChartData: any;
-  radarChartData: any;
+export class DashboardView implements OnInit {
+  totalCompras = 0;
+  totalRentas = 0;
+  totalVentas = 0;
+  totalClientes = 0;
+
   productosMasVendidosData: any;
-  selectedMonth!: number;
-  selectedYear!: number;
-  totalCompras: number = 0;
-  totalRentas: number = 0;
+  radarChartData: any;
+  barChartData: any;
   comprasRentasData: any;
-  vestidosRentados: { tipo: string; color: string; talla: string; cantidad: number; }[] = [];
 
-  months: { name: string; value: number }[] = [
-    { name: 'Enero', value: 1 },
-    { name: 'Febrero', value: 2 },
-    { name: 'Marzo', value: 3 },
-    { name: 'Abril', value: 4 },
-    { name: 'Mayo', value: 5 },
-    { name: 'Junio', value: 6 },
-    { name: 'Julio', value: 7 },
-    { name: 'Agosto', value: 8 },
-    { name: 'Septiembre', value: 9 },
-    { name: 'Octubre', value: 10 },
-    { name: 'Noviembre', value: 11 },
-    { name: 'Diciembre', value: 12 }
-  ];
-  years: number[] = [2023, 2024];
-  totalVentas: number = 120000;
-  totalClientes: number = 340;
-  vestidosMasVendidos: any[] = [
-    { tipo: 'Vestido de Corazón', color: 'Rojo', talla: 'M', cantidad: 50 },
-    { tipo: 'Vestido de Corazón', color: 'Azul', talla: 'L', cantidad: 30 },
-    { tipo: 'Vestido Largo', color: 'Negro', talla: 'S', cantidad: 20 },
-    { tipo: 'Vestido Corto', color: 'Verde', talla: 'M', cantidad: 25 },
-    { tipo: 'Vestido de Gala', color: 'Dorado', talla: 'XL', cantidad: 15 }
-  ];
+  vestidosMasVendidos: {
+    nombre: string;
+    tipo: string;
+    color: string;
+    talla: string;
+    cantidad: number;
+  }[] = [];
 
-  constructor() {
-    this.totalCompras = 100; // Ejemplo de valor
-    this.totalRentas = 50;   // Ejemplo de valor
-    this.loadBarChartData();
-    this.loadRadarChart();
-    this.loadProductosMasVendidosChart();
-    this.loadComprasRentasData(); // Prepara los datos para la gráfica
-  }
-
-  loadBarChartData() {
-    this.barChartData = {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      datasets: [
-        {
-          label: 'Ventas',
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          data: [65, 59, 80, 81, 56, 55, 40, 48, 59, 62, 75, 80]
+  chartOptionsMinimal: any = {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+      padding: 0,
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: '#ffffff',
+        titleColor: '#000',
+        bodyColor: '#333',
+        titleFont: {
+          size: 10,
         },
-        {
-          label: 'Rentas',
-          backgroundColor: 'rgba(255, 206, 86, 0.2)',
-          borderColor: 'rgba(255, 206, 86, 1)',
-          borderWidth: 1,
-          data: [28, 48, 40, 19, 86, 27, 90, 100, 45, 67, 88, 60]
-        }
-      ]
-    };
-  }
-  
+        bodyFont: {
+          size: 10,
+        },
+        padding: 6,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: '#999',
+          font: {
+            size: 10,
+          },
+          padding: 2,
+        },
+      },
+      y: {
+        grid: {
+          color: 'rgba(0,0,0,0.03)',
+        },
+        ticks: {
+          color: '#999',
+          font: {
+            size: 10,
+          },
+          padding: 2,
+        },
+      },
+    },
+  };
 
-  loadRadarChart() {
-    this.radarChartData = {
-      labels: [
-        'Buenavista - Huejutla', 
-        'Altamira - Tampico', 
-        'Chapultepec - Poza Rica', 
-        'Centro - Pachuca', 
-        'La Escondida - Tulancingo'
-      ],
-      datasets: [
-        {
-          label: 'Clientes Frecuentes',
-          data: [120, 90, 80, 70, 60],
-          backgroundColor: 'rgba(0, 123, 255, 0.4)',
-          borderColor: '#007bff',
-          pointBackgroundColor: '#007bff'
-        }
-      ]
-    };
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    plugins: [dayGridPlugin],
+    events: [
+      { title: 'Renta - Ana', date: '2024-06-05' },
+      { title: 'Venta - Gala Azul', date: '2024-06-10' },
+    ],
+  };
+
+  //Controlador del flujo de carga
+  private totalConsultas = 5;
+  private consultasCompletadas = 0;
+
+  constructor(
+    private propietarioService: PropietarioService,
+    private messageService: MessageService
+  ) {}
+
+  ngOnInit() {
+    this.cargarResumenVentas();
+    this.cargarResumenRentas();
+    this.cargarClientesUnicos();
+    this.cargarProductosMasVendidos();
+    this.cargarDatosGraficas();
+    this.verificarCargaCompleta();
   }
+
+  cargarResumenVentas() {
+    this.propietarioService.getResumenVentas().subscribe((res: any) => {
+      console.log(res);
+      this.totalVentas = res.totalVentas;
+      this.totalCompras = res.totalVentas; // Ajusta si hay una diferencia lógica
+      this.loadComprasRentasData();
+      this.verificarCargaCompleta();
+    });
+  }
+
+  cargarResumenRentas() {
+    this.propietarioService.getResumenRentas().subscribe((res: any) => {
+      console.log(res);
+      this.totalRentas = res.totalRentas;
+      this.loadComprasRentasData();
+      this.verificarCargaCompleta();
+    });
+  }
+
+  cargarClientesUnicos() {
+    this.propietarioService.getClientesUnicos().subscribe((res: any) => {
+      console.log(res);
+      this.totalClientes = res.totalClientes;
+      this.verificarCargaCompleta();
+    });
+  }
+
+  cargarProductosMasVendidos() {
+    this.propietarioService.getProductosMasVendidos().subscribe((res: any) => {
+      console.log(res);
+      this.vestidosMasVendidos = res.productosMasVendidos || [];
+      this.loadProductosMasVendidosChart();
+      this.verificarCargaCompleta();
+    });
+  }
+
+  cargarDatosGraficas() {
+    this.propietarioService.getDatosGraficas().subscribe((res: any) => {
+      this.barChartData = {
+        labels: [
+          'Ene',
+          'Feb',
+          'Mar',
+          'Abr',
+          'May',
+          'Jun',
+          'Jul',
+          'Ago',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dic',
+        ],
+        datasets: [
+          {
+            label: 'Ventas',
+            data: res.ventasMensuales,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Rentas',
+            data: res.rentasMensuales,
+            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+            borderColor: 'rgba(255, 206, 86, 1)',
+            borderWidth: 1,
+          },
+        ],
+      };
+
+      this.radarChartData = {
+        labels: res.ventasRentasRadar.labels,
+        datasets: [
+          {
+            label: 'Rentas',
+            data: res.ventasRentasRadar.rentas,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Ventas',
+            data: res.ventasRentasRadar.ventas,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+          },
+        ],
+      };
+      this.verificarCargaCompleta();
+    });
+  }
+
   loadComprasRentasData() {
-    const totalTransacciones = this.totalCompras + this.totalRentas;
+    const total = this.totalCompras + this.totalRentas;
+    if (total === 0) return;
+
     this.comprasRentasData = {
       labels: ['Compras', 'Rentas'],
       datasets: [
         {
           data: [
-            (this.totalCompras / totalTransacciones) * 100,
-            (this.totalRentas / totalTransacciones) * 100
+            (this.totalCompras / total) * 100,
+            (this.totalRentas / total) * 100,
           ],
-          backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
-          hoverBackgroundColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)']
-        }
-      ]
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(255, 99, 132, 0.6)',
+          ],
+          hoverBackgroundColor: [
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 99, 132, 1)',
+          ],
+        },
+      ],
     };
   }
-  
 
   loadProductosMasVendidosChart() {
+    if (!Array.isArray(this.vestidosMasVendidos)) {
+      this.vestidosMasVendidos = [];
+    }
+
     this.productosMasVendidosData = {
-      labels: this.vestidosMasVendidos.map(v => `${v.tipo} - ${v.color}`),
+      labels: this.vestidosMasVendidos.map(
+        (v) => `${v.nombre || v.tipo} - ${v.color}`
+      ),
       datasets: [
         {
           label: 'Cantidad Vendida',
-          data: this.vestidosMasVendidos.map(v => v.cantidad),
-          backgroundColor: this.vestidosMasVendidos.map((v, i) => this.getColor(i)),
+          data: this.vestidosMasVendidos.map((v) => v.cantidad),
+          backgroundColor: this.vestidosMasVendidos.map((_, i) =>
+            this.getColor(i)
+          ),
           borderColor: 'rgba(255, 255, 255, 1)',
-          borderWidth: 2
-        }
-      ]
+          borderWidth: 2,
+        },
+      ],
     };
   }
-  radarChartDataVentaRenta = {
-    labels: ["Jaltocán", "Atlapexco", "Buena Vista", "Huejutla", "Pachuca"],
-    datasets: [
-      {
-        label: "Rentas",
-        data: [50, 40, 30, 20, 10],
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Ventas",
-        data: [40, 50, 60, 70, 80],
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
-  getColor(index: number) {
+
+  getColor(index: number): string {
     const colors = [
-      'rgba(18, 150, 238, 0.74)', // Azul
-      'rgba(238, 255, 86, 0.76)', // Amarillo
-      'rgba(241, 12, 62, 0.8)'  // Rosa
+      'rgba(18, 150, 238, 0.74)',
+      'rgba(238, 255, 86, 0.76)',
+      'rgba(241, 12, 62, 0.8)',
+      'rgba(255, 140, 0, 0.8)',
+      'rgba(0, 200, 83, 0.8)',
     ];
     return colors[index % colors.length];
   }
-  
-  filtrarDatos() {
-    // Lógica para filtrar datos según selectedMonth y selectedYear
-    // Actualiza totalVentas, totalClientes y vestidosMasVendidos
+
+  descargarReporte() {
+    // Lógica para exportar PDF o CSV si aplica
   }
 
-  descargarReporte() {}
+  private verificarCargaCompleta() {
+    this.consultasCompletadas++;
+    if (this.consultasCompletadas === this.totalConsultas) {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Dashboard listo',
+        detail: 'Los datos se cargaron correctamente.',
+      });
+    }
+  }
 }

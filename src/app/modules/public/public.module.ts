@@ -1,6 +1,7 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { PublicRoutingModule } from './public-routing.module';
@@ -121,7 +122,9 @@ import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.co
     InputNumberModule,ConfirmDialogModule,MessageModule,
     CalendarModule,TableModule,NgxImageZoomModule,GalleriaModule,CarouselModule,
     CommonModule,ReactiveFormsModule,
-    PublicRoutingModule,HttpClientModule, ...MATERIALS,
+    PublicRoutingModule,HttpClientModule, 
+    ...MATERIALS,
+    ToastModule,
   ], schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [{
     provide: HTTP_INTERCEPTORS,
