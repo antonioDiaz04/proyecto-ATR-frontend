@@ -1,85 +1,161 @@
-<div class="container">
-    <h1>Nuestra Empresa</h1>
-    
-    <div class="selector">
-      <button 
-        *ngFor="let option of options" 
-        [class.active]="selectedOption === option.id"
-        (click)="selectOption(option.id)"
-        [disabled]="isEditing">
-        {{option.title}}
-      </button>
-    </div>
-    
-    <div class="content-container">
-      <div class="action-buttons">
-        <button *ngIf="!isEditing" (click)="startEditing()" class="edit-btn">
-          <i class="fas fa-edit"></i> Editar
+<div
+  class="max-w-7xl mx-auto px-8 py-12 bg-[#f8fafc] min-h-screen rounded-3xl shadow-lg space-y-10 animate-fade-in"
+>
+  <!-- Encabezado -->
+  <div class="text-center space-y-2 animate-slide-in-down">
+    <h1 class="text-4xl font-bold text-[#232f3e] tracking-tight">
+      Conócenos Mejor
+    </h1>
+    <p class="text-gray-500 text-sm">Información institucional editable</p>
+  </div>
+
+  <!-- Selector de Secciones -->
+  <div class="flex justify-center gap-4 flex-wrap animate-fade-in-up">
+    <button
+      *ngFor="let option of options"
+      (click)="selectOption(option.id)"
+      [disabled]="isEditing"
+      [class.bg-[#232f3e]]="selectedOption === option.id"
+      [class.text-white]="selectedOption === option.id"
+      [class.bg-white]="selectedOption !== option.id"
+      [class.text-gray-700]="selectedOption !== option.id"
+      class="px-5 py-2 rounded-full border border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 text-sm font-medium"
+    >
+      {{ option.title }}
+    </button>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="bg-white rounded-2xl shadow-md p-8 animate-slide-in-up space-y-6">
+    <!-- Botones de Acción -->
+    <div class="flex justify-end gap-3 mb-6">
+      <ng-container *ngIf="!isEditing">
+        <button
+          (click)="startEditing()"
+          class="bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600 transition"
+        >
+          <i class="fas fa-edit mr-2"></i>Editar
         </button>
-        
-        <div *ngIf="isEditing" class="editing-actions">
-          <button (click)="saveChanges()" class="save-btn">
-            <i class="fas fa-save"></i> Guardar
-          </button>
-          <button (click)="cancelEdit()" class="cancel-btn">
-            <i class="fas fa-times"></i> Cancelar
-          </button>
-          <button (click)="clearContent()" class="clear-btn">
-            <i class="fas fa-trash"></i> Limpiar
+      </ng-container>
+
+      <ng-container *ngIf="isEditing">
+        <button
+          (click)="saveChanges()"
+          class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition"
+        >
+          <i class="fas fa-save mr-2"></i>Guardar
+        </button>
+        <button
+          (click)="cancelEdit()"
+          class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500 transition"
+        >
+          <i class="fas fa-times mr-2"></i>Cancelar
+        </button>
+        <button
+          (click)="clearContent()"
+          class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition"
+        >
+          <i class="fas fa-trash mr-2"></i>Limpiar
+        </button>
+      </ng-container>
+    </div>
+
+    <!-- Contenido dinámico -->
+    <ng-container [ngSwitch]="selectedOption">
+      <!-- Misión -->
+      <div *ngSwitchCase="'mision'" class="space-y-4">
+        <h2 *ngIf="!isEditing" class="text-2xl font-bold text-[#2c3e50]">
+          {{ content.mision.title }}
+        </h2>
+        <input
+          *ngIf="isEditing"
+          type="text"
+          formControlName="title"
+          class="w-full border rounded-lg px-4 py-2 text-gray-700"
+          placeholder="Título"
+        />
+        <p *ngIf="!isEditing" class="text-gray-600 text-lg">
+          {{ content.mision.description }}
+        </p>
+        <textarea
+          *ngIf="isEditing"
+          formControlName="description"
+          rows="5"
+          class="w-full border rounded-lg px-4 py-3 text-gray-700"
+          placeholder="Descripción"
+        ></textarea>
+      </div>
+
+      <!-- Visión -->
+      <div *ngSwitchCase="'vision'" class="space-y-4">
+        <h2 *ngIf="!isEditing" class="text-2xl font-bold text-[#2c3e50]">
+          {{ content.vision.title }}
+        </h2>
+        <input
+          *ngIf="isEditing"
+          type="text"
+          formControlName="title"
+          class="w-full border rounded-lg px-4 py-2 text-gray-700"
+          placeholder="Título"
+        />
+        <p *ngIf="!isEditing" class="text-gray-600 text-lg">
+          {{ content.vision.description }}
+        </p>
+        <textarea
+          *ngIf="isEditing"
+          formControlName="description"
+          rows="5"
+          class="w-full border rounded-lg px-4 py-3 text-gray-700"
+          placeholder="Descripción"
+        ></textarea>
+      </div>
+
+      <!-- Valores -->
+      <div *ngSwitchCase="'valores'" class="space-y-4">
+        <h2 *ngIf="!isEditing" class="text-2xl font-bold text-[#2c3e50]">
+          {{ content.valores.title }}
+        </h2>
+        <input
+          *ngIf="isEditing"
+          type="text"
+          formControlName="title"
+          class="w-full border rounded-lg px-4 py-2 text-gray-700"
+          placeholder="Título"
+        />
+        <ul
+          *ngIf="!isEditing"
+          class="list-disc list-inside text-gray-700 space-y-1"
+        >
+          <li *ngFor="let item of content.valores.items">{{ item }}</li>
+        </ul>
+        <div *ngIf="isEditing" class="space-y-3">
+          <div
+            class="flex items-center gap-3"
+            formArrayName="items"
+            *ngFor="let item of valoresItems.controls; let i = index"
+          >
+            <input
+              type="text"
+              [formControlName]="i"
+              class="w-full border rounded-lg px-4 py-2 text-gray-700"
+              placeholder="Valor"
+            />
+            <button
+              (click)="removeValor(i)"
+              class="text-red-600 hover:text-red-800 transition"
+              title="Eliminar valor"
+            >
+              <i class="fas fa-minus-circle text-xl"></i>
+            </button>
+          </div>
+          <button
+            (click)="addValor()"
+            class="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            <i class="fas fa-plus-circle mr-2"></i>Agregar valor
           </button>
         </div>
       </div>
-      
-      <ng-container [ngSwitch]="selectedOption">
-        <!-- Misión -->
-        <div *ngSwitchCase="'mision'" class="content">
-          <h2 *ngIf="!isEditing">{{content.mision.title}}</h2>
-          <div *ngIf="isEditing" class="form-group">
-            <input type="text" formControlName="title" class="form-control" placeholder="Título">
-          </div>
-          
-          <p *ngIf="!isEditing">{{content.mision.description}}</p>
-          <div *ngIf="isEditing" class="form-group">
-            <textarea formControlName="description" class="form-control" rows="5" placeholder="Descripción"></textarea>
-          </div>
-        </div>
-        
-        <!-- Visión -->
-        <div *ngSwitchCase="'vision'" class="content">
-          <h2 *ngIf="!isEditing">{{content.vision.title}}</h2>
-          <div *ngIf="isEditing" class="form-group">
-            <input type="text" formControlName="title" class="form-control" placeholder="Título">
-          </div>
-          
-          <p *ngIf="!isEditing">{{content.vision.description}}</p>
-          <div *ngIf="isEditing" class="form-group">
-            <textarea formControlName="description" class="form-control" rows="5" placeholder="Descripción"></textarea>
-          </div>
-        </div>
-        
-        <!-- Valores -->
-        <div *ngSwitchCase="'valores'" class="content">
-          <h2 *ngIf="!isEditing">{{content.valores.title}}</h2>
-          <div *ngIf="isEditing" class="form-group">
-            <input type="text" formControlName="title" class="form-control" placeholder="Título">
-          </div>
-          
-          <ul *ngIf="!isEditing">
-            <li *ngFor="let item of content.valores.items">{{item}}</li>
-          </ul>
-          
-          <div *ngIf="isEditing" class="values-list">
-            <div formArrayName="items" *ngFor="let item of valoresItems.controls; let i = index" class="value-item">
-              <input type="text" [formControlName]="i" class="form-control" placeholder="Valor">
-              <button (click)="removeValor(i)" class="remove-value-btn">
-                <i class="fas fa-minus-circle"></i>
-              </button>
-            </div>
-            <button (click)="addValor()" class="add-value-btn">
-              <i class="fas fa-plus-circle"></i> Agregar valor
-            </button>
-          </div>
-        </div>
-      </ng-container>
-    </div>
+    </ng-container>
   </div>
+</div>

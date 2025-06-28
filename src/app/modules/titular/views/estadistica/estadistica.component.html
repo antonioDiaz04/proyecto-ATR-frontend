@@ -1,109 +1,115 @@
-<div class="dashboard-container">
+<div
+  class="max-w-7xl mx-auto px-6 py-10 bg-gray-50 min-h-screen animate-fade-in"
+>
   <!-- Encabezado -->
-  <div class="dashboard-header">
-    <h2>Análisis de Rentas - Atelier Vestidos</h2>
-    <p>Datos de Enero-Febrero 2024 y Proyección Marzo</p>
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between mb-10 transition duration-500 ease-in-out"
+  >
+    <div class="transition-opacity duration-700 opacity-100">
+      <h2 class="text-3xl font-bold text-[#2c3e50]">
+        Análisis de Rentas - Atelier
+      </h2>
+      <p class="text-sm text-gray-500">
+        Enero - Febrero 2025 y proyección Marzo
+      </p>
+    </div>
+    <input
+      type="text"
+      placeholder="Buscar clientes o vestidos..."
+      class="mt-4 md:mt-0 px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
+    />
   </div>
 
-  <div class="dashboard-content">
-    <!-- Sección de métricas -->
-    <section class="dashboard-metrics">
-      <div class="card">
-        <h3>Total Rentas Febrero</h3>
-        <p class="metric-value">182</p>
-        <p class="metric-label">Vestidos</p>
-      </div>
-      <div class="card">
-        <h3>Proyección Marzo</h3>
-        <p class="metric-value">275</p>
-        <p class="metric-label">(+51%)</p>
-      </div>
-      <div class="card">
-        <h3>Categoría Líder</h3>
-        <p class="metric-value">Coctel</p>
-        <p class="metric-label">96 rentas</p>
-      </div>
-      <div class="card">
-        <h3>Incremento Promedio</h3>
-        <p class="metric-value">+12.5</p>
-        <p class="metric-label">por quincena</p>
-      </div>
-    </section>
+  <!-- Métricas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1"
+    >
+      <h4 class="text-gray-500 text-sm">Total Rentas Febrero</h4>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">182</p>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1"
+    >
+      <h4 class="text-gray-500 text-sm">Proyección Marzo</h4>
+      <p class="text-2xl font-bold text-green-600 mt-1">
+        275 <span class="text-sm text-green-500">(+51%)</span>
+      </p>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1"
+    >
+      <h4 class="text-gray-500 text-sm">Categoría Líder</h4>
+      <p class="text-lg font-semibold text-indigo-700 mt-1">Coctel (96)</p>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1"
+    >
+      <h4 class="text-gray-500 text-sm">Incremento Promedio</h4>
+      <p class="text-2xl font-bold text-blue-600 mt-1">+12.5</p>
+    </div>
+  </div>
 
-    <!-- Sección de Gráficos -->
-    <section class="dashboard-charts">
-      <!-- Gráfico de crecimiento histórico -->
-      <div class="chart-card">
-        <h3>Evolución de Rentas por Categoría</h3>
-        <div class="chart-container">
-          <p-chart
-            type="line"
-            [data]="rentasChartData"
-            [options]="lineChartOptions"
-          ></p-chart>
-        </div>
-      </div>
+  <!-- Gráficos -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+    <div
+      class="bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg transform hover:scale-[1.01]"
+    >
+      <h3 class="text-lg font-semibold text-gray-700 mb-3">
+        Evolución por Categoría
+      </h3>
+      <div class="h-64 bg-gray-100 rounded-lg animate-pulse"></div>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg transform hover:scale-[1.01]"
+    >
+      <h3 class="text-lg font-semibold text-gray-700 mb-3">
+        Comparativo Feb - Mar
+      </h3>
+      <div class="h-64 bg-gray-100 rounded-lg animate-pulse"></div>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg transform hover:scale-[1.01]"
+    >
+      <h3 class="text-lg font-semibold text-gray-700 mb-3">
+        Distribución por Categoría
+      </h3>
+      <div class="h-64 bg-gray-100 rounded-lg animate-pulse"></div>
+    </div>
+  </div>
 
-      <!-- Gráfico de proyección marzo -->
-      <div class="chart-card">
-        <h3>Proyección Marzo vs Febrero</h3>
-        <div class="chart-container">
-          <p-chart
-            type="bar"
-            [data]="comparativoChartData"
-            [options]="barChartOptions"
-          ></p-chart>
-        </div>
-      </div>
-
-      <!-- Gráfico comparativo -->
-      <div class="chart-card">
-        <h3>Distribución por Categoría (Marzo)</h3>
-        <div class="chart-container">
-          <p-chart
-            type="pie"
-            [data]="pieChartData"
-            [options]="pieChartOptions"
-          ></p-chart>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tabla de datos -->
-    <section class="data-section">
-      <h3>Detalle de Rentas por Período</h3>
-      <p-table [value]="tableData" [scrollable]="true" scrollHeight="400px">
-        <ng-template pTemplate="header">
+  <!-- Tabla -->
+  <div
+    class="bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg"
+  >
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">
+      Detalle por Período
+    </h3>
+    <div class="overflow-x-auto">
+      <table
+        class="min-w-full text-sm text-gray-700 transition-opacity duration-500"
+      >
+        <thead class="bg-gray-100 text-left">
           <tr>
-            <th>Período</th>
-            <th>Gala</th>
-            <th>Noche</th>
-            <th>Coctel</th>
-            <th>Total</th>
-            <th>Incremento</th>
+            <th class="p-3 font-semibold">Período</th>
+            <th class="p-3 font-semibold">Gala</th>
+            <th class="p-3 font-semibold">Noche</th>
+            <th class="p-3 font-semibold">Coctel</th>
+            <th class="p-3 font-semibold">Total</th>
+            <th class="p-3 font-semibold">Incremento</th>
           </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-item>
-          <tr>
-            <td>{{ item.period }}</td>
-            <td>{{ item.gala }}</td>
-            <td>{{ item.noche }}</td>
-            <td>{{ item.coctel }}</td>
-            <td>
-              <strong>{{ item.total }}</strong>
-              <br />
-              <td>
-              <span
-                class="increment"
-                [ngClass]="{ highlight: item.color === 'green' }"
-              >
-                ({{ item.increment.gala }}, {{ item.increment.noche }},
-                {{ item.increment.coctel }})
-              </span>
-            </td>
+        </thead>
+        <tbody>
+          <tr class="border-t hover:bg-gray-50 transition duration-300">
+            <td class="p-3">1-15 Feb</td>
+            <td class="p-3">32</td>
+            <td class="p-3">31</td>
+            <td class="p-3">38</td>
+            <td class="p-3 font-bold text-[#2c3e50]">101</td>
+            <td class="p-3 text-green-600 font-semibold">(+3%, +2%, +5%)</td>
           </tr>
-        </ng-template>
-      </p-table>
-    </section>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

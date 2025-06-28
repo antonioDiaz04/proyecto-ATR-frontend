@@ -1,59 +1,127 @@
-<div class="dashboard-container">
-  <div class="dashboard-header">
-    <h2>Dashboard</h2>
-    <p-button
-      label="Descargar Reporte (PDF)"
-      icon="pi pi-file-pdf"
-      (click)="descargarReporte()"
-    ></p-button>
-  </div>
-
-  <div class="dashboard-filters">
-    <label for="month">Mes:</label>
-    <select id="month" [(ngModel)]="selectedMonth">
-      <option *ngFor="let month of months" [value]="month.value">
-        {{ month.name }}
-      </option>
-    </select>
-
-    <label for="year">Año:</label>
-    <select id="year" [(ngModel)]="selectedYear">
-      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-    </select>
-
-    <button (click)="filtrarDatos()">Filtrar</button>
-  </div>
-
-  <div class="dashboard-content">
-    <!-- Tarjetas de métricas -->
-    <div class="cards">
-      <div class="card">
-        <h3>Ubicación de Clientes Más Frecuentes</h3>
-        <p-chart type="radar" [data]="radarChartData"></p-chart>
-      </div>
-
-      <div class="card">
-        <h3>Distribución de Compras y Rentas</h3>
-        <p-chart type="doughnut" [data]="comprasRentasData"></p-chart>
-      </div>
-
-      <div class="card">
-        <h3>Clasificación De Los Vestidos Más Vendidos</h3>
-        <p-chart type="pie" [data]="productosMasVendidosData"></p-chart>
-      </div>
-      <div class="chart">
-        <h3>Ubicación de Clientes Más Frecuentes - Rentas y Ventas</h3>
-        <p-chart type="radar" [data]="radarChartDataVentaRenta"></p-chart>
+<main class="flex-1 p-8 space-y-8 bg-[#f5f6f8] animate-fade-in">
+  <!-- Encabezado -->
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all duration-500 ease-in-out"
+  >
+    <div class="transition-opacity duration-700 opacity-100">
+      <h2 class="text-3xl font-bold text-[#232f3e]">
+        Panel de Administración - Atelier
+      </h2>
+      <div class="flex gap-2 mt-3">
+        <button
+          class="px-4 py-1 rounded-full border border-gray-300 text-sm bg-white text-gray-700 hover:bg-gray-100 transition transform hover:scale-105"
+        >
+          Día
+        </button>
+        <button
+          class="px-4 py-1 rounded-full border border-gray-300 text-sm bg-white text-gray-700 hover:bg-gray-100 transition transform hover:scale-105"
+        >
+          Semana
+        </button>
+        <button
+          class="px-4 py-1 rounded-full bg-[#232f3e] text-white text-sm shadow transition transform hover:scale-105"
+        >
+          Mes
+        </button>
+        <button
+          class="px-4 py-1 rounded-full border border-gray-300 text-sm bg-white text-gray-700 hover:bg-gray-100 transition transform hover:scale-105"
+        >
+          Año
+        </button>
       </div>
     </div>
-
-    <!-- Gráficas -->
-    <div class="charts">
-      <div class="chart">
-        <h3>Ventas y Rentas Mensuales</h3>
-        <p-chart type="bar" [data]="barChartData"></p-chart>
-      </div>
-
+    <div class="flex items-center gap-4 transition-opacity duration-700">
+      <input
+        type="text"
+        placeholder="Buscar vestidos, clientes..."
+        class="px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6e8efb] transition"
+      />
+      <div class="rounded-full w-10 h-10 bg-gray-400 animate-pulse"></div>
     </div>
   </div>
-</div>
+
+  <!-- Tarjetas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
+    >
+      <h4 class="text-sm text-gray-500">Ingresos Totales</h4>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">$23,902</p>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
+    >
+      <h4 class="text-sm text-gray-500">Vestidos Rentados</h4>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">186</p>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
+    >
+      <h4 class="text-sm text-gray-500">Vestidos Vendidos</h4>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">72</p>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
+    >
+      <h4 class="text-sm text-gray-500">Clientes Nuevos</h4>
+      <p class="text-2xl font-bold text-[#2c3e50] mt-1">35</p>
+    </div>
+  </div>
+
+  <!-- Gráficas y Calendario -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div
+      class="md:col-span-2 bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg transform hover:scale-[1.01]"
+    >
+      <h3 class="text-lg font-medium text-gray-700 mb-3">
+        Ingresos por Renta y Venta
+      </h3>
+      <div class="h-48 bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+    <div
+      class="bg-white p-6 rounded-xl shadow transition duration-500 hover:shadow-lg transform hover:scale-[1.01]"
+    >
+      <h3 class="text-lg font-medium text-gray-700 mb-3">
+        Calendario - Junio 2024
+      </h3>
+      <div class="h-48 bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="mt-4 flex items-center justify-between text-sm text-gray-600">
+        <span>Eventos programados</span>
+        <span class="font-semibold text-[#2c3e50]">12</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Últimas transacciones -->
+  <div
+    class="bg-white p-6 rounded-xl shadow transition-all duration-500 hover:shadow-lg"
+  >
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">
+      Últimas Transacciones
+    </h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left transition-opacity duration-500">
+        <thead class="bg-[#f8f9fa] text-gray-500">
+          <tr>
+            <th class="py-2 px-4">Cliente</th>
+            <th class="py-2 px-4">Tipo</th>
+            <th class="py-2 px-4">Vestido</th>
+            <th class="py-2 px-4">Monto</th>
+            <th class="py-2 px-4">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b hover:bg-gray-50 transition duration-300">
+            <td class="py-3 px-4">Lucía Morales</td>
+            <td class="px-4">Renta</td>
+            <td class="px-4">Vestido Gala Rojo</td>
+            <td class="px-4">$850.00</td>
+            <td class="px-4">
+              <span class="text-green-600 font-semibold">Pagado</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>

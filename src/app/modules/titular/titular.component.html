@@ -1,45 +1,158 @@
-<div class="container">
-  <!-- <header>
-    <h2>Panel de Control</h2>
-  </header> -->
-  <header>
-    <div class="header-top">
-      <h2>Panel de Control</h2>
-      <li class="logout" (click)="logout()">
-        <i class="pi pi-sign-out"></i> Cerrar Sesión
-      </li>
-    </div>
-    <nav>
-      <ul>
-        <li (click)="redirectTo('home')">
-          <i class="pi pi-home"></i> Inicio
-        </li>
-        <li (click)="redirectTo('historial-ventas')">
-          <i class="pi pi-shopping-cart"></i> Ventas
-        </li>
-        <li (click)="redirectTo('historial-rentas')">
-          <i class="pi pi-chart-line"></i> Rentas
-        </li>
-        <li (click)="redirectTo('perdidas')">
-          <i class="pi pi-times-circle"></i> Pérdidas
-        </li>
-        <li (click)="redirectTo('Empresa')">
-          <i class="pi pi-times-circle"></i> Empresa
-        </li>
-        <li (click)="redirectTo('Estadisticas')">
-          <i class="pi pi-times-circle"></i> Estadisticas
-        </li>
-      </ul>
-    </nav>
-  </header>
-  
-  
+<div class="flex h-screen overflow-hidden font-sans">
+  <!-- Sidebar -->
+  <aside
+    class="bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out"
+    [ngClass]="{ 'w-64': !isCollapsed, 'w-20': isCollapsed }"
+  >
+    <div class="flex flex-col justify-between h-full">
+      <!-- Parte superior -->
+      <div class="flex-1 overflow-y-auto">
+        <!-- Logo / Título -->
+        <div
+          class="px-4 py-8 text-2xl font-bold text-gray-800 flex items-center justify-center transition-all duration-300"
+        >
+          <i class="pi pi-user text-xl transition-transform duration-300"></i>
+          <span
+            *ngIf="!isCollapsed"
+            class="ml-2 transition-opacity duration-300 ease-in-out opacity-100"
+            [ngClass]="{ 'opacity-0': isCollapsed }"
+          >
+            Propietario
+          </span>
+        </div>
 
-  <main>
+        <!-- Navegación -->
+        <nav
+          class="space-y-3 text-sm font-medium text-gray-600 transition-all duration-300"
+        >
+          <!-- Grupo Principal -->
+          <div class="space-y-2">
+            <p
+              class="text-xs uppercase text-gray-400 px-4 transition-opacity duration-300"
+              *ngIf="!isCollapsed"
+            >
+              Principal
+            </p>
+            <button
+              (click)="redirectTo('home')"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 transition-all duration-200"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-home transition duration-300"></i>
+              <span *ngIf="!isCollapsed" class="transition-all duration-300"
+                >Panel</span
+              >
+            </button>
+          </div>
+
+          <!-- Grupo Gestión -->
+          <div class="space-y-2 pt-4">
+            <p
+              class="text-xs uppercase text-gray-400 px-4 transition-opacity duration-300"
+              *ngIf="!isCollapsed"
+            >
+              Gestión
+            </p>
+            <button
+              (click)="redirectTo('historial-rentas')"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 transition-all"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-chart-line"></i>
+              <span *ngIf="!isCollapsed">Rentas</span>
+            </button>
+            <button
+              (click)="redirectTo('historial-ventas')"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 transition-all"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-shopping-cart"></i>
+              <span *ngIf="!isCollapsed">Ventas</span>
+            </button>
+            <button
+              (click)="redirectTo('Empresa')"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 transition-all"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-briefcase"></i>
+              <span *ngIf="!isCollapsed">Empresa</span>
+            </button>
+            <button
+              (click)="redirectTo('Estadisticas')"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 transition-all"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-chart-bar"></i>
+              <span *ngIf="!isCollapsed">Estadísticas</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Botón de colapsar -->
+      <div class="pt-6 px-4">
+        <button
+          (click)="toggleSidebar()"
+          class="w-full flex items-center gap-2 py-2 bg-gray-900 text-white rounded hover:bg-black transition-all"
+          [ngClass]="{ 'justify-center': isCollapsed }"
+        >
+          <i
+            class="pi transition-transform duration-300"
+            [ngClass]="
+              isCollapsed ? 'pi-angle-double-right' : 'pi-angle-double-left'
+            "
+          ></i>
+          <span *ngIf="!isCollapsed">Ocultar menú</span>
+        </button>
+      </div>
+      <br />
+      <!-- Pie fijo -->
+      <div
+        class="p-4 space-y-3 text-sm text-gray-500 border-t transition-all duration-300"
+      >
+        <button
+          class="w-full flex items-center gap-2 hover:text-gray-900 transition"
+          [ngClass]="{ 'justify-center': isCollapsed }"
+        >
+          <i class="pi pi-cog"></i>
+          <span *ngIf="!isCollapsed">Configuración</span>
+        </button>
+        <button
+          class="w-full flex items-center gap-2 hover:text-gray-900 transition"
+          [ngClass]="{ 'justify-center': isCollapsed }"
+        >
+          <i class="pi pi-question-circle"></i>
+          <span *ngIf="!isCollapsed">Centro de Ayuda</span>
+        </button>
+        <button
+          (click)="logout()"
+          class="w-full flex items-center gap-2 text-red-500 hover:text-red-700 transition"
+          [ngClass]="{ 'justify-center': isCollapsed }"
+        >
+          <i class="pi pi-sign-out"></i>
+          <span *ngIf="!isCollapsed">Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="flex-1 overflow-y-auto bg-gray-100 p-6">
     <router-outlet></router-outlet>
   </main>
-
-  <footer>
-    <p>© 2024 - Gestión Empresarial</p>
-  </footer>
 </div>

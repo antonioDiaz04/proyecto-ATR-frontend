@@ -4,7 +4,6 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-mvv',
   templateUrl: './mvv.component.html',
-  styleUrl: './mvv.component.scss'
 })
 export class MVVComponent {
   selectedOption: string = 'mision';

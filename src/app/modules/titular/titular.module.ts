@@ -6,7 +6,7 @@ import { TitularComponent } from './titular.component';
 import { HistorialComponent } from './views/historial/historial.component';
 import { VentasComponent } from './views/historial/ventas/ventas.component';
 import { RentasComponent } from './views/historial/rentas/rentas.component';
-import { InicioView } from './views/inicio/inicio.view';
+//import { InicioComponent } from "./views/inicio/inicio.component";
 import { DashboardView } from './views/dashboard/dashboard.view';
 import { EstadisticaComponent } from './views/estadistica/estadistica.component';
 import { ChartModule } from 'primeng/chart';
@@ -24,17 +24,22 @@ import { ValoresComponent } from './views/mvv/valores/valores.component';
     HistorialComponent,
     VentasComponent,
     RentasComponent,
-    InicioView,
+    //InicioComponent,
     DashboardView,
     MVVComponent,
     MisionComponent,
     VisionComponent,
-    ValoresComponent,EstadisticaComponent
+    ValoresComponent,
+    EstadisticaComponent,
   ],
-  imports: [TableModule,ButtonModule ,
-    CommonModule,ChartModule,
-    TitularRoutingModule,ReactiveFormsModule,FormsModule
-    
-  ]
+  imports: [
+    TableModule,
+    ButtonModule,
+    CommonModule,
+    ChartModule,
+    TitularRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
 })
-export class TitularModule { }
+export class TitularModule {}

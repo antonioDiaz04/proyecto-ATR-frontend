@@ -1,25 +1,143 @@
-<div class="ventas-container">
-  <h2>Historial de Rentas</h2>
-  <button pButton label="Generar Reporte" icon="pi pi-file-pdf"  (click)="generarReporte()"></button>
+<main class="flex-1 p-8 space-y-10 bg-gray-50 animate-fade-in">
+  <!-- Encabezado -->
+  <div class="flex items-center justify-between animate-slide-in-down">
+    <div class="space-y-1">
+      <h2 class="text-3xl font-bold text-gray-800 animate-fade-in">
+        Historial de Rentas - Atelier
+      </h2>
+    </div>
+    <div class="flex items-center gap-4">
+      <input
+        type="text"
+        placeholder="Buscar en rentas..."
+        class="px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 ease-in-out"
+      />
+      <div class="rounded-full w-10 h-10 bg-gray-400 animate-pulse"></div>
+    </div>
+  </div>
 
-  <p-table [value]="ventas" [paginator]="true" [rows]="5" responsiveLayout="scroll">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Fecha</th>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Total ($)</th>
-        <th>Método de Pago</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-venta>
-      <tr>
-        <td>{{ venta.fecha }}</td>
-        <td>{{ venta.producto }}</td>
-        <td>{{ venta.cantidad }}</td>
-        <td>{{ venta.total | currency }}</td>
-        <td>{{ venta.metodoPago }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
-</div>
+  <!-- Resumen de rentas -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in-up">
+    <div
+      class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition duration-300 ease-in-out animate-slide-in-left"
+    >
+      <h3 class="text-xl font-semibold text-gray-700 mb-4">
+        Tendencia de Rentas
+      </h3>
+      <div class="h-48 bg-gray-100 rounded animate-pulse"></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg p-6 animate-slide-in-right">
+      <h3 class="text-xl font-semibold text-gray-700 mb-4">
+        Resumen de Rentas
+      </h3>
+      <div class="space-y-4 text-base text-gray-700">
+        <div class="flex justify-between border-b pb-2">
+          <span>Total:</span>
+          <span class="font-bold text-green-600">{{
+            rentasResumen.totalRentas | currency
+          }}</span>
+        </div>
+        <div class="flex justify-between border-b pb-2">
+          <span>Online:</span>
+          <span class="font-semibold text-blue-600">
+            {{ rentasResumen.rentasOnline | currency }} ({{
+              rentasResumen.porcentajeOnline.toFixed(2)
+            }}%)
+          </span>
+        </div>
+        <div class="flex justify-between">
+          <span>Presencial:</span>
+          <span class="font-semibold text-purple-600">
+            {{ rentasResumen.rentasPresenciales | currency }} ({{
+              rentasResumen.porcentajePresencial.toFixed(2)
+            }}%)
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div
+    class="bg-white p-6 rounded-2xl shadow-md flex flex-wrap items-end gap-6 mt-6 animate-fade-in-up"
+  >
+    <div class="transition-all duration-300">
+      <label for="anio" class="block text-sm font-medium text-gray-600"
+        >Año</label
+      >
+      <select
+        id="anio"
+        [(ngModel)]="anioSeleccionado"
+        class="mt-1 border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+      >
+        <option value="">Todos</option>
+        <option *ngFor="let anio of aniosUnicos" [value]="anio">
+          {{ anio }}
+        </option>
+      </select>
+    </div>
+
+    <div class="transition-all duration-300">
+      <label for="mes" class="block text-sm font-medium text-gray-600"
+        >Mes</label
+      >
+      <select
+        id="mes"
+        [(ngModel)]="mesSeleccionado"
+        class="mt-1 border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+      >
+        <option value="">Todos</option>
+        <option *ngFor="let mes of mesesUnicos" [value]="mes">{{ mes }}</option>
+      </select>
+    </div>
+
+    <button
+      pButton
+      label="Filtrar"
+      (click)="filtrarRentas()"
+      class="p-button-sm p-button-outlined p-button-secondary mt-4 animate-pop"
+    ></button>
+  </div>
+
+  <!-- Botón de reporte -->
+  <div class="flex justify-end mt-4 animate-slide-in-up">
+    <button
+      pButton
+      label="Generar Reporte PDF"
+      icon="pi pi-file-pdf"
+      (click)="generarReporte()"
+      class="p-button p-button-success hover:scale-105 transition-transform duration-300"
+    ></button>
+  </div>
+
+  <!-- Tabla -->
+  <div class="bg-white rounded-2xl shadow-md p-6 animate-fade-in-up">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Detalle de Rentas</h3>
+    <p-table
+      [value]="rentas"
+      [paginator]="true"
+      [rows]="5"
+      responsiveLayout="scroll"
+    >
+      <ng-template pTemplate="header">
+        <tr class="bg-gray-100">
+          <th class="py-2 px-4">Fecha</th>
+          <th class="py-2 px-4">Producto</th>
+          <th class="py-2 px-4">Cantidad</th>
+          <th class="py-2 px-4">Total ($)</th>
+          <th class="py-2 px-4">Método de Pago</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-venta>
+        <tr class="hover:bg-gray-50 transition">
+          <td class="py-2 px-4">{{ venta.fecha }}</td>
+          <td class="py-2 px-4">{{ venta.producto }}</td>
+          <td class="py-2 px-4">{{ venta.cantidad }}</td>
+          <td class="py-2 px-4">{{ venta.total | currency }}</td>
+          <td class="py-2 px-4">{{ venta.metodoPago }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</main>
