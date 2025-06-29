@@ -11,37 +11,32 @@ interface MessageBody {
 }
 @Injectable()
 export class mensageservice {
-  // url = '/correo/token/';
-  url = 'https://servidortropicalworld-1.onrender.com/correo/token/';
   constructor(private _http: HttpClient) {}
 
   enviarTokenCorreo(email: string): Observable<any> {
-    return this._http.post<any>(`${environment.api}/enviar-correo`, { email});
-    // return this._http.post<any>(this.url, { correo });
+    return this._http.post<any>(`${environment.api}/enviar-correo`, { email });
   }
   enviarTokenSMS(number_to_send: string): Observable<any> {
-    return this._http.post<any>(`${environment.api}/enviar-number`, { number_to_send});
-    // return this._http.post<any>(this.url, { correo });
+    return this._http.post<any>(`${environment.api}/enviar-number`, {
+      number_to_send,
+    });
   }
   enviarTokenWasthapp(number_to_send: string): Observable<any> {
-    return this._http.post<any>(`${environment.api}/msj/enviar-mensaje`, { number_to_send });
-    // return this._http.post<any>(this.url, { correo });
+    return this._http.post<any>(`${environment.api}/msj/enviar-mensaje`, {
+      number_to_send,
+    });
   }
   activarCuenta(email: string, codigoVerificacion: string): Observable<any> {
-    return this._http.post<any>(`${environment.api}/verificacion/activar-cuenta`, { email, codigoVerificacion });
+    return this._http.post<any>(
+      `${environment.api}/verificacion/activar-cuenta`,
+      { email, codigoVerificacion }
+    );
   }
-  // verificarCodigo(email: string, codigo: string): Observable<any> {
-  //   return this._http.post<any>(`${environment.api}/verificacion/activar-cuenta`, { email, codigo });
-  // }
-  
+
   enviarNotificacion(): Observable<any> {
     return this._http.post<any>(
       `${environment.api}/enviar-notificacion/revisar-correo`,
       {}
     );
   }
-
-  // enviarNotificacion(correo: string): Observable<any> {
-  //     return this._http.post<any>(this.url , { correo });
-  // }
 }

@@ -5,7 +5,7 @@ import { Component,OnInit } from "@angular/core";
   templateUrl: "./ventas.component.html"
 })
 export class VentasComponent implements OnInit {
-    ventas: any[] = [];
+  ventas: any[] = [];
   ventasOriginal: any[] = [];
 
   ventasResumen = {

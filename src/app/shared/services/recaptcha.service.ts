@@ -1,6 +1,4 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
 
@@ -15,16 +13,6 @@ import { environment } from '../../../environments/environment';
 export class RecaptchaService {
   constructor(private http: HttpClient) {}
 
-  /*
-
-  Modo de comunicación con el servidor asíncrono
-
-  parametro token: string
-
-  return Observable<any>
-
-   */
-
   getTokenClientModule(token: string): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -33,10 +21,7 @@ export class RecaptchaService {
     };
 
     return this.http
-      .post<any>(
-        `${environment.api}/verificar/' + token + '/`,
-        httpOptions
-      )
+      .post<any>(`${environment.api}/verificar/' + token + '/`, httpOptions)
 
       .pipe(
         map((response) => response),

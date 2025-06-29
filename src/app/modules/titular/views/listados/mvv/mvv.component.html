@@ -1,133 +1,168 @@
+<p-toast></p-toast>
+
 <div
-  class="max-w-7xl mx-auto px-8 py-12 bg-[#f8fafc] min-h-screen rounded-3xl shadow-lg space-y-10 animate-fade-in"
+  class="max-w-7xl mx-auto px-6 py-10 bg-gradient-to-b from-[#f8fafc] to-[#e2e8f0] min-h-screen space-y-10"
 >
   <!-- Encabezado -->
-  <div class="text-center space-y-2 animate-slide-in-down">
-    <h1 class="text-4xl font-bold text-[#232f3e] tracking-tight">
-      Conócenos Mejor
-    </h1>
-    <p class="text-gray-500 text-sm">Información institucional editable</p>
+  <div class="text-left">
+    <h1 class="text-4xl font-bold text-[#1e293b]">Información Institucional</h1>
+    <p class="text-gray-500 text-sm mt-2">
+      Gestiona los pilares fundamentales de tu empresa
+    </p>
   </div>
 
-  <!-- Selector de Secciones -->
-  <div class="flex justify-center gap-4 flex-wrap animate-fade-in-up">
-    <button
+  <!-- Selector tipo botones -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+  >
+    <div
       *ngFor="let option of options"
       (click)="selectOption(option.id)"
-      [disabled]="isEditing"
-      [class.bg-[#232f3e]]="selectedOption === option.id"
-      [class.text-white]="selectedOption === option.id"
-      [class.bg-white]="selectedOption !== option.id"
-      [class.text-gray-700]="selectedOption !== option.id"
-      class="px-5 py-2 rounded-full border border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 text-sm font-medium"
+      [ngClass]="{
+        'bg-[#1e293b] text-white scale-[1.02]': selectedOption === option.id,
+        'bg-white text-gray-900': selectedOption !== option.id
+      }"
+      class="cursor-pointer rounded-3xl border border-gray-200 p-5 shadow-md hover:shadow-lg transition duration-200 hover:scale-[1.01]"
     >
-      {{ option.title }}
-    </button>
+      <div class="flex items-center gap-4">
+        <i
+          class="text-2xl"
+          [ngClass]="{
+            'fas fa-flag text-green-600': option.id === 'mision',
+            'fas fa-lightbulb text-blue-600': option.id === 'vision',
+            'fas fa-handshake text-purple-600': option.id === 'valores',
+            'fas fa-shield-alt text-gray-600': option.id === 'politicas',
+            'fas fa-file-contract text-indigo-600': option.id === 'terminos',
+            'fas fa-exclamation-triangle text-red-600': option.id === 'deslinde'
+          }"
+        ></i>
+        <div class="flex flex-col">
+          <h3 class="font-semibold text-lg">{{ option.title }}</h3>
+          <span class="text-xs text-gray-400">Gestión personalizada</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Contenedor principal -->
-  <div class="bg-white rounded-2xl shadow-md p-8 animate-slide-in-up space-y-6">
-    <!-- Botones de Acción -->
-    <div class="flex justify-end gap-3 mb-6">
+  <form
+    [formGroup]="mvvForm"
+    class="bg-white shadow rounded-xl p-6 space-y-5"
+    (ngSubmit)="saveChanges()"
+  >
+    <!-- Botones -->
+    <div class="flex justify-end gap-3">
+      <!-- Botón "Nueva" siempre visible -->
       <ng-container *ngIf="!isEditing">
         <button
+          type="button"
+          (click)="createNew()"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          <i class="fas fa-plus mr-2"></i>Nueva
+        </button>
+      </ng-container>
+
+      <!-- Botón "Editar" solo visible cuando no es "politicas", "terminos" o "deslinde" -->
+      <ng-container
+        *ngIf="
+          !isEditing &&
+          !['politicas', 'terminos', 'deslinde'].includes(selectedOption)
+        "
+      >
+        <button
+          type="button"
           (click)="startEditing()"
-          class="bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600 transition"
+          class="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500"
         >
           <i class="fas fa-edit mr-2"></i>Editar
         </button>
       </ng-container>
 
-      <ng-container *ngIf="isEditing">
+      <!-- Mostrar los botones de guardado y cancelación solo cuando se está editando -->
+      <ng-container
+        *ngIf="
+          isEditing &&
+          !['politicas', 'terminos', 'deslinde'].includes(selectedOption)
+        "
+      >
         <button
-          (click)="saveChanges()"
-          class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition"
+          type="submit"
+          [disabled]="mvvForm.invalid"
+          class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           <i class="fas fa-save mr-2"></i>Guardar
         </button>
         <button
+          type="button"
           (click)="cancelEdit()"
-          class="bg-gray-400 text-white px-5 py-2 rounded-lg hover:bg-gray-500 transition"
+          class="bg-gray-300 text-white px-4 py-2 rounded hover:bg-gray-400"
         >
           <i class="fas fa-times mr-2"></i>Cancelar
         </button>
         <button
+          type="button"
           (click)="clearContent()"
-          class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition"
+          class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           <i class="fas fa-trash mr-2"></i>Limpiar
         </button>
       </ng-container>
     </div>
 
-    <!-- Contenido dinámico -->
+    <!-- Contenido -->
     <ng-container [ngSwitch]="selectedOption">
       <!-- Misión -->
-      <div *ngSwitchCase="'mision'" class="space-y-4">
-        <h2 *ngIf="!isEditing" class="text-2xl font-bold text-[#2c3e50]">
-          {{ content.mision.title }}
-        </h2>
-        <input
-          *ngIf="isEditing"
-          type="text"
-          formControlName="title"
-          class="w-full border rounded-lg px-4 py-2 text-gray-700"
-          placeholder="Título"
-        />
-        <p *ngIf="!isEditing" class="text-gray-600 text-lg">
+      <div *ngSwitchCase="'mision'" class="space-y-3">
+        <label class="block text-sm text-gray-600">Misión</label>
+        <div *ngIf="!isEditing" class="text-gray-700">
           {{ content.mision.description }}
-        </p>
+        </div>
         <textarea
           *ngIf="isEditing"
           formControlName="description"
-          rows="5"
-          class="w-full border rounded-lg px-4 py-3 text-gray-700"
-          placeholder="Descripción"
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Descripción de la misión"
         ></textarea>
       </div>
 
       <!-- Visión -->
-      <div *ngSwitchCase="'vision'" class="space-y-4">
-        <h2 *ngIf="!isEditing" class="text-2xl font-bold text-[#2c3e50]">
-          {{ content.vision.title }}
-        </h2>
-        <input
-          *ngIf="isEditing"
-          type="text"
-          formControlName="title"
-          class="w-full border rounded-lg px-4 py-2 text-gray-700"
-          placeholder="Título"
-        />
-        <p *ngIf="!isEditing" class="text-gray-600 text-lg">
+      <div *ngSwitchCase="'vision'" class="space-y-3">
+        <label class="block text-sm text-gray-600">Visión</label>
+        <div *ngIf="!isEditing" class="text-gray-700">
           {{ content.vision.description }}
-        </p>
+        </div>
         <textarea
           *ngIf="isEditing"
           formControlName="description"
-          rows="5"
-          class="w-full border rounded-lg px-4 py-3 text-gray-700"
-          placeholder="Descripción"
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Descripción de la visión"
         ></textarea>
       </div>
 
       <!-- Valores -->
-      <div *ngSwitchCase="'valores'" class="space-y-4">
-        <h2 *ngIf="!isEditing" class="text-2xl font-bold text-[#2c3e50]">
+      <div *ngSwitchCase="'valores'" class="space-y-6">
+        <label class="block text-sm text-gray-500 font-medium">Título</label>
+        <div *ngIf="!isEditing" class="text-xl font-semibold text-[#232f3e]">
           {{ content.valores.title }}
-        </h2>
+        </div>
         <input
           *ngIf="isEditing"
           type="text"
           formControlName="title"
-          class="w-full border rounded-lg px-4 py-2 text-gray-700"
-          placeholder="Título"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Título de valores"
         />
+
+        <label class="block text-sm text-gray-500 font-medium"
+          >Lista de Valores</label
+        >
         <ul
           *ngIf="!isEditing"
           class="list-disc list-inside text-gray-700 space-y-1"
         >
           <li *ngFor="let item of content.valores.items">{{ item }}</li>
         </ul>
+
         <div *ngIf="isEditing" class="space-y-3">
           <div
             class="flex items-center gap-3"
@@ -137,25 +172,269 @@
             <input
               type="text"
               [formControlName]="i"
-              class="w-full border rounded-lg px-4 py-2 text-gray-700"
-              placeholder="Valor"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Valor {{ i + 1 }}"
             />
             <button
+              type="button"
               (click)="removeValor(i)"
-              class="text-red-600 hover:text-red-800 transition"
-              title="Eliminar valor"
+              class="text-red-500 hover:text-red-700 text-lg transition"
             >
-              <i class="fas fa-minus-circle text-xl"></i>
+              <i class="fas fa-minus-circle"></i>
             </button>
           </div>
+
           <button
+            type="button"
             (click)="addValor()"
-            class="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition"
+            class="bg-[#1e293b] text-white px-4 py-2 rounded-lg hover:bg-[#111827] transition flex items-center gap-2"
           >
-            <i class="fas fa-plus-circle mr-2"></i>Agregar valor
+            <i class="fas fa-plus-circle"></i> Agregar valor
           </button>
+        </div>
+
+        <div
+          *ngIf="!isEditing && content.valores.fechaVigencia"
+          class="space-y-1"
+        >
+          <label class="block text-sm text-gray-500 font-medium"
+            >Fecha de vigencia</label
+          >
+          <p class="text-gray-700 text-base">
+            {{ content.valores.fechaVigencia | date : "longDate" }}
+          </p>
+        </div>
+
+        <input
+          *ngIf="isEditing"
+          type="date"
+          formControlName="fechaVigencia"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Políticas -->
+      <div *ngSwitchCase="'politicas'" class="space-y-4">
+        <div
+          *ngIf="content.politicas.length === 0 && !isEditing"
+          class="text-gray-500 italic"
+        >
+          No hay políticas registradas.
+        </div>
+
+        <div
+          *ngFor="let politica of content.politicas; let i = index"
+          class="border-b pb-4"
+        >
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex gap-2 ml-auto">
+              <button
+                type="button"
+                (click)="deletePolitica(i)"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                <i class="fas fa-trash mr-1"></i>Eliminar
+              </button>
+              <button
+                type="button"
+                (click)="editPolitica(i)"
+                class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+              >
+                <i class="fas fa-edit mr-1"></i>Editar
+              </button>
+            </div>
+          </div>
+          <h2 class="text-xl font-semibold text-[#2c3e50]">
+            {{ politica.titulo }}
+          </h2>
+          <p class="text-gray-600 whitespace-pre-line">
+            {{ politica.contenido }}
+          </p>
+          <p class="text-gray-500 text-sm mt-1">
+            Vigente desde: {{ politica.fechaVigencia | date : "longDate" }}
+          </p>
+        </div>
+
+        <div *ngIf="isEditing" class="space-y-4 mt-6 border-t pt-6">
+          <input
+            type="text"
+            formControlName="title"
+            class="w-full border border-gray-300 rounded px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Título de política"
+          />
+          <textarea
+            formControlName="description"
+            rows="5"
+            class="w-full border border-gray-300 rounded px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Descripción de la política"
+          ></textarea>
+          <input
+            type="date"
+            formControlName="fechaVigencia"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div class="flex gap-2 justify-end">
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded shadow-sm"
+            >
+              <i class="fas fa-times mr-2"></i>Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="mvvForm.invalid"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm"
+            >
+              <i class="fas fa-save mr-2"></i>Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Términos y Condiciones -->
+      <div *ngSwitchCase="'terminos'" class="space-y-6">
+        <div *ngIf="!isEditing">
+          <div
+            *ngFor="let term of content.terminos; let i = index"
+            class="border-b pb-4"
+          >
+            <div class="flex justify-end gap-2 mb-2">
+              <button
+                type="button"
+                (click)="deleteTermino(i)"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                <i class="fas fa-trash mr-1"></i>Eliminar
+              </button>
+              <button
+                type="button"
+                (click)="editTermino(i)"
+                class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+              >
+                <i class="fas fa-edit mr-1"></i>Editar
+              </button>
+            </div>
+
+            <h2 class="text-xl font-semibold text-[#2c3e50]">
+              {{ term.titulo }}
+            </h2>
+            <p class="text-gray-600 whitespace-pre-line">
+              {{ term.contenido }}
+            </p>
+            <p class="text-gray-500 text-sm mt-1">
+              Vigente desde: {{ term.fechaVigencia | date : "longDate" }}
+            </p>
+          </div>
+        </div>
+
+        <div *ngIf="isEditing" class="space-y-4">
+          <input
+            type="text"
+            formControlName="title"
+            class="w-full border border-gray-300 rounded px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Título del término"
+          />
+          <textarea
+            formControlName="description"
+            rows="5"
+            class="w-full border border-gray-300 rounded px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Contenido del término"
+          ></textarea>
+          <input
+            type="date"
+            formControlName="fechaVigencia"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <div class="flex gap-2 justify-end">
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded shadow-sm"
+            >
+              <i class="fas fa-times mr-2"></i>Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="mvvForm.invalid"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm"
+            >
+              <i class="fas fa-save mr-2"></i>Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deslinde Legal -->
+      <div *ngSwitchCase="'deslinde'" class="space-y-6">
+        <div *ngIf="!isEditing">
+          <div
+            *ngFor="let d of content.deslinde; let i = index"
+            class="border-b pb-4"
+          >
+            <div class="flex justify-end gap-2 mb-2">
+              <button
+                type="button"
+                (click)="deleteDeslinde(i)"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              >
+                <i class="fas fa-trash mr-1"></i>Eliminar
+              </button>
+              <button
+                type="button"
+                (click)="editDeslinde(i)"
+                class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+              >
+                <i class="fas fa-edit mr-1"></i>Editar
+              </button>
+            </div>
+
+            <h2 class="text-xl font-semibold text-[#2c3e50]">{{ d.titulo }}</h2>
+            <p class="text-gray-600 whitespace-pre-line">{{ d.contenido }}</p>
+            <p class="text-gray-500 text-sm mt-1">
+              Vigente desde: {{ d.fechaVigencia | date : "longDate" }}
+            </p>
+          </div>
+        </div>
+
+        <div *ngIf="isEditing" class="space-y-4">
+          <input
+            type="text"
+            formControlName="title"
+            class="w-full border border-gray-300 rounded px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Título del deslinde"
+          />
+          <textarea
+            formControlName="description"
+            rows="5"
+            class="w-full border border-gray-300 rounded px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Contenido del deslinde legal"
+          ></textarea>
+          <input
+            type="date"
+            formControlName="fechaVigencia"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <div class="flex gap-2 justify-end">
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded shadow-sm"
+            >
+              <i class="fas fa-times mr-2"></i>Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="mvvForm.invalid"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm"
+            >
+              <i class="fas fa-save mr-2"></i>Guardar
+            </button>
+          </div>
         </div>
       </div>
     </ng-container>
-  </div>
+  </form>
 </div>

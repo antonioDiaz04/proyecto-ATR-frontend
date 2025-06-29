@@ -478,8 +478,6 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
           phoneNumber: result.user.phoneNumber || '',
         };
 
-        console.log('Usuario autenticado:', result.user);
-
         this.registrarUsuario(usuario);
       }
     } catch (error) {
@@ -502,8 +500,6 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
           createdAt: new Date(),
           phoneNumber: result.user.phoneNumber || '',
         };
-
-        console.log('Usuario autenticado con Facebook:', result.user);
 
         this.registrarUsuario(usuario);
       }

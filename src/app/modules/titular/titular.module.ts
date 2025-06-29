@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -23,10 +24,12 @@ import { RentasComponent } from './views/historial/rentas/rentas.component';
 import { DashboardView } from './views/dashboard/dashboard.view';
 import { EstadisticaComponent } from './views/estadistica/estadistica.component';
 import { MVVComponent } from './views/listados/mvv/mvv.component';
-import { MisionComponent } from './views/mvv/mision/mision.component';
+// import { MisionComponent } from './views/mvv/mision/mision.component';
 import { VisionComponent } from './views/mvv/vision/vision.component';
 import { ValoresComponent } from './views/mvv/valores/valores.component';
 import { PropietarioService } from '../../shared/services/propietario.service';
+import { ControlAdministrativaService } from '../../shared/services/control-administrativa.service';
+import { ApiInterceptor } from '../../shared/services/api-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,7 @@ import { PropietarioService } from '../../shared/services/propietario.service';
     RentasComponent,
     DashboardView,
     MVVComponent,
-    MisionComponent,
+    // MisionComponent,
     VisionComponent,
     ValoresComponent,
     EstadisticaComponent,
@@ -59,8 +62,14 @@ import { PropietarioService } from '../../shared/services/propietario.service';
       useClass: CsrfInterceptor,
       multi: true, // Permite múltiples interceptores
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor, // <--- este interceptor agrega el token
+      multi: true,
+    },
     PropietarioService,
     MessageService,
+    ControlAdministrativaService,
   ],
 })
 export class TitularModule {}

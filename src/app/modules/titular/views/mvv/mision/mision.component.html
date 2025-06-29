@@ -1,1 +1,99 @@
-<p>mision works!</p>
+<div class="p-6 max-w-5xl mx-auto">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">
+    Gestión de Misiones de la Empresa
+  </h2>
+
+  <!-- Formulario -->
+  <form
+    (ngSubmit)="guardarMision()"
+    [formGroup]="misionForm"
+    class="bg-white p-6 rounded-lg shadow-md mb-10"
+  >
+    <div class="mb-4">
+      <label for="titulo" class="block text-gray-700 font-semibold mb-2"
+        >Título</label
+      >
+      <input
+        id="titulo"
+        type="text"
+        formControlName="titulo"
+        placeholder="Ej. Misión 2022"
+        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label for="contenido" class="block text-gray-700 font-semibold mb-2"
+        >Contenido</label
+      >
+      <textarea
+        id="contenido"
+        formControlName="contenido"
+        rows="5"
+        placeholder="Describa aquí la misión..."
+        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+      ></textarea>
+    </div>
+
+    <div class="mb-4">
+      <label for="fecha" class="block text-gray-700 font-semibold mb-2"
+        >Fecha</label
+      >
+      <input
+        id="fecha"
+        type="date"
+        formControlName="fecha"
+        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+      />
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        class="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-200"
+      >
+        Guardar
+      </button>
+    </div>
+  </form>
+
+  <!-- Tabla CRUD -->
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <h3 class="text-lg font-bold text-gray-800 mb-4">Historial de Misiones</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+            Título
+          </th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+            Fecha
+          </th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let mision of misiones">
+          <td class="px-4 py-2">{{ mision.titulo }}</td>
+          <td class="px-4 py-2">{{ mision.fecha }}</td>
+          <td class="px-4 py-2 space-x-2">
+            <button
+              (click)="editarMision(mision)"
+              class="text-blue-500 hover:underline text-sm"
+            >
+              Editar
+            </button>
+            <button
+              (click)="eliminarMision(mision._id)"
+              class="text-red-500 hover:underline text-sm"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

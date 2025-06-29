@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment'; // Asegúrate de tener la URL de tu API en el environment
-// import { Venta } from './models/venta';  // Asegúrate de tener el modelo de Venta
-// import { Renta } from './models/renta';  // Asegúrate de tener el modelo de Renta
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VentayrentaService {
-  private apiUrl = `${environment.api}/proceso`; // Base URL del backend para rentas
+  private apiUrl = `${environment.api}/proceso`;
 
   constructor(private http: HttpClient) {}
 
