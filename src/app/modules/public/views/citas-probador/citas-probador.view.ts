@@ -52,20 +52,135 @@ export class CitasProbadorView implements OnInit, OnDestroy {
     console.log("✅ constructor");
   }
 
+  idUsuario: string | any = null;
   async ngOnInit() {
     console.log("✅ ngOnInit");
 
     try {
       const productos = await this.indexedDbService.obtenerProductosApartados();
-      this.productosRenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "renta");
-      this.productosVenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "venta");
-      this.cartService.initializeCart(productos);
+      console.log("📥 Productos obtenidos de IndexedDB:", productos);
+
+      if (this.isUserLoggedIn()) {
+        console.log("🔐 Usuario logueado");
+
+        const user = this.sessionService.getUserData();
+        this.idUsuario = user?._id;
+
+        if (!this.idUsuario) {
+          throw new Error("No se pudo obtener el id del usuario");
+        }
+
+        let carritoServidor: DressItem[] = [];
+
+        try {
+          const respuesta = await this.usuarioService.obtenerCarrito(this.idUsuario).toPromise();
+          console.log("🖥️ Carrito obtenido del backend (raw):", respuesta);
+
+          // Si el backend devuelve directamente un array:
+          if (Array.isArray(respuesta)) {
+            carritoServidor = respuesta;
+          } else if (respuesta && Array.isArray(respuesta.productos)) {
+            carritoServidor = respuesta.productos;
+          } else {
+            console.warn("⚠️ Respuesta inesperada del backend, usando carrito vacío");
+          }
+        } catch (err) {
+          console.error("❌ Error al obtener carrito del backend:", err);
+        }
+
+        if (!carritoServidor || carritoServidor.length === 0) {
+          console.log("📦 Backend sin productos, usando IndexedDB");
+
+          this.productosRenta = productos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
+          );
+          this.productosVenta = productos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
+          );
+
+          if (productos.length > 0) {
+            this.usuarioService
+              .guardarCarrito(productos, this.idUsuario)
+              .subscribe({
+                next: () => console.log("🆗 Productos guardados en backend"),
+                error: (err) => console.error("❌ Error al guardar productos nuevos", err),
+              });
+          }
+        } else {
+          console.log("🔄 Backend tiene productos, sincronizando...");
+
+          const idsServidor = new Set(carritoServidor.map((p) => p.id));
+          const productosNuevos = productos.filter((p) => !idsServidor.has(p.id));
+
+          // for (let producto of productos) {
+          //   if (idsServidor.has(producto.id)) {
+          //     await this.indexedDbService.eliminarProducto(producto.id);
+          //     console.log(`🧹 Producto duplicado eliminado de IndexedDB: ${producto.id}`);
+          //   }
+          // }
+
+          const idsIndexedDb = new Set(productos.map((p) => p.id));
+          const productosAEliminarEnBackend = carritoServidor.filter(
+            (p) => !idsIndexedDb.has(p.id)
+          );
+
+          // for (let producto of productosAEliminarEnBackend) {
+          //   await this.usuarioService.eliminarProductoCarrito(this.idUsuario, producto.id).toPromise();
+          //   console.log(`🧹 Producto eliminado del backend: ${producto.id}`);
+          // }
+
+          this.productosRenta = productosNuevos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
+          );
+          this.productosVenta = productosNuevos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
+          );
+
+          if (productosNuevos.length > 0) {
+            this.usuarioService
+              .guardarCarrito(productosNuevos, this.idUsuario)
+              .subscribe({
+                next: () => console.log("🆗 Productos nuevos guardados en backend"),
+                error: (err) => console.error("❌ Error al guardar productos nuevos", err),
+              });
+          }
+        }
+      } else {
+        console.log("👤 Usuario no logueado, solo IndexedDB");
+
+        this.productosRenta = productos.filter(
+          (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
+        );
+        this.productosVenta = productos.filter(
+          (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
+        );
+      }
+
+      this.cartService.initializeCart([...this.productosRenta, ...this.productosVenta]);
       this.calcularTotal();
       this.initializeTabs();
+
     } catch (error) {
       this.handleError("Error al cargar los productos", error);
     }
   }
+
+
+
+  // async ngOnInit() {
+  //   console.log("✅ ngOnInit");
+
+  //   try {
+  //     const productos = await this.indexedDbService.obtenerProductosApartados();
+  //     this.productosRenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "renta");
+  //     this.productosVenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "venta");
+  //     this.cartService.initializeCart(productos);
+  //     this.calcularTotal();
+  //     this.initializeTabs();
+  //   } catch (error) {
+  //     this.handleError("Error al cargar los productos", error);
+  //   }
+  // }
 
 
 
@@ -356,16 +471,20 @@ export class CitasProbadorView implements OnInit, OnDestroy {
 
     this.guardando = true;
 
-    this.usuarioService.guardarCarrito(carrito).subscribe({
+    this.usuarioService.guardarCarrito(carrito, this.idUsuario).subscribe({
       next: () => {
         console.log("✅ Carrito enviado al backend.");
         this.mostrarNotificacion = true;
+
         setTimeout(() => {
           this.mostrarNotificacion = false;
+
         }, 4000);
         this.cerrarModal();
       },
       error: (error) => {
+        this.guardando = false;
+
         console.error("❌ Error al guardar el carrito", error);
         this.showErrorAlert("Error al guardar tu carrito en el servidor");
       },
@@ -379,7 +498,7 @@ export class CitasProbadorView implements OnInit, OnDestroy {
     const confirmacion = confirm("¿Estás seguro de que deseas vaciar el carrito?");
     if (!confirmacion) return;
 
-    this.usuarioService.vaciarCarrito().subscribe({
+    this.usuarioService.vaciarCarrito(this.idUsuario).subscribe({
       next: () => {
         this.cartService.clearCart();
         this.productosRenta = [];

@@ -38,13 +38,29 @@ export class UsuarioService {
     );
   }
 
-  guardarCarrito(productos: any[]): Observable<any> {
-    return this.http.post('/api/v1/carrito/guardar', { productos });
+  guardarCarrito(productos: any[], idUsuario: string): Observable<any> {
+    return this.http.post(`${environment.api}/carrito/guardar`, { productos, idUsuario }, {
+      withCredentials: true,
+    });
   }
-  vaciarCarrito(): Observable<any> {
-  return this.http.delete('/api/v1/carrito/vaciar');
-}
 
+  // eliminarProductoCarrito
+  eliminarProductoCarrito(idUsuario: string, idProducto: string): Observable<any> {
+    return this.http.delete(`${environment.api}/carrito/eliminar/${idUsuario}/${idProducto}`, {
+      withCredentials: true,
+    });
+  }
+  vaciarCarrito(idUsuario: string): Observable<any> {
+    return this.http.delete(`${environment.api}/carrito/vaciar/${idUsuario}`, {
+      withCredentials: true,
+    });
+  }
+
+  obtenerCarrito(idUsuario: string): Observable<any> {
+    return this.http.get(`${environment.api}/carrito/byIdUsuario/${idUsuario}`, {
+      withCredentials: true,
+    });
+  }
 
 
   getPreguntaSecreta(email: any): Observable<any> {
