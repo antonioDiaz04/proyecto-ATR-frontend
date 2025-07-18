@@ -13,7 +13,7 @@ export class IndexedDbService {
   constructor() {
     // Verificar si IndexedDB está soportado en el navegador
     this.indexedDBSupported = this.checkIndexedDBSupport();
-
+    
     if (this.indexedDBSupported) {
       this.initializeDB();
     } else {
@@ -72,7 +72,7 @@ export class IndexedDbService {
   // Método para verificar si la base de datos está lista
   private async ensureDBReady(): Promise<boolean> {
     if (!this.indexedDBSupported) return false;
-
+    
     if (!this.db) {
       await new Promise(resolve => setTimeout(resolve, 100));
       return this.db !== null;
@@ -168,43 +168,25 @@ export class IndexedDbService {
 
 
   // indexed-db.service.ts
-  async guardarSuscripcion(subscription: PushSubscription): Promise<void> {
-    if (!this.indexedDBSupported) {
-      console.warn('IndexedDB no soportado');
-      return;
-    }
-    if (!await this.ensureDBReady()) {
-      console.error('No se pudo inicializar la base de datos');
-      return;
-    }
-    const subJSON = subscription.toJSON();
-    // Add a key property for the object store with keyPath 'key'
-    (subJSON as any).key = 'actual';
-    const transaction = this.db!.transaction('suscripciones', 'readwrite');
-    const store = transaction.objectStore('suscripciones');
-    await new Promise<void>((resolve, reject) => {
-      const request = store.put(subJSON);
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+async guardarSuscripcion(subscription: PushSubscription): Promise<void> {
+  if (!this.indexedDBSupported) {
+    console.warn('IndexedDB no soportado');
+    return;
   }
-  // puedes hacer la funciion que limpia la indexedDB de carrito limpiarCarrito
-  async limpiarCarrito(): Promise<void> {
-    if (!this.indexedDBSupported) {
-      console.warn('IndexedDB no soportado');
-      return;
-    }
-    if (!await this.ensureDBReady()) {
-      console.error('No se pudo inicializar la base de datos');
-      return;
-    }
-    const transaction = this.db!.transaction('apartados', 'readwrite');
-    const store = transaction.objectStore('apartados');
-    await new Promise<void>((resolve, reject) => {
-      const request = store.clear();
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+  if (!await this.ensureDBReady()) {
+    console.error('No se pudo inicializar la base de datos');
+    return;
+  }
+  const subJSON = subscription.toJSON();
+  // Add a key property for the object store with keyPath 'key'
+  (subJSON as any).key = 'actual';
+  const transaction = this.db!.transaction('suscripciones', 'readwrite');
+  const store = transaction.objectStore('suscripciones');
+  await new Promise<void>((resolve, reject) => {
+    const request = store.put(subJSON);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
 
-  }
 }

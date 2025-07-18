@@ -1,162 +1,594 @@
-import { Component } from '@angular/core';
+import { Component, type AfterViewInit, type OnInit } from '@angular/core';
+import Calendar from '@toast-ui/calendar';
+import { MessageService } from 'primeng/api';
+import { ChangeDetectorRef } from '@angular/core';
+import { PropietarioService } from '../../../../shared/services/propietario.service';
+
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexDataLabels,
+  ApexFill,
+  ApexGrid,
+  ApexLegend,
+  ApexMarkers,
+  ApexPlotOptions,
+  ApexStroke,
+  ApexTooltip,
+  ApexTitleSubtitle,
+  ApexXAxis,
+  ApexYAxis,
+} from 'ng-apexcharts';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis?: ApexYAxis;
+  dataLabels?: ApexDataLabels;
+  plotOptions?: ApexPlotOptions;
+  stroke?: ApexStroke;
+  tooltip?: ApexTooltip;
+  fill?: ApexFill;
+  markers?: ApexMarkers;
+  legend?: ApexLegend;
+  grid?: ApexGrid;
+  title?: ApexTitleSubtitle;
+  colors?: string[];
+};
+
+interface Transaccion {
+  id?: string;
+  cliente: string;
+  tipo: 'Renta' | 'Venta';
+  vestido: string;
+  monto: number;
+  estado: 'Pagado' | 'Pendiente' | 'Cancelado';
+  fecha: string;
+  fotoDePerfil?: string;
+}
+
+type OrdenCampo = 'cliente' | 'tipo' | 'vestido' | 'monto' | 'estado' | 'fecha';
+type OrdenDireccion = 'asc' | 'desc';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.view.html',
-  styleUrls: ['./dashboard.view.scss']
+  styleUrl: './dashboard.view.scss',
 })
-export class DashboardView {
-  barChartData: any;
-  radarChartData: any;
-  productosMasVendidosData: any;
-  selectedMonth!: number;
-  selectedYear!: number;
-  totalCompras: number = 0;
-  totalRentas: number = 0;
-  comprasRentasData: any;
-  vestidosRentados: { tipo: string; color: string; talla: string; cantidad: number; }[] = [];
+export class DashboardView implements OnInit, AfterViewInit {
+  // Totales
+  totalRentaVentas = 0;
+  totalVentas = 0;
+  totalRentas = 0;
+  totalClientes = 0;
 
-  months: { name: string; value: number }[] = [
-    { name: 'Enero', value: 1 },
-    { name: 'Febrero', value: 2 },
-    { name: 'Marzo', value: 3 },
-    { name: 'Abril', value: 4 },
-    { name: 'Mayo', value: 5 },
-    { name: 'Junio', value: 6 },
-    { name: 'Julio', value: 7 },
-    { name: 'Agosto', value: 8 },
-    { name: 'Septiembre', value: 9 },
-    { name: 'Octubre', value: 10 },
-    { name: 'Noviembre', value: 11 },
-    { name: 'Diciembre', value: 12 }
-  ];
-  years: number[] = [2023, 2024];
-  totalVentas: number = 120000;
-  totalClientes: number = 340;
-  vestidosMasVendidos: any[] = [
-    { tipo: 'Vestido de Corazón', color: 'Rojo', talla: 'M', cantidad: 50 },
-    { tipo: 'Vestido de Corazón', color: 'Azul', talla: 'L', cantidad: 30 },
-    { tipo: 'Vestido Largo', color: 'Negro', talla: 'S', cantidad: 20 },
-    { tipo: 'Vestido Corto', color: 'Verde', talla: 'M', cantidad: 25 },
-    { tipo: 'Vestido de Gala', color: 'Dorado', talla: 'XL', cantidad: 15 }
-  ];
+  //del periodo anterior
+  montoTotalAnterior = 0;
+  totalRentasAnterior = 0;
+  totalVentasAnterior = 0;
+  totalClientesAnterior = 0;
 
-  constructor() {
-    this.totalCompras = 100; // Ejemplo de valor
-    this.totalRentas = 50;   // Ejemplo de valor
-    this.loadBarChartData();
-    this.loadRadarChart();
-    this.loadProductosMasVendidosChart();
-    this.loadComprasRentasData(); // Prepara los datos para la gráfica
-  }
+  //clesimiento de lasventas y rentas
+  crecimientoRentaVentas = 0;
+  crecimientoRentas = 0;
+  crecimientoVentas = 0;
+  crecimientoClientes = 0;
 
-  loadBarChartData() {
-    this.barChartData = {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      datasets: [
-        {
-          label: 'Ventas',
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
-          data: [65, 59, 80, 81, 56, 55, 40, 48, 59, 62, 75, 80]
-        },
-        {
-          label: 'Rentas',
-          backgroundColor: 'rgba(255, 206, 86, 0.2)',
-          borderColor: 'rgba(255, 206, 86, 1)',
-          borderWidth: 1,
-          data: [28, 48, 40, 19, 86, 27, 90, 100, 45, 67, 88, 60]
-        }
-      ]
-    };
-  }
-  
-
-  loadRadarChart() {
-    this.radarChartData = {
-      labels: [
-        'Buenavista - Huejutla', 
-        'Altamira - Tampico', 
-        'Chapultepec - Poza Rica', 
-        'Centro - Pachuca', 
-        'La Escondida - Tulancingo'
-      ],
-      datasets: [
-        {
-          label: 'Clientes Frecuentes',
-          data: [120, 90, 80, 70, 60],
-          backgroundColor: 'rgba(0, 123, 255, 0.4)',
-          borderColor: '#007bff',
-          pointBackgroundColor: '#007bff'
-        }
-      ]
-    };
-  }
-  loadComprasRentasData() {
-    const totalTransacciones = this.totalCompras + this.totalRentas;
-    this.comprasRentasData = {
-      labels: ['Compras', 'Rentas'],
-      datasets: [
-        {
-          data: [
-            (this.totalCompras / totalTransacciones) * 100,
-            (this.totalRentas / totalTransacciones) * 100
-          ],
-          backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
-          hoverBackgroundColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)']
-        }
-      ]
-    };
-  }
-  
-
-  loadProductosMasVendidosChart() {
-    this.productosMasVendidosData = {
-      labels: this.vestidosMasVendidos.map(v => `${v.tipo} - ${v.color}`),
-      datasets: [
-        {
-          label: 'Cantidad Vendida',
-          data: this.vestidosMasVendidos.map(v => v.cantidad),
-          backgroundColor: this.vestidosMasVendidos.map((v, i) => this.getColor(i)),
-          borderColor: 'rgba(255, 255, 255, 1)',
-          borderWidth: 2
-        }
-      ]
-    };
-  }
-  radarChartDataVentaRenta = {
-    labels: ["Jaltocán", "Atlapexco", "Buena Vista", "Huejutla", "Pachuca"],
-    datasets: [
-      {
-        label: "Rentas",
-        data: [50, 40, 30, 20, 10],
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Ventas",
-        data: [40, 50, 60, 70, 80],
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 1,
-      },
-    ],
+  //
+  cardFlipped = {
+    ingresos: false,
+    rentas: false,
+    ventas: false,
+    clientes: false,
   };
-  getColor(index: number) {
+
+  // Fechas y filtros
+  fechaInicio!: Date;
+  fechaFin!: Date;
+  filtroActivo: 'quincena' | 'semana' | 'mes' | 'anio' = 'mes';
+  filtroSeleccionado = 'mes';
+
+  // Datos de gráfica
+  barChartData: any = {};
+  chartOptionsApex!: Partial<ChartOptions>;
+
+  // Calendario
+  calendar!: Calendar;
+  calendarDateDisplay: string = '';
+  mesAnioActual: string = '';
+
+  // Transacciones
+  transacciones: Transaccion[] = [];
+  transaccionesFiltradas: Transaccion[] = [];
+  transaccionesPaginadas: Transaccion[] = [];
+
+  // Paginación
+  tamanoPagina = 5;
+  paginaActual = 1;
+  mostrarTodas = false;
+
+  // Ordenamiento y búsqueda
+  campoOrden: OrdenCampo = 'fecha';
+  direccionOrden: OrdenDireccion = 'desc';
+  terminoBusqueda = '';
+
+  // Control de carga
+  private totalConsultas = 5;
+  private consultasCompletadas = 0;
+
+  constructor(
+    private propietarioService: PropietarioService,
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.filtrarPor('mes');
+  }
+
+  ngAfterViewInit(): void {
+    this.inicializarCalendario();
+    this.observarCambioDeModo();
+  }
+
+  toggleCard(card: keyof typeof this.cardFlipped) {
+    this.cardFlipped[card] = !this.cardFlipped[card];
+  }
+
+  private calcularCrecimiento(actual: number, anterior?: number): number {
+    if (!anterior || isNaN(anterior)) return 0;
+    return Math.round(((actual - anterior) / anterior) * 100);
+  }
+
+  private inicializarCalendario(): void {
+    const isDarkMode = document.documentElement.classList.contains('dark');
+
+    this.calendar = new Calendar('#tui-calendar-container', {
+      defaultView: 'month',
+      scheduleView: ['allday'],
+      taskView: false,
+      useDetailPopup: true,
+      useFormPopup: false,
+      isReadOnly: true,
+      month: {
+        startDayOfWeek: 1,
+        daynames: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+      },
+      template: {
+        monthDayname: (dayname: any) =>
+          `<span class="tui-full-calendar-dayname">${dayname.label}</span>`,
+      },
+      theme: isDarkMode
+        ? {
+            common: {
+              backgroundColor: '#141516', // fondoOscuro
+              border: '1px solid #374151', // bordeOscuro
+            },
+            month: {
+              dayName: { color: '#F9FAFB' }, // textoClaro
+              holidayExceptThisMonth: { color: '#6b7280' }, // texto tenue
+              dayExceptThisMonth: { color: '#6b7280' },
+              weekend: { backgroundColor: '#1E1E1E' }, // fondoTarjeta
+              moreView: {
+                backgroundColor: '#2A2A2A',
+                color: '#F9FAFB', // mejorar contraste del texto "1 more"
+              },
+              gridCell: {
+                backgroundColor: '#141516',
+                border: '1px solid #374151', // mantener cuadrícula discreta
+              },
+              today: {
+                border: '1px solid #818CF8', // acentoHover
+                color: '#F9FAFB',
+              },
+            },
+            week: {
+              dayName: {
+                backgroundColor: '#1E1E1E',
+                color: '#F9FAFB',
+              },
+              timeGrid: {
+                backgroundColor: '#141516',
+              },
+              timeGridLeft: {
+                backgroundColor: '#1E1E1E',
+                borderRight: '1px solid #374151',
+                color: '#F9FAFB',
+              },
+            },
+          }
+        : {
+            common: {
+              backgroundColor: '#ffffff',
+              border: '1px solid #e2e8f0',
+            },
+            month: {
+              dayName: { color: '#64748b' },
+              holidayExceptThisMonth: { color: '#cbd5e1' },
+              dayExceptThisMonth: { color: '#cbd5e1' },
+              weekend: { backgroundColor: '#f8fafc' },
+            },
+          },
+    });
+
+    this.actualizarMesAnio();
+  }
+
+  updateCalendarDateDisplay() {
+    const date = this.calendar.getDate();
+    this.calendarDateDisplay = date.format('MMMM YYYY'); // requiere moment.js o dayjs
+  }
+
+  private generarColorUnico(str: string): string {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash % 360);
+    return `hsl(${h}, 70%, 70%)`;
+  }
+
+  calendarPrev() {
+    this.calendar.prev();
+    this.updateCalendarDateDisplay();
+  }
+  calendarNext() {
+    this.calendar.next();
+    this.updateCalendarDateDisplay();
+  }
+
+  calendarToday() {
+    this.calendar.today();
+    this.updateCalendarDateDisplay();
+  }
+  actualizarMesAnio() {
+    const fecha = this.calendar.getDate(); // retorna un moment.js o similar
+    const meses = [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ];
+    const mes = meses[fecha.getMonth()];
+    const anio = fecha.getFullYear();
+    this.mesAnioActual = `${mes} ${anio}`;
+    this.cdr.detectChanges();
+  }
+
+  filtrarPor(tipo: 'quincena' | 'semana' | 'mes' | 'anio'): void {
+    this.filtroActivo = tipo;
+    const now = new Date();
+    let start: Date;
+    let end: Date;
+
+    switch (tipo) {
+      case 'quincena': {
+        const dia = now.getDate();
+        start = new Date(now.getFullYear(), now.getMonth(), dia <= 15 ? 1 : 16);
+        end = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          dia <= 15 ? 15 : this.getUltimoDiaMes(now)
+        );
+        break;
+      }
+      case 'semana': {
+        const diaSemana = now.getDay();
+        start = new Date(now);
+        start.setDate(now.getDate() - diaSemana);
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        break;
+      }
+      case 'mes':
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          this.getUltimoDiaMes(now)
+        );
+        break;
+      case 'anio':
+        start = new Date(now.getFullYear(), 0, 1);
+        end = new Date(now.getFullYear(), 11, 31);
+        break;
+    }
+
+    const startStr = start.toISOString().split('T')[0];
+    const endStr = end.toISOString().split('T')[0];
+
+    this.propietarioService
+      .getTotalesRentaVentaPorRango(startStr, endStr)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.totalRentaVentas = data.montoTotalVentas + data.montoTotalRentas;
+          this.montoTotalAnterior =
+            data.montoTotalVentasAnterior + data.montoTotalRentasAnterior || 0;
+          this.totalRentasAnterior = data.montoTotalRentasAnterior || 0;
+          this.totalVentasAnterior = data.montoTotalVentasAnterior || 0;
+          this.totalClientesAnterior = data.totalClientesAnterior || 0;
+          this.totalVentas = data.totalVentas;
+          this.totalRentas = data.totalRentas;
+
+          this.totalClientes = data.totalClientes;
+          this.fechaInicio = start;
+          this.fechaFin = end;
+          this.barChartData = data.barChartData;
+
+          this.chartOptionsApex = {
+            series: data.barChartData.datasets.map((ds: any) => ({
+              name: ds.label,
+              data: ds.data,
+            })),
+            chart: {
+              type: 'bar',
+              height: 350,
+              toolbar: { show: false },
+            },
+            xaxis: {
+              categories: data.barChartData.labels,
+            },
+            colors: ['#3b82f6', '#10b981'],
+            legend: {
+              position: 'top',
+            },
+            dataLabels: {
+              enabled: false,
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                borderRadius: 4,
+              },
+            },
+            fill: {
+              opacity: 1,
+            },
+          };
+
+       
+          if (this.calendar) {
+            this.calendar.clear();
+
+            const eventos = data.calendarOptions?.events ?? [];
+
+            const eventosTipados: any[] = eventos;
+
+            const idsUnicos: string[] = [
+              ...new Set(eventosTipados.map((e) => e.calendarId as string)),
+            ];
+
+            // Asignar un color único a cada calendarId
+            const calendariosUnicos = idsUnicos.map((id) => {
+              const color = this.generarColorUnico(id);
+              return {
+                id,
+                name: `Renta ${id}`,
+                backgroundColor: color,
+                borderColor: color,
+                dragBackgroundColor: color,
+              };
+            });
+
+            this.calendar.setCalendars(calendariosUnicos);
+            this.calendar.createEvents(eventosTipados);
+          }
+
+          this.crecimientoRentaVentas = this.calcularCrecimiento(
+            data.montoTotalVentas + data.montoTotalRentas,
+            data.montoTotalAnterior
+          );
+          this.crecimientoRentas = this.calcularCrecimiento(
+            data.totalRentas,
+            data.totalRentasAnterior
+          );
+          this.crecimientoVentas = this.calcularCrecimiento(
+            data.totalVentas,
+            data.totalVentasAnterior
+          );
+          this.crecimientoClientes = this.calcularCrecimiento(
+            data.totalClientes,
+            data.totalClientesAnterior
+          );
+
+          this.transacciones = data.transacciones || [];
+          this.aplicarFiltrosYOrdenamiento();
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudieron cargar los datos del dashboard.',
+          });
+        },
+      });
+  }
+
+  ordenarPor(campo: OrdenCampo): void {
+    if (this.campoOrden === campo) {
+      this.direccionOrden = this.direccionOrden === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.campoOrden = campo;
+      this.direccionOrden = 'asc';
+    }
+    this.aplicarFiltrosYOrdenamiento();
+  }
+
+  private ordenarTransacciones(transacciones: Transaccion[]): Transaccion[] {
+    return [...transacciones].sort((a, b) => {
+      let valorA: any = a[this.campoOrden];
+      let valorB: any = b[this.campoOrden];
+
+      if (typeof valorA === 'string') {
+        valorA = valorA.toLowerCase();
+        valorB = valorB.toLowerCase();
+      }
+
+      if (this.campoOrden === 'fecha') {
+        valorA = new Date(a.fecha).getTime();
+        valorB = new Date(b.fecha).getTime();
+      }
+
+      let resultado = 0;
+      if (valorA < valorB) resultado = -1;
+      if (valorA > valorB) resultado = 1;
+
+      return this.direccionOrden === 'desc' ? -resultado : resultado;
+    });
+  }
+
+  buscarTransacciones(termino: string): void {
+    this.terminoBusqueda = (termino || '').toLowerCase();
+    this.aplicarFiltrosYOrdenamiento();
+  }
+
+  private filtrarTransacciones(transacciones: Transaccion[]): Transaccion[] {
+    if (!this.terminoBusqueda) return transacciones;
+
+    return transacciones.filter(
+      (transaccion) =>
+        (transaccion.cliente || '')
+          .toLowerCase()
+          .includes(this.terminoBusqueda) ||
+        (transaccion.vestido || '')
+          .toLowerCase()
+          .includes(this.terminoBusqueda) ||
+        (transaccion.tipo || '').toLowerCase().includes(this.terminoBusqueda) ||
+        (transaccion.estado || '').toLowerCase().includes(this.terminoBusqueda)
+    );
+  }
+
+  private aplicarFiltrosYOrdenamiento(): void {
+    console.log('Filtradas:', this.transaccionesFiltradas.length);
+    console.log('Paginadas:', this.transaccionesPaginadas.length);
+    let resultado = this.filtrarTransacciones(this.transacciones);
+    resultado = this.ordenarTransacciones(resultado);
+    this.transaccionesFiltradas = resultado;
+    this.actualizarPaginacion();
+  }
+
+  private actualizarPaginacion(): void {
+    if (this.mostrarTodas) {
+      this.transaccionesPaginadas = this.transaccionesFiltradas;
+    } else {
+      const inicio = 0;
+      const fin = this.paginaActual * this.tamanoPagina;
+      this.transaccionesPaginadas = this.transaccionesFiltradas.slice(
+        inicio,
+        fin
+      );
+    }
+  }
+  private observarCambioDeModo(): void {
+    const target = document.documentElement;
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          this.reinicializarCalendario();
+        }
+      });
+    });
+
+    observer.observe(target, { attributes: true });
+  }
+  private reinicializarCalendario(): void {
+    if (this.calendar) {
+      this.calendar.destroy();
+    }
+    this.inicializarCalendario();
+  }
+  verTodasLasTransacciones(): void {
+    this.mostrarTodas = true;
+    this.actualizarPaginacion();
+  }
+
+  reiniciarPaginacion(): void {
+    this.mostrarTodas = false;
+    this.paginaActual = 1;
+    this.actualizarPaginacion();
+  }
+
+  cargarMas(): void {
+    this.paginaActual++;
+    this.actualizarPaginacion();
+  }
+
+  private getUltimoDiaMes(fecha: Date): number {
+    return new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0).getDate();
+  }
+
+  getColor(index: number): string {
     const colors = [
-      'rgba(18, 150, 238, 0.74)', // Azul
-      'rgba(238, 255, 86, 0.76)', // Amarillo
-      'rgba(241, 12, 62, 0.8)'  // Rosa
+      'rgba(18, 150, 238, 0.74)',
+      'rgba(238, 255, 86, 0.76)',
+      'rgba(241, 12, 62, 0.8)',
+      'rgba(255, 140, 0, 0.8)',
+      'rgba(0, 200, 83, 0.8)',
     ];
     return colors[index % colors.length];
   }
-  
-  filtrarDatos() {
-    // Lógica para filtrar datos según selectedMonth y selectedYear
-    // Actualiza totalVentas, totalClientes y vestidosMasVendidos
+
+  getInitials(nombre: string): string {
+    return nombre
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   }
 
-  descargarReporte() {}
+  // Controles de navegación
+  irAnterior() {
+    this.calendar.prev();
+    this.actualizarMesAnio();
+  }
+
+  irSiguiente() {
+    this.calendar.next();
+    this.actualizarMesAnio();
+  }
+
+  irHoy() {
+    this.calendar.today();
+    this.actualizarMesAnio();
+  }
+
+  get hayDatosEnGrafica(): boolean {
+    const series = this.chartOptionsApex?.series;
+    return !!series?.length && series.some((s) => s.data && s.data.length > 0);
+  }
+
+  trackByTransaccion(index: number, transaccion: Transaccion): any {
+    return transaccion.id || index;
+  }
+
+  getIconoOrdenamiento(campo: OrdenCampo): string {
+    if (this.campoOrden !== campo) return '';
+    return this.direccionOrden === 'asc' ? '↑' : '↓';
+  }
+
+  verificarCargaCompleta(): void {
+    this.consultasCompletadas++;
+    if (this.consultasCompletadas === this.totalConsultas) {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Dashboard listo',
+        detail: 'Los datos se cargaron correctamente.',
+      });
+    }
+  }
 }

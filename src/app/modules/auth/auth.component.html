@@ -1,12 +1,16 @@
-<header class="flex fixed top-0 left-0 right-0 justify-center items-center p-2 bg-white border-b border-[#f0e6eb] z-10">
-  <button type="button"  (click)="atras()" class="flex items-center space-x-1 bg-transparent text-black">
+<header
+  class="flex fixed top-0 left-0 right-0 justify-center items-center p-2 bg-white border-b border-[#f0e6eb] z-10"
+>
+  <button
+    type="button"
+    (click)="atras()"
+    class="flex items-center space-x-1 bg-transparent text-black"
+  >
     <i class="pi pi-chevron-left"></i>
     <span class="text-lg">Volver</span>
   </button>
 </header>
-<main
-  class="min-h-screen bg-[#faf9f7]"
->
+<main class="min-h-screen bg-[#faf9f7]">
   <div
     class="absolute inset-0 z-0"
     style="
@@ -16,7 +20,12 @@
       filter: brightness(0.6) blur(2px) sepia(0.3);
     "
   ></div>
+  <div
+    class="absolute bottom-0 left-0 right-0 h-32 z-0 bg-gradient-to-b from-transparent to-[#faf9f7]"
+  ></div>
   <div class="relative z-1">
-    <router-outlet class="block px-4 md:px-8 py-6 max-w-7xl mx-auto"></router-outlet>
+    <router-outlet
+      class="block px-4 md:px-8 py-6 max-w-7xl mx-auto"
+    ></router-outlet>
   </div>
 </main>

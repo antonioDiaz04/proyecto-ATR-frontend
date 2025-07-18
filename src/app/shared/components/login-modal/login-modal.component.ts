@@ -1,66 +1,64 @@
-import { response } from 'express';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Inject,
+  Input,
+  NgZone,
+  OnChanges,
+  OnInit,
   Output,
   PLATFORM_ID,
-  Renderer2,
-  EventEmitter,
-  Input,
-  OnInit,
   SimpleChanges,
-  OnChanges,
-  AfterViewInit,
   ViewChild,
-  NgZone,
   inject,
 } from '@angular/core';
-import { IndexedDbService } from '../../../modules/public/commons/services/indexed-db.service';
-import { mensageservice } from '../../services/mensage.service';
-import { StorageService } from '../../services/storage.service';
-import { SignInService } from '../../../modules/auth/commons/services/sign-in.service';
-import { SessionService } from '../../services/session.service';
 import {
-  FormBuilder,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
   Validators,
 } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { DatosEmpresaService } from '../../services/datos-empresa.service';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { ThemeServiceService } from '../../services/theme-service.service';
 import { Router } from '@angular/router';
-import { interval, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ERol } from '../../constants/rol.enum';
-import { ToastModule } from 'primeng/toast';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { HttpClientModule } from '@angular/common/http';
-import { DialogModule } from 'primeng/dialog';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { PasswordModule } from 'primeng/password';
-import AOS from 'aos';
 
 import {
   Auth,
-  signInWithPopup,
   FacebookAuthProvider,
   GoogleAuthProvider,
+  signInWithPopup,
 } from '@angular/fire/auth';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { PasswordModule } from 'primeng/password';
+import { ToastModule } from 'primeng/toast';
+
+import { interval, Subscription } from 'rxjs';
+
+import { ERol } from '../../constants/rol.enum';
+import { DatosEmpresaService } from '../../services/datos-empresa.service';
+import { SessionService } from '../../services/session.service';
+import { StorageService } from '../../services/storage.service';
+import { ThemeServiceService } from '../../services/theme-service.service';
+
+import { SignInService } from '../../../modules/auth/commons/services/sign-in.service';
+
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+
+import AOS from 'aos';
 
 @Component({
   selector: 'app-login-modal',
-  standalone: true, // Marca el componente como standalone
+  standalone: true,
   imports: [
-    /* The `SidebarModule` in the Angular code you provided is being imported in the `HeaderComponent` class. This module is likely a custom Angular module or a module provided by a third-party library (such as PrimeNG) that provides functionality related to displaying a sidebar component. */
     FormsModule,
     ToastModule,
     InputTextModule,
@@ -72,60 +70,62 @@ import {
     DialogModule,
     InputGroupModule,
     PasswordModule,
-
     HttpClientModule,
-  ], // Importa las dependencias necesarias
+  ],
   templateUrl: './login-modal.component.html',
-
 })
 export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
   isLoading = false;
   userROL!: string;
-  // Logo=logoAtelier
   count!: number;
   captchaToken: string | null = null;
-  //
+  public robot!: boolean;
+  public presionado!: boolean;
+  usePhoneLogin: boolean = false;
   auth: Auth = inject(Auth);
-  maxAttempts: number = 5; // Se puede asignar un número o 0 más adelante
+  maxAttempts: number = 5;
 
-  attempts: number = 0; // Contador de intentos actuales
-  isLocked: boolean = false; // Estado para saber si está bloqueado
-  lockTime: number = 30; // Tiempo de bloqueo en segundos
-  remainingTime: number = 0; // Tiempo restante para volver a intentar
+  attempts: number = 0;
+  isLocked: boolean = false;
+  lockTime: number = 30;
+  remainingTime: number = 0;
   timerSubscription!: Subscription;
 
   loginForm: FormGroup;
   isGoogleLogin = false;
 
   errorMessage: string = '';
-  loginError: string = ''; // Nueva variable para el mensaje de error
-  // userROL!: string;
+  loginError: string = '';
   loading: boolean = false;
   captchagenerado: boolean = false;
+  private isCaptchaRendered = false;
+
   //datos de la empresa
   logo!: string;
   nombreEmpresa: string = 'Atelier';
   visible: boolean = false;
-  passwordStrengthClass: string = ''; // Clase CSS que se aplica dinámicamente
-  passwordStrengthMessage: string = ''; // Mensaje dinámico que se muestra debajo del campo
+  passwordStrengthClass: string = '';
+  passwordStrengthMessage: string = '';
   captcha = '';
 
-  faltantes: string[] = []; // Lista de requisitos faltantes
+  faltantes: string[] = [];
   showPassword: boolean = false;
-border: any;
+  border: any;
+  passwordIncorrecta = false;
+
+  @Input() isModalVisible: boolean = false;
+  @Output() closed: EventEmitter<string> = new EventEmitter<string>();
+  @Output() mostrarFormulario = new EventEmitter<boolean>();
+
+  @ViewChild('passwordField', { static: false }) passwordField?: ElementRef;
+
   constructor(
-    private indexedDbService: IndexedDbService,
-    private msgs: mensageservice,
     private signInService: SignInService,
     private storageService: StorageService,
     private sessionService: SessionService,
     private fb: FormBuilder,
-    private messageService: MessageService,
     private datosEmpresaService: DatosEmpresaService,
     private ngxService: NgxUiLoaderService,
-    private renderer: Renderer2,
-    // private sessionService: SessionService,
-    private elementRef: ElementRef,
     public themeService: ThemeServiceService,
     private cdr: ChangeDetectorRef,
     //para lo del capchat
@@ -138,16 +138,11 @@ border: any;
       {
         email: [
           '',
-          [
-            Validators.pattern(/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
-          ],
+          [Validators.pattern(/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)],
         ],
-        telefono: [
-          '',
-          [Validators.pattern(/^[0-9]{10}$/)],
-        ],
-        password: ['', Validators.required], // Validador requerido para la contraseña
-        captcha: ['', Validators.required], // Validador requerido para el captcha
+        telefono: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+        password: ['', Validators.required],
+        captcha: ['', Validators.required],
       },
       { validator: this.atLeastOneRequired('email', 'telefono') }
     );
@@ -156,9 +151,6 @@ border: any;
     this.isLoading = false;
   }
 
-
-
-  // Función personalizada para validar que al menos un campo esté lleno
   atLeastOneRequired(control1: string, control2: string) {
     return (formGroup: FormGroup) => {
       const value1 = formGroup.controls[control1].value;
@@ -174,18 +166,14 @@ border: any;
     };
   }
   async ngOnInit() {
-
     AOS.init({
-      duration: 650, // Duración de la animación en milisegundos
-      // easing: 'ease-in-out', // Tipo de animación
-      once: true, // Si `true`, la animación solo se ejecuta una vez
+      duration: 650,
+      once: true,
     });
 
-
-    this.getCaptchaToken();
+    //this.getCaptchaToken();
     this.loadCaptchaScript();
 
-    // Marcar el formulario como "tocado" cuando el usuario interactúe
     this.loginForm.valueChanges.subscribe(() => {
       this.loginForm.markAllAsTouched();
     });
@@ -194,65 +182,63 @@ border: any;
     if (this.usePhoneLogin) {
       // Si usa teléfono, el campo email no es obligatorio
       this.loginForm.get('email')?.clearValidators();
-      this.loginForm.get('telefono')?.setValidators([Validators.required, Validators.pattern('^[0-9]{10}$')]);
+      this.loginForm
+        .get('telefono')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern('^[0-9]{10}$'),
+        ]);
     } else {
       // Si usa email, el campo teléfono no es obligatorio
       this.loginForm.get('telefono')?.clearValidators();
-      this.loginForm.get('email')?.setValidators([Validators.required, Validators.pattern(/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]);
+      this.loginForm
+        .get('email')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+        ]);
     }
 
     this.loginForm.get('email')?.updateValueAndValidity();
     this.loginForm.get('telefono')?.updateValueAndValidity();
   }
 
-  @ViewChild('passwordField') passwordField!: ElementRef;
-
   ngAfterViewInit() {
     this.cargarWidgetRecaptcha();
-    this.passwordField.nativeElement.setAttribute(
-      'autocomplete',
-      'current-password'
-    );
 
-    // Verificar si grecaptcha.ready está disponible
-    if (typeof grecaptcha !== 'undefined' && 'ready' in grecaptcha) {
-      grecaptcha.ready(() => {
-        grecaptcha.render('captcha-container', {
-          sitekey: '6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI',
-          callback: (token: string) => {
-            this.validateCaptcha(); // Validar el captcha cuando cambie
-          },
-        });
-      });
+    if (this.passwordField?.nativeElement) {
+      this.passwordField.nativeElement.setAttribute(
+        'autocomplete',
+        'current-password'
+      );
     }
   }
 
   cargarWidgetRecaptcha() {
     if (typeof grecaptcha !== 'undefined') {
-      grecaptcha.render('captcha-container', {
-        sitekey: '6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI',
-        callback: (token: string) => {
-          this.getCaptchaToken(); // Llamar a getCaptchaToken cuando el captcha se resuelva
-        },
-      });
+      if (!this.isCaptchaRendered) {
+        grecaptcha.render('captcha-container', {
+          sitekey: '6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI',
+          callback: (token: string) => {
+            this.getCaptchaToken();
+          },
+        });
+        this.isCaptchaRendered = true;
+      } else {
+        console.log('reCAPTCHA ya fue renderizado, se omite renderización.');
+      }
     } else {
       console.error('El cliente de reCAPTCHA no está disponible.');
     }
   }
+
   get email() {
     return this.loginForm.get('email');
   }
 
-  public robot!: boolean;
-  public presionado!: boolean;
-
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();
   }
-
-
-
-  usePhoneLogin: boolean = false;
 
   toggleLoginMethod() {
     this.usePhoneLogin = !this.usePhoneLogin;
@@ -260,11 +246,6 @@ border: any;
     this.loginForm.get('email')?.reset();
     this.loginForm.get('telefono')?.reset();
   }
-
-  @Input() isModalVisible: boolean = false;
-  @Output() closed: EventEmitter<string> = new EventEmitter<string>(); // Aquí se define correctamente
-  @Output() mostrarFormulario = new EventEmitter<boolean>(); // Evento para cerrar el modal
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isModalVisible']) {
       console.log(
@@ -275,9 +256,9 @@ border: any;
   }
 
   close(): void {
-    this.mostrarFormulario.emit(false); // Emitimos false para cerrar el modal
+    this.mostrarFormulario.emit(false);
 
-    this.closed.emit('Modal cerrado correctamente'); // Se emite el evento correctamente
+    this.closed.emit('Modal cerrado correctamente');
   }
 
   getCaptchaToken(): string {
@@ -285,9 +266,9 @@ border: any;
       const token = grecaptcha.getResponse();
       if (!token) {
         console.warn('Token no generado todavía.');
-        this.loginForm.get('captcha')?.setValue(''); // Limpiar el valor si no hay token
+        this.loginForm.get('captcha')?.setValue('');
       } else {
-        this.loginForm.get('captcha')?.setValue(token); // Actualizar el valor del captcha en el formulario
+        this.loginForm.get('captcha')?.setValue(token);
       }
       return token;
     } else {
@@ -312,7 +293,7 @@ border: any;
       script.defer = true;
       script.onload = () => {
         console.log('reCAPTCHA script loaded');
-        this.cargarWidgetRecaptcha(); // Llamar a cargarWidgetRecaptcha después de cargar el script
+        this.cargarWidgetRecaptcha();
       };
       document.body.appendChild(script);
     } else {
@@ -337,42 +318,32 @@ border: any;
     );
   }
 
-  // validateCaptcha() {
-  //   const token = grecaptcha.getResponse();
-  //   return token ? token : null;
-  // }
   validateCaptcha() {
     const token = grecaptcha.getResponse();
     if (token) {
-      this.loginForm.get('captcha')?.setValue(token); // Actualiza el valor del captcha en el formulario
+      this.loginForm.get('captcha')?.setValue(token);
       this.loginForm.get('captcha')?.markAsUntouched();
       return token;
     } else {
-      this.loginForm.get('captcha')?.setValue(''); // Limpia el valor si no hay token
+      this.loginForm.get('captcha')?.setValue('');
       return null;
     }
   }
 
   inicia() {
-    this.ngxService.start(); // start foreground spinner of the master loader with 'default' taskId
-    // Stop the foreground loading after 5s
+    this.ngxService.start();
     setTimeout(() => {
-      this.ngxService.stop(); // stop foreground spinner of the master loader with 'default' taskId
+      this.ngxService.stop();
     }, 3000);
 
-    // OR
     this.ngxService.startBackground('do-background-things');
-    // Do something here...
     this.ngxService.stopBackground('do-background-things');
 
-    this.ngxService.startLoader('loader-01'); // start foreground spinner of the loader "loader-01" with 'default' taskId
-    // Stop the foreground loading after 5s
+    this.ngxService.startLoader('loader-01');
     setTimeout(() => {
-      this.ngxService.stopLoader('loader-01'); // stop foreground spinner of the loader "loader-01" with 'default' taskId
+      this.ngxService.stopLoader('loader-01');
     }, 3000);
   }
-
-  passwordIncorrecta = false;
 
   verificarPassword() {
     this.faltantes = [];
@@ -397,22 +368,16 @@ border: any;
 
   login(): void {
     this.loginForm.markAllAsTouched();
-    this.errorMessage = ''; // Limpia el mensaje de error anterior
+    this.errorMessage = '';
     this.loginError = '';
     this.captchaToken = this.loginForm.get('captcha')?.value;
     this.isLoading = true;
-    this.toggleValidation()
+    this.toggleValidation();
     if (this.isLocked) {
       this.loginError = `Has alcanzado el límite de intentos. Intenta de nuevo en ${this.remainingTime} segundos.`;
       this.isLoading = false;
       return;
     }
-
-    // if (this.loginForm.invalid) {
-    //   this.loginError = 'Por favor, completa todos los campos';
-    //   this.isLoading = false;
-    //   return;
-    // }
 
     if (!navigator.onLine) {
       this.loginError =
@@ -458,20 +423,16 @@ border: any;
         },
         (err) => {
           console.error('Error en el inicio de sesión:', err);
-          this.isLoading = false; // Restablecer el estado de carga
+          this.isLoading = false;
 
           if (err.status === 401) {
             this.errorMessage =
               'Credenciales inválidas. Por favor, verifica tu correo y contraseña.';
           } else if (err.status === 403) {
-            this.loginError = err.error.message; // Mostrar el mensaje del servidor
-            this.attempts = err.error.numeroDeIntentos; // Actualizar el número de intentos
-            this.lockTime = parseInt(err.error.tiempo, 10); // Convertir el tiempo de bloqueo a número
+            this.loginError = err.error.message;
+            this.attempts = err.error.numeroDeIntentos;
+            this.lockTime = parseInt(err.error.tiempo, 10);
             this.lockAccount();
-            console.log(
-              'Temporizador iniciado. Tiempo restante:',
-              this.remainingTime
-            );
           } else if (
             err.status === 400 &&
             err.error.message === 'Captcha inválido'
@@ -479,7 +440,7 @@ border: any;
             this.loginError =
               'Captcha inválido. Por favor, inténtalo de nuevo.';
             if (typeof grecaptcha !== 'undefined') {
-              grecaptcha.reset(); // Reiniciar el reCAPTCHA
+              grecaptcha.reset();
             }
           } else if (err.status === 0) {
             this.loginError =
@@ -488,7 +449,6 @@ border: any;
             this.loginError = 'Ha ocurrido un error al iniciar sesión.';
           }
 
-          // Forzar la actualización de la vista
           this.cdr.detectChanges();
         }
       );
@@ -502,15 +462,13 @@ border: any;
       this.loginForm.reset();
       if (result.user) {
         const usuario = {
-          uid: result.user.uid, // ID único del usuario
-          email: result.user.email, // Correo electrónico
-          displayName: result.user.displayName, // Nombre completo
-          photoURL: result.user.photoURL, // Foto de perfil
-          createdAt: new Date(), // Fecha de creación
-          phoneNumber: result.user.phoneNumber || '', //numero de telefeno
+          uid: result.user.uid,
+          email: result.user.email,
+          displayName: result.user.displayName,
+          photoURL: result.user.photoURL,
+          createdAt: new Date(),
+          phoneNumber: result.user.phoneNumber || '',
         };
-
-        console.log('Usuario autenticado:', result.user);
 
         this.registrarUsuario(usuario);
       }
@@ -520,29 +478,33 @@ border: any;
   }
 
   async loginWithFacebook() {
-    const provider = new FacebookAuthProvider(); // Crea el proveedor de Facebook
+    const provider = new FacebookAuthProvider();
     try {
-      const result = await signInWithPopup(this.auth, provider); // Inicia sesión con Facebook
-      this.loginForm.reset(); // Limpia el formulario
+      const result = await signInWithPopup(this.auth, provider);
+      this.loginForm.reset();
 
       if (result.user) {
         const usuario = {
-          uid: result.user.uid, // ID único del usuario
-          email: result.user.email, // Correo electrónico
-          displayName: result.user.displayName, // Nombre completo
-          photoURL: result.user.photoURL, // Foto de perfil
-          createdAt: new Date(), // Fecha de creación
-          phoneNumber: result.user.phoneNumber || '', // Número de teléfono (si está disponible)
+          uid: result.user.uid,
+          email: result.user.email,
+          displayName: result.user.displayName,
+          photoURL: result.user.photoURL,
+          createdAt: new Date(),
+          phoneNumber: result.user.phoneNumber || '',
         };
-
-        console.log('Usuario autenticado con Facebook:', result.user);
 
         this.registrarUsuario(usuario);
       }
-    } catch (error) {
-      console.error('Error en la autenticación con Facebook:', error);
-      this.errorMessage =
-        'Error al iniciar sesión con Facebook. Inténtalo de nuevo.';
+    } catch (error: any) {
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        this.errorMessage =
+          'Este correo ya está registrado con otro método de acceso. Por favor, inicia sesión con el método original.';
+      } else {
+        console.error('Error en la autenticación con Facebook:', error);
+        this.errorMessage =
+          'Error al iniciar sesión con Facebook. Inténtalo de nuevo.';
+      }
+      this.cdr.detectChanges();
     }
   }
 
@@ -590,10 +552,9 @@ border: any;
     });
   }
 
-  // Verifica el estado de bloqueo en localStorage o sessionStorage
   checkLockState() {
     if (isPlatformBrowser(this.platformId)) {
-      const lockInfo = localStorage.getItem('lockInfo'); // O sessionStorage.getItem('lockInfo') si prefieres sessionStorage
+      const lockInfo = localStorage.getItem('lockInfo');
       if (lockInfo) {
         const { attempts, lockTime, isLocked, remainingTime } =
           JSON.parse(lockInfo);
@@ -603,7 +564,7 @@ border: any;
         this.remainingTime = remainingTime;
 
         if (this.isLocked) {
-          this.startCountdown(); // Iniciar el temporizador si ya está bloqueado
+          this.startCountdown();
         }
       }
     }
@@ -617,21 +578,18 @@ border: any;
       isLocked: this.isLocked,
       remainingTime: this.remainingTime,
     };
-    localStorage.setItem('lockInfo', JSON.stringify(lockInfo)); // O sessionStorage.setItem si prefieres sessionStorage
+    localStorage.setItem('lockInfo', JSON.stringify(lockInfo));
   }
 
-  // Método para restablecer el estado del bloqueo
   clearLockState() {
-    localStorage.removeItem('lockInfo'); // O sessionStorage.removeItem si prefieres sessionStorage
+    localStorage.removeItem('lockInfo');
   }
-  // Método para bloquear la cuenta y activar el temporizador
+
   lockAccount(): void {
     this.isLocked = true;
     this.remainingTime = this.lockTime;
 
-    this.saveLockState(); // Guardar el estado del bloqueo
-
-    // Iniciar un temporizador que decremente cada segundo
+    this.saveLockState();
     this.startCountdown();
   }
 
@@ -639,14 +597,13 @@ border: any;
     this.ngZone.run(() => {
       this.timerSubscription = interval(1000).subscribe(() => {
         this.remainingTime--;
-        console.log('Tiempo restante:', this.remainingTime); // Verificar en la consola
-        this.saveLockState(); // Actualizar el tiempo restante en el almacenamiento
+        console.log('Tiempo restante:', this.remainingTime);
+        this.saveLockState();
 
-        // Forzar la detección de cambios
         this.cdr.detectChanges();
 
         if (this.remainingTime <= 0) {
-          this.resetLock(); // Desbloquear al finalizar el temporizador
+          this.resetLock();
         }
       });
     });
@@ -654,10 +611,10 @@ border: any;
   resetLock(): void {
     this.isLocked = false;
     this.attempts = 0;
-    this.clearLockState(); // Eliminar el estado del bloqueo
+    this.clearLockState();
 
     if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe(); // Detener el temporizador
+      this.timerSubscription.unsubscribe();
     }
   }
 
@@ -681,8 +638,6 @@ border: any;
     return this.loginForm.get('password')?.value?.length >= 8;
   }
   redirectTo(route: string): void {
-    // this.sidebarVisible = false;
-    // this.visible = false;
     this.router.navigate(
       route.includes('Sign-in') ||
         route.includes('Sign-up') ||

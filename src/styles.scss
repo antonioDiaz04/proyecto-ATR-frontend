@@ -7,13 +7,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 // @import "src/app/shared/styles/variables.css";
 // In app.component.css
-:host ::ng-deep .Password-Styling-Class{
-
+:host ::ng-deep .Password-Styling-Class {
   border-radius: 50px;
   padding: 10px 5px;
 }
@@ -24,7 +23,7 @@ body {
   // -moz-user-select: none; /* Firefox */
   font-family: Arial, Helvetica, sans-serif;
   // -ms-user-select: none; /* Internet Explorer/Edge */
-  background-color:#faf9f7;
+  background-color: #faf9f7;
   // background-color: rgb(249, 249, 249);
   color: #333;
 }
@@ -173,11 +172,14 @@ body {
   }
 }
 
-
-.p-inputgroup ,.input-login,.p-inputtext, .p-fluid .p-inputgroup .p-inputtext, .p-inputgroup .p-inputwrapper, .p-inputgroup .p-inputwrapper > .p-component {
+.p-inputgroup,
+.input-login,
+.p-inputtext,
+.p-fluid .p-inputgroup .p-inputtext,
+.p-inputgroup .p-inputwrapper,
+.p-inputgroup .p-inputwrapper > .p-component {
   flex: 1 1 auto;
   width: 100%;
-
 }
 
 :host ::ng-deep .p-dialog-mask {
@@ -198,3 +200,20 @@ body {
   z-index: 10;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
+
+/* Estilo oscuro para PrimeNG Toast */
+.dark ::ng-deep .p-toast {
+  background-color: transparent;
+}
+
+.dark ::ng-deep .p-toast-message {
+  background-color: #1a1a1b !important; /* mainOscuro */
+  color: #f9fafb !important; /* textoClaro */
+  border-left: 4px solid #6366f1 !important; /* acento */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.dark ::ng-deep .p-toast .p-toast-message .p-toast-icon-close {
+  color: #f9fafb !important;
+}
+  

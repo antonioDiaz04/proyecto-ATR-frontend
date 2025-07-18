@@ -5,11 +5,10 @@ import { environment } from '../../../../../environments/environment';
 // import { environment } from '../../../../../environments/environment.prod';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   signUpAndVerifyEmail(data: any): Observable<any> {
     const url = `${environment.api}auth/sign-up-and-verify-email`;
@@ -26,6 +25,12 @@ export class AuthService {
     return this.http.get(url);
   }
 
+  guardarToken(usuarioId: string, token: string) {
+    return this.http.post(`${environment.api}/autentificacion/guardar-token-alexa`, {
+      usuarioId,
+      token,
+    });
+  }
 
   // requestPasswordRecovery(data: any): Observable<any> {
   //   const url = `${environment.api}/auth/request-password-recovery`;
@@ -45,26 +50,33 @@ export class AuthService {
     const url = `${environment.api}/auth/verify-code-and-reset-password`;
     return this.http.post(url, data);
   }
-  verifyVerificationCode(data: { correo: string; verificationCode: string }): Observable<any> {
+  verifyVerificationCode(data: {
+    correo: string;
+    verificationCode: string;
+  }): Observable<any> {
     const url = `${environment.api}/auth/verify-verification-code`; // Reemplaza con la ruta adecuada de tu backend
     return this.http.post(url, data);
   }
-
 
   consultaUsuariosPorTelefonoOCorreo(query: string): Observable<any> {
     const url = `${environment.api}/auth/consulta_us_tel_correo`;
     return this.http.post(url, { query });
   }
 
-
   verificca_respuest(formData: any): Observable<any> {
-    return this.http.post<any>(`${environment.api}/auth/verificca_respuest`, formData);
+    return this.http.post<any>(
+      `${environment.api}/auth/verificca_respuest`,
+      formData
+    );
   }
 
   // cambiarContrasena_(formData: any): Observable<any> {
   //   return this.http.post<any>(`${environment.api}/auth/cambiarContrasena_`, formData);
   // }
   cambiarContrasena_(formData: any): Observable<any> {
-    return this.http.post<any>(`${environment.api}/auth/cambiarContrasena_`, formData);
+    return this.http.post<any>(
+      `${environment.api}/auth/cambiarContrasena_`,
+      formData
+    );
   }
 }

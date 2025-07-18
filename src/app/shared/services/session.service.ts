@@ -3,7 +3,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { StorageService } from './storage.service';
 import { Iuser } from '../interfaces/user.interface';
 import * as CryptoJS from 'crypto-js';
-import * as bcrypt from 'bcryptjs'; // Asegúrate de instalar bcryptjs en tu proyecto
+import * as bcrypt from 'bcryptjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -59,27 +59,24 @@ export class SessionService {
     }
   }
 
-  // Descifrar un texto
-  // Función para descifrar el texto
   descifrarTexto(encryptedData: string): string {
-    const key = encryptedData; // La clave secreta usada para cifrar
-    const ivHex = '0000000000000000'; // El IV utilizado para cifrar
+    const key = encryptedData;
+    const ivHex = '0000000000000000';
 
     // Decrypt using AES
     const bytes = CryptoJS.AES.decrypt(
       encryptedData,
       CryptoJS.enc.Utf8.parse(key),
       {
-        iv: CryptoJS.enc.Utf8.parse(ivHex), // Vector de inicialización en formato hexadecimal
-        mode: CryptoJS.mode.CBC, // Modo CBC
-        padding: CryptoJS.pad.Pkcs7, // Relleno con PKCS7
+        iv: CryptoJS.enc.Utf8.parse(ivHex),
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
       }
     );
 
     // Convierte los bytes descifrados en un texto legible
     const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
 
-    // Si la descifrado da un texto vacío, es posible que haya un problema con el IV o la clave
     if (!decryptedText) {
       throw new Error('No se pudo descifrar el texto correctamente');
     }
@@ -110,8 +107,6 @@ export class SessionService {
     this.storageService.removeItem('token');
   }
 
-  // Guardar el ID de salida en sessionStorage
-
   // Obtener el ID de salida desde storageService
   getIdSalida(): string | null {
     return this.storageService.getIdSalidaActual();
@@ -119,14 +114,4 @@ export class SessionService {
   getCantidadSalida(): number | null {
     return this.storageService.getCantidad();
   }
-
-  // Eliminar el ID de salida de storageService
-  // removeIdSalida(): void {
-  //   this.storageService.removeItem(this.salidaKey);
-  // }
-
-  // // Limpiar toda la sesión si es necesario
-  // clearSession(): void {
-  //   this.storageService.clear();
-  // }
 }

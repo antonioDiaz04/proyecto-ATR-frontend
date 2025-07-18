@@ -1,141 +1,141 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { HomeView } from "./views/home/home.view";
-import path from "path";
-import { PublicComponent } from "./public.component";
-import { AcercaDeView } from "./views/acerca-de/acerca-de.view";
-import { ConfigView } from "./views/config/config.view";
-import { DetailsProductView } from "./views/details-product/details-product.view";
-import { PerfilView } from "./views/perfil/perfil.view";
-import { TerminosComponent } from "./views/terminos/terminos.component";
-import { PoliticasComponent } from "./views/politicas/politicas.component";
-import { CitasProbadorView } from "./views/citas-probador/citas-probador.view";
-import { ResultsComponent } from "./views/results/results.component";
-import { NotFoundComponent } from "./views/not-found/not-found.component";
-import { Error500Component } from "./views/error500/error500.component";
-import { TagComponent } from "./components/tag/tag.component";
-import { ProcessRentaComponent } from "./views/process-renta/process-renta.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeView } from './views/home/home.view';
+import path from 'path';
+import { PublicComponent } from './public.component';
+import { AcercaDeView } from './views/acerca-de/acerca-de.view';
+import { ConfigView } from './views/config/config.view';
+import { DetailsProductView } from './views/details-product/details-product.view';
+import { PerfilView } from './views/perfil/perfil.view';
+import { TerminosComponent } from './views/terminos/terminos.component';
+import { PoliticasComponent } from './views/politicas/politicas.component';
+import { CitasProbadorView } from './views/citas-probador/citas-probador.view';
+import { ResultsComponent } from './views/results/results.component';
+import { NotFoundComponent } from './views/not-found/not-found.component';
+import { Error500Component } from './views/error500/error500.component';
+import { TagComponent } from './components/tag/tag.component';
+import { ProcessRentaComponent } from './views/process-renta/process-renta.component';
 // import { ComprasComponent } from "./views/compras/compras.component";
-import { ProcessCompraComponent } from "./views/process-compra/process-compra.component";
-import { MisionVisionComponent } from "./views/mision-vision/mision-vision.component";
-import { PreguntasComponent } from "./views/preguntas/preguntas.component";
-import { NuevosLlegadasView } from "./views/nuevos-llegadas/nuevos-llegadas.view";
-import { LookAccesorioComponent } from "./views/look-accesorio/look-accesorio.component";
+import { ProcessCompraComponent } from './views/process-compra/process-compra.component';
+import { MisionVisionComponent } from './views/mision-vision/mision-vision.component';
+import { PreguntasComponent } from './views/preguntas/preguntas.component';
+import { NuevosLlegadasView } from './views/nuevos-llegadas/nuevos-llegadas.view';
+import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.component';
 
 const routes: Routes = [
   {
-    path: "",
-    redirectTo: "inicio",
-    pathMatch: "full",
+    path: '',
+    redirectTo: 'inicio',
+    pathMatch: 'full',
   },
   {
-    path: "",
+    path: '',
     component: PublicComponent,
     children: [
       {
-        path: "inicio",
+        path: 'inicio',
         component: HomeView,
         data: {
-          title: "inicio",
-          breadcrumb: "inicio",
+          title: 'inicio',
+          breadcrumb: 'inicio',
         },
       },
       {
-        path: "AcercaDe",
+        path: 'AcercaDe',
         component: AcercaDeView,
         data: {
-          title: "AcercaDe",
-          breadcrumb: "Acerca de la empresa",
+          title: 'AcercaDe',
+          breadcrumb: 'Acerca de la empresa',
         },
       },
       {
-        path: "Nuevos",
+        path: 'Nuevos',
         component: NuevosLlegadasView,
         data: {
-          title: "Nuevos",
-          breadcrumb: "Nuevos",
+          title: 'Nuevos',
+          breadcrumb: 'Nuevos',
         },
       },
       {
-        path: "terminos",
+        path: 'terminos',
         component: TerminosComponent,
         data: {
-          title: "terminos",
-          breadcrumb: "terminos",
+          title: 'terminos',
+          breadcrumb: 'terminos',
         },
       },
       {
-        path: "Preguntas",
+        path: 'Preguntas',
         component: PreguntasComponent,
         data: {
-          title: "Preguntas",
-          breadcrumb: "Preguntas",
+          title: 'Preguntas',
+          breadcrumb: 'Preguntas',
         },
       },
       {
-        path: "politicas",
+        path: 'politicas',
         component: PoliticasComponent,
         data: {
-          title: "politicas",
-          breadcrumb: "politicas",
+          title: 'politicas',
+          breadcrumb: 'politicas',
         },
       },
       {
-        path: "look",
+        path: 'look',
         component: LookAccesorioComponent,
         data: {
-          title: "look",
-          breadcrumb: "look",
+          title: 'look',
+          breadcrumb: 'look',
         },
       },
       {
-        path: "search",
+        path: 'search',
         component: ResultsComponent,
-        data: { title: "search", breadcrumb: "busqueda" },
+        data: { title: 'search', breadcrumb: 'busqueda' },
       },
       {
-        path: "search/:query",
+        path: 'search/:query',
         component: ResultsComponent,
         data: {
-          title: "search",
-          breadcrumb: "productos",
+          title: 'search',
+          breadcrumb: 'productos',
         },
       },
       {
-        path: "Mi-perfil",
+        path: 'Mi-perfil',
         component: PerfilView,
         data: {
-          title: "Mi perfil",
-          breadcrumb: "Mi perfil",
+          title: 'Mi perfil',
+          breadcrumb: 'Mi perfil',
         },
       },
       {
-        path: "MisionVision",
+        path: 'MisionVision',
         component: MisionVisionComponent,
         data: {
-          title: "Misión y Visión",
-          breadcrumb: "Misión y Visión",
+          title: 'Misión y Visión',
+          breadcrumb: 'Misión y Visión',
         },
       },
       {
-        path: "CitasProbador",
+        path: 'CitasProbador',
         component: CitasProbadorView,
         data: {
-          title: "carrito",
-          breadcrumb: "carrito",
+          title: 'carrito',
+          breadcrumb: 'carrito',
         },
       },
-      { path: "Config", component: ConfigView },
+      { path: 'Config', component: ConfigView },
       {
-        path: "Detail/:id",
+        path: 'Detail/:id',
         component: DetailsProductView,
         data: {
-          title: "Detalle del Producto",
-          breadcrumb: "Detalle del Producto",
+          title: 'Detalle del Producto',
+          breadcrumb: 'Detalle del Producto',
         },
       },
       {
-        path: "continuarRenta/:id",
+        path: 'continuarRenta/:id',
         component: ProcessRentaComponent,
         // data: {
         //   title: "Renata de producto",
@@ -143,7 +143,7 @@ const routes: Routes = [
         // },
       },
       {
-        path: "continuarCompra/:id",
+        path: 'continuarCompra/:id',
         component: ProcessCompraComponent,
         // data: {
         //   title: "Renata de producto",
@@ -151,41 +151,40 @@ const routes: Routes = [
         // },
       },
       {
-        path: "404",
+        path: '404',
         component: NotFoundComponent,
         data: {
-          title: "pagina no encontrada",
-          breadcrumb: "pagina no encontrada",
+          title: 'pagina no encontrada',
+          breadcrumb: 'pagina no encontrada',
         },
       },
       {
-        path: "500",
+        path: '500',
         component: Error500Component,
         data: {
-          title: "error del servidor",
-          breadcrumb: "500",
+          title: 'error del servidor',
+          breadcrumb: '500',
         },
       },
       {
-        path: "carga",
+        path: 'carga',
         component: Error500Component,
         data: {
-          title: "carga",
-          breadcrumb: "carga",
+          title: 'carga',
+          breadcrumb: 'carga',
         },
       },
       {
-        path: "Servicios",
+        path: 'Servicios',
         component: TagComponent,
         data: {
-          title: "servicios y ayuda",
-          breadcrumb: "Servicios",
+          title: 'servicios y ayuda',
+          breadcrumb: 'Servicios',
         },
       },
     ],
   },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

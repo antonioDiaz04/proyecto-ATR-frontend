@@ -19,26 +19,9 @@ export class ClientesService {
     return this.http.get(`${environment.api}/usuarios/clientes/agrupados`);
   }
 
-
-  // http://localhost:4000/usuarios/getUsuarios
   obtenerCLientes(): Observable<any> {
     return this.http.get(`${environment.api}/usuarios/`);
   }
-
-  // obtenerCLientesByIdPurificadora(idPurificadora: any): Observable<any> {
-  //   return this.http.get(
-  //     `${environment.api}/purificadoraAdmin/clientes/`+idPurificadora
-  //   );
-  // }
-  // obtenerCLientesDisponibles(): Observable<any> {
-  //   return this.http.get(
-  //     `${environment.api}/purificadoraAdmin/clientesDisponibles/`
-  //   );
-  // }
-  // obtenerCLientesDisponiblesByColonia(colonia: any): Observable<any> {
-  //   const url = `${environment.api}/purificadoraAdmin/clientesDisponiblesByColonia/`;
-  //   return this.http.post(url, { colonia });
-  // }
 
   detalleClienteById(id: string): Observable<any> {
     const url = `${environment.api}/usuarios/` + id;

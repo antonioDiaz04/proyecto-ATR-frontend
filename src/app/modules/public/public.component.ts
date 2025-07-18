@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { SwPush } from "@angular/service-worker";
+import { SwPush } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +16,9 @@ export class PublicComponent implements OnInit {
   sidebarVisible: boolean = false;
   isMobile: boolean = false;
 
-  constructor(private router: Router,private swPush: SwPush) {
-
+  constructor(private router: Router, private swPush: SwPush) {
     // Escucha los cambios de ruta
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         // Verifica si la ruta actual es 'home'
         this.isHomePage = event.url === '/inicio';
@@ -27,7 +27,7 @@ export class PublicComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscription()
+    this.subscription();
     const ua = navigator.userAgent;
     console.log(ua);
 
@@ -66,9 +66,16 @@ export class PublicComponent implements OnInit {
       console.log('No se está ejecutando en un navegador');
     }
   }
+
+  fadeInOut = trigger('fadeInOut', [
+    transition(':enter', [
+      style({ opacity: 0 }),
+      animate('300ms ease-in', style({ opacity: 1 })),
+    ]),
+    transition(':leave', [animate('300ms ease-out', style({ opacity: 0 }))]),
+  ]);
   isHomePage: boolean = false;
 
-  
   redirectTo(route: string): void {
     // this.sidebarVisible2 = !this.sidebarVisible2
     console.log(route);
@@ -105,7 +112,4 @@ export class PublicComponent implements OnInit {
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-
-
 }

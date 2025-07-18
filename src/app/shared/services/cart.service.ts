@@ -19,8 +19,6 @@ export class CartService {
     this.initialize(); // Inicializa correctamente
   }
 
-  
-
   // Inicializa el carrito correctamente esperando la carga
   private async initialize() {
     try {
@@ -86,12 +84,5 @@ export class CartService {
   // Inicializar manualmente (si necesitas usarlo en tests)
   initializeCart(items: any[]) {
     this.dressItemsSignal.set(items);
-  }
-  // agrega una funcion para limpiar el carrito 
-  async clearCart() {
-    this.dressItemsSignal.set([]);
-    await this.indexedDbService.limpiarCarrito();
-    this.cartUpdated.next();
-    console.log("🧹 Carrito limpiado");
   }
 }

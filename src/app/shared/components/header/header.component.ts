@@ -463,8 +463,4 @@ filtrarPorCategoria(categoria: string) {
   //     this.showSuggestions = false;
   //   }, 200);
   // }
-
-
-  userMenuOpen: boolean = false;
-
 }

@@ -1,45 +1,191 @@
-<div class="container">
-  <!-- <header>
-    <h2>Panel de Control</h2>
-  </header> -->
-  <header>
-    <div class="header-top">
-      <h2>Panel de Control</h2>
-      <li class="logout" (click)="logout()">
-        <i class="pi pi-sign-out"></i> Cerrar Sesión
-      </li>
-    </div>
-    <nav>
-      <ul>
-        <li (click)="redirectTo('home')">
-          <i class="pi pi-home"></i> Inicio
-        </li>
-        <li (click)="redirectTo('historial-ventas')">
-          <i class="pi pi-shopping-cart"></i> Ventas
-        </li>
-        <li (click)="redirectTo('historial-rentas')">
-          <i class="pi pi-chart-line"></i> Rentas
-        </li>
-        <li (click)="redirectTo('perdidas')">
-          <i class="pi pi-times-circle"></i> Pérdidas
-        </li>
-        <li (click)="redirectTo('Empresa')">
-          <i class="pi pi-times-circle"></i> Empresa
-        </li>
-        <li (click)="redirectTo('Estadisticas')">
-          <i class="pi pi-times-circle"></i> Estadisticas
-        </li>
-      </ul>
-    </nav>
-  </header>
-  
-  
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+/>
+<!-- Botón hamburguesa -->
+<button
+  #menuToggleRef
+  class="absolute top-6 left-4 z-50 block md:hidden bg-white dark:bg-sidebarOscuro p-2 rounded shadow"
+  (click)="menuAbierto = !menuAbierto"
+>
+  <i class="fas fa-bars text-gray-800 dark:text-textoClaro text-xl"></i>
+</button>
 
-  <main>
+<!-- Contenedor principal -->
+<div
+  class="flex h-screen overflow-hidden font-sans bg-white dark:bg-fondoOscuro text-gray-800 dark:text-textoClaro transition-colors duration-300"
+>
+  <!-- Sidebar -->
+  <aside
+    #sidebarRef
+    class="bg-white dark:bg-sidebarOscuro shadow-lg flex-col transition-all duration-300 ease-in-out z-40 fixed inset-y-0 left-0 md:relative md:flex"
+    [ngClass]="{
+      hidden: !menuAbierto,
+      flex: menuAbierto,
+      'w-64': !isCollapsed,
+      'w-20': isCollapsed
+    }"
+  >
+    <div class="flex flex-col justify-between h-full">
+      <!-- Parte superior -->
+      <div class="flex-1 overflow-y-auto">
+        <div
+          class="px-4 py-8 text-2xl font-bold flex items-center justify-center"
+        >
+          <i class="pi pi-user text-xl"></i>
+          <span
+            *ngIf="!isCollapsed"
+            class="ml-2"
+            [ngClass]="{ 'opacity-0': isCollapsed }"
+          >
+            Propietario
+          </span>
+        </div>
+
+        <!-- Navegación -->
+        <nav
+          class="space-y-3 text-sm font-medium text-gray-600 dark:text-textoClaro"
+        >
+          <div class="space-y-2">
+            <p
+              class="text-xs uppercase text-gray-400 px-4 dark:text-gray-400"
+              *ngIf="!isCollapsed"
+            >
+              Principal
+            </p>
+            <button
+              (click)="redirectTo('home'); menuAbierto = false"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 dark:hover:bg-bordeOscuro"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-home"></i>
+              <span *ngIf="!isCollapsed">Panel</span>
+            </button>
+          </div>
+
+          <div class="space-y-2 pt-4">
+            <p
+              class="text-xs uppercase text-gray-400 px-4 dark:text-gray-400"
+              *ngIf="!isCollapsed"
+            >
+              Gestión
+            </p>
+
+            <button
+              (click)="redirectTo('historial-rentas'); menuAbierto = false"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 dark:hover:bg-bordeOscuro"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-chart-line"></i>
+              <span *ngIf="!isCollapsed">Rentas</span>
+            </button>
+
+            <button
+              (click)="redirectTo('historial-ventas'); menuAbierto = false"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 dark:hover:bg-bordeOscuro"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-shopping-cart"></i>
+              <span *ngIf="!isCollapsed">Ventas</span>
+            </button>
+
+            <button
+              (click)="redirectTo('Empresa'); menuAbierto = false"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 dark:hover:bg-bordeOscuro"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-briefcase"></i>
+              <span *ngIf="!isCollapsed">Empresa</span>
+            </button>
+
+            <button
+              (click)="redirectTo('Estadisticas'); menuAbierto = false"
+              class="w-full flex items-center gap-2 py-2 rounded hover:bg-gray-200 dark:hover:bg-bordeOscuro"
+              [ngClass]="{
+                'px-4': !isCollapsed,
+                'justify-center': isCollapsed
+              }"
+            >
+              <i class="pi pi-chart-bar"></i>
+              <span *ngIf="!isCollapsed">Estadísticas</span>
+            </button>
+          </div>
+        </nav>
+        <nav
+          class="space-y-3 text-sm font-medium text-gray-600 dark:text-textoClaro"
+        >
+          <!-- Botón Modo Oscuro -->
+          <div class="pt-4 px-4" *ngIf="!isCollapsed">
+            <p
+              class="text-xs uppercase gap-2  text-gray-400 px-4 dark:text-gray-400"
+              *ngIf="!isCollapsed"
+            >
+              Nueva Modalidad
+            </p>
+            <br>
+            <button
+              (click)="alternarModoOscuro()"
+              [ngClass]="{
+                'bg-black gap-2 text-white hover:bg-gray-800': !modoOscuroActivo,
+                'bg-white gap-2 text-gray-900 hover:bg-gray-300': modoOscuroActivo
+              }"
+              class="w-full flex items-center gap-2 px-3 py-2 rounded-md shadow transition"
+              title="Cambiar modo oscuro"
+            >
+              <i
+                class="fas"
+                [ngClass]="modoOscuroActivo ? 'fa-sun' : 'fa-moon'"
+              ></i>
+              <span>{{ modoOscuroActivo ? "Modo Claro" : "Modo Oscuro" }}</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Pie -->
+      <div
+        class="p-4 space-y-3 text-sm text-gray-500 dark:text-gray-400 border-t dark:border-bordeOscuro"
+      >
+        <button
+          class="w-full flex items-center gap-2 hover:text-gray-900 dark:hover:text-white"
+          [ngClass]="{ 'justify-center': isCollapsed }"
+        >
+          <i class="pi pi-cog"></i>
+          <span *ngIf="!isCollapsed">Configuración</span>
+        </button>
+        <button
+          class="w-full flex items-center gap-2 hover:text-gray-900 dark:hover:text-white"
+          [ngClass]="{ 'justify-center': isCollapsed }"
+        >
+          <i class="pi pi-question-circle"></i>
+          <span *ngIf="!isCollapsed">Centro de Ayuda</span>
+        </button>
+        <button
+          (click)="logout(); menuAbierto = false"
+          class="w-full flex items-center gap-2 text-red-500 hover:text-red-700 dark:hover:text-red-400"
+          [ngClass]="{ 'justify-center': isCollapsed }"
+        >
+          <i class="pi pi-sign-out"></i>
+          <span *ngIf="!isCollapsed">Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="flex-1 overflow-y-auto bg-white dark:bg-fondoOscuro p-6">
     <router-outlet></router-outlet>
   </main>
-
-  <footer>
-    <p>© 2024 - Gestión Empresarial</p>
-  </footer>
 </div>

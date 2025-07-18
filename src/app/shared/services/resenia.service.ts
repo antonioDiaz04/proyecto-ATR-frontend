@@ -10,16 +10,15 @@ interface Resenia {
   estado: 'pendiente' | 'aceptada' | 'rechazada';
   usuarioId: string;
   fecha: Date;
-  // Add other review properties as needed
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReseniaService {
-  private apiUrl = `${environment.api}/resenia`; // Assuming base path is '/resenias'
+  private apiUrl = `${environment.api}/resenia`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Basic CRUD Operations
   crearResenia(reseniaData: any): Observable<Resenia> {
@@ -35,14 +34,18 @@ export class ReseniaService {
   }
 
   actualizarResenia(id: string, estado: string): Observable<any> {
-    return this.http.put<Resenia[]>(`${this.apiUrl}/actualizar/${id}`, { estado });
+    return this.http.put<Resenia[]>(`${this.apiUrl}/actualizar/${id}`, {
+      estado,
+    });
   }
 
   eliminarResenia(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
   eliminarReseniasSeleccionadas(ids: string[]): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/eliminar-seleccionadas`, { ids });
+    return this.http.post<void>(`${this.apiUrl}/eliminar-seleccionadas`, {
+      ids,
+    });
   }
 
   // Status Management
@@ -69,10 +72,16 @@ export class ReseniaService {
   }
 
   obtenerReseniasAceptadasPorUsuario(usuarioId: string): Observable<Resenia[]> {
-    return this.http.get<Resenia[]>(`${this.apiUrl}/usuario/${usuarioId}/aceptadas`);
+    return this.http.get<Resenia[]>(
+      `${this.apiUrl}/usuario/${usuarioId}/aceptadas`
+    );
   }
 
-  obtenerReseniasRechazadasPorUsuario(usuarioId: string): Observable<Resenia[]> {
-    return this.http.get<Resenia[]>(`${this.apiUrl}/usuario/${usuarioId}/rechazadas`);
+  obtenerReseniasRechazadasPorUsuario(
+    usuarioId: string
+  ): Observable<Resenia[]> {
+    return this.http.get<Resenia[]>(
+      `${this.apiUrl}/usuario/${usuarioId}/rechazadas`
+    );
   }
 }

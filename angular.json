@@ -17,17 +17,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": [
-              "aos",
-              "crypto-js",
-              "bcryptjs"
-            ],
+            "allowedCommonJsDependencies": ["aos", "crypto-js", "bcryptjs"],
             "outputPath": "dist/my-pwa",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -40,10 +34,12 @@
               "src/styles.scss",
               "node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css",
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "src/styles.scss"
+              "node_modules/@toast-ui/calendar/dist/toastui-calendar.min.css",
+              "node_modules/primeng/resources/primeng.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/@toast-ui/calendar/dist/toastui-calendar.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -89,10 +85,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [

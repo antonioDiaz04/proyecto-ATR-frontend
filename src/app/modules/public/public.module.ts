@@ -1,6 +1,7 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { PublicRoutingModule } from './public-routing.module';
@@ -113,17 +114,17 @@ import { ReseniaService } from '../../shared/services/resenia.service';
 import { NuevosLlegadasView } from './views/nuevos-llegadas/nuevos-llegadas.view';
 import { IncluyeAccesorioView } from './views/incluye-accesorio/incluye-accesorio.view';
 import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.component';
-import { PrivacyModalComponent } from './components/privacy-modal/privacy-modal.component';
-import { AuthService } from '../auth/commons/services/auth.service';
 // import { IncluyeAccesorioView } from './view/incluye-accesorio/incluye-accesorio.view';
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent, PrivacyModalComponent],
+  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent],
   exports:[COMPONENTS],
   imports: [HeaderModule,InputTextModule,FloatLabelModule,
     InputNumberModule,ConfirmDialogModule,MessageModule,
     CalendarModule,TableModule,NgxImageZoomModule,GalleriaModule,CarouselModule,
     CommonModule,ReactiveFormsModule,
-    PublicRoutingModule,HttpClientModule, ...MATERIALS,
+    PublicRoutingModule,HttpClientModule, 
+    ...MATERIALS,
+    ToastModule,
   ], schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -135,7 +136,7 @@ import { AuthService } from '../auth/commons/services/auth.service';
   UsuarioService,ProductoService,
   ToastrService,CartService,NotificacionService,
   MessageService,IndexedDbService,
-  ConfirmationService,SignInService,AuthService ,
+  ConfirmationService,SignInService,
   SignUpService,UsuarioService,DatosEmpresaService,ControlAdministrativaService,ThemeServiceService],
 })
 export class PublicModule {}

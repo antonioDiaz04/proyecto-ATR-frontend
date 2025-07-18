@@ -167,12 +167,4 @@
   (click)="closeModal($event)">
   <img #PreviewmainImage [src]="Detalles.imagenPrincipal" alt="Imagen Ampliada"
     class="modal-image max-w-[90vw] max-h-[90vh] object-contain" />
-</div><!-- Notificación flotante al agregar producto -->
-<div *ngIf="mostrarToast" class="fixed bottom-4 right-4 z-50 bg-white border border-gray-200 shadow-lg rounded-lg flex items-center gap-3 px-4 py-3 w-[320px] animate-fade-in-fast">
-  <img [src]="productoToast.imagen" alt="Producto" class="w-12 h-12 rounded-md object-cover">
-  <div class="flex-1">
-    <p class="text-sm text-gray-800 font-medium">Agregado al carrito</p>
-    <p class="text-xs text-gray-600 truncate">{{ productoToast.nombre }}</p>
-    <a routerLink="/carrito" class="text-xs text-blue-600 hover:underline">Ir al carrito</a>
-  </div>
 </div>

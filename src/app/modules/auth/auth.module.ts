@@ -51,12 +51,16 @@ import { RecuperarByEmailComponent } from './view/recuperar-by-email/recuperar-b
 import { HeaderModule } from '../../shared/components/header/header.module';
 import { DatosEmpresaService } from '../../shared/services/datos-empresa.service';
 import { SignInView } from './view/sign-in/sign-in.view';
+import { AuthSelectorComponent } from './view/auth-selector/auth-selector.component';
+
 
 @NgModule({
   declarations: [
     AuthComponent,
     VerificarCodigoView,
     RegistroView,RecuperarByEmailComponent, SignInView,
+    AuthSelectorComponent
+    
     // LoginModalComponent,
   ],
   imports: [
