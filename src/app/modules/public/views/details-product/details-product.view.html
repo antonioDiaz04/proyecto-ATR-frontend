@@ -1,109 +1,157 @@
-<p-confirmDialog [style]="{borderRadius: '0px', padding: '2rem'}" [breakpoints]="{'960px': '75vw', '640px': '90vw'}"
-  [draggable]="false"></p-confirmDialog>
+<p-confirmDialog 
+  [style]="{borderRadius: '0px', padding: '2rem'}"
+  [breakpoints]="{'960px': '75vw', '640px': '90vw'}"
+  [draggable]="false"
+></p-confirmDialog>
 
-<div class="w-full max-w-[90rem] mx-auto  text-[#2a2723] mt-28 p-8 lg:p-12">
+<div class="w-full max-w-[90rem] mx-auto text-[#2a2723] mt-28 p-8 lg:p-12">
   <!-- <div class="w-full max-w-[90rem] mx-auto bg-[#f9f7f4] text-[#2a2723] mt-20 p-8 lg:p-12"> -->
   <!-- Luxury Header with Back Button -->
   <div class="mb-8">
-    <button (click)="volver()"
-      class="group flex items-center gap-2 text-[#9c8e7a] hover:text-[#2a2723] transition-colors duration-300">
+    <button
+      (click)="volver()"
+      class="group flex items-center gap-2 text-[#9c8e7a] hover:text-[#2a2723] transition-colors duration-300"
+    >
       <i class="pi pi-arrow-left text-lg"></i>
       <span class="font-serif tracking-wider">REGRESAR A LA COLECCIÓN</span>
-      <div class="w-0 h-px bg-[#d4c4a8] group-hover:w-4 transition-all duration-500"></div>
+      <div
+        class="w-0 h-px bg-[#d4c4a8] group-hover:w-4 transition-all duration-500"
+      ></div>
     </button>
   </div>
 
   <!-- Product Content - Luxury Layout -->
   <div *ngIf="Detalles && !isLoading" class="flex flex-col lg:flex-row gap-16">
-
     <!-- Image Gallery Section -->
-     <div class="w-full lg:w-1/2 lg:sticky lg:top-36 lg:self-start">
-
+    <div class="w-full lg:w-1/2 lg:sticky lg:top-36 lg:self-start">
       <!-- Contenedor Sticky que se queda fijo al hacer scroll -->
       <div class="flex flex-col">
         <!-- Main Image with Luxury Effects -->
-        <div class="relative w-full h-[500px] overflow-hidden mb-6 border border-[#e8e3db]">
-          <img #mainImage *ngIf="mainImageUrl" [src]="mainImageUrl" alt="Luxury Product"
+        <div
+          class="relative w-full h-[500px] overflow-hidden mb-6 border border-[#e8e3db]"
+        >
+          <img
+            #mainImage
+            *ngIf="mainImageUrl"
+            [src]="mainImageUrl"
+            alt="Luxury Product"
             class="w-full h-full object-cover transition-all duration-700 hover:scale-[1.02] cursor-zoom-in"
-            (click)="openModal()" (mousemove)="applyZoomEffect($event)" (mouseleave)="resetZoomEffect()" />
+            (click)="openModal()"
+            (mousemove)="applyZoomEffect($event)"
+            (mouseleave)="resetZoomEffect()"
+          />
 
           <div
-            class="absolute top-4 right-4 bg-[#2a2723]/80 text-[#d4c4a8] text-xs px-3 py-1 font-light tracking-wider">
-            {{ (Detalles.imagenes?.indexOf(mainImageUrl) || 0) + 1 }} OF {{ Detalles.imagenes?.length || 0 }}
+            class="absolute top-4 right-4 bg-[#2a2723]/80 text-[#d4c4a8] text-xs px-3 py-1 font-light tracking-wider"
+          >
+            {{ (Detalles.imagenes?.indexOf(mainImageUrl) || 0) + 1 }} OF {{
+            Detalles.imagenes?.length || 0 }}
           </div>
 
           <!-- Favorite Button - Luxury -->
-          <button (click)="toggleFavorite($event)" class="absolute top-4 left-4 group">
-            <svg [class.active]="esFavorito"
+          <button
+            (click)="toggleFavorite($event)"
+            class="absolute top-4 left-4 group"
+          >
+            <svg
+              [class.active]="esFavorito"
               class="w-8 h-8 text-[#d4c4a8] hover:text-[#2a2723] fill-current transition-colors duration-500"
-              viewBox="0 0 24 24">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
                  2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
                  C13.09 3.81 14.76 3 16.5 3 
                  19.58 3 22 5.42 22 8.5
-                 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              />
             </svg>
           </button>
         </div>
-<!-- Thumbnails with Pagination and Larger Images -->
-<div class="flex flex-col items-center gap-2 py-2">
-  <!-- Thumbnails List -->
-  <div class="flex gap-4 justify-center">
-    <img *ngFor="let img of paginatedImages"
-      [src]="img"
-      (mouseenter)="onThumbnailHover(img)"
-      (mouseleave)="resetMainImage()"
-      (click)="changeMainImage(img)"
-      [class.selected-thumbnail]="img === mainImageUrl"
-      class="w-28 h-28 object-cover cursor-pointer border border-[#e8e3db] hover:border-[#2a2723] transition-all duration-300"
-      style="border-width:2px" />
-  </div>
+        <!-- Thumbnails with Pagination and Larger Images -->
+        <div class="flex flex-col items-center gap-2 py-2">
+          <!-- Thumbnails List -->
+          <div class="flex gap-4 justify-center">
+            <img
+              *ngFor="let img of paginatedImages"
+              [src]="img"
+              (mouseenter)="onThumbnailHover(img)"
+              (mouseleave)="resetMainImage()"
+              (click)="changeMainImage(img)"
+              [class.selected-thumbnail]="img === mainImageUrl"
+              class="w-28 h-28 object-cover cursor-pointer border border-[#e8e3db] hover:border-[#2a2723] transition-all duration-300"
+              style="border-width: 2px"
+            />
+          </div>
 
-  <!-- Dot Pagination -->
-  <div class="flex justify-center gap-2 mt-2">
-    <button *ngFor="let page of [].constructor(totalPages); let i = index"
-      (click)="setPage(i)"
-      [class.bg-[#2a2723]]="currentPage === i"
-      class="w-2.5 h-2.5 rounded-full bg-[#e8e3db] hover:bg-[#9c8e7a] transition-all duration-300">
-    </button>
-  </div>
-</div>
+          <!-- Dot Pagination -->
+          <div class="flex justify-center gap-2 mt-2">
+            <button
+              *ngFor="let page of [].constructor(totalPages); let i = index"
+              (click)="setPage(i)"
+              [class.bg-[#2a2723]]="currentPage === i"
+              class="w-2.5 h-2.5 rounded-full bg-[#e8e3db] hover:bg-[#9c8e7a] transition-all duration-300"
+            ></button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Product Info - Luxury Typography -->
-    <div class="border border-[#e8e3db] p-2 w-full lg:w-1/2 flex flex-col gap-8">
+    <div
+      class="border border-[#e8e3db] p-2 w-full lg:w-1/2 flex flex-col gap-8"
+    >
       <div>
-        <h1 class="font-serif text-4xl tracking-tight mb-2">{{ Detalles.nombre }}</h1>
-        <p class="text-[#9c8e7a] font-light">Style #{{ Detalles.codigoProducto }}</p>
+        <h1 class="font-serif text-4xl tracking-tight mb-2">
+          {{ Detalles.nombre }}
+        </h1>
+        <p class="text-[#9c8e7a] font-light">
+          Style #{{ Detalles.codigoProducto }}
+        </p>
       </div>
 
       <!-- Availability - Luxury Badge -->
       <div *ngIf="Detalles.disponible" class="flex items-center gap-3">
         <div class="w-3 h-3 bg-[#2a2723] rounded-full"></div>
-        <span class="text-[#6e6a63] text-sm tracking-wider">AVAILABLE FOR {{ Detalles.opcionesTipoTransaccion |
-          uppercase }}</span>
+        <span class="text-[#6e6a63] text-sm tracking-wider"
+          >AVAILABLE FOR {{ Detalles.opcionesTipoTransaccion | uppercase
+          }}</span
+        >
       </div>
       <div *ngIf="!Detalles.disponible" class="flex items-center gap-3">
         <div class="w-3 h-3 bg-[#9c8e7a] rounded-full"></div>
-        <span class="text-[#6e6a63] text-sm tracking-wider">TEMPORARILY UNAVAILABLE</span>
+        <span class="text-[#6e6a63] text-sm tracking-wider"
+          >TEMPORARILY UNAVAILABLE</span
+        >
       </div>
 
       <!-- Pricing - Luxury Display -->
       <div class="flex flex-col gap-2 mt-4">
         <div class="flex items-baseline gap-3">
-          <p class="font-serif text-3xl text-[#2a2723]">$MX{{ Detalles.precioActual | number }}</p>
-          <p *ngIf="Detalles.mostrarPrecioAnterior" class="text-[#9c8e7a] line-through text-sm">$MX{{
-            Detalles.precioAnterior | number }}</p>
+          <p class="font-serif text-3xl text-[#2a2723]">
+            $MX{{ Detalles.precioActual | number }}
+          </p>
+          <p
+            *ngIf="Detalles.mostrarPrecioAnterior"
+            class="text-[#9c8e7a] line-through text-sm"
+          >
+            $MX{{ Detalles.precioAnterior | number }}
+          </p>
         </div>
 
-        <div *ngIf="Detalles.mostrarPrecioAnterior && Detalles.precioAnterior > Detalles.precioActual"
-          class="flex flex-col gap-2">
-          <span class="bg-[#2a2723] text-[#d4c4a8] text-xs px-4 py-1 rounded-full w-max tracking-wider">
-            SAVE {{ calcularDescuento(Detalles.precioAnterior, Detalles.precioActual) }}%
+        <div
+          *ngIf="Detalles.mostrarPrecioAnterior && Detalles.precioAnterior > Detalles.precioActual"
+          class="flex flex-col gap-2"
+        >
+          <span
+            class="bg-[#2a2723] text-[#d4c4a8] text-xs px-4 py-1 rounded-full w-max tracking-wider"
+          >
+            SAVE {{ calcularDescuento(Detalles.precioAnterior,
+            Detalles.precioActual) }}%
           </span>
           <span class="text-[#6e6a63] text-xs font-light">
-            You save MX$ {{ Detalles.precioAnterior - Detalles.precioActual | number }}
+            You save MX$ {{ Detalles.precioAnterior - Detalles.precioActual |
+            number }}
           </span>
         </div>
       </div>
@@ -131,40 +179,144 @@
       <!-- Action Buttons - Luxury Style -->
       <div class="flex flex-col gap-4 mt-8">
         <!-- class="bg-[#2a2723] hover:bg-[#1a1713] text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full text-center tracking-wider font-light"> -->
-        <button *ngIf="Detalles.disponible"
+        <button
+          *ngIf="Detalles.disponible"
           (click)="Detalles.opcionesTipoTransaccion == 'renta' ? redirigirContinuarRenta(Detalles._id) : redirigirContinuarCompra(Detalles._id)"
-          class="w-full bg-[#2a2723] text-white font-medium py-4 px-6 hover:bg-gray-800 transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
-          {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'BOOK PRIVATE FITTING' : 'ADD TO WARDROBE' }}
+          class="w-full bg-[#2a2723] text-white font-medium py-4 px-6 hover:bg-gray-800 transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+        >
+          {{ Detalles.opcionesTipoTransaccion == 'renta' ? 'BOOK PRIVATE
+          FITTING' : 'ADD TO WARDROBE' }}
         </button>
 
-        <button (click)="apartarRentar(Detalles)"
-          class="border border-[#2a2723] text-[#2a2723] hover:bg-[#2a2723] hover:text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full flex items-center justify-center gap-3 tracking-wider font-light">
+        <button
+          (click)="apartarRentar(Detalles)"
+          class="border border-[#2a2723] text-[#2a2723] hover:bg-[#2a2723] hover:text-[#f9f7f4] py-4 rounded-none transition-all duration-500 w-full flex items-center justify-center gap-3 tracking-wider font-light"
+        >
           <i class="pi pi-shopping-cart"></i> ADD TO CART
         </button>
       </div>
 
       <!-- Share Options - Minimalist -->
       <div class="mt-8">
-        <p class="text-xs tracking-widest mb-3 text-[#9c8e7a]">SHARE THIS PIECE</p>
+        <p class="text-xs tracking-widest mb-3 text-[#9c8e7a]">
+          SHARE THIS PIECE
+        </p>
         <div class="flex gap-4">
-          <button class="text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300" title="Share">
+          <button
+            class="text-[#6e6a63] hover:text-[#2a2723] transition-colors duration-300"
+            title="Share"
+          >
             <i class="pi pi-share-alt"></i>
           </button>
         </div>
       </div>
 
       <!-- Product Description - Luxury Typography -->
-      <div *ngIf="Detalles && !isLoading" class="mt-16 border-t border-[#e8e3db] pt-12">
-        <h2 class="font-serif text-2xl tracking-tight mb-6">MÁS DETALLES DEL PRODUCTO</h2>
-        <p class="text-[#6e6a63] leading-relaxed text-base font-light max-w-3xl">{{ Detalles.descripcion }}</p>
+      <div
+        *ngIf="Detalles && !isLoading"
+        class="mt-16 border-t border-[#e8e3db] pt-12"
+      >
+        <h2 class="font-serif text-2xl tracking-tight mb-6">
+          MÁS DETALLES DEL PRODUCTO
+        </h2>
+        <p
+          class="text-[#6e6a63] leading-relaxed text-base font-light max-w-3xl"
+        >
+          {{ Detalles.descripcion }}
+        </p>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Fullscreen Image Modal - Luxury Version -->
-<div class="image-modal fixed inset-0 bg-black/90 z-50 flex items-center justify-center" *ngIf="isViewImagen"
-  (click)="closeModal($event)">
-  <img #PreviewmainImage [src]="Detalles.imagenPrincipal" alt="Imagen Ampliada"
-    class="modal-image max-w-[90vw] max-h-[90vh] object-contain" />
+<div
+  class="image-modal fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+  *ngIf="isViewImagen"
+  (click)="closeModal($event)"
+>
+  <img
+    #PreviewmainImage
+    [src]="Detalles.imagenPrincipal"
+    alt="Imagen Ampliada"
+    class="modal-image max-w-[90vw] max-h-[90vh] object-contain"
+  />
+</div>
+
+<!-- Modal de Productos Recomendados -->
+<div
+  *ngIf="mostrarModalRecomendados"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+>
+  <div
+    class="bg-white w-full max-w-7xl max-h-[90vh] overflow-y-auto rounded-md p-8 shadow-2xl relative"
+  >
+    <!-- Botón cerrar -->
+    <button
+      (click)="cerrarModal()"
+      class="absolute top-4 right-4 text-gray-600 hover:text-black text-xl"
+    >
+      &times;
+    </button>
+
+    <!-- Título -->
+    <h2 class="text-2xl lg:text-3xl font-serif font-bold mb-8 text-gray-800">
+      También te podría interesar
+    </h2>
+
+    <!-- Contenido -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8"
+    >
+      <div
+        *ngFor="let producto of productosRecomendados"
+        class="bg-white border border-gray-200 rounded-md shadow-md hover:shadow-xl transition p-4 flex flex-col"
+      >
+        <img
+          [src]="producto.imagenes?.[0]"
+          [alt]="producto.nombre"
+          class="h-56 w-full object-cover rounded-md mb-4"
+        />
+        <h3 class="text-lg font-semibold mb-1 truncate">
+          {{ producto.nombre }}
+        </h3>
+        <p class="text-sm text-gray-500 mb-2 truncate">
+          {{ producto.descripcion || 'Sin descripción' }}
+        </p>
+
+        <div class="mt-auto">
+          <p class="text-green-600 text-lg font-bold mb-2">
+            ${{ producto.precio }}
+          </p>
+
+          <div
+            *ngIf="producto.resenas?.length"
+            class="mb-3 text-sm text-[#2a2723] bg-[#f5f5f5] p-3 rounded shadow-inner"
+          >
+            <div *ngFor="let review of producto.resenas | slice:0:1">
+              <div class="flex items-center gap-1 mb-1 text-xl">
+                <ng-container *ngFor="let star of [1,2,3,4,5]">
+                  <span
+                    [ngClass]="{ 'text-yellow-500': star <= review.rating, 'text-gray-300': star > review.rating }"
+                  >
+                    ★
+                  </span>
+                </ng-container>
+              </div>
+              <p class="italic text-sm text-[#4b4b4b] leading-snug">
+                <i class="pi pi-comment mr-1"></i>“{{ review.comentario }}”
+              </p>
+            </div>
+          </div>
+
+          <button
+            (click)="verProductoModal(producto)"
+            class="w-full bg-[#9c8e7a] text-white py-2 rounded hover:bg-[#2a2723] transition-colors"
+          >
+            Ver producto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

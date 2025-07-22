@@ -1,5 +1,16 @@
+
 import { Location } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { ProductoService } from '../../../../shared/services/producto.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IndexedDbService } from '../../commons/services/indexed-db.service';
@@ -56,31 +67,168 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   mainImageUrl: string = ''; // URL de la imagen principal
   showImages: boolean = false; // Variable para mostrar/ocultar las imágenes secundarias
   imagenes: any; // Sigue siendo un array de cadenas para imágenes adicionales en base64
-  selectedMainImage!: string
+  selectedMainImage!: string;
   // accesorios: any;
   productId!: any;
-  publicKey: string = environment .publicKey; // Este es el valor que debes obtener en la consola de Firebase.
-  
+  publicKey: string = environment.publicKey; // Este es el valor que debes obtener en la consola de Firebase.
+
   Detalles: any = null; // Inicializado en null
 
+  mostrarModalRecomendados = false;
 
+  productosRecomendados = [
+    {
+      _id: '67e058358bbb15e17ae334a1',
+      nombre: 'Vestido de Noche Azul Marino',
+      descripcion: 'Elegante vestido largo con escote en V.',
+      precio: 850,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752961685/ProductosAtelier/qxxfhf9fhxptbsvocugx.png',
+      ],
+      resenas: [
+        { comentario: 'Me sentí como una reina, muy cómodo.', rating: 5 },
+        { comentario: 'Ideal para eventos formales, me encantó.', rating: 4 },
+      ],
+    },
+    {
+      _id: '67e058358bbb15e17ae334a2',
+      nombre: 'Vestido Rojo Corte Sirena',
+      descripcion: 'Ajustado al cuerpo, ideal para bodas.',
+      precio: 990,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752962222/ProductosAtelier/riatr6wf5crhzqyr2dyd.png',
+      ],
+      resenas: [
+        { comentario: 'Resalta la figura, me fascinó.', rating: 5 },
+        { comentario: 'La tela es de muy buena calidad.', rating: 4 },
+      ],
+    },
+    {
+      _id: '67e058358bbb15e17ae334a3',
+      nombre: 'Vestido Rosa Pastel Corto',
+      descripcion: 'Vestido fresco y juvenil, ideal para primavera.',
+      precio: 720,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752962687/ProductosAtelier/xqwgfxzkodhzaqjd7cef.png',
+      ],
+      resenas: [
+        { comentario: 'Perfecto para una sesión de fotos.', rating: 5 },
+        { comentario: 'Muy cómodo y favorecedor.', rating: 4 },
+      ],
+    },
+    {
+      _id: '67e058358bbb15e17ae334a4',
+      nombre: 'Vestido Verde Esmeralda Strapless',
+      descripcion: 'Con caída fluida y abertura lateral.',
+      precio: 1050,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752962823/ProductosAtelier/ebqwlmv2il00cbglck5j.png',
+      ],
+      resenas: [
+        {
+          comentario: '¡Increíble color! Me lo chulearon toda la noche.',
+          rating: 5,
+        },
+        { comentario: 'Muy elegante, lo volvería a usar.', rating: 4 },
+      ],
+    },
+    {
+      _id: '67e058358bbb15e17ae334a5',
+      nombre: 'Vestido Blanco Civil',
+      descripcion: 'Sencillo pero sofisticado, perfecto para boda civil.',
+      precio: 780,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963100/ProductosAtelier/vblanco_civil.png',
+      ],
+      resenas: [
+        { comentario: '¡Justo lo que buscaba para mi civil!', rating: 5 },
+        { comentario: 'Minimalista y elegante.', rating: 4 },
+      ],
+    },
+    {
+      _id: '67e058358bbb15e17ae334a6',
+      nombre: 'Vestido Dama de Honor Lila',
+      descripcion: 'Color suave con corte A y tirantes finos.',
+      precio: 890,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963250/ProductosAtelier/dama_lila.png',
+      ],
+      resenas: [
+        { comentario: 'Todas las damas se veían hermosas.', rating: 5 },
+        { comentario: 'El color es perfecto para primavera.', rating: 4 },
+      ],
+    },
+    {
+      _id: '67e058358bbb15e17ae334a7',
+      nombre: 'Vestido Casual Elegante Negro',
+      descripcion: 'Versátil para eventos semiformales.',
+      precio: 650,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963401/ProductosAtelier/casual_negro.png',
+      ],
+      resenas: [
+        { comentario: 'Muy cómodo, lo usaré más de una vez.', rating: 5 },
+        { comentario: 'Buen ajuste y tela ligera.', rating: 4 },
+      ],
+    },
+    {
+      _id: '67e058358bbb15e17ae334a8',
+      nombre: 'Vestido de Lentejuelas Dorado',
+      descripcion: 'Impactante para eventos de noche o fin de año.',
+      precio: 1100,
+      imagenes: [
+        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963500/ProductosAtelier/lentejuelas_dorado.png',
+      ],
+      resenas: [
+        { comentario: '¡Brilló toda la noche!', rating: 5 },
+        { comentario: 'Cómodo a pesar de las lentejuelas.', rating: 4 },
+      ],
+    },
+  ];
+
+  mezclarProductos(productos: any[]): any[] {
+    return productos
+      .map((p) => ({ producto: p, orden: Math.random() }))
+      .sort((a, b) => a.orden - b.orden)
+      .map((p) => p.producto);
+  }
+  abrirModal() {
+    this.productosRecomendados = this.mezclarProductos(
+      this.productosRecomendados
+    );
+    this.mostrarModalRecomendados = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModalRecomendados = false;
+  }
+
+  verProductoModal(producto: any) {
+    this.cerrarModal();
+    // Aquí puedes hacer algo, por ejemplo, navegar o abrir otro modal
+    this.router.navigate(['/producto', producto._id]);
+  }
 
   // Variables para paginación de thumbnails
-currentPage: number = 0;
-imagesPerPage: number = 5;
+  currentPage: number = 0;
+  imagesPerPage: number = 5;
 
-get paginatedImages(): string[] {
-  const start = this.currentPage * this.imagesPerPage;
-  return this.Detalles?.imagenes?.slice(start, start + this.imagesPerPage) || [];
-}
+  get paginatedImages(): string[] {
+    const start = this.currentPage * this.imagesPerPage;
+    return (
+      this.Detalles?.imagenes?.slice(start, start + this.imagesPerPage) || []
+    );
+  }
 
-get totalPages(): number {
-  return Math.ceil((this.Detalles?.imagenes?.length || 0) / this.imagesPerPage);
-}
+  get totalPages(): number {
+    return Math.ceil(
+      (this.Detalles?.imagenes?.length || 0) / this.imagesPerPage
+    );
+  }
 
-setPage(index: number): void {
-  this.currentPage = index;
-}
+  setPage(index: number): void {
+    this.currentPage = index;
+  }
 
   responsiveOptions: any[] = [
     {
@@ -101,28 +249,39 @@ setPage(index: number): void {
   ];
 
   ngAfterViewInit(): void {
-    // Fancybox.bind('[data-fancybox="gallery"]', {
-    //   Toolbar: false,
-    //   Thumbs: {
-    //     autoStart: true,
-    //   },
-    // });
+    if (this.mainImage && this.mainImage.nativeElement) {
+      this.renderer.listen(
+        this.mainImage.nativeElement,
+        'mousemove',
+        (event: MouseEvent) => {
+          this.applyZoomEffect(event);
+        }
+      );
 
-    this.renderer.listen(this.mainImage.nativeElement, 'mousemove', (event: MouseEvent) => {
-      this.applyZoomEffect(event);
-    });
+      this.renderer.listen(this.mainImage.nativeElement, 'mouseleave', () => {
+        this.resetZoomEffect();
+      });
+    }
 
-    this.renderer.listen(this.mainImage.nativeElement, 'mouseleave', () => {
-      this.resetZoomEffect();
-    });
-    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mousemove', (event: MouseEvent) => {
-      this.applyZoomEffectPreviewmainImage(event);
-    });
+    if (this.PreviewmainImage && this.PreviewmainImage.nativeElement) {
+      this.renderer.listen(
+        this.PreviewmainImage.nativeElement,
+        'mousemove',
+        (event: MouseEvent) => {
+          this.applyZoomEffectPreviewmainImage(event);
+        }
+      );
 
-    this.renderer.listen(this.PreviewmainImage.nativeElement, 'mouseleave', () => {
-      this.resetZoomEffectPreviewmainImage();
-    });
+      this.renderer.listen(
+        this.PreviewmainImage.nativeElement,
+        'mouseleave',
+        () => {
+          this.resetZoomEffectPreviewmainImage();
+        }
+      );
+    }
   }
+
   calcularDescuento(precioAnterior: number, precioActual: number): number {
     return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
   }
@@ -139,7 +298,6 @@ setPage(index: number): void {
     this.selectedMainImage = image;
 
     this.mainImageUrl = this.selectedMainImage;
-
   }
 
   // Al salir del hover, restaura la imagen principal seleccionada previamente
@@ -147,7 +305,8 @@ setPage(index: number): void {
     this.mainImageUrl = this.selectedMainImage;
   }
   @ViewChild('mainImage', { static: false }) mainImage!: ElementRef;
-  @ViewChild('PreviewmainImage', { static: false }) PreviewmainImage!: ElementRef;
+  @ViewChild('PreviewmainImage', { static: false })
+  PreviewmainImage!: ElementRef;
   constructor(
     private location: Location,
     private indexedDbService: IndexedDbService,
@@ -181,7 +340,7 @@ setPage(index: number): void {
     const productId = this.activatedRoute.snapshot.params['id'];
     this.obtenerProducto(productId);
     this.sub = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         const productId = this.activatedRoute.snapshot.params['id'];
         if (productId) {
@@ -194,12 +353,19 @@ setPage(index: number): void {
     //     // por ejemplo, velocidad de transición, etc.
     //   });
     // }, 100);
+
+    const mostrar = localStorage.getItem('mostrarRecomendadosVentaVestido');
+    if (mostrar === 'true') {
+      this.mostrarModalRecomendados = true;
+      localStorage.removeItem('mostrarRecomendadosVentaVestido');
+    }
   }
   obtenerProducto(id: string) {
     // Obtener detalles del producto
 
     this.ngxService.start(); // Inicia el loader
-    this.productoS_.obtenerDetalleProductoById(id)
+    this.productoS_
+      .obtenerDetalleProductoById(id)
       .subscribe((response: any) => {
         this.ngxService.stop(); // Inicia el loader
 
@@ -215,7 +381,7 @@ setPage(index: number): void {
         // Preparar imágenes para el carrusel
         this.images = this.Detalles.imagenes.map((img: string) => ({
           itemImageSrc: img,
-          thumbnailImageSrc: img
+          thumbnailImageSrc: img,
         }));
 
         this.cdRef.detectChanges(); // Forzar la actualización del DOM
@@ -235,8 +401,8 @@ setPage(index: number): void {
   applyZoomEffect(event: MouseEvent): void {
     const image = this.mainImage.nativeElement;
     const rect = image.getBoundingClientRect(); // Obtiene la posición de la imagen en la pantalla
-    const x = (event.clientX - rect.left) / rect.width * 100;
-    const y = (event.clientY - rect.top) / rect.height * 100;
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
 
     this.renderer.setStyle(image, 'transform-origin', `${x}% ${y}%`);
     this.renderer.setStyle(image, 'transform', 'scale(2)');
@@ -298,24 +464,21 @@ setPage(index: number): void {
       imagenes: producto.imagenes[0],
       opcionesTipoTransaccion: producto.opcionesTipoTransaccion,
     };
-  
+
     try {
       this.cartService.addToCart(body2);
       console.log('Producto agregado al carrito:', body2);
-  
+
       // Enviar notificación push al usuario
       const nombreProducto = producto.nombre;
       const imagenProducto = producto.imagenes[0]; // Asegúrate de que sea una URL válida
-  
+
       // Llama a generarToken y pasa los datos del producto
       this.generarToken(nombreProducto, imagenProducto);
-  
     } catch (error) {
       console.error('Error al guardar el producto:', error);
     }
   }
-  
-
 
   goToCart() {
     // Lógica para ir al carrito
@@ -326,7 +489,6 @@ setPage(index: number): void {
     // Lógica para iniciar sesión
     console.log('Iniciar sesión');
   }
-
 
   openModal(): void {
     Fancybox.show(
@@ -348,9 +510,8 @@ setPage(index: number): void {
     }
   }
   verDetalles(id: number) {
-    this.router.navigate(["/Detail/" + id]);
+    this.router.navigate(['/Detail/' + id]);
   }
-
 
   changeMainImage(image: string): void {
     this.selectedMainImage = image;
@@ -380,38 +541,46 @@ setPage(index: number): void {
     }
   }
 
-
   generarToken(nombreProducto: string, imagenProducto: string): void {
-    const esLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    const esLocal =
+      location.hostname === 'localhost' || location.hostname === '127.0.0.1';
     const esSeguro = location.protocol === 'https:' || esLocal;
-  
+
     if (!esSeguro) {
-      console.error('Las notificaciones push solo funcionan en sitios HTTPS o localhost.');
-      alert('Debes acceder mediante HTTPS o localhost para usar notificaciones.');
+      console.error(
+        'Las notificaciones push solo funcionan en sitios HTTPS o localhost.'
+      );
+      alert(
+        'Debes acceder mediante HTTPS o localhost para usar notificaciones.'
+      );
       return;
     }
-  
+
     if (!('serviceWorker' in navigator)) {
       console.error('Este navegador no soporta Service Workers.');
       alert('Tu navegador no soporta notificaciones push.');
       return;
     }
-  
+
     if (!this.swPush || !this.swPush.isEnabled) {
-      console.warn('Push notifications no están habilitadas en este navegador.');
+      console.warn(
+        'Push notifications no están habilitadas en este navegador.'
+      );
       return;
     }
-  
+
     Notification.requestPermission().then((permiso) => {
       if (permiso !== 'granted') {
         console.warn('Permiso de notificaciones no concedido:', permiso);
         alert('Debes permitir notificaciones para recibir alertas.');
         return;
       }
-  
-      navigator.serviceWorker.register('ngsw-worker.js')
+
+      navigator.serviceWorker
+        .register('ngsw-worker.js')
         .then(() => {
-          this.swPush.requestSubscription({ serverPublicKey: this.publicKey })
+          this.swPush
+            .requestSubscription({ serverPublicKey: this.publicKey })
             .then((sub) => {
               const productoInfo = {
                 nombreProducto,
@@ -431,21 +600,24 @@ setPage(index: number): void {
         });
     });
   }
-  
-  enviarNotificacion(token: PushSubscription, productoInfo: { nombreProducto: string, imagenProducto: string }): void {
+
+  enviarNotificacion(
+    token: PushSubscription,
+    productoInfo: { nombreProducto: string; imagenProducto: string }
+  ): void {
     const body = {
       token,
       nombreProducto: productoInfo.nombreProducto,
       imagenProducto: productoInfo.imagenProducto,
     };
-  
+
     this.notificacionService_.enviarNotificacionLlevaTuVestido(body).subscribe(
       (response) => {
-        console.log("Notificación enviada:", response);
+        console.log('Notificación enviada:', response);
       },
       (error) => {
-        console.error("Error al enviar la notificación:", error);
+        console.error('Error al enviar la notificación:', error);
       }
     );
   }
-}  
+}

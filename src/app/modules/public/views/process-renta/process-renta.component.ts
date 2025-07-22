@@ -411,6 +411,9 @@ export class ProcessRentaComponent implements OnInit {
                 const order = await actions.order.capture();
                 console.log('Pago completado:', order);
 
+                localStorage.setItem('mostrarRecomendadosVentaVestido', 'true');
+                this.location.back();
+
                 // Crear transacción y enviar la información al backend
                 // Crear transacción y enviar la información al backend
                 const rentaDetails = {
@@ -459,10 +462,6 @@ export class ProcessRentaComponent implements OnInit {
                         summary: 'Éxito',
                         detail: 'Transacción registrada exitosamente.',
                       });
-
-                      setTimeout(() => {
-                        this.router.navigate(['/search']);
-                      }, 2500);
                     },
                     error: (err) => {
                       console.error('Error al registrar transacción:', err);

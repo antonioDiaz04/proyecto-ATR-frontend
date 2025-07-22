@@ -30,6 +30,8 @@ export class ProcessCompraComponent implements OnInit {
   productId: string = '';
   Detalles: any;
 
+  mostrarModalRecomendados = false;
+
   // Variables del formulario de renta
   arrendador: string = '';
   arrendatario: string = '';
@@ -82,6 +84,14 @@ export class ProcessCompraComponent implements OnInit {
         console.error('Error al obtener detalles:', err);
       },
     });
+  }
+
+  abrirModal() {
+    this.mostrarModalRecomendados = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModalRecomendados = false;
   }
 
   private checkPayPalLoaded(): Promise<void> {
@@ -216,6 +226,13 @@ export class ProcessCompraComponent implements OnInit {
                   }
 
                   const order = await actions.order.capture();
+
+                  localStorage.setItem(
+                    'mostrarRecomendadosVentaVestido',
+                    'true'
+                  );
+                  this.location.back();
+
                   console.log('Payment completed:', order);
 
                   const ventaPayload = {
@@ -239,15 +256,12 @@ export class ProcessCompraComponent implements OnInit {
                     .subscribe({
                       next: (response) => {
                         console.log(response);
+
                         this.messageService.add({
                           severity: 'success',
                           summary: 'Éxito',
                           detail: 'Transacción registrada exitosamente.',
                         });
-
-                        setTimeout(() => {
-                          this.router.navigate(['/search']);
-                        }, 2500);
                       },
                       error: (err) => {
                         console.error('Error al registrar transacción:', err);
@@ -287,7 +301,16 @@ export class ProcessCompraComponent implements OnInit {
       }
     });
   }
-
+  ngAfterViewInit(): void {
+    const mostrar = localStorage.getItem('mostrarRecomendadosVentaVestido');
+    if (mostrar === 'true') {
+      this.mostrarModalRecomendados = true;
+      localStorage.removeItem('mostrarRecomendadosVentaVestido');
+    }
+  }
+  verProducto(_id: any) {
+    this.router.navigate([`/Detail/${_id}`]);
+  }
   volver() {
     this.location.back();
   }
