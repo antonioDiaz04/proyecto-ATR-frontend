@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { SessionService } from "../../../../shared/services/session.service";
 import { ERol } from "../../../../shared/constants/rol.enum";
 import { CartService } from "../../../../shared/services/cart.service";
+import { UsuarioService } from "../../../../shared/services/usuario.service";
 import { Location } from "@angular/common";
 import { NotificacionService } from "../../../../shared/services/notification.service";
 import { SwPush } from "@angular/service-worker";
@@ -44,30 +45,146 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
     private sessionService: SessionService,
     private indexedDbService: IndexedDbService,
     private router: Router,
+    private usuarioService: UsuarioService,
     private cartService: CartService
   ) {
     console.log("✅ constructor");
   }
 
+  idUsuario: string | any = null;
   async ngOnInit() {
     console.log("✅ ngOnInit");
 
     try {
       const productos = await this.indexedDbService.obtenerProductosApartados();
-      this.productosRenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "renta");
-      this.productosVenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "venta");
-      this.cartService.initializeCart(productos);
+      console.log("📥 Productos obtenidos de IndexedDB:", productos);
+
+      if (this.isUserLoggedIn()) {
+        console.log("🔐 Usuario logueado");
+
+        const user = this.sessionService.getUserData();
+        this.idUsuario = user?._id;
+
+        if (!this.idUsuario) {
+          throw new Error("No se pudo obtener el id del usuario");
+        }
+
+        let carritoServidor: DressItem[] = [];
+
+        try {
+          const respuesta = await this.usuarioService.obtenerCarrito(this.idUsuario).toPromise();
+          console.log("🖥️ Carrito obtenido del backend (raw):", respuesta);
+
+          // Si el backend devuelve directamente un array:
+          if (Array.isArray(respuesta)) {
+            carritoServidor = respuesta;
+          } else if (respuesta && Array.isArray(respuesta.productos)) {
+            carritoServidor = respuesta.productos;
+          } else {
+            console.warn("⚠️ Respuesta inesperada del backend, usando carrito vacío");
+          }
+        } catch (err) {
+          console.error("❌ Error al obtener carrito del backend:", err);
+        }
+
+        if (!carritoServidor || carritoServidor.length === 0) {
+          console.log("📦 Backend sin productos, usando IndexedDB");
+
+          this.productosRenta = productos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
+          );
+          this.productosVenta = productos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
+          );
+
+          if (productos.length > 0) {
+            this.usuarioService
+              .guardarCarrito(productos, this.idUsuario)
+              .subscribe({
+                next: () => console.log("🆗 Productos guardados en backend"),
+                error: (err) => console.error("❌ Error al guardar productos nuevos", err),
+              });
+          }
+        } else {
+          console.log("🔄 Backend tiene productos, sincronizando...");
+
+          const idsServidor = new Set(carritoServidor.map((p) => p.id));
+          const productosNuevos = productos.filter((p) => !idsServidor.has(p.id));
+
+          // for (let producto of productos) {
+          //   if (idsServidor.has(producto.id)) {
+          //     await this.indexedDbService.eliminarProducto(producto.id);
+          //     console.log(`🧹 Producto duplicado eliminado de IndexedDB: ${producto.id}`);
+          //   }
+          // }
+
+          const idsIndexedDb = new Set(productos.map((p) => p.id));
+          const productosAEliminarEnBackend = carritoServidor.filter(
+            (p) => !idsIndexedDb.has(p.id)
+          );
+
+          // for (let producto of productosAEliminarEnBackend) {
+          //   await this.usuarioService.eliminarProductoCarrito(this.idUsuario, producto.id).toPromise();
+          //   console.log(`🧹 Producto eliminado del backend: ${producto.id}`);
+          // }
+
+          this.productosRenta = productosNuevos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
+          );
+          this.productosVenta = productosNuevos.filter(
+            (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
+          );
+
+          if (productosNuevos.length > 0) {
+            this.usuarioService
+              .guardarCarrito(productosNuevos, this.idUsuario)
+              .subscribe({
+                next: () => console.log("🆗 Productos nuevos guardados en backend"),
+                error: (err) => console.error("❌ Error al guardar productos nuevos", err),
+              });
+          }
+        }
+      } else {
+        console.log("👤 Usuario no logueado, solo IndexedDB");
+
+        this.productosRenta = productos.filter(
+          (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
+        );
+        this.productosVenta = productos.filter(
+          (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
+        );
+      }
+
+      this.cartService.initializeCart([...this.productosRenta, ...this.productosVenta]);
       this.calcularTotal();
       this.initializeTabs();
+
     } catch (error) {
       this.handleError("Error al cargar los productos", error);
     }
   }
-  
-  
-  
- async ngOnDestroy() {
-  console.log("✅ ngOnDestroy");
+
+
+
+  // async ngOnInit() {
+  //   console.log("✅ ngOnInit");
+
+  //   try {
+  //     const productos = await this.indexedDbService.obtenerProductosApartados();
+  //     this.productosRenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "renta");
+  //     this.productosVenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "venta");
+  //     this.cartService.initializeCart(productos);
+  //     this.calcularTotal();
+  //     this.initializeTabs();
+  //   } catch (error) {
+  //     this.handleError("Error al cargar los productos", error);
+  //   }
+  // }
+
+
+
+  async ngOnDestroy() {
+    console.log("✅ ngOnDestroy");
 
   // Asegúrate de que el soporte y permiso se revisen antes del timeout si lo necesitas
   this.checkPushSupport();
@@ -290,4 +407,175 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
     console.log("✅ isSecure");
     return location.protocol === 'https:' || this.isLocalhost();
   }
+
+  title = 'Atelier protegue tus datos';
+  isPrivacyModalOpen: boolean = false; // Estado para controlar la visibilidad del modal
+  mostrarModalConfirmacion: boolean = false;
+  aceptaTerminos: boolean = false;
+
+
+  openPrivacyModal(): void {
+    this.isPrivacyModalOpen = true;
+  }
+
+  onPrivacyModalClose(): void {
+    this.isPrivacyModalOpen = false;
+  }
+
+  // showDialog() {
+  //   this.sidebarVisible = true;
+  // }
+
+  redirectTo(route: string): void {
+    console.log(route);
+    if (route === 'login') {
+      this.router.navigate(['/auth/login']);
+    } else {
+      console.log("click", route);
+      this.router.navigate(['/', route]);
+    }
+  }
+
+  mostrarConfirmacion() {
+    this.mostrarModalConfirmacion = true;
+    this.aceptaTerminos = false; // reiniciar cada vez que abre
+  }
+
+  // Cerrar modal
+  cerrarModal() {
+    this.mostrarModalConfirmacion = false;
+  }
+
+  // Abrir modal de privacidad
+  abrirPrivacyModal() {
+    this.isPrivacyModalOpen = true;
+  }
+
+  // Cerrar modal de privacidad
+  // onPrivacyModalClose() {
+  //   this.isPrivacyModalOpen = false;
+  // }
+  guardando: boolean = false;
+
+
+  // Guardar carrito para usuario logueado
+  guardarCarrito(): void {
+    if (!this.aceptaTerminos) return;
+
+    const carrito = [...this.productosRenta, ...this.productosVenta];
+    if (!carrito.length) {
+      this.showWarningAlert("Tu carrito está vacío");
+      return;
+    }
+
+    this.guardando = true;
+
+    this.usuarioService.guardarCarrito(carrito).subscribe({
+      next: () => {
+        console.log("✅ Carrito enviado al backend.");
+        this.mostrarNotificacion = true;
+        setTimeout(() => {
+          this.mostrarNotificacion = false;
+        }, 4000);
+        this.cerrarModal();
+      },
+      error: (error) => {
+        console.error("❌ Error al guardar el carrito", error);
+        this.showErrorAlert("Error al guardar tu carrito en el servidor");
+      },
+      complete: () => {
+        this.guardando = false;
+      }
+    });
+  }
+
+  vaciarCarrito(): void {
+    const confirmacion = confirm("¿Estás seguro de que deseas vaciar el carrito?");
+    if (!confirmacion) return;
+
+    this.usuarioService.vaciarCarrito().subscribe({
+      next: () => {
+        this.cartService.clearCart();
+        this.productosRenta = [];
+        this.productosVenta = [];
+        this.totalCompra = 0;
+        this.showSuccessAlert("Carrito vaciado correctamente");
+      },
+      error: (err) => {
+        console.error("❌ Error al vaciar el carrito", err);
+        this.showErrorAlert("No se pudo vaciar el carrito en el servidor");
+      }
+    });
+  }
+
+  // Redirigir al login si no está logueado
+  redirigirLogin() {
+    if (!this.aceptaTerminos) return;
+    this.router.navigate(['/auth/login']);
+  }
+
+  // now 
+
+  scannerActivo = false;
+  vincularMensaje = '';
+  vincularExito = false;
+  wearToken: string = '';
+  wearDeviceId: string = '';
+  usuarioActualId: string = '';
+
+  activarScanner() {
+    this.vincularMensaje = '';
+    this.vincularExito = false;
+    this.scannerActivo = true;
+  }
+
+  vincularDispositivo() {
+    const payload = {
+      usuarioId: this.usuarioActualId,
+      token: this.wearToken,
+      deviceId: this.wearDeviceId,
+    };
+
+    console.log(payload);
+    this.usuarioService.vincularDispositivo(payload).subscribe({
+      next: () => {
+        this.vincularExito = true;
+        this.vincularMensaje = '¡Dispositivo vinculado exitosamente!';
+      },
+      error: (err) => {
+        console.error(err);
+        this.vincularExito = false;
+        this.vincularMensaje = 'Error al vincular el dispositivo.';
+      },
+    });
+  }
+
+  onCodeResult(result: any) {
+    this.scannerActivo = false;
+    const partes = result.split('|');
+
+    if (partes.length === 2) {
+      this.wearToken = partes[0];
+      this.wearDeviceId = partes[1];
+
+      const usuarioId = this.sessionService.getId(); // O donde guardes tu sesión
+      if (usuarioId) {
+        this.usuarioActualId = usuarioId;
+        this.vincularDispositivo();
+      } else {
+        this.vincularMensaje = 'No se pudo obtener el ID del usuario';
+        this.vincularExito = false;
+      }
+    } else {
+      this.vincularMensaje = 'QR inválido';
+      this.vincularExito = false;
+    }
+  }
+  iniciarRegistro() {
+
+  }
+
+
+  mostrarNotificacion: boolean = false;
+
 }

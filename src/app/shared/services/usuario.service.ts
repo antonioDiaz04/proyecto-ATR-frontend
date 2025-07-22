@@ -23,6 +23,31 @@ export class UsuarioService {
     );
   }
 
+  guardarCarrito(productos: any[], idUsuario: string): Observable<any> {
+    return this.http.post(`${environment.api}/carrito/guardar`, { productos, idUsuario }, {
+      withCredentials: true,
+    });
+  }
+
+  // eliminarProductoCarrito
+  eliminarProductoCarrito(idUsuario: string, idProducto: string): Observable<any> {
+    return this.http.delete(`${environment.api}/carrito/eliminar/${idUsuario}/${idProducto}`, {
+      withCredentials: true,
+    });
+  }
+  vaciarCarrito(idUsuario: string): Observable<any> {
+    return this.http.delete(`${environment.api}/carrito/vaciar/${idUsuario}`, {
+      withCredentials: true,
+    });
+  }
+
+  obtenerCarrito(idUsuario: string): Observable<any> {
+    return this.http.get(`${environment.api}/carrito/byIdUsuario/${idUsuario}`, {
+      withCredentials: true,
+    });
+  }
+
+
   getPreguntaSecreta(email: any): Observable<any> {
     return this.http.post<any>(
       environment.api + '/verificacion/verificar-correo',
