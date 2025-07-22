@@ -33,7 +33,7 @@ import { MessageService } from 'primeng/api';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ThemeServiceService } from '../../services/theme-service.service';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; // Asegúrate de importar Router
 import { interval, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -76,7 +76,6 @@ import {
     HttpClientModule,
   ], // Importa las dependencias necesarias
   templateUrl: './login-modal.component.html',
-
 })
 export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
   isLoading = false;
@@ -112,7 +111,7 @@ export class LoginModalComponent implements OnInit, OnChanges, AfterViewInit {
 
   faltantes: string[] = []; // Lista de requisitos faltantes
   showPassword: boolean = false;
-border: any;
+  border: any;
   constructor(
     private indexedDbService: IndexedDbService,
     private msgs: mensageservice,
@@ -130,7 +129,7 @@ border: any;
     private cdr: ChangeDetectorRef,
     //para lo del capchat
     private ngZone: NgZone,
-    private router: Router,
+    private router: Router, // Inyecta el Router
 
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -156,8 +155,6 @@ border: any;
     this.isLoading = false;
   }
 
-
-
   // Función personalizada para validar que al menos un campo esté lleno
   atLeastOneRequired(control1: string, control2: string) {
     return (formGroup: FormGroup) => {
@@ -174,13 +171,11 @@ border: any;
     };
   }
   async ngOnInit() {
-
     AOS.init({
       duration: 650, // Duración de la animación en milisegundos
       // easing: 'ease-in-out', // Tipo de animación
       once: true, // Si `true`, la animación solo se ejecuta una vez
     });
-
 
     this.getCaptchaToken();
     this.loadCaptchaScript();
@@ -189,7 +184,11 @@ border: any;
     this.loginForm.valueChanges.subscribe(() => {
       this.loginForm.markAllAsTouched();
     });
+
+    // **NUEVO: Verificar sesión al iniciar el componente**
+    this.checkSessionAndRedirect();
   }
+
   toggleValidation() {
     if (this.usePhoneLogin) {
       // Si usa teléfono, el campo email no es obligatorio
@@ -239,6 +238,7 @@ border: any;
       console.error('El cliente de reCAPTCHA no está disponible.');
     }
   }
+
   get email() {
     return this.loginForm.get('email');
   }
@@ -249,8 +249,6 @@ border: any;
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();
   }
-
-
 
   usePhoneLogin: boolean = false;
 
@@ -276,7 +274,6 @@ border: any;
 
   close(): void {
     this.mostrarFormulario.emit(false); // Emitimos false para cerrar el modal
-
     this.closed.emit('Modal cerrado correctamente'); // Se emite el evento correctamente
   }
 
@@ -337,10 +334,6 @@ border: any;
     );
   }
 
-  // validateCaptcha() {
-  //   const token = grecaptcha.getResponse();
-  //   return token ? token : null;
-  // }
   validateCaptcha() {
     const token = grecaptcha.getResponse();
     if (token) {
@@ -408,12 +401,6 @@ border: any;
       return;
     }
 
-    // if (this.loginForm.invalid) {
-    //   this.loginError = 'Por favor, completa todos los campos';
-    //   this.isLoading = false;
-    //   return;
-    // }
-
     if (!navigator.onLine) {
       this.loginError =
         'Por favor, verifica tu conexión y vuelve a intentarlo.';
@@ -446,12 +433,21 @@ border: any;
                 navigateTo = '/titular/home';
               }
 
+              // **NUEVO: Guardar la ruta actual antes de navegar**
+              if (isPlatformBrowser(this.platformId)) {
+                localStorage.setItem('lastVisitedRoute', this.router.url);
+              }
+
               this.router.navigate([navigateTo]).then(() => {
                 if (navigateTo === '/inicio') {
                   window.location.reload();
                 }
                 this.inicia();
-                window.location.reload();
+                // **Considera si realmente necesitas recargar la página completa aquí.**
+                // Una recarga total puede ser disruptiva para el flujo de usuario.
+                // Si la interfaz de usuario se actualiza correctamente con el navigate,
+                // la recarga podría ser innecesaria.
+                // window.location.reload();
               });
             }
           }
@@ -529,8 +525,8 @@ border: any;
         const usuario = {
           uid: result.user.uid, // ID único del usuario
           email: result.user.email, // Correo electrónico
-          displayName: result.user.displayName, // Nombre completo
-          photoURL: result.user.photoURL, // Foto de perfil
+          fullName: result.user.displayName, // Nombre completo
+          profilePicture: result.user.photoURL, // Foto de perfil
           createdAt: new Date(), // Fecha de creación
           phoneNumber: result.user.phoneNumber || '', // Número de teléfono (si está disponible)
         };
@@ -566,11 +562,18 @@ border: any;
           }
           console.log(navigateTo);
 
+          // **NUEVO: Guardar la ruta actual antes de navegar**
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('lastVisitedRoute', this.router.url);
+          }
+
           this.router.navigate([navigateTo]).then(() => {
             if (navigateTo === '/inicio') {
               window.location.reload();
             }
             this.inicia();
+            // **Considera si realmente necesitas recargar la página completa aquí.**
+            // window.location.reload();
           });
         }
       },
@@ -680,9 +683,14 @@ border: any;
   get hasMinLength(): boolean {
     return this.loginForm.get('password')?.value?.length >= 8;
   }
+
   redirectTo(route: string): void {
-    // this.sidebarVisible = false;
-    // this.visible = false;
+    // Save the current route before navigating
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('lastVisitedRoute', this.router.url);
+    }
+    // this.sidebarVisible = false; // Comentado, ya que no veo estas propiedades en tu clase
+    // this.visible = false; // Comentado, ya que no veo estas propiedades en tu clase
     this.router.navigate(
       route.includes('Sign-in') ||
         route.includes('Sign-up') ||
@@ -691,5 +699,47 @@ border: any;
         ? ['/auth', route]
         : ['/public', route]
     );
+  }
+
+  /**
+   * Checks if a user session exists (token present and valid)
+   * and redirects them to the last visited page or their default page.
+   * This should run when the component initializes.
+   */
+  private checkSessionAndRedirect(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = this.storageService.getToken();
+      if (token) {
+        // Here you would ideally validate the token with your backend
+        // For simplicity, we'll assume a token presence means a valid session
+        // In a real app, you might have a `sessionService.isLoggedIn()` that checks token validity
+
+        const userData = this.sessionService.getUserData(); // Get user data from decoded token
+        if (userData) {
+          this.userROL = userData.rol;
+          let defaultRedirectRoute = '/inicio'; // Default for CLIENTE
+
+          if (this.userROL === ERol.ADMIN) {
+            defaultRedirectRoute = '/admin/home';
+          } else if (this.userROL === ERol.TITULAR) {
+            defaultRedirectRoute = '/titular/home';
+          }
+
+          // Try to get the last visited route
+          const lastVisitedRoute = localStorage.getItem('lastVisitedRoute');
+
+          // If a modal is open, we close it
+          if (this.isModalVisible) {
+            this.close();
+          }
+
+          // Redirect to the last visited route or their default role-based route
+          this.router.navigate([lastVisitedRoute || defaultRedirectRoute]).then(() => {
+            console.log('Sesión reanudada. Redirigiendo a:', lastVisitedRoute || defaultRedirectRoute);
+            this.inicia(); // Show loader on redirect
+          });
+        }
+      }
+    }
   }
 }
