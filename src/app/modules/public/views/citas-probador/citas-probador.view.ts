@@ -1,15 +1,15 @@
-import { Component, OnInit,OnDestroy  } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { IndexedDbService } from "../../commons/services/indexed-db.service";
 import { Router } from "@angular/router";
 import { SessionService } from "../../../../shared/services/session.service";
 import { ERol } from "../../../../shared/constants/rol.enum";
 import { CartService } from "../../../../shared/services/cart.service";
-import { UsuarioService } from "../../../../shared/services/usuario.service";
 import { Location } from "@angular/common";
 import { NotificacionService } from "../../../../shared/services/notification.service";
 import { SwPush } from "@angular/service-worker";
 import { environment } from "../../../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
+import { UsuarioService } from "../../../../shared/services/usuario.service";
 
 export interface DressItem {
   id: string;
@@ -24,7 +24,7 @@ export interface DressItem {
   selector: "app-citas-probador",
   templateUrl: "./citas-probador.view.html",
 })
-export class CitasProbadorView implements OnInit,OnDestroy  {
+export class CitasProbadorView implements OnInit, OnDestroy {
   productosRenta: DressItem[] = [];
   productosVenta: DressItem[] = [];
   tipoCompra: string = "renta";
@@ -45,8 +45,9 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
     private sessionService: SessionService,
     private indexedDbService: IndexedDbService,
     private router: Router,
+    private cartService: CartService,
     private usuarioService: UsuarioService,
-    private cartService: CartService
+
   ) {
     console.log("✅ constructor");
   }
@@ -73,7 +74,7 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
 
         try {
           const respuesta = await this.usuarioService.obtenerCarrito(this.idUsuario).toPromise();
-          console.log("🖥️ Carrito obtenido del backend (raw):", respuesta);
+          console.log("🖥 Carrito obtenido del backend (raw):", respuesta);
 
           // Si el backend devuelve directamente un array:
           if (Array.isArray(respuesta)) {
@@ -81,7 +82,7 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
           } else if (respuesta && Array.isArray(respuesta.productos)) {
             carritoServidor = respuesta.productos;
           } else {
-            console.warn("⚠️ Respuesta inesperada del backend, usando carrito vacío");
+            console.warn("⚠ Respuesta inesperada del backend, usando carrito vacío");
           }
         } catch (err) {
           console.error("❌ Error al obtener carrito del backend:", err);
@@ -114,7 +115,7 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
           // for (let producto of productos) {
           //   if (idsServidor.has(producto.id)) {
           //     await this.indexedDbService.eliminarProducto(producto.id);
-          //     console.log(`🧹 Producto duplicado eliminado de IndexedDB: ${producto.id}`);
+          //     console.log(🧹 Producto duplicado eliminado de IndexedDB: ${producto.id});
           //   }
           // }
 
@@ -125,7 +126,7 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
 
           // for (let producto of productosAEliminarEnBackend) {
           //   await this.usuarioService.eliminarProductoCarrito(this.idUsuario, producto.id).toPromise();
-          //   console.log(`🧹 Producto eliminado del backend: ${producto.id}`);
+          //   console.log(🧹 Producto eliminado del backend: ${producto.id});
           // }
 
           this.productosRenta = productosNuevos.filter(
@@ -186,21 +187,21 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
   async ngOnDestroy() {
     console.log("✅ ngOnDestroy");
 
-  // Asegúrate de que el soporte y permiso se revisen antes del timeout si lo necesitas
-  this.checkPushSupport();
+    // Asegúrate de que el soporte y permiso se revisen antes del timeout si lo necesitas
+    this.checkPushSupport();
 
-  setTimeout(async () => {
-    console.log("⌛ 5 segundos después de ngOnDestroy");
+    setTimeout(async () => {
+      console.log("⌛ 5 segundos después de ngOnDestroy");
 
-    // Si quieres, puedes validar aquí antes de pedir permiso o enviar notificación
-    if (!this.pushSupportInfo.supported) {
-      console.warn("⛔ Notificaciones no soportadas");
-      return;
-    }
+      // Si quieres, puedes validar aquí antes de pedir permiso o enviar notificación
+      if (!this.pushSupportInfo.supported) {
+        console.warn("⛔ Notificaciones no soportadas");
+        return;
+      }
 
-    await this.requestPushPermission(); // o cualquier otra lógica diferida
-  }, 5000); // 5000 ms = 5 segundos
-}
+      await this.requestPushPermission(); // o cualquier otra lógica diferida
+    }, 5000); // 5000 ms = 5 segundos
+  }
 
 
   private checkPushSupport(): void {
@@ -239,34 +240,34 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
     }
 
     // try {
-      const registration = await this.registerServiceWorker();
+    const registration = await this.registerServiceWorker();
 
-      // 🔁 Eliminar suscripción anterior si ya existe
-      const existingSubscription = await registration.pushManager.getSubscription();
-      if (existingSubscription) {
-        await existingSubscription.unsubscribe();
-        console.log("✅ Suscripción anterior eliminada");
-      }
+    // 🔁 Eliminar suscripción anterior si ya existe
+    const existingSubscription = await registration.pushManager.getSubscription();
+    if (existingSubscription) {
+      await existingSubscription.unsubscribe();
+      console.log("✅ Suscripción anterior eliminada");
+    }
 
-      const permission = await Notification.requestPermission();
-      this.pushPermission = permission;
+    const permission = await Notification.requestPermission();
+    this.pushPermission = permission;
 
-      if (permission !== 'granted') {
-        this.showWarningAlert('Has bloqueado las notificaciones en tu navegador');
-        return;
-      }
+    if (permission !== 'granted') {
+      this.showWarningAlert('Has bloqueado las notificaciones en tu navegador');
+      return;
+    }
 
-      const newSubscription = await this.swPush.requestSubscription({
-        serverPublicKey: this.publicKey
-      });
+    const newSubscription = await this.swPush.requestSubscription({
+      serverPublicKey: this.publicKey
+    });
 
-      // ✅ Guardar la suscripción en IndexedDB
-      await this.indexedDbService.guardarSuscripcion(newSubscription);
+    // ✅ Guardar la suscripción en IndexedDB
+    await this.indexedDbService.guardarSuscripcion(newSubscription);
 
-      await this.enviarNotificacion(newSubscription);
-      // this.showSuccessAlert('Notificaciones habilitadas con éxito');
+    await this.enviarNotificacion(newSubscription);
+    // this.showSuccessAlert('Notificaciones habilitadas con éxito');
 
-    
+
   }
 
   private async registerServiceWorker(): Promise<ServiceWorkerRegistration> {
@@ -367,7 +368,7 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
     const msg = error instanceof Error ? error.message : String(error);
     const alertMsg = msg.includes('denied') ? 'Permiso denegado para notificaciones' :
       msg.includes('service worker') ? 'Error en el Service Worker. Recarga la página' :
-      msg.includes('VAPID') ? 'Error de configuración de notificaciones' : msg;
+        msg.includes('VAPID') ? 'Error de configuración de notificaciones' : msg;
     this.showErrorAlert(alertMsg);
   }
 
@@ -470,16 +471,20 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
 
     this.guardando = true;
 
-    this.usuarioService.guardarCarrito(carrito).subscribe({
+    this.usuarioService.guardarCarrito(carrito, this.idUsuario).subscribe({
       next: () => {
         console.log("✅ Carrito enviado al backend.");
         this.mostrarNotificacion = true;
+
         setTimeout(() => {
           this.mostrarNotificacion = false;
+
         }, 4000);
         this.cerrarModal();
       },
       error: (error) => {
+        this.guardando = false;
+
         console.error("❌ Error al guardar el carrito", error);
         this.showErrorAlert("Error al guardar tu carrito en el servidor");
       },
@@ -493,9 +498,9 @@ export class CitasProbadorView implements OnInit,OnDestroy  {
     const confirmacion = confirm("¿Estás seguro de que deseas vaciar el carrito?");
     if (!confirmacion) return;
 
-    this.usuarioService.vaciarCarrito().subscribe({
+    this.usuarioService.vaciarCarrito(this.idUsuario).subscribe({
       next: () => {
-        this.cartService.clearCart();
+        // this.cartService.clearCart();
         this.productosRenta = [];
         this.productosVenta = [];
         this.totalCompra = 0;

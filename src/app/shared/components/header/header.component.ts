@@ -198,7 +198,7 @@ this.updateMenuItems()
     const query = this.busquedaProducto.trim();
     if (!query) return texto;
 
-    const regex = new RegExp(`(${query})`, 'gi');
+    const regex = new RegExp((`${query}`), 'gi');
     return texto.replace(regex, '<b>$1</b>');
   }
 
@@ -448,8 +448,8 @@ filtrarPorCategoria(categoria: string) {
   // highlightMatch(suggestion: string): string {
   //   const query = this.searchQuery;
   //   if (!query) return suggestion;
-  //   const regex = new RegExp(`(${query})`, 'gi');
-  //   return suggestion.replace(regex, `<b>$1</b>`);
+  //   const regex = new RegExp((${query}), 'gi');
+  //   return suggestion.replace(regex, <b>$1</b>);
   // }
 
   // Selecciona una sugerencia y ejecuta la búsqueda
@@ -463,4 +463,8 @@ filtrarPorCategoria(categoria: string) {
   //     this.showSuggestions = false;
   //   }, 200);
   // }
+
+
+  userMenuOpen: boolean = false;
+
 }
