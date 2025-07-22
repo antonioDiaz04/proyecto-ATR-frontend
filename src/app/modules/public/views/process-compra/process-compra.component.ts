@@ -13,7 +13,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
 import { SessionService } from './../../../../shared/services/session.service';
-import { VentayrentaService } from './../../../../shared/services/ventayrenta.service';
+import { TransactionService } from './../../../../shared/services/transaction.service';
 import { environment } from '../../../../../environments/environment';
 import { ProductoService } from '../../../../shared/services/producto.service';
 
@@ -55,7 +55,7 @@ export class ProcessCompraComponent implements OnInit {
     private messageService: MessageService,
     private ngZone: NgZone,
     private sessionService: SessionService,
-    private ventaRentaService: VentayrentaService,
+    private transactionService: TransactionService,
     private router: Router
   ) {}
 
@@ -219,50 +219,45 @@ export class ProcessCompraComponent implements OnInit {
                   console.log('Payment completed:', order);
 
                   const ventaPayload = {
-                    usuario: idUser,
-                    productos: [
-                      {
-                        producto: this.productId,
-                        cantidad: 1,
-                        precioUnitario: this.Detalles?.precio,
-                        descuento: 0,
-                      },
-                    ],
+                    idUsuario: idUser,
+                    idVestido: this.productId,
+                    tipoTransaccion: 'venta',
+                    montoTotal: this.Detalles?.precioActual,
+                    estado: 'completada',
                     detallesPago: {
-                      metodoPago: 'PayPal',
-                      paypalTransactionId: order.id,
-                      paypalPayerEmail: order.payer.email_address,
+                      estadoPago: 'pagado_total',
+                      cantidadPagada: this.Detalles?.precioActual,
+                      metodoPago: 'paypal',
+                      fechaUltimoPago: new Date().toISOString(),
+                      idTransaccionPasarela: order.id,
                     },
-                    notas: this.Detalles?.nombre,
-                    esApartado: false,
-                    resumen: {
-                      anticipo: 0,
-                      subtotal: this.Detalles?.precio,
-                      total: this.Detalles?.precio,
-                    },
+                    detallesEntregaLocal: {},
                   };
 
-                  this.ventaRentaService.crearVenta(ventaPayload).subscribe({
-                    next: (response) => {
-                      console.log(response);
-                      this.messageService.add({
-                        severity: 'success',
-                        summary: 'Éxito',
-                        detail: 'Pago realizado exitosamente.',
-                      });
-                      setTimeout(() => {
-                        this.router.navigate(['/search']);
-                      }, 2500);
-                    },
-                    error: (err) => {
-                      console.log(err);
-                      this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'No se pudo registrar la venta.',
-                      });
-                    },
-                  });
+                  this.transactionService
+                    .createTransaction(ventaPayload)
+                    .subscribe({
+                      next: (response) => {
+                        console.log(response);
+                        this.messageService.add({
+                          severity: 'success',
+                          summary: 'Éxito',
+                          detail: 'Transacción registrada exitosamente.',
+                        });
+
+                        setTimeout(() => {
+                          this.router.navigate(['/search']);
+                        }, 2500);
+                      },
+                      error: (err) => {
+                        console.error('Error al registrar transacción:', err);
+                        this.messageService.add({
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: 'No se pudo registrar la transacción.',
+                        });
+                      },
+                    });
                 } catch (error) {
                   console.error('Payment error:', error);
                   this.messageService.add({

@@ -36,6 +36,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { PaginatorModule } from 'primeng/paginator';
 import { ThemeServiceService } from '../../shared/services/theme-service.service';
 import { ProductoService } from '../../shared/services/producto.service';
+import { TransactionService } from '../../shared/services/transaction.service';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { SessionService } from '../../shared/services/session.service';
 import { mensageservice } from '../../shared/services/mensage.service';
@@ -134,6 +135,7 @@ import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.co
   SessionService,ReseniaService,
   mensageservice,
   UsuarioService,ProductoService,
+  TransactionService,
   ToastrService,CartService,NotificacionService,
   MessageService,IndexedDbService,
   ConfirmationService,SignInService,
