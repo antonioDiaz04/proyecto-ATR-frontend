@@ -40,4 +40,7 @@ export class ProductoService {
   obtenerDetalleProductoById(id: any): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${environment.api}/producto/byId/${id}`);
   }
+  obtenerRangoFechasVestido(id: any): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${environment.api}/producto/rango-fechas-renta/${id}`);
+  }
 }
