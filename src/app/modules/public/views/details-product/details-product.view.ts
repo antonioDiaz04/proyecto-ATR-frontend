@@ -1,4 +1,4 @@
-
+import { response } from 'express';
 import { Location } from '@angular/common';
 import {
   AfterViewInit,
@@ -28,20 +28,27 @@ import { environment } from '../../../../../environments/environment';
 
 declare const Fancybox: any;
 
+interface Resena {
+  comentario: string;
+  rating: number;
+}
+
 interface Producto {
-  id?: string; // Opcional, para incluir el _id de MongoDB
   nombre: string;
-  imagenPrincipal: any; // Sigue siendo una cadena para representar la imagen en base64
-  otrasImagenes: string[]; // Sigue siendo un array de cadenas para imágenes adicionales en base64
-  color: string;
-  textura?: string;
   precio: number;
-  estado: {
-    disponible: boolean;
-    tipoVenta: 'Venta' | 'Renta';
-    nuevo?: boolean; // Nuevo es opcional
-  };
-  descripcion?: string; // Descripción opcional
+  imagenes: string[];
+  descripcion?: string;
+  resenas?: Resena[];
+}
+
+interface ProductoRecomendado {
+  nombre: string;
+  imagenes: string[];
+  descripcion?: string;
+  precio_venta?: number;
+  precio_promocion?: number;
+  precio?: number;
+  resenas?: { rating: number; comentario: string }[];
 }
 
 @Component({
@@ -76,126 +83,10 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
 
   mostrarModalRecomendados = false;
 
-  productosRecomendados = [
-    {
-      _id: '67e058358bbb15e17ae334a1',
-      nombre: 'Vestido de Noche Azul Marino',
-      descripcion: 'Elegante vestido largo con escote en V.',
-      precio: 850,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752961685/ProductosAtelier/qxxfhf9fhxptbsvocugx.png',
-      ],
-      resenas: [
-        { comentario: 'Me sentí como una reina, muy cómodo.', rating: 5 },
-        { comentario: 'Ideal para eventos formales, me encantó.', rating: 4 },
-      ],
-    },
-    {
-      _id: '67e058358bbb15e17ae334a2',
-      nombre: 'Vestido Rojo Corte Sirena',
-      descripcion: 'Ajustado al cuerpo, ideal para bodas.',
-      precio: 990,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752962222/ProductosAtelier/riatr6wf5crhzqyr2dyd.png',
-      ],
-      resenas: [
-        { comentario: 'Resalta la figura, me fascinó.', rating: 5 },
-        { comentario: 'La tela es de muy buena calidad.', rating: 4 },
-      ],
-    },
-    {
-      _id: '67e058358bbb15e17ae334a3',
-      nombre: 'Vestido Rosa Pastel Corto',
-      descripcion: 'Vestido fresco y juvenil, ideal para primavera.',
-      precio: 720,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752962687/ProductosAtelier/xqwgfxzkodhzaqjd7cef.png',
-      ],
-      resenas: [
-        { comentario: 'Perfecto para una sesión de fotos.', rating: 5 },
-        { comentario: 'Muy cómodo y favorecedor.', rating: 4 },
-      ],
-    },
-    {
-      _id: '67e058358bbb15e17ae334a4',
-      nombre: 'Vestido Verde Esmeralda Strapless',
-      descripcion: 'Con caída fluida y abertura lateral.',
-      precio: 1050,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752962823/ProductosAtelier/ebqwlmv2il00cbglck5j.png',
-      ],
-      resenas: [
-        {
-          comentario: '¡Increíble color! Me lo chulearon toda la noche.',
-          rating: 5,
-        },
-        { comentario: 'Muy elegante, lo volvería a usar.', rating: 4 },
-      ],
-    },
-    {
-      _id: '67e058358bbb15e17ae334a5',
-      nombre: 'Vestido Blanco Civil',
-      descripcion: 'Sencillo pero sofisticado, perfecto para boda civil.',
-      precio: 780,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963100/ProductosAtelier/vblanco_civil.png',
-      ],
-      resenas: [
-        { comentario: '¡Justo lo que buscaba para mi civil!', rating: 5 },
-        { comentario: 'Minimalista y elegante.', rating: 4 },
-      ],
-    },
-    {
-      _id: '67e058358bbb15e17ae334a6',
-      nombre: 'Vestido Dama de Honor Lila',
-      descripcion: 'Color suave con corte A y tirantes finos.',
-      precio: 890,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963250/ProductosAtelier/dama_lila.png',
-      ],
-      resenas: [
-        { comentario: 'Todas las damas se veían hermosas.', rating: 5 },
-        { comentario: 'El color es perfecto para primavera.', rating: 4 },
-      ],
-    },
-    {
-      _id: '67e058358bbb15e17ae334a7',
-      nombre: 'Vestido Casual Elegante Negro',
-      descripcion: 'Versátil para eventos semiformales.',
-      precio: 650,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963401/ProductosAtelier/casual_negro.png',
-      ],
-      resenas: [
-        { comentario: 'Muy cómodo, lo usaré más de una vez.', rating: 5 },
-        { comentario: 'Buen ajuste y tela ligera.', rating: 4 },
-      ],
-    },
-    {
-      _id: '67e058358bbb15e17ae334a8',
-      nombre: 'Vestido de Lentejuelas Dorado',
-      descripcion: 'Impactante para eventos de noche o fin de año.',
-      precio: 1100,
-      imagenes: [
-        'http://res.cloudinary.com/dvvhnrvav/image/upload/v1752963500/ProductosAtelier/lentejuelas_dorado.png',
-      ],
-      resenas: [
-        { comentario: '¡Brilló toda la noche!', rating: 5 },
-        { comentario: 'Cómodo a pesar de las lentejuelas.', rating: 4 },
-      ],
-    },
-  ];
+  recomendaciones: ProductoRecomendado[] = [];
+  productosRecomendados: any[] = this.recomendaciones;
 
-  mezclarProductos(productos: any[]): any[] {
-    return productos
-      .map((p) => ({ producto: p, orden: Math.random() }))
-      .sort((a, b) => a.orden - b.orden)
-      .map((p) => p.producto);
-  }
   abrirModal() {
-    this.productosRecomendados = this.mezclarProductos(
-      this.productosRecomendados
-    );
     this.mostrarModalRecomendados = true;
   }
 
@@ -286,12 +177,6 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
   }
 
-  // Cambia la imagen principal y guarda la selección
-  // changeMainImage(image: string): void {
-  //   this.mainImageUrl = image;
-  //   this.selectedMainImage = image;
-  // }
-
   // Al pasar el mouse, cambia temporalmente la imagen principal
   onThumbnailHover(image: string): void {
     // this.mainImageUrl = image;
@@ -316,12 +201,9 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private swPush: SwPush,
     private notificacionService_: NotificacionService,
-
     private ngxService: NgxUiLoaderService,
     private router: Router,
-    private cartService: CartService,
-    private confirmationService: ConfirmationService, // Inyectar ConfirmationService
-    private messageService: MessageService // Inyectar MessageService (opcional para notificacio
+    private cartService: CartService
   ) {
     // this.id=require.para
   }
@@ -347,18 +229,8 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
           this.obtenerProducto(productId); // Tu función para recargar el producto
         }
       });
-    // setTimeout(() => {
-    //   Fancybox.bind('[data-fancybox="gallery"]', {
-    //     // Aquí puedes agregar configuraciones adicionales si es necesario
-    //     // por ejemplo, velocidad de transición, etc.
-    //   });
-    // }, 100);
 
-    const mostrar = localStorage.getItem('mostrarRecomendadosVentaVestido');
-    if (mostrar === 'true') {
-      this.mostrarModalRecomendados = true;
-      localStorage.removeItem('mostrarRecomendadosVentaVestido');
-    }
+    // }, 100);
   }
   obtenerProducto(id: string) {
     // Obtener detalles del producto
@@ -367,6 +239,7 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
     this.productoS_
       .obtenerDetalleProductoById(id)
       .subscribe((response: any) => {
+        console.log(response);
         this.ngxService.stop(); // Inicia el loader
 
         this.isLoading = false;
@@ -384,7 +257,33 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
           thumbnailImageSrc: img,
         }));
 
-        this.cdRef.detectChanges(); // Forzar la actualización del DOM
+        this.cdRef.detectChanges();
+        const mostrar = localStorage.getItem('mostrarRecomendadosVentaVestido');
+        if (mostrar === 'true') {
+          this.mostrarModalRecomendados = true;
+          localStorage.removeItem('mostrarRecomendadosVentaVestido');
+
+          const vestido = {
+            id_producto: this.Detalles?._id,
+            producto_nombre: this.Detalles?.nombre,
+            producto_talla: this.Detalles?.talla,
+            producto_color: this.Detalles?.color,
+            producto_temporada: this.Detalles?.temporada,
+            vestido_estilo: this.Detalles?.estilo,
+            vestido_condicion: this.Detalles?.condicion,
+          };
+
+          this.productoS_
+            .obtenerRecomendacionesPorAtributos(vestido)
+            .subscribe((response: any) => {
+              if (response.success) {
+                console.log(response);
+                this.recomendaciones = response.recomendaciones;
+              } else {
+                console.warn('No se encontraron recomendaciones');
+              }
+            });
+        }
       });
   }
   scrollToTop() {

@@ -308,53 +308,6 @@ export class ProcessRentaComponent implements OnInit {
     // this.generarToken(); // Generamos el token antes de enviar los datos
   }
 
-  // Método para generar el token y enviarlo al backend
-  // generarToken(): void {
-  //   if ('serviceWorker' in navigator && this.swPush) {
-  //     this.swPush
-  //       .requestSubscription({ serverPublicKey: this.publicKey })
-  //       .then((sub) => {
-  //         const token = JSON.stringify(sub);
-  //         console.log('enviar=>', token);
-  //         const data = {
-  //           usuarioId: this.usuarioId,
-  //           arrendatario: this.arrendatario,
-  //           fechaInicio: this.fechaInicio,
-  //           fechaFin: this.fechaFin,
-  //           direccionInmueble: this.direccionInmueble,
-  //           montoRenta: this.montoRenta,
-  //           productId: this.productId,
-  //           token: token, // Token generado
-  //         };
-
-  //         this.enviarTokenAlBackend(token); // Enviar el token al backend
-  //       })
-  //       .catch((err) => {
-  //         console.error('Error al suscribirse a notificaciones:', err);
-  //         alert(
-  //           'Hubo un problema al suscribirse a las notificaciones. Por favor, asegúrese de que el navegador soporte Service Workers.'
-  //         );
-  //         this.isLoading = false; // Desactiva el loader en caso de error
-  //       });
-  //   } else {
-  //     console.error('Service Workers no están habilitados en este navegador.');
-  //     alert('El navegador no soporta notificaciones push.');
-  //     this.isLoading = false; // Desactiva el loader si no es compatible
-  //   }
-  // }
-
-  // Método para enviar el token de notificación al backend
-  // enviarTokenAlBackend(token: string): void {
-  //   this.http
-  //     .post(`${environment.api}/v1/enviar-notificacion/ejemplo`, {
-  //       token,
-  //     })
-  //     .subscribe(
-  //       () => console.log('Token enviado al backend correctamente'),
-  //       (err) => console.error('Error al enviar el token al backend:', err)
-  //     );
-  // }
-
   initializePayPal() {
     if (!this.paypalLoaded || !this.paypalElement?.nativeElement) {
       console.error('PayPal no está cargado o el elemento no existe');
@@ -371,11 +324,6 @@ export class ProcessRentaComponent implements OnInit {
 
       return; // No continuar con la inicialización de PayPal si el anticipo no es suficiente
     }
-
-    const estadoPago =
-      this.anticipo >= this.montoRenta! ? 'pagado_total' : 'pagado_parcial';
-    const cantidadPagada =
-      this.anticipo >= this.montoRenta! ? this.montoRenta! : this.anticipo;
 
     // Si el anticipo es suficiente, continuar con la inicialización de PayPal
     this.ngZone.runOutsideAngular(() => {
