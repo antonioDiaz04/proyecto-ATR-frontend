@@ -1,0 +1,254 @@
+<div class="font-poppins text-gray-800 bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8 relative flex">
+  <div class="flex-grow max-w-full mx-auto p-4 bg-white rounded-xl shadow-lg transition-all duration-300"
+       [ngClass]="{'md:mr-[30rem]': showDetailPanel, 'mr-auto': !showDetailPanel}">
+    <header class="text-start mb-10 pb-5 border-b border-gray-200 relative">
+      <h1 class="text-4xl sm:text-5xl text-gray-900 font-extrabold mb-2">Tu Historial de Transacciones</h1>
+      <p class="text-lg text-gray-600 mb-6">Un resumen detallado de tus actividades</p>
+      <button class="absolute top-4 right-4 bg-red-600 text-white py-2 px-4 rounded-lg text-sm flex items-center gap-2 hover:bg-red-700 transition-colors duration-300 transform hover:-translate-y-0.5">
+        <i class="fas fa-sign-out-alt"></i> Salir
+      </button>
+    </header>
+
+    <div *ngIf="loading" class="text-center py-16 px-5 text-gray-600 text-xl bg-gray-100 rounded-lg mt-8">
+      <div class="animate-spin rounded-full h-16 w-16 border-4 border-t-4 border-gray-200 border-t-indigo-600 mx-auto mb-4"></div>
+      <p>Cargando tu historial...</p>
+    </div>
+
+    <div *ngIf="!loading && transacciones.length === 0" class="text-center py-16 px-5 text-gray-600 text-xl bg-gray-100 rounded-lg mt-8">
+      <i class="fas fa-box-open text-5xl text-gray-400 mb-6"></i>
+      <p class="mb-6">¡Vaya! Parece que aún no tienes transacciones registradas.</p>
+      <button class="bg-indigo-600 text-white py-3 px-8 rounded-lg text-base font-medium hover:bg-indigo-700 transition-colors duration-300 transform hover:scale-105 shadow-md">
+        <i class="fas fa-search mr-2"></i> Explorar Colección
+      </button>
+    </div>
+
+    <div *ngIf="!loading && transacciones.length > 0" class="grid gap-6 mt-8">
+      <div *ngFor="let transaccion of transacciones"
+           class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300">
+        <div class="flex flex-col md:flex-row">
+          <div class="p-4 flex-shrink-0">
+            <div class="w-28 h-28 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+              <img [src]="getVestidoImagen(transaccion)"
+                   alt="{{ transaccion.idVestido.nombre }}"
+                   class="w-full h-full object-cover">
+            </div>
+          </div>
+
+          <div class="p-6 flex-grow flex flex-col">
+            <div class="flex-grow">
+              <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ transaccion.idVestido.nombre }}</h3>
+
+              <div class="flex flex-wrap gap-3 mb-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                      [ngClass]="{
+                        'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20': transaccion.estado === 'Completada',
+                        'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20': transaccion.estado === 'Pendiente',
+                        'bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-600/20': transaccion.estado === 'Cancelada'
+                      }">
+                  {{ transaccion.estado }}
+                </span>
+
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                      [ngClass]="{
+                        'bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20': transaccion.tipoTransaccion === 'renta',
+                        'bg-purple-50 text-purple-700 ring-1 ring-inset ring-purple-600/20': transaccion.tipoTransaccion === 'Venta'
+                      }">
+                  {{ transaccion.tipoTransaccion | uppercase }}
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p class="text-sm text-gray-500">Monto</p>
+                  <p class="text-lg font-bold text-gray-900">${{ transaccion.montoTotal | number:'1.2-2' }} MXN</p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Fecha</p>
+                  <p class="text-md font-medium text-gray-800">{{ transaccion.fechaTransaccion | date:'mediumDate' }}</p>
+                </div>
+              </div>
+
+              <div *ngIf="transaccion.resenaCliente" class="mt-4">
+                <p class="text-sm text-gray-500">Tu valoración:</p>
+                <div class="flex items-center text-indigo-500"> {{ getStars(transaccion.resenaCliente.rating) }}
+                  <span class="text-sm text-gray-600 ml-2">{{ transaccion.resenaCliente.rating }}/5</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex justify-end">
+              <button (click)="openDetailPanel(transaccion)"
+                      class="bg-gray-800 text-white py-2.5 px-6 rounded-lg font-medium hover:bg-gray-900 transition-colors duration-300 flex items-center gap-2 shadow-md hover:shadow-lg">
+                <i class="fas fa-info-circle text-sm"></i> Ver Detalles
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && totalPages > 1" class="flex flex-col sm:flex-row justify-between items-center mt-10 gap-4">
+      <p class="text-gray-600">Mostrando {{ transacciones.length }} de {{ totalTransacciones }} transacciones</p>
+
+      <div class="flex items-center space-x-2">
+        <button (click)="prevPage()" [disabled]="currentPage === 1"
+                class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center gap-2 text-sm">
+          <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+
+        <ng-container *ngFor="let page of getPaginationRange()">
+          <button (click)="goToPage(page)"
+                  class="w-9 h-9 flex items-center justify-center border rounded-lg text-sm font-medium
+                         {{ currentPage === page ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100' }}
+                         transition-colors duration-200">
+            {{ page }}
+          </button>
+        </ng-container>
+
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+                class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center gap-2 text-sm">
+          Siguiente <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showDetailPanel" class="fixed inset-y-0 right-0 w-full md:w-[30rem] bg-white shadow-2xl z-50 flex flex-col transform translate-x-0 transition-transform duration-300 ease-out animate-slide-in-right">
+    <div class="p-6 overflow-y-auto flex-grow">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900">Detalles Completos</h2>
+        <button (click)="closeDetailPanel()" class="text-gray-500 hover:text-gray-800 transition-colors duration-200 text-xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div *ngIf="selectedTransaction" class="space-y-6">
+        <div class="bg-gray-50 p-4 rounded-lg shadow-sm"> <div class="w-full h-48 rounded-lg overflow-hidden mb-4 shadow-xs"> <img [src]="getVestidoImagen(selectedTransaction)"
+                 alt="{{ selectedTransaction.idVestido.nombre }}"
+                 class="w-full h-full object-cover">
+          </div>
+
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ selectedTransaction.idVestido.nombre }}</h3>
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p class="text-sm text-gray-500">Monto</p>
+              <p class="text-lg font-semibold text-gray-900">${{ selectedTransaction.montoTotal | number:'1.2-2' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Estado</p>
+              <p class="text-lg font-medium" [ngClass]="{
+                'text-emerald-700': selectedTransaction.estado === 'Completada',
+                'text-amber-700': selectedTransaction.estado === 'Pendiente',
+                'text-rose-700': selectedTransaction.estado === 'Cancelada'
+              }">
+                {{ selectedTransaction.estado }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden"> <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <h4 class="text-lg font-semibold text-gray-800">Información General</h4>
+              <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300"></i>
+            </div>
+            <div class="p-4 pt-0"> <ul class="space-y-3 text-gray-700">
+                <li class="flex justify-between">
+                  <span class="text-gray-600">ID Transacción:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction._id }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Fecha:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.fechaTransaccion | date:'medium' }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Tipo:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.tipoTransaccion | uppercase }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden"> <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <h4 class="text-lg font-semibold text-gray-800">Detalles del Vestido</h4>
+              <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300"></i>
+            </div>
+            <div class="p-4 pt-0"> <ul class="space-y-3 text-gray-700">
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Color:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.idVestido.color }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Talla:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.idVestido.talla }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Estilo:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.idVestido.estilo }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Temporada:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.idVestido.temporada.join(', ') }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden"> <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <h4 class="text-lg font-semibold text-gray-800">Detalles de Pago</h4>
+              <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300"></i>
+            </div>
+            <div class="p-4 pt-0"> <ul class="space-y-3 text-gray-700">
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Método:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.detallesPago.metodoPago | titlecase }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Estado:</span>
+                  <span class="font-medium text-gray-800">{{ selectedTransaction.detallesPago.estadoPago === 'pagado_total' ? 'Pagado' : 'Pendiente' }}</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-gray-600">Total:</span>
+                  <span class="font-medium text-gray-900">${{ selectedTransaction.montoTotal | number:'1.2-2' }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden"> <div class="p-4">
+              <h4 class="text-lg font-semibold text-gray-800">Deja tu Reseña</h4>
+            </div>
+            <div class="p-4 pt-0"> <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2">Tu Calificación:</label>
+                  <div class="flex items-center space-x-1 text-2xl cursor-pointer">
+                    <i *ngFor="let star of [1,2,3,4,5]; let i = index"
+                       class="fas fa-star"
+                       [ngClass]="{'text-blue-600': i + 1 <= currentRating, 'text-gray-300': i + 1 > currentRating}" (click)="setRating(i + 1)">
+                    </i>
+                  </div>
+                </div>
+
+                <div class="mb-6">
+                  <label for="comentario-panel" class="block text-gray-700 text-sm font-bold mb-2">Comentario:</label>
+                  <textarea id="comentario-panel" formControlName="comentario"
+                            class="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            rows="4"
+                            placeholder="Comparte tu experiencia con este vestido..."></textarea>
+                </div>
+
+                <button type="submit" [disabled]="reviewForm.invalid"
+                        class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-bold hover:bg-indigo-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
+                  {{ selectedTransaction.resenaCliente ? 'Actualizar Reseña' : 'Enviar Reseña' }}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showDetailPanel" class="fixed inset-0  z-40 animate-fade-in" (click)="closeDetailPanel()"></div>
+</div>

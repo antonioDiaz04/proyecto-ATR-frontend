@@ -7,6 +7,7 @@ import { ComprasComponent } from './views/compras/compras.component';
 import { NotificacionesComponent } from './views/notificaciones/notificaciones.component';
 import { ReportarIncidenteComponent } from './views/reportar-incidente/reportar-incidente.component';
 import { AlexaTokenGeneratorComponent } from '../client/views/alexa-token-generator/alexa-token-generator.component';
+import { TransaccionesComponent } from './views/transacciones/transacciones.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,14 @@ const routes: Routes = [
       {
         path: 'perfil',
         component: PerfilComponent,
+        // data: {
+        //   title: "inicio",
+        //   breadcrumb: "inicio",
+        // },
+      },
+      {
+        path: 'transacciones',
+        component: TransaccionesComponent,
         // data: {
         //   title: "inicio",
         //   breadcrumb: "inicio",

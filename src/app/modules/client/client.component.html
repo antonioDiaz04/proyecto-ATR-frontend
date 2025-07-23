@@ -31,6 +31,10 @@
         <li>
           <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Servicios</p>
           <ul class="space-y-2">
+            <li (click)="redirectToCliente('transacciones'); showMobileSidebar = false"
+              class="flex items-center gap-2 cursor-pointer hover:text-blue-600">
+              <span>Transacciones</span>
+            </li>
             <li (click)="redirectToCliente('compras'); showMobileSidebar = false"
               class="flex items-center gap-2 cursor-pointer hover:text-blue-600">
               <i class="pi pi-shopping-cart text-gray-600"></i>

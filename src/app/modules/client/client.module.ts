@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { ClientRoutingModule } from './client-routing.module';
 import { PerfilComponent } from './views/perfil/perfil.component';
 import { RentasComponent } from './views/rentas/rentas.component';
@@ -28,13 +28,14 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlexaTokenGeneratorComponent } from './views/alexa-token-generator/alexa-token-generator.component';
 import { AuthService } from '../auth/commons/services/auth.service';
+import { TransaccionesComponent } from './views/transacciones/transacciones.component';
 
 @NgModule({
   declarations: [
     PerfilComponent,
     RentasComponent,
     ComprasComponent,
-    ClientComponent,
+    ClientComponent,TransaccionesComponent,
     NotificacionesComponent,
     SidenavComponent,
     ReportarIncidenteComponent,
@@ -49,7 +50,7 @@ import { AuthService } from '../auth/commons/services/auth.service';
     AvatarGroupModule,
     ClientRoutingModule,
     FormsModule,
-    ZXingScannerModule,
+    ZXingScannerModule,JsonPipe,
     ReactiveFormsModule,
   ],
   providers: [

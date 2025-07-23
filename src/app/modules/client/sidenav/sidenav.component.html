@@ -34,6 +34,16 @@
       </div>
       <ul>
         <li
+          (click)="redirectToCliente('transacciones')"
+          class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+        >
+          <i class="pi pi-shopping-cart text-gray-500"></i>
+          <span
+            class="text-sm font-light text-gray-700 group-hover:text-red-700 whitespace-nowrap"
+            >Transacciones</span
+          >
+        </li>
+        <li
           (click)="redirectToCliente('compras')"
           class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
         >
