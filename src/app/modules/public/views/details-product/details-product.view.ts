@@ -86,6 +86,43 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   recomendaciones: ProductoRecomendado[] = [];
   productosRecomendados: any[] = this.recomendaciones;
 
+
+
+  // Variables para paginación de thumbnails en móvil/tablet
+currentThumbPage: number = 0;
+thumbsPerPage: number = 3;
+
+get paginatedImages(): string[] {
+  const start = this.currentThumbPage * this.thumbsPerPage;
+  return this.Detalles?.imagenes?.slice(start, start + this.thumbsPerPage) || [];
+}
+
+get totalThumbPages(): number {
+  return Math.ceil((this.Detalles?.imagenes?.length || 0) / this.thumbsPerPage);
+}
+
+setThumbPage(index: number): void {
+  if (index >= 0 && index < this.totalThumbPages) {
+    this.currentThumbPage = index;
+  }
+}
+
+// Métodos para manejar el cambio de imagen principal
+// onThumbnailHover(image: string): void {
+//   this.selectedMainImage = image;
+//   this.mainImageUrl = this.selectedMainImage;
+// }
+
+// resetMainImage(): void {
+//   this.mainImageUrl = this.selectedMainImage;
+// }
+
+// changeMainImage(image: string): void {
+//   this.selectedMainImage = image;
+//   this.mainImageUrl = this.selectedMainImage;
+// }
+
+
   abrirModal() {
     this.mostrarModalRecomendados = true;
   }
@@ -104,12 +141,12 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
   currentPage: number = 0;
   imagesPerPage: number = 5;
 
-  get paginatedImages(): string[] {
-    const start = this.currentPage * this.imagesPerPage;
-    return (
-      this.Detalles?.imagenes?.slice(start, start + this.imagesPerPage) || []
-    );
-  }
+  // get paginatedImages(): string[] {
+  //   const start = this.currentPage * this.imagesPerPage;
+  //   return (
+  //     this.Detalles?.imagenes?.slice(start, start + this.imagesPerPage) || []
+  //   );
+  // }
 
   get totalPages(): number {
     return Math.ceil(

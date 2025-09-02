@@ -74,6 +74,7 @@ import { CategoriaService } from '../../shared/services/categoria.service';
 import { ChartModule } from 'primeng/chart';
 import { SidebarModule } from 'primeng/sidebar';
 import { ReseniaService } from '../../shared/services/resenia.service';
+import { HeatmapComponent } from './components/heatmap/heatmap.component';
 
 const VIEWS = [HomeView, FooterComponent];
 
@@ -122,6 +123,7 @@ const MATERIALS = [SidebarModule,ChartModule, DragDropModule,ButtonModule, Dropd
     AsignarAcsVestidoRentaComponent,
     ListadoAcsVestidoRentaComponent,
     CategoriaComponent,
+    HeatmapComponent,
 
   ],
   imports: [ MATERIALS,ReactiveFormsModule,ToastModule ,CommonModule, AdminRoutingModule, FormsModule,HttpClientModule,],

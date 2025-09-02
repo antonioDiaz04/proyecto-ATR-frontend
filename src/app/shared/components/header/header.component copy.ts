@@ -32,12 +32,6 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
   productosFiltrados: any[] = [];
   todosLosProductos!: any[];
   isLoading: boolean = false;
-  isScrolled: boolean = false; // Añadido para el efecto de scroll
-  isSticky: boolean = false; // Añadido para el efecto de scroll
-  sidebarVisible: boolean = false; // Añadido para el menú lateral
-  isLoggedIn: boolean = false; // Variable para simular el estado de inicio de sesión
-  userMenuOpen: boolean = false; // Para el menú de usuario en desktop
-  isModalVisible: boolean = false; // Para el modal de login
 
   private cartSubscription!: Subscription;
 
@@ -47,12 +41,6 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
     private messageService: MessageService,
     private sanitizer: DomSanitizer
   ) {}
-
-  @HostListener('window:scroll', ['$event'])
-  onScroll() {
-    this.isScrolled = window.scrollY > 50;
-    this.isSticky = window.scrollY > 50;
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['isMobile']) {
@@ -68,8 +56,6 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.cargarProductos();
-    // Simulación del estado de login, lo ideal es obtenerlo de un servicio de autenticación
-    this.isLoggedIn = false;
   }
 
   cargarProductos() {
@@ -100,16 +86,23 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.productosFiltrados = this.todosLosProductos.filter((p) => {
-      const searchableText = `${p.nombre || ''} ${p.color || ''} ${p.talla || ''} ${p.tipoCuello || ''} ${p.tipoCola || ''} ${p.tipoCapas || ''} ${p.tipoHombro || ''} ${p.precioActual || ''} ${p.precioAnterior || ''}`.toLowerCase();
-      return searchableText.includes(texto);
+      return (
+        (p.nombre && p.nombre.toLowerCase().includes(texto)) ||
+        (p.color && p.color.toLowerCase().includes(texto)) ||
+        (p.talla && p.talla.toLowerCase().includes(texto)) ||
+        (p.tipoCuello && p.tipoCuello.toLowerCase().includes(texto)) ||
+        (p.tipoCola && p.tipoCola.toLowerCase().includes(texto)) ||
+        (p.tipoCapas && p.tipoCapas.toLowerCase().includes(texto)) ||
+        (p.tipoHombro && p.tipoHombro.toLowerCase().includes(texto)) ||
+        (p.precioActual && p.precioActual.toString().includes(texto)) ||
+        (p.precioAnterior && p.precioAnterior.toString().includes(texto))
+      );
     });
   }
 
   resaltarCoincidencia(texto: string): SafeHtml {
     const query = this.busquedaProducto.trim();
-    if (!query || !texto) {
-      return texto;
-    }
+    if (!query) return texto;
 
     const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${escapedQuery})`, 'gi');
@@ -128,39 +121,5 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
     setTimeout(() => {
       this.mostrarDropdown = false;
     }, 200);
-  }
-
-  // Métodos adicionales del HTML
-  redirectTo(route: string) {
-    this.router.navigate([`/${route}`]);
-    this.sidebarVisible = false; // Cierra el menú en móvil
-  }
-
-  redirectToCliente(route: string) {
-    // Lógica de redirección a páginas de cliente
-    console.log(`Redireccionando a /cliente/${route}`);
-  }
-
-  logout() {
-    this.isLoggedIn = false;
-    console.log('Sesión cerrada');
-    // Lógica para cerrar sesión
-  }
-
-  showDialog() {
-    this.sidebarVisible = true;
-  }
-
-  openModal() {
-    this.isModalVisible = true;
-  }
-
-  cerrarModal(event: boolean) {
-    this.isModalVisible = event;
-  }
-
-  dressItemCount(): number {
-    // Lógica para obtener el número de items en el carrito
-    return 0;
   }
 }
