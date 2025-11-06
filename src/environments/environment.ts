@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   // api: 'https://proyecto-atr-backend.onrender.com/api/v1', //!alojado
-  api: 'https://proyecto-atr-backend-l06t.onrender.com/api/v1', //!Local
+  api: 'http://localhost:4000/api/v1', //!Local
   serviceWorker: true,
 
   publicKey:
@@ -18,3 +18,4 @@ export const environment = {
     measurementId: 'G-Z85LGNMKKZ',
   },
 };
+// https://proyecto-atr-backend-l06t.onrender.com/api/v1

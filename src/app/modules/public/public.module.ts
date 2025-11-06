@@ -115,6 +115,17 @@ import { ReseniaService } from '../../shared/services/resenia.service';
 import { NuevosLlegadasView } from './views/nuevos-llegadas/nuevos-llegadas.view';
 import { IncluyeAccesorioView } from './views/incluye-accesorio/incluye-accesorio.view';
 import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.component';
+
+
+// 🚨 Importaciones de NGRX que debes agregar
+import { StoreModule } from '@ngrx/store';
+// import { EffectsModule } from '@ngrx/effects';
+
+// 🚨 Placeholder para tu lógica NgRx (DEBES CREAR ESTOS ARCHIVOS)
+// import { productReducers } from './commons/store/products/product.reducers';
+// import { ProductEffects } from './commons/store/products/product.effects';
+// Si el archivo del componente usa selectores, agrégalos aquí.
+
 // import { IncluyeAccesorioView } from './view/incluye-accesorio/incluye-accesorio.view';
 @NgModule({
   declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent],
@@ -124,6 +135,13 @@ import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.co
     CalendarModule,TableModule,NgxImageZoomModule,GalleriaModule,CarouselModule,
     CommonModule,ReactiveFormsModule,
     PublicRoutingModule,HttpClientModule, 
+    // 🚨 REGISTRO DE NGRX STORE PARA ESTE MÓDULO (FEATURE) 🚨
+    // 'productsFeature' es el nombre de la porción del estado.
+    // StoreModule.forFeature('productsFeature', productReducers), 
+    
+    // 🚨 REGISTRO DE NGRX EFFECTS PARA ESTE MÓDULO 🚨
+    // EffectsModule.forFeature([ProductEffects]),
+    
     ...MATERIALS,
     ToastModule,
   ], schemas: [CUSTOM_ELEMENTS_SCHEMA],

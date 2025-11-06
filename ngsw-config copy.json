@@ -55,10 +55,10 @@
         "https://miapi.com/**"
       ],
       "cacheConfig": {
-        "strategy": "freshness",   // Network First
-        "maxSize": 50,             // máximo de entradas en caché
-        "maxAge": "6h",            // cuánto tiempo se consideran válidos los datos
-        "timeout": "10s"           // si la red tarda >10s, usar caché
+        "strategy": "freshness",  
+        "maxSize": 50,             
+        "maxAge": "6h",           
+        "timeout": "10s"           
       }
     }
   ]
