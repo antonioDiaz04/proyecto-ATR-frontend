@@ -34,5 +34,8 @@ title="Volver arriba"
 </button>
 
   <!-- Footer -->
+  <app-network-modal [visible]="!isOnline" (accept)="closeModal()"></app-network-modal>
   <app-footer class="w-full"></app-footer>
 </div>
+
+

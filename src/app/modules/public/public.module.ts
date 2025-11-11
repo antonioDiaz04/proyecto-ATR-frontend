@@ -116,7 +116,7 @@ import { NuevosLlegadasView } from './views/nuevos-llegadas/nuevos-llegadas.view
 import { IncluyeAccesorioView } from './views/incluye-accesorio/incluye-accesorio.view';
 import { LookAccesorioComponent } from './views/look-accesorio/look-accesorio.component';
 
-
+import { NetworkModalComponent } from '../../network-modal/network-modal.component';
 // 🚨 Importaciones de NGRX que debes agregar
 import { StoreModule } from '@ngrx/store';
 // import { EffectsModule } from '@ngrx/effects';
@@ -128,7 +128,7 @@ import { StoreModule } from '@ngrx/store';
 
 // import { IncluyeAccesorioView } from './view/incluye-accesorio/incluye-accesorio.view';
 @NgModule({
-  declarations: [VIEWS,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent],
+  declarations: [VIEWS,NetworkModalComponent,COMPONENTS, CarritoView, TagComponent, PoliticasComponent, TerminosComponent, CitasProbadorView, ResultsComponent, HeroImgComponent, FigureComponent, BreadcrumbComponent, NotFoundComponent, Error500Component, SidevarComponent, CargaComponent, ProductosComponent, ProcessRentaComponent, DataCompraComponent, InformacionUserComponent, ProcessCompraComponent, RentasComponent, AccesoriosComponent, ComentariosComponent, MisionVisionComponent, PreguntasComponent, NuevosLlegadasView, IncluyeAccesorioView, LookAccesorioComponent],
   exports:[COMPONENTS],
   imports: [HeaderModule,InputTextModule,FloatLabelModule,
     InputNumberModule,ConfirmDialogModule,MessageModule,

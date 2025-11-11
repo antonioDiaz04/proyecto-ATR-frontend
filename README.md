@@ -27,3 +27,10 @@ Listado simple y sin detalles de un proyecto desarrollado con el stack MEAN (Mon
    ng serve
    Abre tu navegador y entra a
    http://localhost:4200
+
+
+
+# ng build --configuration production
+
+
+# npx server dist/<nombre-app>

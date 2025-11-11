@@ -16,6 +16,14 @@ export class PublicComponent implements OnInit {
   sidebarVisible: boolean = false;
   isMobile: boolean = false;
 
+
+
+  isOnline = true; // Estado que actualizas según conexión
+
+  closeModal() {
+    this.isOnline = true; // o la acción que quieras hacer al aceptar
+  }
+
   constructor(private router: Router, private swPush: SwPush) {
     // Escucha los cambios de ruta
     this.router.events.subscribe((event) => {
@@ -24,6 +32,10 @@ export class PublicComponent implements OnInit {
         this.isHomePage = event.url === '/inicio';
       }
     });
+
+    window.addEventListener('online', () => this.isOnline = true);
+    window.addEventListener('offline', () => this.isOnline = false);
+
   }
 
   ngOnInit(): void {
