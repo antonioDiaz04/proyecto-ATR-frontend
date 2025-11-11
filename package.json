@@ -55,7 +55,7 @@
     "jquery-zoom": "^1.7.21",
     "libphonenumber-js": "^1.11.16",
     "my-pwa": "file:",
-    "ng-apexcharts": "^1.7.4",
+    "ng-apexcharts": "^1.11.0",
     "ngx-cookie-service": "^18.0.0",
     "ngx-image-zoom": "^3.0.0",
     "ngx-toastr": "^19.0.0",
