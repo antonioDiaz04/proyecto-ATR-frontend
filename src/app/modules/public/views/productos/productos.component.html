@@ -1,6 +1,6 @@
 <!-- Versión Desktop - Carrusel de Lujo -->
 <div class="w-full px-6 mb-2" *ngIf="!isLoading && !isMobile">
-  <div class="pt-2 pb-2 px-10 items-center text-center justify-center ">
+  <div class="pt-2 pb-2 px-10 items-center text-center justify-center">
     <span class="block italic font-light text-[#9c8e7a] text-xl">Haute Couture</span>
     <div class="relative flex items-center justify-center">
       <div class="flex-grow border-t border-[#9c8e7a]"></div>
@@ -10,6 +10,7 @@
       <div class="flex-grow border-t border-[#9c8e7a]"></div>
     </div>
   </div>
+  
   <p-carousel [value]="productos" [numVisible]="4" [numScroll]="1" [circular]="true"
     [responsiveOptions]="responsiveOptions" styleClass="luxury-carousel">
     <ng-template let-producto pTemplate="item">
@@ -36,12 +37,13 @@
             </div>
           </div>
 
-          <!-- Descuento - Estilo refinado -->
+          <!-- Descuento -->
           <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
             class="absolute top-3 right-3 bg-[#d4c4a8] text-[#2a2723] text-xs px-3 py-1 tracking-wider">
             -{{ calcularDescuento(producto.precioAnterior, producto.precioActual) }}%
           </div>
-          <!-- Versión con gris oscuro -->
+          
+          <!-- Botones hover -->
           <div
             class="absolute bottom-0 left-0 right-0 flex justify-center space-x-4 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button
@@ -61,14 +63,13 @@
             <h3 class="font-serif text-lg text-[#2a2723] mb-2 tracking-tight">
               {{ producto.nombre }}
             </h3>
-
             <p class="text-xs text-[#9c8e7a] mb-3 font-light">
               Talla: {{ producto.talla }} | Color: {{ producto.color }}
             </p>
           </div>
 
           <div>
-            <!-- Precios - Diseño elegante -->
+            <!-- Precios -->
             <div class="flex items-baseline gap-2">
               <span class="text-lg text-[#2a2723] font-medium">
                 MX$ {{ producto.precioActual | currency }}
@@ -78,7 +79,7 @@
               </span>
             </div>
 
-            <!-- Ahorro - Texto discreto -->
+            <!-- Ahorro -->
             <div *ngIf="producto.mostrarPrecioAnterior && producto.precioAnterior > producto.precioActual"
               class="mt-1 text-[#6e6a63] text-xs">
               Ahorras MX$ {{ producto.precioAnterior - producto.precioActual | currency }}
@@ -126,14 +127,27 @@
     </div>
   </div>
 </div>
-<!-- Skeleton Loading - Estilo minimalista -->
-<div *ngIf="isLoading" class="flex justify-center mb-6 gap-6">
-  <div *ngFor="let item of skeletonItems" class="bg-white w-80 h-[480px] border border-[#e8e3db]">
+
+<!-- ✅ SKELETON DESKTOP - Carrusel horizontal -->
+<div *ngIf="isLoading && !isMobile" class="flex justify-center mb-6 gap-6 overflow-x-auto">
+  <div *ngFor="let item of skeletonItems" class="bg-white w-80 h-[480px] border border-[#e8e3db] flex-shrink-0">
     <p-skeleton width="100%" height="320px" borderRadius="0"></p-skeleton>
     <div class="p-4">
       <p-skeleton width="80%" height="20px" class="mb-3"></p-skeleton>
       <p-skeleton width="60%" height="16px" class="mb-4"></p-skeleton>
       <p-skeleton width="40%" height="20px"></p-skeleton>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ SKELETON MOBILE - Grid de 2 columnas -->
+<div *ngIf="isLoading && isMobile" class="grid grid-cols-2 gap-4 px-4">
+  <div *ngFor="let item of skeletonItems" class="bg-white border border-[#e8e3db]">
+    <p-skeleton width="100%" height="160px" borderRadius="0"></p-skeleton>
+    <div class="p-3">
+      <p-skeleton width="90%" height="16px" class="mb-2"></p-skeleton>
+      <p-skeleton width="60%" height="14px" class="mb-3"></p-skeleton>
+      <p-skeleton width="70%" height="16px"></p-skeleton>
     </div>
   </div>
 </div>

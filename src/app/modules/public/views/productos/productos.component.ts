@@ -1,194 +1,184 @@
-import {
-  Component,
-  HostListener,
-  Inject,
-  OnInit, ViewChild,
-  PLATFORM_ID, ElementRef
-} from "@angular/core";
+import { Component, HostListener, Inject, OnInit, OnDestroy, ViewChild, ElementRef, PLATFORM_ID } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { Router } from "@angular/router";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { SessionService } from "../../../../shared/services/session.service";
-import { ERol } from "../../../../shared/constants/rol.enum";
-import { DatosEmpresaService } from "../../../../shared/services/datos-empresa.service";
 import { ProductoService } from "../../../../shared/services/producto.service";
 import { IndexedDbService } from "../../commons/services/indexed-db.service";
 import { NgxUiLoaderService } from "ngx-ui-loader";
+import { Producto } from '../../../../shared/models/Producto.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: "app-productos",
   templateUrl: "./productos.component.html",
-  // styleUrls: ["./productos.component.scss"],
 })
-export class ProductosComponent implements OnInit {
+export class ProductosComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  
+  // ✅ ESTADOS UI
   isMobile: boolean = false;
   visible: boolean = false;
   userROL!: string;
   position: any = "bottom-left";
-  productosPaginados: any = [];
-  numVisibleProducts: number = 5; // Valor por defecto
-  rows = 7; // Número de elementos por página
-  skeletonItems: any[] = Array(5).fill({}); // Array de 6 elementos para el skeleton
-  productos: any = []; // Inicializamos como array vacío
+  isLoading: boolean = true;
+  isOnline: boolean = false;
+  error: string | null = null;
+
+  // ✅ DATOS
+  productos: Producto[] = [];
+  productosPaginados: Producto[] = [];
+  numVisibleProducts: number = 5;
+  rows = 7;
+  skeletonItems: any[] = Array(5).fill({});
+
+  // Carousel
+  autoplay = 2000;
+  defaultAutoplay = 2000;
   responsiveOptions = [
-    {
-      breakpoint: '1400px',
-      numVisible: 4,
-      numScroll: 1
-    },
-    {
-      breakpoint: '1024px',
-      numVisible: 3,
-      numScroll: 1
-    },
-    {
-      breakpoint: '768px',
-      numVisible: 2,
-      numScroll: 1
-    },
-    {
-      breakpoint: '560px',
-      numVisible: 1,
-      numScroll: 1
-    }
+    { breakpoint: '1400px', numVisible: 4, numScroll: 1 },
+    { breakpoint: '1024px', numVisible: 3, numScroll: 1 },
+    { breakpoint: '768px', numVisible: 2, numScroll: 1 },
+    { breakpoint: '560px', numVisible: 1, numScroll: 1 }
   ];
 
-  autoplay = 2000; // Intervalo en milisegundos
-  defaultAutoplay = 2000; // Guarda el valor original
-
-  pauseCarousel() {
-    this.autoplay = 0; // Detener autoplay
-  }
-
-  resumeCarousel() {
-    this.autoplay = this.defaultAutoplay; // Restaurar autoplay
-  }
-
-  // Inicializamos isLoading en true para mostrar el skeleton
-  isLoading: boolean = true;
+  @ViewChild('carousel', { static: false }) carousel!: ElementRef;
 
   constructor(
     private indexedDbService: IndexedDbService,
     private router: Router,
     private ngxService: NgxUiLoaderService,
     private sessionService: SessionService,
-    private datosEmpresaService: DatosEmpresaService,
-    private PRODUCTOSERVICE_: ProductoService,
+    private productoService: ProductoService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
-  private detectDevice() {
-    if (typeof window !== "undefined") {
-      const ua = navigator.userAgent;
-      console.log(ua);
-      this.isMobile = window.innerWidth <= 600;
+  ngOnInit() {
+    this.detectDevice();
+    this.checkOnlineStatus();
+    this.setupOnlineOfflineListeners();
+    this.loadProducts();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // ✅ LÓGICA OFFLINE-FIRST: NO llamar API si estás offline
+  private async loadProducts() {
+    this.isLoading = true;
+    this.ngxService.start();
+    this.error = null;
+
+    // ✅ DECISIÓN INMEDIATA: Online u Offline
+    if (this.isOnline) {
+      // 1️⃣ ONLINE: Intentar API
+      try {
+        const productos = await this.productoService.obtenerProductos().pipe(
+          takeUntil(this.destroy$)
+        ).toPromise();
+        
+        const productosValidos = productos || [];
+        
+        if (productosValidos.length > 0) {
+          // ✅ Guardar en cache para próxima vez
+          await this.indexedDbService.guardarProductosOffline(productosValidos);
+          console.log('✅ ONLINE: Productos de API y cacheados');
+        }
+        
+        this.productos = productosValidos;
+      } catch (error) {
+        console.error('❌ Error en API, usando cache:', error);
+        await this.loadFromIndexedDB();
+      }
+    } else {
+      // 2️⃣ OFFLINE: NO llamar API, leer directamente de cache
+      console.log('❌ OFFLINE: Leyendo directamente de IndexedDB');
+      await this.loadFromIndexedDB();
+    }
+
+    // ✅ Actualizar UI
+    this.numVisibleProducts = Math.min(5, this.productos.length);
+    this.cambiarPagina({ first: 0, rows: this.rows });
+    this.isLoading = false;
+    this.ngxService.stop();
+  }
+
+  // ✅ CARGA DESDE INDEXEDDB
+  private async loadFromIndexedDB() {
+    try {
+      const productosOffline = await this.indexedDbService.obtenerProductosOffline();
+      
+      if (productosOffline.length > 0) {
+        this.productos = productosOffline;
+        console.log('✅ CACHE: Productos obtenidos de IndexedDB');
+      } else {
+        this.error = 'No hay conexión y no hay datos guardados offline';
+        this.productos = [];
+      }
+    } catch (error) {
+      console.error('❌ ERROR CACHE:', error);
+      this.error = 'Error al cargar datos offline';
+      this.productos = [];
     }
   }
-  calcularDescuento(precioAnterior: number, precioActual: number): number {
-    return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
+
+  // ✅ DETECTAR CONEXIÓN
+  private checkOnlineStatus() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isOnline = navigator.onLine;
+    }
   }
 
+  private setupOnlineOfflineListeners() {
+    if (!isPlatformBrowser(this.platformId)) return;
 
+    window.addEventListener('online', () => {
+      this.isOnline = true;
+      console.log('🌐 Conexión restaurada - Recargando desde API');
+      this.loadProducts(); // Recargar todo
+    });
 
+    window.addEventListener('offline', () => {
+      this.isOnline = false;
+      console.log('❌ Conexión perdida - Modo offline activado');
+    });
+  }
+
+  detectDevice() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isMobile = window.innerWidth <= 768;
+    }
+  }
 
   @HostListener("window:resize", ["$event"])
   onResize() {
     this.detectDevice();
   }
 
-  // Antes de recargar o cerrar la página, vaciamos productos y mostramos el skeleton
   @HostListener("window:beforeunload", ["$event"])
   onBeforeUnload(event: Event) {
-    this.ngxService.start(); // Inicia el loader
-    console.log("⏳ La página se está recargando...");
+    this.ngxService.start();
     this.isLoading = true;
-    this.productos = []; // Vaciar los productos en la carga
-  }
-
-  // HostListener para window:load (se dispara al cargar la página)
-  @HostListener("window:load", ["$event"])
-  onWindowLoad(event: Event) {
-    this.ngxService.stop(); // Detiene el loader
-    console.log("✅ La página se ha cargado completamente.");
-    // Cargar los productos después de que la página se haya cargado
-    this.cargarProductos();
-  }
-
-  ngOnInit() {
-    // Al iniciar la carga, vaciamos el array de productos
     this.productos = [];
-    this.isLoading = true;
-
-    this.detectDevice();
-
-    // Cargar los productos solo si la página no se está recargando
-    if (!this.isPageReloading()) {
-      this.cargarProductos();
-    } else {
-      // console.log("⏳ La página se está recargando, no se cargarán los productos.");
-      this.isLoading = false;
-      this.cargarProductos();
-      this.ngxService.start(); // Inicia el loader
-
-    }
-
-    this.detectDevice();
   }
 
-  cargarProductos() {
-    this.isLoading = true; // Mostrar el skeleton al cargar
-    this.PRODUCTOSERVICE_.obtenerProductos().subscribe(
-      (response) => {
-        this.ngxService.stop(); // Inicia el loader
-
-        // console.log("📦 Productos recibidos:");
-        this.productos = response;
-        this.numVisibleProducts = Math.min(5, this.productos.length);
-        this.isLoading = false; // Ocultar el skeleton
-      },
-      (error) => {
-        console.error("❌ Error al cargar los productos:");
-        this.isLoading = false; // Ocultar el skeleton en caso de error
-      }
-    );
+  calcularDescuento(precioAnterior: number, precioActual: number): number {
+    if (!precioAnterior || precioAnterior <= 0) return 0;
+    return Math.round(((precioAnterior - precioActual) / precioAnterior) * 100);
   }
 
-  isPageReloading(): boolean {
-
-    return performance.navigation.type === performance.navigation.TYPE_RELOAD;
-  }
-
-  // isPageReloading(): boolean {
-  //   if (typeof window === "undefined" || typeof performance === "undefined") {
-  //     console.warn("No se está ejecutando en un navegador");
-  //     return false;
-  //   }
-
-  //   if (typeof performance.getEntriesByType === "function") {
-  //     const navigationEntries = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-  //     if (navigationEntries.length > 0 && "type" in navigationEntries[0]) {
-  //       return navigationEntries[0].type === "reload";
-  //     }
-  //   }
-
-  //   return (window.performance as any)?.navigation?.type === 1;
-  // }
-
-  // isPageReloading(): boolean {
-  //   const navEntries = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-  //   return navEntries.length > 0 && navEntries[0].type === "reload";
-  // }
-
-  verDetalles(id: number) {
-    this.ngxService.start(); // Inicia el loader
+  verDetalles(id: any) {
+    this.ngxService.start();
     this.router.navigate(["/Detail/" + id]);
   }
 
   redirectTo(route: string): void {
-    console.log(route);
     if (route === "Sign-in") {
       this.router.navigate(["/auth/Sign-in"]);
     } else {
-      console.log("click", route);
       this.router.navigate(["/", route]);
     }
   }
@@ -199,37 +189,43 @@ export class ProductosComponent implements OnInit {
     this.productosPaginados = this.productos.slice(start, end);
   }
 
-  apartarRentar(producto: any) {
-    console.log("Producto seleccionado:", producto);
-    const body2 = {
+  apartarRentar(producto: Producto) {
+    const productoParaGuardar = {
       id: producto._id,
       nombre: producto.nombre,
-      precio: producto.precio,
-      imagenPrincipal: producto.imagenPrincipal,
+      precio: producto.precioActual,
+      imagenPrincipal: producto.imagenes[0],
+      fechaGuardado: new Date().toISOString()
     };
 
-    try {
-      this.indexedDbService.guardarProducto(body2);
-    } catch (error) {
-      console.error("Error al guardar el producto:", error);
+    this.indexedDbService.guardarProducto(productoParaGuardar).then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Producto apartado',
+        text: `${producto.nombre} ha sido guardado`,
+        toast: true,
+        position: 'top-end',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }).catch(error => {
+      console.error("Error al guardar:", error);
+    });
+  }
+
+  scrollLeft() {
+    if (this.carousel?.nativeElement) {
+      this.carousel.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
     }
   }
 
-  @ViewChild('carousel', { static: false }) carousel!: ElementRef;
-
-  scrollLeft() {
-    this.carousel.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
-  }
-
   scrollRight() {
-    this.carousel.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
+    if (this.carousel?.nativeElement) {
+      this.carousel.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
+    }
   }
 
-
-
-
-  // Función para cambiar la imagen al hacer hover
-   cambiarImagen(producto: any, event: MouseEvent) {
+  cambiarImagen(producto: any, event: MouseEvent) {
     const imgElement = event.target as HTMLImageElement;
     if (!producto._hoverIndex) {
       producto._hoverIndex = 0;
@@ -240,10 +236,8 @@ export class ProductosComponent implements OnInit {
     }
   }
 
-  // Función para restaurar la imagen al salir del hover
   restaurarImagen(producto: any, event: MouseEvent) {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = producto.imagenPrincipal || producto.imagenes[0]; // Restaurar la primera imagen
+    imgElement.src = producto.imagenPrincipal || producto.imagenes[0];
   }
-
 }
