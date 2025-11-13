@@ -1,7 +1,7 @@
 {
   "name": "Atelier",
   "short_name": "Atelier",
-  "theme_color": "#374151",
+  "theme_color": "#EDE3DB",
   "background_color": "#EDE3DB",
   "display": "standalone",
   "scope": "./",
