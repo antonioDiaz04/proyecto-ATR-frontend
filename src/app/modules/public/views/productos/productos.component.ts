@@ -17,13 +17,13 @@ import Swal from 'sweetalert2';
 export class ProductosComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   
-  // ✅ ESTADOS UI
+  // ✅ ESTADOS
   isMobile: boolean = false;
   visible: boolean = false;
   userROL!: string;
   position: any = "bottom-left";
   isLoading: boolean = true;
-  isOnline: boolean = false;
+  isOnline: boolean = true;
   error: string | null = null;
 
   // ✅ DATOS
@@ -54,11 +54,11 @@ export class ProductosComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.detectDevice();
     this.checkOnlineStatus();
     this.setupOnlineOfflineListeners();
-    this.loadProducts();
+    await this.loadProducts();
   }
 
   ngOnDestroy() {
@@ -66,87 +66,146 @@ export class ProductosComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ✅ LÓGICA OFFLINE-FIRST: NO llamar API si estás offline
+  // ✅ LÓGICA PRINCIPAL MEJORADA
   private async loadProducts() {
     this.isLoading = true;
     this.ngxService.start();
     this.error = null;
 
-    // ✅ DECISIÓN INMEDIATA: Online u Offline
-    if (this.isOnline) {
-      // 1️⃣ ONLINE: Intentar API
-      try {
-        const productos = await this.productoService.obtenerProductos().pipe(
-          takeUntil(this.destroy$)
-        ).toPromise();
-        
-        const productosValidos = productos || [];
-        
-        if (productosValidos.length > 0) {
-          // ✅ Guardar en cache para próxima vez
-          await this.indexedDbService.guardarProductosOffline(productosValidos);
-          console.log('✅ ONLINE: Productos de API y cacheados');
-        }
-        
-        this.productos = productosValidos;
-      } catch (error) {
-        console.error('❌ Error en API, usando cache:', error);
-        await this.loadFromIndexedDB();
+    try {
+      if (this.isOnline) {
+        await this.loadFromAPI();
+      } else {
+        await this.loadFromCache();
       }
-    } else {
-      // 2️⃣ OFFLINE: NO llamar API, leer directamente de cache
-      console.log('❌ OFFLINE: Leyendo directamente de IndexedDB');
-      await this.loadFromIndexedDB();
+    } catch (error) {
+      console.error('❌ Error crítico cargando productos:', error);
+      this.error = 'Error al cargar los productos';
+      this.productos = [];
+    } finally {
+      this.updateUI();
+      this.isLoading = false;
+      this.ngxService.stop();
     }
-
-    // ✅ Actualizar UI
-    this.numVisibleProducts = Math.min(5, this.productos.length);
-    this.cambiarPagina({ first: 0, rows: this.rows });
-    this.isLoading = false;
-    this.ngxService.stop();
   }
 
-  // ✅ CARGA DESDE INDEXEDDB
-  private async loadFromIndexedDB() {
+  // ✅ CARGA DESDE API (Online)
+  private async loadFromAPI() {
+    console.log('🌐 ONLINE: Intentando cargar desde API...');
+    
+    try {
+      const productos = await this.productoService.obtenerProductos()
+        .pipe(takeUntil(this.destroy$))
+        .toPromise();
+
+      const productosValidos = productos || [];
+      
+      if (productosValidos.length > 0) {
+        // Guardar en cache para próxima vez (pero no esperar)
+        this.indexedDbService.guardarProductosOffline(productosValidos)
+          .then(() => console.log('✅ Productos guardados en cache'))
+          .catch(err => console.error('❌ Error guardando en cache:', err));
+        
+        this.productos = productosValidos;
+        console.log(`✅ API: ${productosValidos.length} productos cargados`);
+      } else {
+        throw new Error('API devolvió array vacío');
+      }
+      
+    } catch (error) {
+      console.warn('❌ Error en API, intentando cache...', error);
+      await this.loadFromCache();
+    }
+  }
+
+  // ✅ CARGA DESDE CACHE (Offline/Fallback)
+  private async loadFromCache() {
+    console.log('📂 OFFLINE: Cargando desde cache...');
+    
     try {
       const productosOffline = await this.indexedDbService.obtenerProductosOffline();
       
       if (productosOffline.length > 0) {
         this.productos = productosOffline;
-        console.log('✅ CACHE: Productos obtenidos de IndexedDB');
+        console.log(`✅ CACHE: ${productosOffline.length} productos recuperados`);
+        
+        // Mostrar advertencia de modo offline
+        if (!this.isOnline) {
+          Swal.fire({
+            icon: 'info',
+            title: 'Modo Offline',
+            text: 'Mostrando datos guardados. Algunas funciones pueden estar limitadas.',
+            toast: true,
+            position: 'top-end',
+            timer: 3000,
+            showConfirmButton: false
+          });
+        }
       } else {
-        this.error = 'No hay conexión y no hay datos guardados offline';
+        this.error = this.isOnline 
+          ? 'No se pudieron cargar los productos' 
+          : 'No hay conexión y no hay datos guardados';
         this.productos = [];
       }
-    } catch (error) {
-      console.error('❌ ERROR CACHE:', error);
-      this.error = 'Error al cargar datos offline';
+    } catch (cacheError) {
+      console.error('❌ Error cargando desde cache:', cacheError);
+      this.error = 'Error al cargar los datos locales';
       this.productos = [];
     }
   }
 
-  // ✅ DETECTAR CONEXIÓN
+  // ✅ ACTUALIZAR UI
+  private updateUI() {
+    this.numVisibleProducts = Math.min(5, this.productos.length);
+    this.cambiarPagina({ first: 0, rows: this.rows });
+  }
+
+  // ✅ DETECCIÓN DE CONEXIÓN MEJORADA
   private checkOnlineStatus() {
     if (isPlatformBrowser(this.platformId)) {
       this.isOnline = navigator.onLine;
+      console.log(`🔌 Estado conexión: ${this.isOnline ? 'ONLINE' : 'OFFLINE'}`);
     }
   }
 
   private setupOnlineOfflineListeners() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    window.addEventListener('online', () => {
+    window.addEventListener('online', async () => {
+      console.log('🌐 Conexión restaurada - Sincronizando...');
       this.isOnline = true;
-      console.log('🌐 Conexión restaurada - Recargando desde API');
-      this.loadProducts(); // Recargar todo
+      
+      // Recargar datos frescos
+      await this.loadProducts();
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Conexión restaurada',
+        text: 'Datos actualizados',
+        toast: true,
+        position: 'top-end',
+        timer: 2000,
+        showConfirmButton: false
+      });
     });
 
     window.addEventListener('offline', () => {
+      console.log('❌ Conexión perdida - Modo offline');
       this.isOnline = false;
-      console.log('❌ Conexión perdida - Modo offline activado');
+      
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin conexión',
+        text: 'Modo offline activado',
+        toast: true,
+        position: 'top-end',
+        timer: 2000,
+        showConfirmButton: false
+      });
     });
   }
 
+  // ✅ MÉTODOS EXISTENTES (sin cambios)
   detectDevice() {
     if (isPlatformBrowser(this.platformId)) {
       this.isMobile = window.innerWidth <= 768;
@@ -162,7 +221,6 @@ export class ProductosComponent implements OnInit, OnDestroy {
   onBeforeUnload(event: Event) {
     this.ngxService.start();
     this.isLoading = true;
-    this.productos = [];
   }
 
   calcularDescuento(precioAnterior: number, precioActual: number): number {
@@ -210,6 +268,15 @@ export class ProductosComponent implements OnInit, OnDestroy {
       });
     }).catch(error => {
       console.error("Error al guardar:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo guardar el producto',
+        toast: true,
+        position: 'top-end',
+        timer: 2000,
+        showConfirmButton: false
+      });
     });
   }
 
@@ -239,5 +306,21 @@ export class ProductosComponent implements OnInit, OnDestroy {
   restaurarImagen(producto: any, event: MouseEvent) {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = producto.imagenPrincipal || producto.imagenes[0];
+  }
+
+  // ✅ NUEVO: Forzar recarga desde API
+  async recargarProductos() {
+    this.isOnline = true;
+    await this.loadFromAPI();
+  }
+
+  // ✅ NUEVO: Limpiar cache
+  async limpiarCache() {
+    try {
+      await this.indexedDbService.limpiarProductosOffline();
+      Swal.fire('✅', 'Cache limpiado correctamente', 'success');
+    } catch (error) {
+      Swal.fire('❌', 'Error limpiando cache', 'error');
+    }
   }
 }

@@ -8,12 +8,12 @@ export class IndexedDbService {
   private db: IDBDatabase | null = null;
   private productosSubject = new BehaviorSubject<any[]>([]);
   productos$ = this.productosSubject.asObservable();
+  private readonly DB_NAME = 'Atelierdb';
+  private readonly DB_VERSION = 3; // Incrementada para forzar actualización
   private indexedDBSupported: boolean;
 
   constructor() {
-    // Verificar si IndexedDB está soportado en el navegador
     this.indexedDBSupported = this.checkIndexedDBSupport();
-
     if (this.indexedDBSupported) {
       this.initializeDB();
     } else {
@@ -21,244 +21,241 @@ export class IndexedDbService {
     }
   }
 
-  // Método para verificar soporte de IndexedDB
   private checkIndexedDBSupport(): boolean {
     try {
-      if (!('indexedDB' in window)) {
-        console.warn('IndexedDB no está disponible en window');
-        return false;
-      }
-      return true;
+      return !!window.indexedDB;
     } catch (e) {
-      console.error('Error al verificar IndexedDB:');
+      console.error('Error al verificar IndexedDB:', e);
       return false;
     }
   }
 
-  // Inicializar la base de datos
-  // private async initializeDB() {
-  //   if (!this.indexedDBSupported) {
-  //     console.warn('No se puede inicializar IndexedDB: no soportado');
-  //     return;
-  //   }
-
-  //   try {
-  //     const request = indexedDB.open('Atelierdb', 1);
-
-  //     request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-  //       const db = (event.target as IDBOpenDBRequest).result;
-  //       if (!db.objectStoreNames.contains('apartados')) {
-  //         db.createObjectStore('apartados', { keyPath: 'id' });
-  //       }
-  //       if (!db.objectStoreNames.contains('suscripciones')) {
-  //         db.createObjectStore('suscripciones', { keyPath: 'key' });
-  //       }
-  //     };
-
-  //     request.onsuccess = (event: Event) => {
-  //       this.db = (event.target as IDBOpenDBRequest).result;
-  //       console.log('Conexión a IndexedDB establecida correctamente');
-  //       this.actualizarProductos();
-  //     };
-
-  //     request.onerror = () => {
-  //       console.error("Error al abrir la base de datos:");
-  //     };
-  //   } catch (error) {
-  //     console.error('Error al inicializar IndexedDB:');
-  //   }
-  // }
-   private initializeDB() {
-    // Usa versión 2 para forzar onupgradeneeded si ya existe la DB
-    const request = indexedDB.open('Atelierdb', 2);
-
-    request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      
-      // ✅ CREAR Object Store para productos offline
-      if (!db.objectStoreNames.contains('productosOffline')) {
-        db.createObjectStore('productosOffline', { keyPath: '_id' });
-      }
-      
-      // Object store para productos apartados
-      if (!db.objectStoreNames.contains('apartados')) {
-        db.createObjectStore('apartados', { keyPath: 'id' });
-      }
-      
-      // Object store para suscripciones
-      if (!db.objectStoreNames.contains('suscripciones')) {
-        db.createObjectStore('suscripciones', { keyPath: 'key' });
-      }
-    };
-
-    request.onsuccess = (event: Event) => {
-      this.db = (event.target as IDBOpenDBRequest).result;
-      console.log('✅ IndexedDB inicializada');
-    };
-
-    request.onerror = () => {
-      console.error('❌ Error al abrir IndexedDB');
-    };
-  }
-
-
- 
-  // ✅ Guardar TODOS los productos para offline
-  async guardarProductosOffline(productos: any[]): Promise<void> {
-    if (!this.db) {
-      console.warn('IndexedDB no inicializada');
-      return;
-    }
-
-    const transaction = this.db.transaction('productosOffline', 'readwrite');
-    const store = transaction.objectStore('productosOffline');
-    
-    await store.clear(); // Limpiar datos antiguos
-    
-    for (const producto of productos) {
-      store.put(producto);
-    }
-    
-    console.log(`✅ ${productos.length} productos cacheados`);
-  }
- // ✅ Obtener productos para mostrar (offline)
-  async obtenerProductosOffline(): Promise<any[]> {
-    if (!this.db) {
-      console.warn('IndexedDB no inicializada');
-      return [];
-    }
-
-    const transaction = this.db.transaction('productosOffline', 'readonly');
-    const store = transaction.objectStore('productosOffline');
-    
+  private initializeDB(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = store.getAll();
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
+      const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
+
+      request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        
+        // ✅ Crear Object Stores si no existen
+        if (!db.objectStoreNames.contains('productosOffline')) {
+          const store = db.createObjectStore('productosOffline', { keyPath: '_id' });
+          store.createIndex('categoria', 'categoria', { unique: false });
+        }
+        
+        if (!db.objectStoreNames.contains('apartados')) {
+          db.createObjectStore('apartados', { keyPath: 'id' });
+        }
+        
+        if (!db.objectStoreNames.contains('suscripciones')) {
+          db.createObjectStore('suscripciones', { keyPath: 'key' });
+        }
+        
+        console.log('✅ Object Stores creados/actualizados');
+      };
+
+      request.onsuccess = (event: Event) => {
+        this.db = (event.target as IDBOpenDBRequest).result;
+        console.log('✅ Conexión a IndexedDB establecida correctamente');
+        resolve();
+      };
+
+      request.onerror = (event: Event) => {
+        console.error('❌ Error al abrir IndexedDB:', (event.target as IDBOpenDBRequest).error);
+        reject((event.target as IDBOpenDBRequest).error);
+      };
     });
   }
 
-
-
-  
-  // Método para verificar si la base de datos está lista
+  // ✅ Esperar a que la BD esté lista
   private async ensureDBReady(): Promise<boolean> {
     if (!this.indexedDBSupported) return false;
 
     if (!this.db) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      return this.db !== null;
+      try {
+        await this.initializeDB();
+      } catch (error) {
+        console.error('Error al inicializar DB:', error);
+        return false;
+      }
     }
     return true;
   }
 
-  // Actualizar la lista de productos
-  private async actualizarProductos() {
-    try {
-      const productos = await this.obtenerProductosApartados();
-      this.productosSubject.next(productos);
-    } catch (error) {
-      console.error('Error al actualizar productos:');
-    }
-  }
-
-  // Guardar un producto
-  async guardarProducto(producto: any) {
-    if (!this.indexedDBSupported) {
-      console.warn('No se puede guardar: IndexedDB no soportado');
-      return;
-    }
-
-    if (!await this.ensureDBReady()) {
-      console.error('No se pudo inicializar la base de datos');
-      return;
-    }
-
-    try {
-      const transaction = this.db!.transaction('apartados', 'readwrite');
-      const store = transaction.objectStore('apartados');
-      store.put(producto);
-      await this.actualizarProductos();
-    } catch (error) {
-      console.error('Error al guardar producto:');
-    }
-  }
-
-  // Eliminar un producto
-  async eliminarProducto(id: string) {
-    if (!this.indexedDBSupported) return;
-
-    if (!await this.ensureDBReady()) {
-      console.error('No se pudo inicializar la base de datos');
-      return;
-    }
-
-    try {
-      const transaction = this.db!.transaction('apartados', 'readwrite');
-      const store = transaction.objectStore('apartados');
-      store.delete(id);
-      await this.actualizarProductos();
-    } catch (error) {
-      console.error('Error al eliminar producto');
-    }
-  }
-
-  // Obtener todos los productos
-  async obtenerProductosApartados(): Promise<any[]> {
-    if (!this.indexedDBSupported) {
-      console.warn('IndexedDB no soportado, retornando array vacío');
-      return [];
-    }
-
-    if (!await this.ensureDBReady()) {
-      console.error('No se pudo inicializar la base de datos');
-      return [];
+  // ✅ GUARDAR PRODUCTOS PARA OFFLINE (MEJORADO)
+  async guardarProductosOffline(productos: any[]): Promise<void> {
+    if (!(await this.ensureDBReady())) {
+      throw new Error('IndexedDB no disponible');
     }
 
     return new Promise((resolve, reject) => {
       try {
-        const transaction = this.db!.transaction('apartados', 'readonly');
-        const store = transaction.objectStore('apartados');
-        const request = store.getAll();
-
-        request.onsuccess = () => {
-          console.log('Productos obtenidos de IndexedDB:', request.result);
-          resolve(request.result);
+        const transaction = this.db!.transaction(['productosOffline'], 'readwrite');
+        const store = transaction.objectStore('productosOffline');
+        
+        // Limpiar store existente primero
+        const clearRequest = store.clear();
+        
+        clearRequest.onsuccess = () => {
+          console.log(`🔄 Guardando ${productos.length} productos en cache...`);
+          
+          let completed = 0;
+          let errors = 0;
+          
+          if (productos.length === 0) {
+            resolve();
+            return;
+          }
+          
+          productos.forEach(producto => {
+            // Asegurar que el producto tenga _id
+            if (!producto._id) {
+              producto._id = `temp_${Date.now()}_${Math.random()}`;
+            }
+            
+            const request = store.put(producto);
+            
+            request.onsuccess = () => {
+              completed++;
+              if (completed + errors === productos.length) {
+                console.log(`✅ ${completed} productos guardados en cache`);
+                resolve();
+              }
+            };
+            
+            request.onerror = () => {
+              errors++;
+              console.error('Error guardando producto:', producto._id);
+              if (completed + errors === productos.length) {
+                if (errors > 0) {
+                  reject(new Error(`${errors} productos no se pudieron guardar`));
+                } else {
+                  resolve();
+                }
+              }
+            };
+          });
         };
-
-        request.onerror = () => {
-          console.error('Error al obtener productos');
-          reject(request.error);
+        
+        clearRequest.onerror = () => {
+          reject(clearRequest.error);
         };
+        
       } catch (error) {
-        console.error('Error en la transacción');
         reject(error);
       }
     });
   }
 
-
-
-  // indexed-db.service.ts
-  async guardarSuscripcion(subscription: PushSubscription): Promise<void> {
-    if (!this.indexedDBSupported) {
-      console.warn('IndexedDB no soportado');
-      return;
+  // ✅ OBTENER PRODUCTOS OFFLINE (MEJORADO)
+  async obtenerProductosOffline(): Promise<any[]> {
+    if (!(await this.ensureDBReady())) {
+      console.warn('IndexedDB no disponible');
+      return [];
     }
-    if (!await this.ensureDBReady()) {
-      console.error('No se pudo inicializar la base de datos');
-      return;
-    }
-    const subJSON = subscription.toJSON();
-    // Add a key property for the object store with keyPath 'key'
-    (subJSON as any).key = 'actual';
-    const transaction = this.db!.transaction('suscripciones', 'readwrite');
-    const store = transaction.objectStore('suscripciones');
-    await new Promise<void>((resolve, reject) => {
-      const request = store.put(subJSON);
+
+    return new Promise((resolve, reject) => {
+      try {
+        const transaction = this.db!.transaction(['productosOffline'], 'readonly');
+        const store = transaction.objectStore('productosOffline');
+        const request = store.getAll();
+        
+        request.onsuccess = () => {
+          console.log(`📥 Recuperados ${request.result.length} productos desde cache`);
+          resolve(request.result);
+        };
+        
+        request.onerror = () => {
+          console.error('Error obteniendo productos offline:', request.error);
+          reject(request.error);
+        };
+        
+      } catch (error) {
+        console.error('Error en transacción:', error);
+        reject(error);
+      }
+    });
+  }
+
+  // ✅ MÉTODOS PARA APARTADOS (existente)
+  async guardarProducto(producto: any): Promise<void> {
+    if (!(await this.ensureDBReady())) return;
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction(['apartados'], 'readwrite');
+      const store = transaction.objectStore('apartados');
+      const request = store.put(producto);
+      
       request.onsuccess = () => resolve();
       request.onerror = () => reject(request.error);
     });
   }
 
+  async eliminarProducto(id: string): Promise<void> {
+    if (!(await this.ensureDBReady())) return;
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction(['apartados'], 'readwrite');
+      const store = transaction.objectStore('apartados');
+      const request = store.delete(id);
+      
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async obtenerProductosApartados(): Promise<any[]> {
+    if (!(await this.ensureDBReady())) return [];
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction(['apartados'], 'readonly');
+      const store = transaction.objectStore('apartados');
+      const request = store.getAll();
+      
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // ✅ MÉTODOS PARA SUSCRIPCIONES (existente)
+  async guardarSuscripcion(subscription: PushSubscription): Promise<void> {
+    if (!(await this.ensureDBReady())) return;
+
+    const subJSON = subscription.toJSON();
+    (subJSON as any).key = 'actual';
+    
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction(['suscripciones'], 'readwrite');
+      const store = transaction.objectStore('suscripciones');
+      const request = store.put(subJSON);
+      
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // ✅ NUEVO: Limpiar cache de productos
+  async limpiarProductosOffline(): Promise<void> {
+    if (!(await this.ensureDBReady())) return;
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction(['productosOffline'], 'readwrite');
+      const store = transaction.objectStore('productosOffline');
+      const request = store.clear();
+      
+      request.onsuccess = () => {
+        console.log('✅ Cache de productos limpiado');
+        resolve();
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // ✅ NUEVO: Verificar si hay datos offline
+  async tieneDatosOffline(): Promise<boolean> {
+    if (!(await this.ensureDBReady())) return false;
+
+    const productos = await this.obtenerProductosOffline();
+    return productos.length > 0;
+  }
 }
