@@ -1,14 +1,17 @@
 # proyecto-ATR-frontend
 
 ## Descripción
-Listado simple y sin detalles de un proyecto desarrollado con el stack MEAN (MongoDB, Express, Angular, Node.js). Este proyecto utiliza Angular para el frontend y una API REST en Node.js/Express para el backend.
+Listado simple y sin detalles de un proyecto desarrollado con el stack MEAN (MongoDB, Express, Angular, Node.js). 
+
+Este proyecto utiliza Angular para el frontend y una API REST en Node.js/Express para el backend.
 
 ---
 
 ## Presentación
 
-
-![Imagen de Presentación](https://res.cloudinary.com/dvvhnrvav/image/upload/v1749478374/nhptpqrmywep4jjpmxkz.png)
+<p>
+  <img src="https://res.cloudinary.com/dvvhnrvav/image/upload/v1749478374/nhptpqrmywep4jjpmxkz.png" width="500" alt="Imagen de Presentación" />
+</p>
 
 ---
 
