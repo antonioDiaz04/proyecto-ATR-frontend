@@ -1,4 +1,5 @@
-<p-dialog (onHide)="close()" [modal]="true" [(visible)]="isModalVisible" [style]="{'border-radius':'0', 'width': '35rem' }" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
+<p-dialog (onHide)="close()" [modal]="true" [(visible)]="isModalVisible"
+  [style]="{'border-radius':'0', 'width': '35rem' }" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }">
   <div class="p-6" data-aos="fade-up">
     <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Iniciar sesión</h2>
 
@@ -17,16 +18,14 @@
         </div>
 
         <div *ngIf="!usePhoneLogin; else phoneLogin">
-          <input type="text" placeholder="Introduce tu correo electrónico" formControlName="email"
-            id="email"
+          <input type="text" placeholder="Introduce tu correo electrónico" formControlName="email" id="email"
             class="w-full px-5 py-3 text-lg rounded-none border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
             required [pattern]="'^[a-zA-Z0-9][\\w.-]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'" [disabled]="isLocked" />
         </div>
 
         <ng-template #phoneLogin>
           <div>
-            <input type="tel" placeholder="Introduce tu número de teléfono" formControlName="telefono"
-              id="phone"
+            <input type="tel" placeholder="Introduce tu número de teléfono" formControlName="telefono" id="phone"
               class="w-full px-5 py-3 text-lg rounded-none border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:border-transparent transition"
               required [pattern]="'^[0-9]{9,15}$'" [disabled]="isLocked" />
           </div>
@@ -36,8 +35,7 @@
         <div *ngIf="!usePhoneLogin">
           <div *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched && !isGoogleLogin"
             class="text-gray-900 text-sm mt-1">El correo es obligatorio.</div>
-          <div
-            *ngIf="loginForm.get('email')?.hasError('pattern') && loginForm.get('email')?.touched && !isGoogleLogin"
+          <div *ngIf="loginForm.get('email')?.hasError('pattern') && loginForm.get('email')?.touched && !isGoogleLogin"
             class="text-gray-900 text-sm mt-1">Introduce un correo válido.</div>
         </div>
 
@@ -62,7 +60,7 @@
             <i [class]="showPassword ?  'pi pi-eye':'pi pi-eye-slash' "></i>
           </button>
         </div>
-        
+
         <p [ngClass]="passwordStrengthClass" class="text-sm mt-1">{{ passwordStrengthMessage }}</p>
         <div *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched"
           class="text-gray-900 text-sm">La contraseña es obligatoria.</div>
@@ -77,15 +75,13 @@
 
       <!-- Captcha -->
       <div class="mt-6 w-full flex justify-center">
-        <div id="captcha-container"
-          class="mx-auto"
-          style="display: flex; justify-content: center;"
-          data-sitekey="6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI"
-          data-theme="light">
+        <div id="captcha-container" class="mx-auto" style="display: flex; justify-content: center;"
+          data-sitekey="6Ld8joAqAAAAABuc_VUhgDt7bzSOYAr7whD6WeNI" data-theme="light">
         </div>
       </div>
 
-      <div *ngIf="loginError" class="text-gray-900 text-base py-2 px-3 bg-gray-100 rounded-none border border-gray-300">{{ loginError }}</div>
+      <div *ngIf="loginError" class="text-gray-900 text-base py-2 px-3 bg-gray-100 rounded-none border border-gray-300">
+        {{ loginError }}</div>
 
       <div *ngIf="loginForm.get('captcha')?.invalid && loginForm.get('captcha')?.touched" class="text-gray-900 text-sm">
         <div *ngIf="isLocked">
@@ -113,6 +109,15 @@
           <img src="https://www.svgrepo.com/show/452196/facebook-1.svg" class="w-6 h-6 mr-3" alt="Facebook" />
           <span class="text-lg">Continuar con Facebook</span>
         </button>
+
+        <!-- NUEVO BOTÓN QR -->
+        <!-- <button type="button"} -->
+        <button type="button" (click)="loginWithQR()"
+          class="flex items-center justify-center w-full py-3 bg-white text-gray-900 rounded-none hover:bg-gray-50 transition border border-gray-300">
+          <i class="pi pi-qrcode text-2xl mr-3"></i>
+          <span class="text-lg">Escanear QR para iniciar sesión</span>
+        </button>
+
       </div>
 
       <!-- Enlaces -->
@@ -124,7 +129,8 @@
         </p>
         <p class="text-base">
           ¿No tienes cuenta?
-          <a (click)="redirectTo('Sign-up')" class="text-gray-900 underline hover:text-gray-700 cursor-pointer">Regístrate</a>
+          <a (click)="redirectTo('Sign-up')"
+            class="text-gray-900 underline hover:text-gray-700 cursor-pointer">Regístrate</a>
         </p>
       </div>
     </form>

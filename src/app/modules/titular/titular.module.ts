@@ -9,7 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { NgApexchartsModule } from 'ng-apexcharts';
+// import { NgApexchartsModule } from 'ng-apexcharts';
 
 // Routing
 import { TitularRoutingModule } from './titular-routing.module';
@@ -50,7 +50,7 @@ import { ApiInterceptor } from '../../shared/services/api-interceptor.service';
     HttpClientModule,
     ToastModule,
     FullCalendarModule,
-    NgApexchartsModule,
+    // NgApexchartsModule,
   ],
   providers: [
     {

@@ -38,7 +38,23 @@ export class HeaderComponent implements OnInit, OnChanges, OnDestroy {
   isLoggedIn: boolean = false; // Variable para simular el estado de inicio de sesión
   userMenuOpen: boolean = false; // Para el menú de usuario en desktop
   isModalVisible: boolean = false; // Para el modal de login
+// Para el menú dinámico
+menuItems = [
+  { label: 'Inicio', icon: 'pi pi-home', route: 'inicio' },
+  { label: 'Nuestra colección', icon: 'pi pi-search', route: 'search' },
+  { label: 'Nuevos Arrivos', icon: 'pi pi-star', route: 'Nuevos', badge: 'NEW' },
+  { label: 'Vestidos por Ocasión', icon: 'pi pi-calendar', route: 'vestidos-por-ocasion' },
+  { label: 'Recomendaciones', icon: 'pi pi-sparkles', route: 'recomendaciones' },
+  { label: 'Acompleta tu look', icon: 'pi pi-shopping-bag', route: 'look' },
+  { label: 'Cita de probador', icon: 'pi pi-calendar-plus', route: 'CitasProbador' }
+];
 
+bottomLinks = [
+  { label: 'Sobre Nosotros', icon: 'pi pi-info-circle', route: 'sobre-nosotros' },
+  { label: 'Preguntas Frecuentes', icon: 'pi pi-question-circle', route: 'preguntas-frecuentes' },
+  { label: 'Términos y Condiciones', icon: 'pi pi-file', route: 'terminos' },
+  { label: 'Políticas de Privacidad', icon: 'pi pi-lock', route: 'politicas' }
+];
   private cartSubscription!: Subscription;
 
   constructor(

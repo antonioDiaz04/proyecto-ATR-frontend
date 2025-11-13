@@ -30,4 +30,10 @@ export class SignInService {
       usuario
     );
   }
+
+  // En signIn.service.ts
+loginWithQRToken(token: string): Observable<any> {
+  const headers = { 'Content-Type': 'application/json' };
+  return this.http.post(`${environment.api}/auth/qr-login`, { token }, { headers });
+}
 }

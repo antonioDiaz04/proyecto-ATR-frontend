@@ -4,39 +4,6 @@ import { MessageService } from 'primeng/api';
 import { ChangeDetectorRef } from '@angular/core';
 import { PropietarioService } from '../../../../shared/services/propietario.service';
 
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexDataLabels,
-  ApexFill,
-  ApexGrid,
-  ApexLegend,
-  ApexMarkers,
-  ApexPlotOptions,
-  ApexStroke,
-  ApexTooltip,
-  ApexTitleSubtitle,
-  ApexXAxis,
-  ApexYAxis,
-} from 'ng-apexcharts';
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  yaxis?: ApexYAxis;
-  dataLabels?: ApexDataLabels;
-  plotOptions?: ApexPlotOptions;
-  stroke?: ApexStroke;
-  tooltip?: ApexTooltip;
-  fill?: ApexFill;
-  markers?: ApexMarkers;
-  legend?: ApexLegend;
-  grid?: ApexGrid;
-  title?: ApexTitleSubtitle;
-  colors?: string[];
-};
-
 interface Transaccion {
   id?: string;
   cliente: string;
@@ -46,6 +13,12 @@ interface Transaccion {
   estado: 'Pagado' | 'Pendiente' | 'Cancelado';
   fecha: string;
   fotoDePerfil?: string;
+}
+
+interface DatosGrafica {
+  mes: string;
+  renta: number;
+  venta: number;
 }
 
 type OrdenCampo = 'cliente' | 'tipo' | 'vestido' | 'monto' | 'estado' | 'fecha';
@@ -89,9 +62,9 @@ export class DashboardView implements OnInit, AfterViewInit {
   filtroActivo: 'quincena' | 'semana' | 'mes' | 'anio' = 'mes';
   filtroSeleccionado = 'mes';
 
-  // Datos de gráfica
-  barChartData: any = {};
-  chartOptionsApex!: Partial<ChartOptions>;
+  // Datos de gráfica personalizada
+  datosGrafica: DatosGrafica[] = [];
+  maxValorGrafica = 0;
 
   // Calendario
   calendar!: Calendar;
@@ -323,41 +296,10 @@ export class DashboardView implements OnInit, AfterViewInit {
           this.totalClientes = data.totalClientes;
           this.fechaInicio = start;
           this.fechaFin = end;
-          this.barChartData = data.barChartData;
 
-          this.chartOptionsApex = {
-            series: data.barChartData.datasets.map((ds: any) => ({
-              name: ds.label,
-              data: ds.data,
-            })),
-            chart: {
-              type: 'bar',
-              height: 350,
-              toolbar: { show: false },
-            },
-            xaxis: {
-              categories: data.barChartData.labels,
-            },
-            colors: ['#3b82f6', '#10b981'],
-            legend: {
-              position: 'top',
-            },
-            dataLabels: {
-              enabled: false,
-            },
-            plotOptions: {
-              bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                borderRadius: 4,
-              },
-            },
-            fill: {
-              opacity: 1,
-            },
-          };
+          // Procesar datos para la gráfica personalizada
+          this.procesarDatosParaGrafica(data.barChartData);
 
-       
           if (this.calendar) {
             this.calendar.clear();
 
@@ -413,6 +355,45 @@ export class DashboardView implements OnInit, AfterViewInit {
           });
         },
       });
+  }
+
+  private procesarDatosParaGrafica(barChartData: any): void {
+    if (!barChartData || !barChartData.labels || !barChartData.datasets) {
+      this.datosGrafica = [];
+      this.maxValorGrafica = 0;
+      return;
+    }
+
+    const labels = barChartData.labels;
+    const rentaDataset = barChartData.datasets.find((ds: any) => ds.label.toLowerCase().includes('renta'));
+    const ventaDataset = barChartData.datasets.find((ds: any) => ds.label.toLowerCase().includes('venta'));
+
+    this.datosGrafica = labels.map((label: string, index: number) => {
+      const renta = rentaDataset?.data?.[index] || 0;
+      const venta = ventaDataset?.data?.[index] || 0;
+      
+      return {
+        mes: label,
+        renta: renta,
+        venta: venta
+      };
+    });
+
+    // Calcular el valor máximo para la escala
+    this.maxValorGrafica = Math.max(
+      ...this.datosGrafica.flatMap(item => [item.renta, item.venta]),
+      1 // Mínimo 1 para evitar división por cero
+    );
+  }
+
+  getBarHeight(valor: number): string {
+    if (this.maxValorGrafica === 0) return '5%';
+    const percentage = (valor / this.maxValorGrafica) * 100;
+    return `${Math.max(percentage, 5)}%`; // Mínimo 5% para que sea visible
+  }
+
+  get hayDatosEnGrafica(): boolean {
+    return this.datosGrafica.length > 0 && this.datosGrafica.some(item => item.renta > 0 || item.venta > 0);
   }
 
   ordenarPor(campo: OrdenCampo): void {
@@ -565,11 +546,6 @@ export class DashboardView implements OnInit, AfterViewInit {
   irHoy() {
     this.calendar.today();
     this.actualizarMesAnio();
-  }
-
-  get hayDatosEnGrafica(): boolean {
-    const series = this.chartOptionsApex?.series;
-    return !!series?.length && series.some((s) => s.data && s.data.length > 0);
   }
 
   trackByTransaccion(index: number, transaccion: Transaccion): any {
