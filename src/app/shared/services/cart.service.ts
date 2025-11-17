@@ -1,88 +1,132 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Subject } from 'rxjs';
 import { IndexedDbService } from '../../modules/public/commons/services/indexed-db.service';
 
+export interface CartItem {
+  _id: string;
+  nombre: string;
+  precio: number;
+  imagenes: string[];
+  opcionesTipoTransaccion: string;
+}
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root',
 })
 export class CartService {
-  private dressItemsSignal = signal<any[]>([]);
-  dressItemCount = computed(() => this.dressItemsSignal().length);
 
-  private cartUpdated = new Subject<void>();
-  cartUpdated$ = this.cartUpdated.asObservable();
+  private itemsSignal = signal<CartItem[]>([]);
+  items = this.itemsSignal.asReadonly();
 
-  // Bandera para saber si ya se cargó el carrito
-  private isInitialized = signal(false);
+  itemCount = computed(() => this.itemsSignal().length);
 
-  constructor(private indexedDbService: IndexedDbService) {
-    this.initialize(); // Inicializa correctamente
-  }
+  totalPrice = computed(() =>
+    this.itemsSignal().reduce((total, item) => total + (item.precio || 0), 0)
+  );
 
-  // Inicializa el carrito correctamente esperando la carga
-  private async initialize() {
-    try {
-      const items = await this.indexedDbService.obtenerProductosApartados();
-      this.dressItemsSignal.set(items);
-      this.isInitialized.set(true);
-      console.log("✅ Carrito inicializado con productos:", items);
-    } catch (error) {
-      console.error("❌ Error al inicializar el carrito:", error);
-    }
-  }
+  private isInitialized = signal(false);
 
-  // Método para agregar un producto al carrito
-  async addToCart(producto: any) {
-    if (!this.isInitialized()) {
-      console.warn("⏳ El carrito aún no ha sido inicializado");
-      return;
-    }
+  constructor(private indexedDbService: IndexedDbService) {
+    this.initialize();
+  }
 
-    console.log("🛒 Intentando agregar producto al carrito:", producto);
+  // =============================
+  // Inicializar carrito
+  // =============================
+  private async initialize() {
+    try {
+      const items = await this.indexedDbService.obtenerProductosApartados();
+      this.itemsSignal.set(items);
+      this.isInitialized.set(true);
+      console.log("Carrito inicializado:", items);
+    } catch (error) {
+      console.error("Error inicializando carrito:", error);
+    }
+  }
 
-    const currentItems = this.dressItemsSignal();
-    const isProductInCart = currentItems.some(item => item.id === producto.id);
+  private async waitForInit(): Promise<void> {
+    if (this.isInitialized()) return;
+    console.warn("Carrito no inicializado, esperando...");
+    
+    await new Promise(resolve =>
+      setTimeout(resolve, 50)
+    );
 
-    if (isProductInCart) {
-      console.warn("⚠️ El producto ya está en el carrito");
-      return;
-    }
+    return this.waitForInit();
+  }
 
-    this.dressItemsSignal.set([...currentItems, producto]);
-    console.log("✅ Producto agregado al carrito (señal):", producto);
+  // =============================
+  // Agregar producto
+  // =============================
+  async addToCart(producto: CartItem) {
+    await this.waitForInit();
 
-    try {
-      await this.indexedDbService.guardarProducto(producto);
-      console.log("💾 Producto guardado en IndexedDB:", producto);
+    // CORRECCIÓN: Construcción explícita para evitar propiedades inesperadas
+    const normalizado: CartItem = {
+      _id: producto._id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      opcionesTipoTransaccion: producto.opcionesTipoTransaccion,
+      // Normalización reforzada: asegura que 'imagenes' sea siempre un array de strings
+      imagenes: Array.isArray(producto.imagenes)
+        ? producto.imagenes
+        : (typeof producto.imagenes === 'string' ? [producto.imagenes] : [])
+    };
 
-      this.cartUpdated.next();
-      console.log("📣 Notificación de cambio en el carrito enviada");
-    } catch (error) {
-      console.error("❌ Error al guardar el producto en IndexedDB:", error);
-    }
-  }
+    const currentItems = this.itemsSignal();
+    const exists = currentItems.some(item => item._id === normalizado._id);
 
-  // Método para eliminar un producto del carrito
-  async removeFromCart(id: string) {
-    const currentItems = this.dressItemsSignal();
-    const updatedItems = currentItems.filter(item => item.id !== id);
+    if (exists) {
+      console.warn("Producto ya en carrito:", normalizado._id);
+      return;
+    }
 
-    this.dressItemsSignal.set(updatedItems);
-    console.log("🗑️ Producto eliminado del carrito:", updatedItems);
+    // Actualiza signal
+    this.itemsSignal.set([...currentItems, normalizado]);
 
-    await this.indexedDbService.eliminarProducto(id);
-    console.log("💾 Producto eliminado de IndexedDB con ID:", id);
+    try {
+      console.log("Objeto final a guardar:", normalizado); // Log de depuración
+      await this.indexedDbService.guardarProducto(normalizado);
+      console.log("Guardado en IndexedDB:", normalizado);
+    } catch (error) {
+      console.error("Error al guardar, revirtiendo:", error);
+      this.itemsSignal.set(currentItems);
+    }
+  }
 
-    this.cartUpdated.next();
-  }
+  // =============================
+  // Eliminar producto
+  // =============================
+  async removeFromCart(id: string) {
+    const currentItems = this.itemsSignal();
+    const updatedItems = currentItems.filter(item => item._id !== id);
 
-  // Método para obtener los productos actuales
-  getCartItems() {
-    return this.dressItemsSignal();
-  }
+    this.itemsSignal.set(updatedItems);
 
-  // Inicializar manualmente (si necesitas usarlo en tests)
-  initializeCart(items: any[]) {
-    this.dressItemsSignal.set(items);
-  }
+    try {
+      await this.indexedDbService.eliminarProducto(id);
+      console.log("Eliminado de IndexedDB:", id);
+    } catch (error) {
+      console.error("Error eliminando en IndexedDB:", error);
+      this.itemsSignal.set(currentItems); // revertir
+    }
+  }
+
+  // =============================
+  // Sincronizar con backend
+  // =============================
+  async syncWithBackend(backendItems: CartItem[]) {
+    const localItems = this.itemsSignal();
+
+    const merged = [...backendItems];
+
+    for (const localItem of localItems) {
+      const existsInBackend = backendItems.some(b => b._id === localItem._id);
+      if (!existsInBackend) {
+        merged.push(localItem);
+      }
+    }
+
+    this.itemsSignal.set(merged);
+    console.log("Carrito sincronizado con backend:", merged);
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, signal, computed } from "@angular/core";
 import { IndexedDbService } from "../../commons/services/indexed-db.service";
 import { Router } from "@angular/router";
 import { SessionService } from "../../../../shared/services/session.service";
@@ -12,7 +12,7 @@ import { HttpClient } from "@angular/common/http";
 import { UsuarioService } from "../../../../shared/services/usuario.service";
 
 export interface DressItem {
-  id: string;
+  _id: string; // Cambiado de 'id' a '_id' para consistencia
   nombre: string;
   precio: number;
   imagenes: any;
@@ -25,10 +25,12 @@ export interface DressItem {
   templateUrl: "./citas-probador.view.html",
 })
 export class CitasProbadorView implements OnInit, OnDestroy {
-  productosRenta: DressItem[] = [];
-  productosVenta: DressItem[] = [];
-  tipoCompra: string = "renta";
-  totalCompra: number = 0;
+  // Convertidos a signals para reactividad
+  productosRenta = signal<DressItem[]>([]);
+  productosVenta = signal<DressItem[]>([]);
+  tipoCompra = signal<string>("renta");
+  totalCompra = signal<number>(0);
+  
   isLoggedIn: boolean = false;
   productoSeleccionado: DressItem | null = null;
   mostrarModal: boolean = false;
@@ -76,7 +78,6 @@ export class CitasProbadorView implements OnInit, OnDestroy {
           const respuesta = await this.usuarioService.obtenerCarrito(this.idUsuario).toPromise();
           console.log("🖥 Carrito obtenido del backend (raw):", respuesta);
 
-          // Si el backend devuelve directamente un array:
           if (Array.isArray(respuesta)) {
             carritoServidor = respuesta;
           } else if (respuesta && Array.isArray(respuesta.productos)) {
@@ -91,12 +92,12 @@ export class CitasProbadorView implements OnInit, OnDestroy {
         if (!carritoServidor || carritoServidor.length === 0) {
           console.log("📦 Backend sin productos, usando IndexedDB");
 
-          this.productosRenta = productos.filter(
+          this.productosRenta.set(productos.filter(
             (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
-          );
-          this.productosVenta = productos.filter(
+          ));
+          this.productosVenta.set(productos.filter(
             (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
-          );
+          ));
 
           if (productos.length > 0) {
             this.usuarioService
@@ -109,32 +110,20 @@ export class CitasProbadorView implements OnInit, OnDestroy {
         } else {
           console.log("🔄 Backend tiene productos, sincronizando...");
 
-          const idsServidor = new Set(carritoServidor.map((p) => p.id));
-          const productosNuevos = productos.filter((p) => !idsServidor.has(p.id));
+          const idsServidor = new Set(carritoServidor.map((p) => p._id));
+          const productosNuevos = productos.filter((p) => !idsServidor.has(p._id));
 
-          // for (let producto of productos) {
-          //   if (idsServidor.has(producto.id)) {
-          //     await this.indexedDbService.eliminarProducto(producto.id);
-          //     console.log(🧹 Producto duplicado eliminado de IndexedDB: ${producto.id});
-          //   }
-          // }
-
-          const idsIndexedDb = new Set(productos.map((p) => p.id));
+          const idsIndexedDb = new Set(productos.map((p) => p._id));
           const productosAEliminarEnBackend = carritoServidor.filter(
-            (p) => !idsIndexedDb.has(p.id)
+            (p) => !idsIndexedDb.has(p._id)
           );
 
-          // for (let producto of productosAEliminarEnBackend) {
-          //   await this.usuarioService.eliminarProductoCarrito(this.idUsuario, producto.id).toPromise();
-          //   console.log(🧹 Producto eliminado del backend: ${producto.id});
-          // }
-
-          this.productosRenta = productosNuevos.filter(
+          this.productosRenta.set(productosNuevos.filter(
             (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
-          );
-          this.productosVenta = productosNuevos.filter(
+          ));
+          this.productosVenta.set(productosNuevos.filter(
             (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
-          );
+          ));
 
           if (productosNuevos.length > 0) {
             this.usuarioService
@@ -148,15 +137,15 @@ export class CitasProbadorView implements OnInit, OnDestroy {
       } else {
         console.log("👤 Usuario no logueado, solo IndexedDB");
 
-        this.productosRenta = productos.filter(
+        this.productosRenta.set(productos.filter(
           (p) => p.opcionesTipoTransaccion?.toLowerCase() === "renta"
-        );
-        this.productosVenta = productos.filter(
+        ));
+        this.productosVenta.set(productos.filter(
           (p) => p.opcionesTipoTransaccion?.toLowerCase() === "venta"
-        );
+        ));
       }
 
-      this.cartService.initializeCart([...this.productosRenta, ...this.productosVenta]);
+      // Eliminado: this.cartService.initializeCart([...]) - El servicio ya se inicializa solo
       this.calcularTotal();
       this.initializeTabs();
 
@@ -165,44 +154,19 @@ export class CitasProbadorView implements OnInit, OnDestroy {
     }
   }
 
-
-
-  // async ngOnInit() {
-  //   console.log("✅ ngOnInit");
-
-  //   try {
-  //     const productos = await this.indexedDbService.obtenerProductosApartados();
-  //     this.productosRenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "renta");
-  //     this.productosVenta = productos.filter(p => p.opcionesTipoTransaccion?.toLowerCase() === "venta");
-  //     this.cartService.initializeCart(productos);
-  //     this.calcularTotal();
-  //     this.initializeTabs();
-  //   } catch (error) {
-  //     this.handleError("Error al cargar los productos", error);
-  //   }
-  // }
-
-
-
   async ngOnDestroy() {
     console.log("✅ ngOnDestroy");
-
-    // Asegúrate de que el soporte y permiso se revisen antes del timeout si lo necesitas
     this.checkPushSupport();
 
     setTimeout(async () => {
       console.log("⌛ 5 segundos después de ngOnDestroy");
-
-      // Si quieres, puedes validar aquí antes de pedir permiso o enviar notificación
       if (!this.pushSupportInfo.supported) {
         console.warn("⛔ Notificaciones no soportadas");
         return;
       }
-
-      await this.requestPushPermission(); // o cualquier otra lógica diferida
-    }, 5000); // 5000 ms = 5 segundos
+      await this.requestPushPermission();
+    }, 5000);
   }
-
 
   private checkPushSupport(): void {
     console.log("✅ checkPushSupport");
@@ -239,10 +203,7 @@ export class CitasProbadorView implements OnInit, OnDestroy {
       return;
     }
 
-    // try {
     const registration = await this.registerServiceWorker();
-
-    // 🔁 Eliminar suscripción anterior si ya existe
     const existingSubscription = await registration.pushManager.getSubscription();
     if (existingSubscription) {
       await existingSubscription.unsubscribe();
@@ -261,13 +222,8 @@ export class CitasProbadorView implements OnInit, OnDestroy {
       serverPublicKey: this.publicKey
     });
 
-    // ✅ Guardar la suscripción en IndexedDB
     await this.indexedDbService.guardarSuscripcion(newSubscription);
-
     await this.enviarNotificacion(newSubscription);
-    // this.showSuccessAlert('Notificaciones habilitadas con éxito');
-
-
   }
 
   private async registerServiceWorker(): Promise<ServiceWorkerRegistration> {
@@ -308,24 +264,24 @@ export class CitasProbadorView implements OnInit, OnDestroy {
     }
   }
 
-  deleteDressItem(id: string): void {
-    console.log("✅ deleteDressItem", id);
-    this.productosRenta = this.productosRenta.filter(p => p.id !== id);
-    this.productosVenta = this.productosVenta.filter(p => p.id !== id);
-    this.cartService.removeFromCart(id);
+  deleteDressItem(_id: string): void { // Cambiado: ahora recibe _id
+    console.log("✅ deleteDressItem", _id);
+    this.productosRenta.update(items => items.filter(p => p._id !== _id));
+    this.productosVenta.update(items => items.filter(p => p._id !== _id));
+    this.cartService.removeFromCart(_id); // Pasar _id correcto
     this.calcularTotal();
   }
 
   setTipoCompra(tipo: string): void {
     console.log("✅ setTipoCompra", tipo);
-    this.tipoCompra = tipo;
+    this.tipoCompra.set(tipo);
     this.calcularTotal();
   }
 
   calcularTotal(): void {
     console.log("✅ calcularTotal");
-    const productos = this.tipoCompra === 'renta' ? this.productosRenta : this.productosVenta;
-    this.totalCompra = productos.reduce((total, item) => total + item.precio, 0);
+    const productos = this.tipoCompra() === 'renta' ? this.productosRenta() : this.productosVenta();
+    this.totalCompra.set(productos.reduce((total, item) => total + item.precio, 0));
   }
 
   isUserLoggedIn(): boolean {
@@ -410,10 +366,9 @@ export class CitasProbadorView implements OnInit, OnDestroy {
   }
 
   title = 'Atelier protegue tus datos';
-  isPrivacyModalOpen: boolean = false; // Estado para controlar la visibilidad del modal
+  isPrivacyModalOpen: boolean = false;
   mostrarModalConfirmacion: boolean = false;
   aceptaTerminos: boolean = false;
-
 
   openPrivacyModal(): void {
     this.isPrivacyModalOpen = true;
@@ -422,10 +377,6 @@ export class CitasProbadorView implements OnInit, OnDestroy {
   onPrivacyModalClose(): void {
     this.isPrivacyModalOpen = false;
   }
-
-  // showDialog() {
-  //   this.sidebarVisible = true;
-  // }
 
   redirectTo(route: string): void {
     console.log(route);
@@ -439,31 +390,23 @@ export class CitasProbadorView implements OnInit, OnDestroy {
 
   mostrarConfirmacion() {
     this.mostrarModalConfirmacion = true;
-    this.aceptaTerminos = false; // reiniciar cada vez que abre
+    this.aceptaTerminos = false;
   }
 
-  // Cerrar modal
   cerrarModal() {
     this.mostrarModalConfirmacion = false;
   }
 
-  // Abrir modal de privacidad
   abrirPrivacyModal() {
     this.isPrivacyModalOpen = true;
   }
 
-  // Cerrar modal de privacidad
-  // onPrivacyModalClose() {
-  //   this.isPrivacyModalOpen = false;
-  // }
   guardando: boolean = false;
 
-
-  // Guardar carrito para usuario logueado
   guardarCarrito(): void {
     if (!this.aceptaTerminos) return;
 
-    const carrito = [...this.productosRenta, ...this.productosVenta];
+    const carrito = [...this.productosRenta(), ...this.productosVenta()];
     if (!carrito.length) {
       this.showWarningAlert("Tu carrito está vacío");
       return;
@@ -475,16 +418,13 @@ export class CitasProbadorView implements OnInit, OnDestroy {
       next: () => {
         console.log("✅ Carrito enviado al backend.");
         this.mostrarNotificacion = true;
-
         setTimeout(() => {
           this.mostrarNotificacion = false;
-
         }, 4000);
         this.cerrarModal();
       },
       error: (error) => {
         this.guardando = false;
-
         console.error("❌ Error al guardar el carrito", error);
         this.showErrorAlert("Error al guardar tu carrito en el servidor");
       },
@@ -500,10 +440,10 @@ export class CitasProbadorView implements OnInit, OnDestroy {
 
     this.usuarioService.vaciarCarrito(this.idUsuario).subscribe({
       next: () => {
-        // this.cartService.clearCart();
-        this.productosRenta = [];
-        this.productosVenta = [];
-        this.totalCompra = 0;
+        this.cartService.removeFromCart(''); // Limpiar todos
+        this.productosRenta.set([]);
+        this.productosVenta.set([]);
+        this.totalCompra.set(0);
         this.showSuccessAlert("Carrito vaciado correctamente");
       },
       error: (err) => {
@@ -513,13 +453,10 @@ export class CitasProbadorView implements OnInit, OnDestroy {
     });
   }
 
-  // Redirigir al login si no está logueado
   redirigirLogin() {
     if (!this.aceptaTerminos) return;
     this.router.navigate(['/auth/login']);
   }
-
-  // now 
 
   scannerActivo = false;
   vincularMensaje = '';
@@ -563,7 +500,7 @@ export class CitasProbadorView implements OnInit, OnDestroy {
       this.wearToken = partes[0];
       this.wearDeviceId = partes[1];
 
-      const usuarioId = this.sessionService.getId(); // O donde guardes tu sesión
+      const usuarioId = this.sessionService.getId();
       if (usuarioId) {
         this.usuarioActualId = usuarioId;
         this.vincularDispositivo();
@@ -576,11 +513,10 @@ export class CitasProbadorView implements OnInit, OnDestroy {
       this.vincularExito = false;
     }
   }
+
   iniciarRegistro() {
 
   }
 
-
   mostrarNotificacion: boolean = false;
-
 }

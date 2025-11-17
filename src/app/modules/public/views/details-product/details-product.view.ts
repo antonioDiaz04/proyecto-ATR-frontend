@@ -89,38 +89,38 @@ export class DetailsProductView implements OnInit, AfterViewInit, OnDestroy {
 
 
   // Variables para paginación de thumbnails en móvil/tablet
-currentThumbPage: number = 0;
-thumbsPerPage: number = 3;
+  currentThumbPage: number = 0;
+  thumbsPerPage: number = 3;
 
-get paginatedImages(): string[] {
-  const start = this.currentThumbPage * this.thumbsPerPage;
-  return this.Detalles?.imagenes?.slice(start, start + this.thumbsPerPage) || [];
-}
-
-get totalThumbPages(): number {
-  return Math.ceil((this.Detalles?.imagenes?.length || 0) / this.thumbsPerPage);
-}
-
-setThumbPage(index: number): void {
-  if (index >= 0 && index < this.totalThumbPages) {
-    this.currentThumbPage = index;
+  get paginatedImages(): string[] {
+    const start = this.currentThumbPage * this.thumbsPerPage;
+    return this.Detalles?.imagenes?.slice(start, start + this.thumbsPerPage) || [];
   }
-}
 
-// Métodos para manejar el cambio de imagen principal
-// onThumbnailHover(image: string): void {
-//   this.selectedMainImage = image;
-//   this.mainImageUrl = this.selectedMainImage;
-// }
+  get totalThumbPages(): number {
+    return Math.ceil((this.Detalles?.imagenes?.length || 0) / this.thumbsPerPage);
+  }
 
-// resetMainImage(): void {
-//   this.mainImageUrl = this.selectedMainImage;
-// }
+  setThumbPage(index: number): void {
+    if (index >= 0 && index < this.totalThumbPages) {
+      this.currentThumbPage = index;
+    }
+  }
 
-// changeMainImage(image: string): void {
-//   this.selectedMainImage = image;
-//   this.mainImageUrl = this.selectedMainImage;
-// }
+  // Métodos para manejar el cambio de imagen principal
+  // onThumbnailHover(image: string): void {
+  //   this.selectedMainImage = image;
+  //   this.mainImageUrl = this.selectedMainImage;
+  // }
+
+  // resetMainImage(): void {
+  //   this.mainImageUrl = this.selectedMainImage;
+  // }
+
+  // changeMainImage(image: string): void {
+  //   this.selectedMainImage = image;
+  //   this.mainImageUrl = this.selectedMainImage;
+  // }
 
 
   abrirModal() {
@@ -393,26 +393,24 @@ setThumbPage(index: number): void {
   }
 
   apartarRentar(producto: any) {
-    const body2 = {
-      id: producto._id,
+    console.log('producto :', producto )
+    // NO sobrescribas el _id, usa el original del producto
+    const itemParaCarrito = {
+      _id: producto._id,  // ✅ Usa _id directamente
       nombre: producto.nombre,
-      precio: producto.precio,
+      precio: producto.precioActual,
       imagenes: producto.imagenes[0],
       opcionesTipoTransaccion: producto.opcionesTipoTransaccion,
     };
 
     try {
-      this.cartService.addToCart(body2);
-      console.log('Producto agregado al carrito:', body2);
+      this.cartService.addToCart(itemParaCarrito);
+      console.log('✅ Producto agregado:', itemParaCarrito);
 
-      // Enviar notificación push al usuario
-      const nombreProducto = producto.nombre;
-      const imagenProducto = producto.imagenes[0]; // Asegúrate de que sea una URL válida
-
-      // Llama a generarToken y pasa los datos del producto
-      this.generarToken(nombreProducto, imagenProducto);
+      // Notificación push
+      this.generarToken(producto.nombre, producto.imagenes[0]);
     } catch (error) {
-      console.error('Error al guardar el producto:', error);
+      console.error('❌ Error al agregar producto:', error);
     }
   }
 

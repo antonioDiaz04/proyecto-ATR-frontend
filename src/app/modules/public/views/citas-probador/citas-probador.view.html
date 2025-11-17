@@ -14,19 +14,19 @@
     <div class="border-b border-[#e8e0e5] mb-4 md:mb-6">
       <nav class="flex flex-wrap gap-2 sm:gap-4 md:gap-8">
         <button 
-          [class.text-[#3d2e35]]="tipoCompra === 'renta'"
-          [class.border-[#3d2e35]]="tipoCompra === 'renta'"
-          [class.text-[#a38f9b]]="tipoCompra !== 'renta'"
-          [class.border-transparent]="tipoCompra !== 'renta'"
+          [class.text-[#3d2e35]]="tipoCompra() === 'renta'"
+          [class.border-[#3d2e35]]="tipoCompra() === 'renta'"
+          [class.text-[#a38f9b]]="tipoCompra() !== 'renta'"
+          [class.border-transparent]="tipoCompra() !== 'renta'"
           class="py-2 px-1 border-b-2 font-light text-xs sm:text-sm tracking-wide hover:text-[#6c4d5a] transition-all"
           (click)="setTipoCompra('renta')">
           <i class="pi pi-calendar mr-1 sm:mr-2"></i> Para Rentar
         </button>
         <button 
-          [class.text-[#3d2e35]]="tipoCompra === 'venta'"
-          [class.border-[#3d2e35]]="tipoCompra === 'venta'"
-          [class.text-[#a38f9b]]="tipoCompra !== 'venta'"
-          [class.border-transparent]="tipoCompra !== 'venta'"
+          [class.text-[#3d2e35]]="tipoCompra() === 'venta'"
+          [class.border-[#3d2e35]]="tipoCompra() === 'venta'"
+          [class.text-[#a38f9b]]="tipoCompra() !== 'venta'"
+          [class.border-transparent]="tipoCompra() !== 'venta'"
           class="py-2 px-1 border-b-2 font-light text-xs sm:text-sm tracking-wide hover:text-[#6c4d5a] transition-all"
           (click)="setTipoCompra('venta')">
           <i class="pi pi-shopping-bag mr-1 sm:mr-2"></i> Para Comprar
@@ -39,13 +39,13 @@
       <!-- Product List -->
       <div class="lg:col-span-2 space-y-4 sm:space-y-6">
         <!-- Empty State -->
-        <div *ngIf="(tipoCompra === 'renta' && productosRenta.length === 0) || (tipoCompra === 'venta' && productosVenta.length === 0)" 
+        <div *ngIf="(tipoCompra() === 'renta' && productosRenta().length === 0) || (tipoCompra() === 'venta' && productosVenta().length === 0)" 
              class="bg-white shadow-xs p-6 md:p-8 text-center border border-[#f0e6eb]">
           <svg class="mx-auto h-12 sm:h-14 md:h-16 w-12 sm:w-14 md:w-16 text-[#d4a8b4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
           <h3 class="mt-3 text-base sm:text-lg md:text-xl font-light text-[#3d2e35]">Carrito Vacío</h3>
-          <p class="mt-1 md:mt-2 text-[#a38f9b] text-xs sm:text-sm">No has agregado vestidos para {{tipoCompra === 'renta' ? 'rentar' : 'comprar'}}.</p>
+          <p class="mt-1 md:mt-2 text-[#a38f9b] text-xs sm:text-sm">No has agregado vestidos para {{tipoCompra() === 'renta' ? 'rentar' : 'comprar'}}.</p>
           <div class="mt-4 sm:mt-6">
             <a routerLink="/search" class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-xs sm:text-sm font-light tracking-wide text-white bg-[#3d2e35] hover:bg-[#6c4d5a] transition-all">
               Explorar Colección
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Items -->
-        <div *ngFor="let item of (tipoCompra === 'renta' ? productosRenta : productosVenta)" 
+        <div *ngFor="let item of (tipoCompra() === 'renta' ? productosRenta() : productosVenta())" 
              class="bg-white shadow-xs border border-[#f0e6eb] hover:shadow-sm transition-all overflow-hidden">
           <div class="flex flex-col sm:flex-row">
             <!-- Image -->
@@ -66,20 +66,15 @@
             <div class="p-4 sm:p-6 sm:w-2/3 flex flex-col justify-between">
               <div>
                 <h3 class="text-base sm:text-lg md:text-xl font-light text-[#3d2e35] mb-1 sm:mb-2">{{ item.nombre }}</h3>
-                <p class="text-[#a38f9b] text-xs tracking-wider mb-2 sm:mb-3 uppercase">Disponible para {{tipoCompra === 'renta' ? 'renta' : 'venta'}}</p>
+                <p class="text-[#a38f9b] text-xs tracking-wider mb-2 sm:mb-3 uppercase">Disponible para {{tipoCompra() === 'renta' ? 'renta' : 'venta'}}</p>
                 <p class="text-[#3d2e35] text-sm sm:text-base md:text-lg font-light">${{ item.precio | number }}</p>
               </div>
               <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
                 <button 
-                  (click)="deleteDressItem(item.id)"
+                  (click)="deleteDressItem(item._id)"
                   class="flex-1 flex items-center justify-center px-3 sm:px-4 py-1 sm:py-2 border border-[#e8e0e5] text-xs sm:text-sm font-light text-[#6c4d5a] hover:bg-[#faf7f9] transition-all">
                   <i class="pi pi-trash mr-1 sm:mr-2"></i> Eliminar del carrito
                 </button>
-                <!-- <button 
-                  (click)="tipoCompra === 'renta' ? continuarCompra(item, 'renta') : mostrarResumen(item)"
-                  class="flex-1 flex items-center justify-center px-3 sm:px-4 py-1 sm:py-2 border border-transparent text-xs sm:text-sm font-light text-white bg-[#3d2e35] hover:bg-[#6c4d5a] transition-all">
-                  Continuar <i class="pi pi-arrow-right ml-1 sm:ml-2"></i>
-                </button> -->
               </div>
             </div>
           </div>
@@ -93,11 +88,11 @@
           <div class="space-y-3 sm:space-y-4">
             <div class="flex justify-between">
               <span class="text-[#a38f9b] text-sm sm:text-base">Subtotal</span>
-              <span class="font-light text-sm sm:text-base">${{ totalCompra | number }}</span>
+              <span class="font-light text-sm sm:text-base">${{ totalCompra() | number }}</span>
             </div>
             <div class="border-t border-[#f0e6eb] pt-3 sm:pt-4 flex justify-between">
-              <span class="text-base font-light text-[#3d2e35]">Total {{tipoCompra === 'renta' ? 'renta' : 'venta'}}</span>
-              <span class="text-base font-light">${{ totalCompra | number }}</span>
+              <span class="text-base font-light text-[#3d2e35]">Total {{tipoCompra() === 'renta' ? 'renta' : 'venta'}}</span>
+              <span class="text-base font-light">${{ totalCompra() | number }}</span>
             </div>
           </div>
           <div class="mt-6 sm:mt-8">
@@ -110,7 +105,7 @@
 
   <!-- Modal -->
   <p-dialog 
-    header="Confirmación de {{tipoCompra === 'renta' ? 'renta' : 'compra'}}" 
+    header="Confirmación de {{tipoCompra() === 'renta' ? 'renta' : 'compra'}}" 
     [(visible)]="mostrarModal" 
     [modal]="true" 
     [style]="{width: '500px', 'border-radius': '12px'}"
@@ -124,7 +119,7 @@
         </div>
         <div>
           <h4 class="font-light text-[#3d2e35] text-base sm:text-lg">{{ productoSeleccionado?.nombre }}</h4>
-          <p class="text-[#a38f9b] text-xs mt-1 tracking-wider uppercase">{{tipoCompra === 'renta' ? 'Para rentar' : 'Para comprar'}}</p>
+          <p class="text-[#a38f9b] text-xs mt-1 tracking-wider uppercase">{{tipoCompra() === 'renta' ? 'Para rentar' : 'Para comprar'}}</p>
         </div>
       </div>
       <div class="border-t border-[#f0e6eb] pt-3 sm:pt-4 space-y-2 sm:space-y-3">
@@ -134,7 +129,7 @@
         </div>
         <div class="flex justify-between pt-2 sm:pt-3">
           <span class="text-[#3d2e35] font-light text-sm sm:text-base">Total</span>
-          <span class="text-[#3d2e35] font-light text-sm sm:text-base">${{ totalCompra | number }}</span>
+          <span class="text-[#3d2e35] font-light text-sm sm:text-base">${{ totalCompra() | number }}</span>
         </div>
       </div>
     </div>

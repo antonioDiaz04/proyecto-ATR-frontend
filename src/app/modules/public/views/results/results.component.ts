@@ -156,7 +156,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
 
   apartarRentar(producto: any) {
     const body2 = {
-      id: producto._id,
+      _id: producto._id,
       nombre: producto.nombre,
       precio: producto.precio,
       imagenes: producto.imagenes[0],
