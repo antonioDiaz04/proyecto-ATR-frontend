@@ -26,7 +26,7 @@
     "@angular/ssr": "^18.2.15",
     "@angx/ngx-easy-captcha": "^1.0.8",
     "@auth0/angular-jwt": "^5.2.0",
-    "@capacitor/cli": "^6.2.0",
+    "@capacitor/cli": "^8.0.2",
     "@capacitor/core": "^6.2.0",
     "@fancyapps/fancybox": "^3.5.7",
     "@fullcalendar/angular": "^6.1.18",
